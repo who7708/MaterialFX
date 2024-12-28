@@ -2,100 +2,173 @@
   /*! Palette */
   -md-source: #4355B9;
   -md-ref-palette-primary0: #000000;
-  -md-ref-palette-primary10: #00105C;
-  -md-ref-palette-primary20: #08218A;
-  -md-ref-palette-primary30: #293CA0;
-  -md-ref-palette-primary40: #4355B9;
-  -md-ref-palette-primary50: #5D6FD4;
-  -md-ref-palette-primary60: #7789F0;
-  -md-ref-palette-primary70: #97A5FF;
+  -md-ref-palette-primary4: #000739;
+  -md-ref-palette-primary5: #000840;
+  -md-ref-palette-primary6: #020B43;
+  -md-ref-palette-primary10: #0B154B;
+  -md-ref-palette-primary12: #101A4F;
+  -md-ref-palette-primary15: #172155;
+  -md-ref-palette-primary17: #1B255A;
+  -md-ref-palette-primary20: #222C61;
+  -md-ref-palette-primary24: #2C356A;
+  -md-ref-palette-primary25: #2E376C;
+  -md-ref-palette-primary30: #394379;
+  -md-ref-palette-primary35: #454F85;
+  -md-ref-palette-primary40: #515B92;
+  -md-ref-palette-primary50: #6A73AD;
+  -md-ref-palette-primary60: #848DC8;
+  -md-ref-palette-primary70: #9EA7E5;
   -md-ref-palette-primary80: #BAC3FF;
+  -md-ref-palette-primary87: #D3D8FF;
   -md-ref-palette-primary90: #DEE0FF;
+  -md-ref-palette-primary92: #E5E6FF;
+  -md-ref-palette-primary94: #ECECFF;
   -md-ref-palette-primary95: #F0EFFF;
+  -md-ref-palette-primary96: #F4F2FF;
+  -md-ref-palette-primary98: #FBF8FF;
   -md-ref-palette-primary99: #FEFBFF;
   -md-ref-palette-primary100: #FFFFFF;
   -md-ref-palette-secondary0: #000000;
+  -md-ref-palette-secondary4: #0A0D1E;
+  -md-ref-palette-secondary5: #0D1021;
+  -md-ref-palette-secondary6: #0F1223;
   -md-ref-palette-secondary10: #181A2C;
+  -md-ref-palette-secondary12: #1C1E30;
+  -md-ref-palette-secondary15: #222537;
+  -md-ref-palette-secondary17: #26293B;
   -md-ref-palette-secondary20: #2D2F42;
+  -md-ref-palette-secondary24: #35384B;
+  -md-ref-palette-secondary25: #383A4D;
   -md-ref-palette-secondary30: #434659;
+  -md-ref-palette-secondary35: #4F5165;
   -md-ref-palette-secondary40: #5B5D72;
   -md-ref-palette-secondary50: #73768B;
   -md-ref-palette-secondary60: #8D8FA6;
   -md-ref-palette-secondary70: #A8AAC1;
   -md-ref-palette-secondary80: #C3C5DD;
+  -md-ref-palette-secondary87: #D7D8F1;
   -md-ref-palette-secondary90: #E0E1F9;
+  -md-ref-palette-secondary92: #E5E6FF;
+  -md-ref-palette-secondary94: #ECECFF;
   -md-ref-palette-secondary95: #F0EFFF;
+  -md-ref-palette-secondary96: #F4F2FF;
+  -md-ref-palette-secondary98: #FBF8FF;
   -md-ref-palette-secondary99: #FEFBFF;
   -md-ref-palette-secondary100: #FFFFFF;
   -md-ref-palette-tertiary0: #000000;
+  -md-ref-palette-tertiary4: #1D051A;
+  -md-ref-palette-tertiary5: #21071C;
+  -md-ref-palette-tertiary6: #24091F;
   -md-ref-palette-tertiary10: #2D1228;
+  -md-ref-palette-tertiary12: #32162C;
+  -md-ref-palette-tertiary15: #381C32;
+  -md-ref-palette-tertiary17: #3D2037;
   -md-ref-palette-tertiary20: #44263D;
+  -md-ref-palette-tertiary24: #4E2F47;
+  -md-ref-palette-tertiary25: #503149;
   -md-ref-palette-tertiary30: #5D3C55;
+  -md-ref-palette-tertiary35: #6A4861;
   -md-ref-palette-tertiary40: #77536D;
   -md-ref-palette-tertiary50: #916C86;
   -md-ref-palette-tertiary60: #AC85A1;
   -md-ref-palette-tertiary70: #C99FBC;
   -md-ref-palette-tertiary80: #E6BAD7;
+  -md-ref-palette-tertiary87: #FACDEB;
   -md-ref-palette-tertiary90: #FFD7F1;
+  -md-ref-palette-tertiary92: #FFDFF3;
+  -md-ref-palette-tertiary94: #FFE7F5;
   -md-ref-palette-tertiary95: #FFECF6;
+  -md-ref-palette-tertiary96: #FFF0F7;
+  -md-ref-palette-tertiary98: #FFF7F9;
   -md-ref-palette-tertiary99: #FFFBFF;
   -md-ref-palette-tertiary100: #FFFFFF;
   -md-ref-palette-error0: #000000;
+  -md-ref-palette-error4: #280001;
+  -md-ref-palette-error5: #2D0001;
+  -md-ref-palette-error6: #310001;
   -md-ref-palette-error10: #410002;
+  -md-ref-palette-error12: #490002;
+  -md-ref-palette-error15: #540003;
+  -md-ref-palette-error17: #5C0004;
   -md-ref-palette-error20: #690005;
+  -md-ref-palette-error24: #790006;
+  -md-ref-palette-error25: #7E0007;
   -md-ref-palette-error30: #93000A;
+  -md-ref-palette-error35: #A80710;
   -md-ref-palette-error40: #BA1A1A;
   -md-ref-palette-error50: #DE3730;
   -md-ref-palette-error60: #FF5449;
   -md-ref-palette-error70: #FF897D;
   -md-ref-palette-error80: #FFB4AB;
+  -md-ref-palette-error87: #FFCFC9;
   -md-ref-palette-error90: #FFDAD6;
+  -md-ref-palette-error92: #FFE2DE;
+  -md-ref-palette-error94: #FFE9E6;
   -md-ref-palette-error95: #FFEDEA;
+  -md-ref-palette-error96: #FFF0EE;
+  -md-ref-palette-error98: #FFF8F7;
   -md-ref-palette-error99: #FFFBFF;
   -md-ref-palette-error100: #FFFFFF;
   -md-ref-palette-neutral0: #000000;
-  -md-ref-palette-neutral4: #0E0E11;
-  -md-ref-palette-neutral6: #131316;
-  -md-ref-palette-neutral10: #1B1B1F;
-  -md-ref-palette-neutral12: #1F1F23;
-  -md-ref-palette-neutral17: #2A2A2D;
-  -md-ref-palette-neutral20: #303034;
-  -md-ref-palette-neutral22: #353438;
-  -md-ref-palette-neutral24: #39393C;
-  -md-ref-palette-neutral30: #47464A;
-  -md-ref-palette-neutral40: #5F5E62;
-  -md-ref-palette-neutral50: #78767A;
-  -md-ref-palette-neutral60: #929094;
-  -md-ref-palette-neutral70: #ACAAAF;
-  -md-ref-palette-neutral80: #C8C5CA;
-  -md-ref-palette-neutral87: #DCD9DE;
-  -md-ref-palette-neutral90: #E4E1E6;
-  -md-ref-palette-neutral92: #EAE7EC;
-  -md-ref-palette-neutral94: #F0EDF1;
-  -md-ref-palette-neutral95: #F3F0F4;
-  -md-ref-palette-neutral96: #F6F2F7;
-  -md-ref-palette-neutral98: #FBF8FD;
+  -md-ref-palette-neutral4: #0D0E13;
+  -md-ref-palette-neutral5: #101116;
+  -md-ref-palette-neutral6: #121318;
+  -md-ref-palette-neutral10: #1B1B21;
+  -md-ref-palette-neutral12: #1F1F25;
+  -md-ref-palette-neutral15: #25252B;
+  -md-ref-palette-neutral17: #29292F;
+  -md-ref-palette-neutral20: #303036;
+  -md-ref-palette-neutral24: #39393F;
+  -md-ref-palette-neutral25: #3B3B41;
+  -md-ref-palette-neutral30: #46464C;
+  -md-ref-palette-neutral35: #525258;
+  -md-ref-palette-neutral40: #5E5E64;
+  -md-ref-palette-neutral50: #77767D;
+  -md-ref-palette-neutral60: #919097;
+  -md-ref-palette-neutral70: #ACAAB1;
+  -md-ref-palette-neutral80: #C7C5CD;
+  -md-ref-palette-neutral87: #DBD9E0;
+  -md-ref-palette-neutral90: #E4E1E9;
+  -md-ref-palette-neutral92: #E9E7EF;
+  -md-ref-palette-neutral94: #EFEDF4;
+  -md-ref-palette-neutral95: #F2EFF7;
+  -md-ref-palette-neutral96: #F5F2FA;
+  -md-ref-palette-neutral98: #FBF8FF;
   -md-ref-palette-neutral99: #FEFBFF;
   -md-ref-palette-neutral100: #FFFFFF;
   -md-ref-palette-neutral-variant0: #000000;
+  -md-ref-palette-neutral-variant4: #0D0E15;
+  -md-ref-palette-neutral-variant5: #0F1018;
+  -md-ref-palette-neutral-variant6: #12131A;
   -md-ref-palette-neutral-variant10: #1A1B23;
+  -md-ref-palette-neutral-variant12: #1E1F27;
+  -md-ref-palette-neutral-variant15: #24252D;
+  -md-ref-palette-neutral-variant17: #292931;
   -md-ref-palette-neutral-variant20: #2F3038;
+  -md-ref-palette-neutral-variant24: #383941;
+  -md-ref-palette-neutral-variant25: #3A3B43;
   -md-ref-palette-neutral-variant30: #46464F;
+  -md-ref-palette-neutral-variant35: #51525B;
   -md-ref-palette-neutral-variant40: #5D5E67;
   -md-ref-palette-neutral-variant50: #767680;
   -md-ref-palette-neutral-variant60: #90909A;
   -md-ref-palette-neutral-variant70: #ABAAB4;
   -md-ref-palette-neutral-variant80: #C7C5D0;
+  -md-ref-palette-neutral-variant87: #DAD9E4;
   -md-ref-palette-neutral-variant90: #E3E1EC;
+  -md-ref-palette-neutral-variant92: #E9E7F2;
+  -md-ref-palette-neutral-variant94: #EEEDF8;
   -md-ref-palette-neutral-variant95: #F1EFFA;
+  -md-ref-palette-neutral-variant96: #F4F2FD;
+  -md-ref-palette-neutral-variant98: #FBF8FF;
   -md-ref-palette-neutral-variant99: #FEFBFF;
   -md-ref-palette-neutral-variant100: #FFFFFF;
   /*! Scheme */
   -md-sys-color-primary: #BAC3FF;
-  -md-sys-color-primary-container: #293CA0;
-  -md-sys-color-on-primary: #08218A;
+  -md-sys-color-primary-container: #394379;
+  -md-sys-color-on-primary: #222C61;
   -md-sys-color-on-primary-container: #DEE0FF;
-  -md-sys-color-inverse-primary: #4355B9;
+  -md-sys-color-inverse-primary: #515B92;
   -md-sys-color-secondary: #C3C5DD;
   -md-sys-color-secondary-container: #434659;
   -md-sys-color-on-secondary: #2D2F42;
@@ -108,22 +181,22 @@
   -md-sys-color-error-container: #93000A;
   -md-sys-color-on-error: #690005;
   -md-sys-color-on-error-container: #FFDAD6;
-  -md-sys-color-surface: #131316;
-  -md-sys-color-surface-dim: #131316;
-  -md-sys-color-surface-bright: #39393C;
-  -md-sys-color-surface-container-lowest: #0E0E11;
-  -md-sys-color-surface-container-low: #1B1B1F;
-  -md-sys-color-surface-container: #1F1F23;
-  -md-sys-color-surface-container-high: #2A2A2D;
-  -md-sys-color-surface-container-highest: #353438;
+  -md-sys-color-surface: #121318;
+  -md-sys-color-surface-dim: #121318;
+  -md-sys-color-surface-bright: #39393F;
+  -md-sys-color-surface-container-lowest: #0D0E13;
+  -md-sys-color-surface-container-low: #1B1B21;
+  -md-sys-color-surface-container: #1F1F25;
+  -md-sys-color-surface-container-high: #29292F;
+  -md-sys-color-surface-container-highest: #39393F;
   -md-sys-color-surface-variant: #46464F;
-  -md-sys-color-on-surface: #E4E1E6;
-  -md-sys-color-on-surface-variant: #C7C5D0;
-  -md-sys-color-inverse-surface: #E4E1E6;
-  -md-sys-color-inverse-on-surface: #303034;
+  -md-sys-color-on-surface: #E4E1E9;
+  -md-sys-color-on-surface-variant: #E3E1EC;
+  -md-sys-color-inverse-surface: #E4E1E9;
+  -md-sys-color-inverse-on-surface: #303036;
   -md-sys-color-surface-tint: #BAC3FF;
-  -md-sys-color-background: #131316;
-  -md-sys-color-on-background: #E4E1E6;
+  -md-sys-color-background: #121318;
+  -md-sys-color-on-background: #E4E1E9;
   -md-sys-color-outline: #90909A;
   -md-sys-color-outline-variant: #46464F;
   -md-sys-color-shadow: #000000;
@@ -171,8 +244,8 @@
 .mfx-button.filled:disabled,
 .mfx-button.outlined:disabled,
 .mfx-button.text:disabled {
-  -fx-background-color: rgba(228, 225, 230, 0.12);
-  -fx-text-fill: #E4E1E6
+  -fx-background-color: rgba(228, 225, 233, 0.12);
+  -fx-text-fill: #E4E1E9
 }
 
 .mfx-button:disabled > .label {
@@ -180,7 +253,7 @@
 }
 
 .mfx-button:disabled > .label > .mfx-font-icon {
-  -mfx-color: #E4E1E6
+  -mfx-color: #E4E1E9
 }
 
 .mfx-button:disabled > .surface {
@@ -190,7 +263,7 @@
  * Elevated Buttons
  ****************************************************************************************************/
 .mfx-button.elevated {
-  -fx-background-color: #1B1B1F;
+  -fx-background-color: #1B1B21;
   -fx-text-fill: #BAC3FF
 }
 
@@ -218,11 +291,11 @@
  ****************************************************************************************************/
 .mfx-button.filled {
   -fx-background-color: #BAC3FF;
-  -fx-text-fill: #08218A
+  -fx-text-fill: #222C61
 }
 
 .mfx-button.filled > .label > .mfx-font-icon {
-  -mfx-color: #08218A
+  -mfx-color: #222C61
 }
 
 .mfx-button.filled > .surface {
@@ -230,11 +303,11 @@
 }
 
 .mfx-button.filled > .surface > .bg {
-  -fx-background-color: #08218A
+  -fx-background-color: #222C61
 }
 
 .mfx-button.filled > .surface > .mfx-ripple-generator {
-  -mfx-ripple-color: rgba(8, 33, 138, 0.1)
+  -mfx-ripple-color: rgba(34, 44, 97, 0.1)
 }
 
 .mfx-button.filled:hover > .surface {
@@ -335,7 +408,7 @@
   -fx-font-family: "Roboto Medium";
   -fx-font-weight: 500;
   -fx-font-size: 14px;
-  -fx-text-fill: #E4E1E6
+  -fx-text-fill: #E4E1E9
 }
 
 .mfx-checkbox > .mfx-icon-wrapper {
@@ -344,7 +417,7 @@
   -fx-border-width: 2px;
   -mfx-size: 18px;
   -mfx-animation-preset: CLIP;
-  -fx-border-color: #C7C5D0
+  -fx-border-color: #E3E1EC
 }
 
 .mfx-checkbox > .mfx-icon-wrapper > .mfx-font-icon {
@@ -379,7 +452,7 @@
 .mfx-checkbox:indeterminate > .mfx-icon-wrapper > .mfx-font-icon,
 .mfx-checkbox:selected > .mfx-icon-wrapper > .mfx-font-icon {
   visibility: visible;
-  -mfx-color: #08218A
+  -mfx-color: #222C61
 }
 
 .mfx-checkbox:error > .mfx-icon-wrapper {
@@ -404,13 +477,13 @@
 }
 
 .mfx-checkbox:disabled > .mfx-icon-wrapper {
-  -fx-border-color: rgba(228, 225, 230, 0.38);
+  -fx-border-color: rgba(228, 225, 233, 0.38);
   -fx-background-color: transparent
 }
 
 .mfx-checkbox:indeterminate:disabled > .mfx-icon-wrapper,
 .mfx-checkbox:selected:disabled > .mfx-icon-wrapper {
-  -fx-background-color: rgba(228, 225, 230, 0.38)
+  -fx-background-color: rgba(228, 225, 233, 0.38)
 }
 /*!***************************************************************************************************
  * FABs Shared Properties
@@ -484,7 +557,7 @@
  * Primary FABs
  ****************************************************************************************************/
 .mfx-button.fab {
-  -fx-background-color: #293CA0;
+  -fx-background-color: #394379;
   -fx-text-fill: #DEE0FF
 }
 
@@ -541,7 +614,7 @@
  * Surface FABs
  ****************************************************************************************************/
 .mfx-button.fab.surface {
-  -fx-background-color: #2A2A2D;
+  -fx-background-color: #29292F;
   -fx-text-fill: #BAC3FF
 }
 
@@ -558,7 +631,7 @@
 }
 
 .mfx-button.fab.surface.lowered {
-  -fx-background-color: #1B1B1F;
+  -fx-background-color: #1B1B21;
   -fx-text-fill: #BAC3FF
 }
 /*!**************************************************************************************************
@@ -591,14 +664,14 @@
 .mfx-icon-button.filled:disabled,
 .mfx-icon-button.outlined:disabled,
 .mfx-icon-button:disabled {
-  -fx-background-color: rgba(228, 225, 230, 0.12)
+  -fx-background-color: rgba(228, 225, 233, 0.12)
 }
 
 .mfx-icon-button.filled-tonal:disabled > .mfx-icon-wrapper > .mfx-font-icon,
 .mfx-icon-button.filled:disabled > .mfx-icon-wrapper > .mfx-font-icon,
 .mfx-icon-button.outlined:disabled > .mfx-icon-wrapper > .mfx-font-icon,
 .mfx-icon-button:disabled > .mfx-icon-wrapper > .mfx-font-icon {
-  -mfx-color: #E4E1E6;
+  -mfx-color: #E4E1E9;
   -fx-opacity: 38%
 }
 /*!***************************************************************************************************
@@ -609,15 +682,15 @@
 }
 
 .mfx-icon-button > .mfx-icon-wrapper > .mfx-font-icon {
-  -mfx-color: #C7C5D0
+  -mfx-color: #E3E1EC
 }
 
 .mfx-icon-button > .surface > .bg {
-  -fx-background-color: #C7C5D0
+  -fx-background-color: #E3E1EC
 }
 
 .mfx-icon-button > .surface > .mfx-ripple-generator {
-  -mfx-ripple-color: rgba(199, 197, 208, 0.1)
+  -mfx-ripple-color: rgba(227, 225, 236, 0.1)
 }
 
 .mfx-icon-button:selectable:selected {
@@ -637,7 +710,7 @@
 }
 
 .mfx-icon-button:disabled > .mfx-icon-wrapper > .mfx-font-icon {
-  -mfx-color: #E4E1E6
+  -mfx-color: #E4E1E9
 }
 /*!***************************************************************************************************
  * Filled IconButtons
@@ -649,21 +722,21 @@
 
 .mfx-icon-button.filled > .mfx-icon-wrapper > .mfx-font-icon,
 .mfx-icon-button.filled:selectable:selected > .mfx-icon-wrapper > .mfx-font-icon {
-  -mfx-color: #08218A
+  -mfx-color: #222C61
 }
 
 .mfx-icon-button.filled > .surface > .bg,
 .mfx-icon-button.filled:selectable:selected > .surface > .bg {
-  -fx-background-color: #08218A
+  -fx-background-color: #222C61
 }
 
 .mfx-icon-button.filled > .surface > .mfx-ripple-generator,
 .mfx-icon-button.filled:selectable:selected > .surface > .mfx-ripple-generator {
-  -mfx-ripple-color: rgba(8, 33, 138, 0.1)
+  -mfx-ripple-color: rgba(34, 44, 97, 0.1)
 }
 
 .mfx-icon-button.filled:selectable {
-  -fx-background-color: #353438
+  -fx-background-color: #39393F
 }
 
 .mfx-icon-button.filled:selectable > .mfx-icon-wrapper > .mfx-font-icon {
@@ -693,19 +766,19 @@
 
 .mfx-icon-button.filled-tonal > .surface > .mfx-ripple-generator,
 .mfx-icon-button.filled-tonal:selectable:selected > .surface > .mfx-ripple-generator {
-  -mfx-ripple-color: rgba(199, 197, 208, 0.1)
+  -mfx-ripple-color: rgba(227, 225, 236, 0.1)
 }
 
 .mfx-icon-button.filled-tonal:selectable {
-  -fx-background-color: #353438
+  -fx-background-color: #39393F
 }
 
 .mfx-icon-button.filled-tonal:selectable > .mfx-icon-wrapper > .mfx-font-icon {
-  -mfx-color: #C7C5D0
+  -mfx-color: #E3E1EC
 }
 
 .mfx-icon-button.filled-tonal:selectable > .surface > .bg {
-  -fx-background-color: #C7C5D0
+  -fx-background-color: #E3E1EC
 }
 /*!***************************************************************************************************
  * Outlined IconButtons
@@ -717,28 +790,28 @@
 }
 
 .mfx-icon-button.outlined > .mfx-icon-wrapper > .mfx-font-icon {
-  -mfx-color: #C7C5D0
+  -mfx-color: #E3E1EC
 }
 
 .mfx-icon-button.outlined > .surface > .bg {
-  -fx-background-color: #C7C5D0
+  -fx-background-color: #E3E1EC
 }
 
 .mfx-icon-button.outlined > .surface > .mfx-ripple-generator {
-  -mfx-ripple-color: rgba(199, 197, 208, 0.1)
+  -mfx-ripple-color: rgba(227, 225, 236, 0.1)
 }
 
 .mfx-icon-button.outlined:selectable:selected {
-  -fx-background-color: #E4E1E6;
+  -fx-background-color: #E4E1E9;
   -fx-border-color: transparent
 }
 
 .mfx-icon-button.outlined:selectable:selected > .mfx-icon-wrapper > .mfx-font-icon {
-  -mfx-color: #303034
+  -mfx-color: #303036
 }
 
 .mfx-icon-button.outlined:selectable:selected > .surface > .bg {
-  -fx-background-color: #303034
+  -fx-background-color: #303036
 }
 /*!***************************************************************************************************
  * Circular Progress Indicators
@@ -784,19 +857,19 @@
   -fx-padding: 4px 12px 4px 12px;
   -fx-border-color: #90909A;
   -fx-background-color: transparent;
-  -fx-text-fill: #E4E1E6
+  -fx-text-fill: #E4E1E9
 }
 
 .mfx-segmented-button > .segment > .label > .mfx-font-icon {
-  -mfx-color: #E4E1E6
+  -mfx-color: #E4E1E9
 }
 
 .mfx-segmented-button > .segment > .surface > .bg {
-  -fx-background-color: #E4E1E6
+  -fx-background-color: #E4E1E9
 }
 
 .mfx-segmented-button > .segment > .surface > .mfx-ripple-generator {
-  -mfx-ripple-color: rgba(228, 225, 230, 0.1)
+  -mfx-ripple-color: rgba(228, 225, 233, 0.1)
 }
 
 .mfx-segmented-button > .segment:first {
@@ -833,7 +906,7 @@
 
 .mfx-segmented-button > .segment:disabled {
   -fx-border-color: rgba(144, 144, 154, 0.12);
-  -fx-text-fill: rgba(228, 225, 230, 0.38)
+  -fx-text-fill: rgba(228, 225, 233, 0.38)
 }
 
 .mfx-segmented-button > .segment:disabled > .label {
@@ -841,7 +914,7 @@
 }
 
 .mfx-segmented-button > .segment:disabled > .label > .mfx-font-icon {
-  -mfx-color: rgba(228, 225, 230, 0.38)
+  -mfx-color: rgba(228, 225, 233, 0.38)
 }
 
 .mfx-segmented-button > .segment:selected:disabled {
@@ -861,7 +934,7 @@
 .mfx-tooltip .content > .plain {
   -fx-min-height: 24px;
   -fx-padding: 8px;
-  -fx-background-color: #E4E1E6;
+  -fx-background-color: #E4E1E9;
   -fx-background-radius: 4px
 }
 
@@ -872,7 +945,7 @@
   -fx-font-size: 12px;
   -fx-wrap-text: true;
   -fx-wrapping-width: 200px;
-  -fx-text-fill: #303034
+  -fx-text-fill: #303036
 }
 
 .mfx-popup .content > .rich,
@@ -880,7 +953,7 @@
   -fx-padding: 12px 16px 8px 16px;
   -fx-spacing: 8px;
   -mfx-elevation: LEVEL2;
-  -fx-background-color: #1F1F23;
+  -fx-background-color: #1F1F25;
   -fx-background-radius: 12px
 }
 
@@ -889,7 +962,7 @@
   -fx-font-family: "Roboto Medium";
   -fx-font-weight: 500;
   -fx-font-size: 14px;
-  -fx-text-fill: #C7C5D0
+  -fx-text-fill: #E3E1EC
 }
 
 .mfx-popup .content > .rich > .label,
@@ -898,7 +971,7 @@
   -fx-font-weight: 400;
   -fx-font-size: 14px;
   -fx-wrapping-width: 300px;
-  -fx-text-fill: #C7C5D0
+  -fx-text-fill: #E3E1EC
 }
 
 .mfx-popup .content > .rich > .actions,
