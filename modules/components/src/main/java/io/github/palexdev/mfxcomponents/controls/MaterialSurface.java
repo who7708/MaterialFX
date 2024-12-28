@@ -18,9 +18,7 @@
 
 package io.github.palexdev.mfxcomponents.controls;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -104,7 +102,7 @@ public class MaterialSurface extends Region implements MFXStyleable {
     private Region owner;
     private MFXRippleGenerator rg;
     private InvalidationListener stateListener;
-    private final List<State> states = new ArrayList<>(State.DEFAULTS);
+    private final Queue<State> states = new PriorityQueue<>(Comparator.comparingInt(State::getPriority));
 
     protected final Region bg;
     protected Animation animation;
@@ -115,6 +113,7 @@ public class MaterialSurface extends Region implements MFXStyleable {
     //================================================================================
     public MaterialSurface(Region owner) {
         this.owner = owner;
+        states.addAll(State.DEFAULTS);
 
         bg = new Region();
         bg.getStyleClass().add("bg");
@@ -505,7 +504,7 @@ public class MaterialSurface extends Region implements MFXStyleable {
         return rg;
     }
 
-    public List<State> getStates() {
+    public Queue<State> getStates() {
         return states;
     }
 
@@ -535,13 +534,14 @@ public class MaterialSurface extends Region implements MFXStyleable {
         /**
          * Special state whose predicate is always {@code true}. Used when none of the other states is active. Opacity is 0.0.
          */
-        public static final State FALLBACK = State.of(n -> true, s -> 0.0);
+        public static final State FALLBACK = State.of(Integer.MIN_VALUE, n -> true, s -> 0.0);
 
         /**
          * This state is activated when the node is disabled or the {@link PseudoClass} ':disabled' is active.
          * The opacity is retrieved from {@link MaterialSurface#disabledOpacityProperty()}.
          */
         public static final State DISABLED = State.of(
+            0,
             n -> n.isDisabled() || isPseudoActive(n, PseudoClasses.DISABLED),
             MaterialSurface::getDisabledOpacity
         );
@@ -551,6 +551,7 @@ public class MaterialSurface extends Region implements MFXStyleable {
          * The opacity is retrieved from {@link MaterialSurface#pressedOpacityProperty()}.
          */
         public static final State PRESSED = State.of(
+            1,
             n -> n.isPressed() || isPseudoActive(n, PseudoClasses.PRESSED),
             MaterialSurface::getPressedOpacity
         );
@@ -561,6 +562,7 @@ public class MaterialSurface extends Region implements MFXStyleable {
          * The opacity is retrieved from {@link MaterialSurface#focusedOpacityProperty()}.
          */
         public static final State FOCUSED = State.of(
+            2,
             n -> n.isFocused() || n.isFocusWithin() || isPseudoActive(n, PseudoClasses.FOCUSED, PseudoClasses.FOCUS_WITHIN),
             MaterialSurface::getFocusedOpacity
         );
@@ -570,6 +572,7 @@ public class MaterialSurface extends Region implements MFXStyleable {
          * The opacity is retrieved from {@link MaterialSurface#hoverOpacityProperty()}.
          */
         public static final State HOVER = State.of(
+            3,
             n -> n.isHover() || isPseudoActive(n, PseudoClasses.HOVER),
             MaterialSurface::getHoverOpacity
         );
@@ -583,16 +586,18 @@ public class MaterialSurface extends Region implements MFXStyleable {
         //================================================================================
         // Properties
         //================================================================================
+        private final int priority;
         private final Predicate<Node> condition;
         private final Function<MaterialSurface, Double> opacityFunction;
 
-        public State(Predicate<Node> condition, Function<MaterialSurface, Double> opacityFunction) {
+        public State(int priority, Predicate<Node> condition, Function<MaterialSurface, Double> opacityFunction) {
+            this.priority = priority;
             this.condition = condition;
             this.opacityFunction = opacityFunction;
         }
 
-        public static State of(Predicate<Node> condition, Function<MaterialSurface, Double> opacityFunction) {
-            return new State(condition, opacityFunction);
+        public static State of(int priority, Predicate<Node> condition, Function<MaterialSurface, Double> opacityFunction) {
+            return new State(priority, condition, opacityFunction);
         }
 
         //================================================================================
@@ -642,6 +647,17 @@ public class MaterialSurface extends Region implements MFXStyleable {
         //================================================================================
         // Getters
         //================================================================================
+
+        /**
+         * This parameter determines which state wins over another.
+         * <p>
+         * In {@link MaterialSurface} states are stored in a {@link PriorityQueue} for two reasons:
+         * <p> 1) To clearly state that there's a hierarchy for states
+         * <p> 2) To more easily add custom states
+         */
+        public int getPriority() {
+            return priority;
+        }
 
         /**
          * @return the {@link Predicate} used to check whether the state is active on a given node
