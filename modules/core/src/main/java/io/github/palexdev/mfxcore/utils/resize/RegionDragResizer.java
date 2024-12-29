@@ -18,13 +18,13 @@
 
 package io.github.palexdev.mfxcore.utils.resize;
 
+import java.util.function.Function;
+
 import io.github.palexdev.mfxcore.enums.Zone;
 import io.github.palexdev.mfxcore.utils.resize.base.AbstractDragResizer;
 import io.github.palexdev.mfxcore.utils.resize.base.DragResizeHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
-
-import java.util.function.Function;
 
 public class RegionDragResizer extends AbstractDragResizer<Region> {
 	private Function<Region, Double> minWidthFunction = r -> 0.0;
@@ -76,7 +76,7 @@ public class RegionDragResizer extends AbstractDragResizer<Region> {
 		}
 
 		double minW = minWidthFunction.apply(node);
-		double minH = minWidthFunction.apply(node);
+		double minH = minHeightFunction.apply(node);
 
 		if (newW < minW) {
 			if (Zone.isLeft(draggedZone)) {
