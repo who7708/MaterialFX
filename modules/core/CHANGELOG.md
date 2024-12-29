@@ -16,6 +16,16 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 [//]: ##[Unreleased]
 
+## [11.11.2] - 29-12-2024
+
+### Changed
+
+- StageResizer: by default do not allow resize if the Stage is not resizable
+
+### Fixed
+
+- RegionDragResizer: use minHeightFunction for height (was using minWidthFunction)
+
 ## [11.11.1] - 04-11-2024
 
 ### Fixed
