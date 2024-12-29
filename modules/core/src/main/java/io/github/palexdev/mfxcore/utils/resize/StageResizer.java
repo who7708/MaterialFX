@@ -28,12 +28,17 @@ import javafx.stage.Stage;
  * (given that the root of the content is a {@link Region}).
  */
 public class StageResizer extends RegionDragResizer {
+	//================================================================================
+	// Properties
+	//================================================================================
+	private Stage stage;
 
 	//================================================================================
 	// Constructors
 	//================================================================================
 	public StageResizer(Region node, Stage stage) {
 		super(node);
+		this.stage = stage;
 		setResizeHandler((n, x, y, w, h) -> resizeStage(stage, w, h));
 	}
 
@@ -41,8 +46,13 @@ public class StageResizer extends RegionDragResizer {
 	// Methods
 	//================================================================================
 	protected void resizeStage(Stage stage, double w, double h) {
+		if (!canResize()) return;
 		stage.setWidth(w);
 		stage.setHeight(h);
+	}
+
+	protected boolean canResize() {
+		return stage.isResizable();
 	}
 
 	//================================================================================
@@ -64,5 +74,20 @@ public class StageResizer extends RegionDragResizer {
 	protected void handleDragged(MouseEvent event) {
 		if (node.getCursor() == Cursor.MOVE) return;
 		super.handleDragged(event);
+	}
+
+	@Override
+	protected void handleMoved(MouseEvent event) {
+		if (!canResize()) {
+			node.setCursor(Cursor.DEFAULT);
+			return;
+		}
+		super.handleMoved(event);
+	}
+
+	@Override
+	public void dispose() {
+		stage = null;
+		super.dispose();
 	}
 }
