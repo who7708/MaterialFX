@@ -46,8 +46,8 @@ public class RegionDragResizer extends AbstractDragResizer<Region> {
 	protected void handleDragged(MouseEvent event) {
 		if (draggedZone == Zone.NONE) return;
 
-		double currX = event.getSceneX();
-		double currY = event.getSceneY();
+		double currX = eventX(event);
+		double currY = eventY(event);
 		double deltaX = currX - clickedX;
 		double deltaY = currY - clickedY;
 		double widthDelta;

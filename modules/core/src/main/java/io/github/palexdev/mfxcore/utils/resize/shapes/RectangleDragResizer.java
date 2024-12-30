@@ -18,13 +18,13 @@
 
 package io.github.palexdev.mfxcore.utils.resize.shapes;
 
+import java.util.function.Function;
+
 import io.github.palexdev.mfxcore.enums.Zone;
 import io.github.palexdev.mfxcore.utils.resize.base.AbstractDragResizer;
 import io.github.palexdev.mfxcore.utils.resize.base.DragResizeHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
-
-import java.util.function.Function;
 
 public class RectangleDragResizer extends AbstractDragResizer<Rectangle> {
 	private Function<Rectangle, Double> minWidthFunction = r -> 0.0;
@@ -47,8 +47,8 @@ public class RectangleDragResizer extends AbstractDragResizer<Rectangle> {
 	protected void handleDragged(MouseEvent event) {
 		if (draggedZone == Zone.NONE) return;
 
-		double currX = event.getSceneX();
-		double currY = event.getSceneY();
+		double currX = eventX(event);
+		double currY = eventY(event);
 		double deltaX = currX - clickedX;
 		double deltaY = currY - clickedY;
 		double widthDelta;
@@ -77,7 +77,7 @@ public class RectangleDragResizer extends AbstractDragResizer<Rectangle> {
 		}
 
 		double minW = minWidthFunction.apply(node);
-		double minH = minWidthFunction.apply(node);
+		double minH = minHeightFunction.apply(node);
 
 		if (newW < minW) {
 			if (Zone.isLeft(draggedZone)) {

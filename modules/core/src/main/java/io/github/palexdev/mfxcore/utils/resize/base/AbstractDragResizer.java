@@ -18,6 +18,9 @@
 
 package io.github.palexdev.mfxcore.utils.resize.base;
 
+import java.util.Arrays;
+import java.util.EnumSet;
+
 import io.github.palexdev.mfxcore.enums.Zone;
 import io.github.palexdev.mfxcore.utils.resize.RegionDragResizer;
 import io.github.palexdev.mfxcore.utils.resize.shapes.CircleDragResizer;
@@ -33,9 +36,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-
-import java.util.Arrays;
-import java.util.EnumSet;
 
 // TODO documentation
 public abstract class AbstractDragResizer<T extends Node> {
@@ -110,8 +110,8 @@ public abstract class AbstractDragResizer<T extends Node> {
 
 	protected void handlePressed(MouseEvent event) {
 		node.requestFocus();
-		clickedX = event.getSceneX();
-		clickedY = event.getSceneY();
+		clickedX = eventX(event);
+		clickedY = eventY(event);
 		nodeX = nodeX();
 		nodeY = nodeY();
 		nodeW = nodeW();
@@ -211,6 +211,14 @@ public abstract class AbstractDragResizer<T extends Node> {
 
 	protected boolean intersect(double side, double point) {
 		return side + margin > point && side - margin < point;
+	}
+
+	protected double eventX(MouseEvent event) {
+		return event.getSceneX();
+	}
+
+	protected double eventY(MouseEvent event) {
+		return event.getSceneY();
 	}
 
 	protected double nodeX() {

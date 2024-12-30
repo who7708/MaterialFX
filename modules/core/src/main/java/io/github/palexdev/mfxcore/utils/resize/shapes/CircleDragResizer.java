@@ -18,6 +18,8 @@
 
 package io.github.palexdev.mfxcore.utils.resize.shapes;
 
+import java.util.function.Function;
+
 import io.github.palexdev.mfxcore.enums.Zone;
 import io.github.palexdev.mfxcore.utils.resize.base.AbstractDragResizer;
 import io.github.palexdev.mfxcore.utils.resize.base.DragResizeHandler;
@@ -25,8 +27,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
-
-import java.util.function.Function;
 
 public class CircleDragResizer extends AbstractDragResizer<Circle> {
 	private Function<Circle, Double> minRadiusFunction = c -> 0.0;
@@ -49,8 +49,8 @@ public class CircleDragResizer extends AbstractDragResizer<Circle> {
 	protected void handleDragged(MouseEvent event) {
 		if (draggedZone == Zone.NONE) return;
 
-		double currX = event.getSceneX();
-		double currY = event.getSceneY();
+		double currX = eventX(event);
+		double currY = eventY(event);
 		double deltaX = currX - clickedX;
 		double deltaY = currY - clickedY;
 		double deltaRad = 0;
