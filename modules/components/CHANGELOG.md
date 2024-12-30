@@ -16,6 +16,12 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 [//]: ##[Unreleased]
 
+## [11.16.10] - 30-12-2024
+
+### Fixed
+
+- Fix MFXSegmentedButton ignoring density because of wrong minHeight computation
+
 ## [11.26.9] - 28-12-2024
 
 ### Changed

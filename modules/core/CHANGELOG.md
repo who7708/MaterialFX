@@ -16,6 +16,17 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 [//]: ##[Unreleased]
 
+## [11.11.3] - 30-12-2024
+
+### Changed
+
+- Resizers: allow implementations to easily decide which mouse coordinates to use
+- StageResizer: move the stage when resizing from top or left
+
+### Fixed
+
+- CSSFragment fix oversight
+
 ## [11.11.2] - 29-12-2024
 
 ### Changed
