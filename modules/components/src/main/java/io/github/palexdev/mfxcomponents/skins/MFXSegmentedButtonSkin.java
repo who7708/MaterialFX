@@ -1,5 +1,11 @@
 package io.github.palexdev.mfxcomponents.skins;
 
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
+
 import io.github.palexdev.mfxcomponents.behaviors.MFXSegmentedButtonBehavior;
 import io.github.palexdev.mfxcomponents.behaviors.MFXSelectableBehaviorBase;
 import io.github.palexdev.mfxcomponents.controls.base.MFXSelectable;
@@ -16,12 +22,6 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.control.ContentDisplay;
-
-import java.lang.ref.Reference;
-import java.lang.ref.WeakReference;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Supplier;
 
 /**
  * Default skin used by {@link MFXSegmentedButton}. Extends {@link MFXSkinBase} as this is nothing more than a simple
@@ -125,7 +125,7 @@ public class MFXSegmentedButtonSkin extends MFXSkinBase<MFXSegmentedButton, MFXS
         MFXSegmentedButton button = getSkinnable();
         int density = button.getDensity();
         double minH = MIN_HEIGHT - (4.0 * density);
-        return Math.max(minH, super.computeMinHeight(width, topInset, rightInset, bottomInset, leftInset));
+        return snappedTopInset() + snapSizeY(minH) + snappedBottomInset();
     }
 
     @Override
