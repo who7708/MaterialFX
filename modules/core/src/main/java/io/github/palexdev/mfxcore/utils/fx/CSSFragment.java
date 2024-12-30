@@ -724,7 +724,7 @@ public class CSSFragment {
         }
 
         public Builder fontStyle(FontPosture val) {
-            style("-prop: " + val);
+            style("-fx-font-style: " + val);
             return this;
         }
 
