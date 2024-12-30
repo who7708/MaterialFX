@@ -39,14 +39,16 @@ public class StageResizer extends RegionDragResizer {
 	public StageResizer(Region node, Stage stage) {
 		super(node);
 		this.stage = stage;
-		setResizeHandler((n, x, y, w, h) -> resizeStage(stage, w, h));
+		setResizeHandler((n, x, y, w, h) -> resizeRelocateStage(stage, x, y, w, h));
 	}
 
 	//================================================================================
 	// Methods
 	//================================================================================
-	protected void resizeStage(Stage stage, double w, double h) {
+	protected void resizeRelocateStage(Stage stage, double x, double y, double w, double h) {
 		if (!canResize()) return;
+		stage.setX(x);
+		stage.setY(y);
 		stage.setWidth(w);
 		stage.setHeight(h);
 	}
@@ -61,8 +63,8 @@ public class StageResizer extends RegionDragResizer {
 	@Override
 	protected void handlePressed(MouseEvent event) {
 		node.requestFocus();
-		clickedX = event.getSceneX();
-		clickedY = event.getSceneY();
+		clickedX = eventX(event);
+		clickedY = eventY(event);
 		nodeX = nodeX();
 		nodeY = nodeY();
 		nodeW = nodeW();
@@ -83,6 +85,26 @@ public class StageResizer extends RegionDragResizer {
 			return;
 		}
 		super.handleMoved(event);
+	}
+
+	@Override
+	protected double eventX(MouseEvent event) {
+		return event.getScreenX();
+	}
+
+	@Override
+	protected double eventY(MouseEvent event) {
+		return event.getScreenY();
+	}
+
+	@Override
+	protected double nodeX() {
+		return stage.getX();
+	}
+
+	@Override
+	protected double nodeY() {
+		return stage.getY();
 	}
 
 	@Override
