@@ -17,22 +17,26 @@
  */
 package io.github.palexdev.materialfx.filter;
 
-import io.github.palexdev.materialfx.beans.BiPredicateBean;
 import java.math.BigDecimal;
 import java.util.List;
-import static org.junit.Assert.*;
-import org.junit.Test;
+
+import io.github.palexdev.materialfx.beans.BiPredicateBean;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BigDecimalFilterTest {
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void constructor() {
         final String NAME1 = "amount", NAME2 = "balance";
 
         BigDecimalFilter<Account> f = new BigDecimalFilter<>("amount", Account::balance);
-        assertEquals(NAME1, f.name()); assertNotNull(f.getExtractor());
+        assertEquals(NAME1, f.name());
+        assertNotNull(f.getExtractor());
         f = new BigDecimalFilter<>("amount", null);
-        assertEquals(NAME1, f.name()); assertNull(f.getExtractor());
+        assertEquals(NAME1, f.name());
+        assertNull(f.getExtractor());
     }
 
     @Test
@@ -49,7 +53,8 @@ public class BigDecimalFilterTest {
         assertEquals("lesser or equal to", predicates.get(5).name());
     }
 
-    @Test public void getValue() {
+    @Test
+    public void getValue() {
         final String D1 = "0.0000000000001", D2 = "123456789012345";
 
         BigDecimalFilter<Account> f = new BigDecimalFilter<>("amount", Account::balance);

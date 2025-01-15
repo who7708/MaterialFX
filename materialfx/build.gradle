@@ -1,10 +1,9 @@
-import org.apache.tools.ant.taskdefs.condition.Os
+import com.vanniktech.maven.publish.SonatypeHost
 
 plugins {
     id 'java-library'
-    id 'biz.aQute.bnd.builder' version "$bnd"
     id 'com.vanniktech.maven.publish' version "$mavenPublish"
-    id 'com.github.johnrengelman.shadow' version "$shadowJarPlugin"
+    id 'com.gradleup.shadow' version "$shadowJarPlugin"
 }
 
 // Cross-platform scripts
@@ -19,54 +18,31 @@ repositories {
     }
 }
 
-compileJava {
+java {
     sourceCompatibility = "$jdk"
     targetCompatibility = "$jdk"
+    withJavadocJar()
+    withSourcesJar()
+    tasks.withType(Jar).each { it.archiveBaseName.set("materialfx") }
 }
 
 dependencies {
-    testImplementation "org.junit.jupiter:junit-jupiter-api:$junit"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit"
-
     api "io.github.palexdev:mfxcore:$mfxcore"
     api "io.github.palexdev:mfxresources:$mfxresources"
     api "io.github.palexdev:virtualizedfx:$vfx"
+
+    testImplementation platform("org.junit:junit-bom:$junit")
+    testImplementation 'org.junit.jupiter:junit-jupiter'
 }
 
 javafx {
-    configuration = 'compileOnly'
-}
-
-javadoc {
-    excludes = ['**/*.html', 'META-INF/**']
-
-    options.use = true
-    options.splitIndex = true
-    options.encoding = 'UTF-8'
-    options.author = true
-    options.version = true
-    options.windowTitle = "$project.name $project.version API"
-    options.docTitle = "$project.name $project.version API"
-    options.links = ['https://docs.oracle.com/en/java/javase/11/docs/api',
-                     'https://openjfx.io/javadoc/17']
-}
-
-tasks.register('javadocJar', Jar) {
-    dependsOn javadoc
-    archiveClassifier.set('javadoc')
-    from javadoc.destinationDir
-}
-
-tasks.register('sourcesJarBuild', Jar) {
-    dependsOn classes
-    archiveClassifier.set('sources')
-    from sourceSets.main.allSource
+    modules = ['javafx.controls', 'javafx.fxml']
+    configurations = ["compileOnly", "testImplementation"]
 }
 
 artifacts {
-    archives javadocJar
-    archives sourcesJarBuild
     archives jar
+    archives shadowJar
 }
 
 jar {
@@ -89,27 +65,7 @@ shadowJar {
     }
 }
 
-tasks.register('copyJar', Copy) {
-    from jar
-    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-        into System.getenv("APPDATA") + '/Scene Builder/Library'
-    } else if (Os.isFamily(Os.FAMILY_MAC)) {
-        into System.getProperty("user.home") + '/Library/Application Support' + '/Scene Builder/Library'
-    } else if (Os.isFamily(Os.FAMILY_UNIX)) {
-        into System.getProperty("user.home") + '/.scenebuilder/Library'
-    }
-}
-
-tasks.register('removeBnd', Delete) {
-    delete fileTree(project.buildDir) {
-        include '**/*.bnd'
-    }
-}
-
-build {
-    dependsOn shadowJar, copyJar, removeBnd
-}
-
-mavenPublish {
-    sonatypeHost = "S01"
+mavenPublishing {
+    publishToMavenCentral(SonatypeHost.S01)
+    signAllPublications()
 }

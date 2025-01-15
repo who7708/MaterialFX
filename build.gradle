@@ -15,10 +15,18 @@ repositories {
 }
 
 subprojects {
+    apply plugin: 'java-library'
     apply plugin: 'org.openjfx.javafxplugin'
 
     javafx {
         version = "$jfx"
-        modules = ['javafx.controls', 'javafx.fxml', 'javafx.media', 'javafx.swing', 'javafx.web']
+    }
+
+    test {
+        // Because the new TestFX is garbage :)
+        jvmArgs += [
+                '--add-opens', 'javafx.graphics/com.sun.javafx.application=ALL-UNNAMED'
+        ]
+        useJUnitPlatform()
     }
 }

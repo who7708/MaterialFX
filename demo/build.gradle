@@ -1,5 +1,7 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 
+import java.nio.file.Paths
+
 plugins {
     id 'application'
     id 'org.beryx.jlink' version "$jlink"
@@ -13,49 +15,43 @@ repositories {
     }
 }
 
+compileJava {
+    sourceCompatibility = "$jdk"
+    targetCompatibility = "$jdk"
+}
+
 dependencies {
+    implementation project(':materialfx')
+
+    implementation("io.github.palexdev:scenicview:$scenicView") {
+        exclude group: 'org.openjfx'
+    }
+    implementation("fr.brouillard.oss:cssfx:$cssfx") { exclude group: 'org.openjfx' }
+    implementation "org.kordamp.ikonli:ikonli-core:$ikonli"
+    implementation "org.kordamp.ikonli:ikonli-javafx:$ikonli"
+    implementation "org.kordamp.ikonli:ikonli-fontawesome5-pack:$ikonli"
+    implementation "io.github.palexdev:virtualizedfx:$vfx"
+
     testImplementation "org.testfx:testfx-core:$testfx"
     testImplementation "org.testfx:testfx-junit5:$testfx"
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit"
     testImplementation "org.junit.platform:junit-platform-suite-api:$junitSuite"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit"
-
-    implementation "io.github.palexdev:scenicview:$scenicView"
-    implementation("fr.brouillard.oss:cssfx:$cssfx") { exclude group: 'org.openjfx' }
-    implementation "org.kordamp.ikonli:ikonli-core:$ikonli"
-    implementation "org.kordamp.ikonli:ikonli-javafx:$ikonli"
-    implementation "org.kordamp.ikonli:ikonli-fontawesome5-pack:$ikonli"
-    implementation "io.github.palexdev:virtualizedfx:$vfx"
-    implementation project(':materialfx')
 }
 
-compileJava {
-    sourceCompatibility = "$testJdk"
-    targetCompatibility = "$testJdk"
-}
-
-compileTestJava {
-    moduleOptions {
-        compileOnClasspath = true
-    }
-}
-
-test {
-    useJUnitPlatform()
-
-    moduleOptions {
-        runOnClasspath = true
-    }
+javafx {
+    modules = ['javafx.controls', 'javafx.fxml', 'javafx.swing']
+    configurations = ["implementation", "testImplementation"]
 }
 
 application {
-    setMainModule("MaterialFX.Demo")
+    mainModule = "MaterialFX.Demo"
     String main = project.findProperty("chooseMain").toString()
     if (main != "null" && !main.trim().isEmpty()) {
-        setMainClassName(main)
+        mainClass = main
     } else {
-        setMainClassName("io.github.palexdev.materialfx.demo.Demo")
+        mainClass = "io.github.palexdev.materialfx.demo.Demo"
     }
     applicationDefaultJvmArgs = ["-Dglass.disableGrab=true"]
 }
@@ -66,26 +62,40 @@ jlink {
         mainClass = "io.github.palexdev.materialfx.demo.Demo"
         name = 'MaterialFX Demo'
     }
+
+    addExtraDependencies("javafx")
+
     jpackage {
-        imageOptions = ['--icon', 'src/main/resources/logo.ico']
+        imageOptions = ['--icon', 'src/main/resources/io/github/palexdev/materialfx/demo/logo.ico']
     }
 
-    targetPlatform("linux-x64") {
-        jdkHome = jdkDownload("https://cdn.azul.com/zulu/bin/zulu19.32.13-ca-jdk19.0.2-linux_x64.tar.gz")
-        addExtraModulePath("/home/palexdev/Documents/JavaFX_jmods/linux_x64")
+    def jmodBasePath = Paths.get(rootProject.projectDir.getAbsolutePath()).resolve("jfx-jmods").toString()
+    targetPlatform("linux") {
+        jdkHome = jdkDownload("https://cdn.azul.com/zulu/bin/zulu21.38.21-ca-jdk21.0.5-linux_x64.tar.gz")
+        addExtraModulePath("$jmodBasePath/linux-$jfx")
+
+        jpackage {
+            targetPlatformName = "linux"
+        }
     }
 
     targetPlatform("win") {
-        jdkHome = jdkDownload("https://cdn.azul.com/zulu/bin/zulu19.32.13-ca-jdk19.0.2-win_x64.zip")
-        addExtraModulePath("/home/palexdev/Documents/JavaFX_jmods/win_x64")
+        jdkHome = jdkDownload("https://cdn.azul.com/zulu/bin/zulu21.38.21-ca-jdk21.0.5-win_x64.zip")
+        addExtraModulePath("$jmodBasePath/win-$jfx")
+
+        jpackage {
+            targetPlatformName = "win"
+        }
     }
 
     targetPlatform("mac") {
-        jdkHome = jdkDownload("https://cdn.azul.com/zulu/bin/zulu19.32.13-ca-jdk19.0.2-macosx_x64.tar.gz")
-        addExtraModulePath("/home/palexdev/Documents/JavaFX_jmods/mac_x64")
-    }
+        jdkHome = jdkDownload("https://cdn.azul.com/zulu/bin/zulu21.38.21-ca-jdk21.0.5-macosx_x64.tar.gz")
+        addExtraModulePath("$jmodBasePath/mac-$jfx")
 
-    addExtraDependencies('javafx')
+        jpackage {
+            targetPlatformName = "mac"
+        }
+    }
 }
 
 tasks.register('doPackageAll') {

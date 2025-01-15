@@ -20,7 +20,7 @@ public class Reproducer extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         StackPane pane = new StackPane();
-        pane.setPadding(InsetsBuilder.all(10));
+        pane.setPadding(InsetsBuilder.uniform(10).get());
 
         MFXTableView<Person> table = new MFXTableView<>(Model.people);
         MFXTableColumn<Person> name = new MFXTableColumn<>("Name");
