@@ -18,21 +18,21 @@
 
 package io.github.palexdev.materialfx.skins;
 
-import io.github.palexdev.materialfx.collections.TransformableList;
+import java.util.function.Function;
+import java.util.function.Predicate;
+
+import io.github.palexdev.materialfx.collections.RefineList;
 import io.github.palexdev.materialfx.controls.BoundTextField;
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import io.github.palexdev.materialfx.controls.MFXTextField;
-import io.github.palexdev.materialfx.i18n.I18N;
-import io.github.palexdev.virtualizedfx.unused.simple.SimpleVirtualFlow;
+import io.github.palexdev.mfxlocalization.I18N;
+import io.github.palexdev.virtualizedfx.list.VFXList;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 /**
  * Skin associated with every {@link MFXFilterComboBox} by default.
@@ -101,37 +101,37 @@ public class MFXFilterComboBoxSkin<T> extends MFXComboBoxSkin<T> {
     @Override
     protected Node createPopupContent() {
         MFXFilterComboBox<T> comboBox = getComboBox();
-        TransformableList<T> filterList = comboBox.getFilterList();
+        RefineList<T> list = comboBox.getFilterList();
 
         MFXTextField searchField = new MFXTextField("", I18N.getOrDefault("filterCombo.search"));
         searchField.getStyleClass().add("search-field");
         searchField.textProperty().bindBidirectional(comboBox.searchTextProperty());
         searchField.setMaxWidth(Double.MAX_VALUE);
 
-        virtualFlow = new SimpleVirtualFlow<>(
-                filterList,
-                comboBox.getCellFactory(),
-                Orientation.VERTICAL
+        vfxList = new VFXList<>(
+            list.getView(),
+            comboBox.getCellFactory(),
+            Orientation.VERTICAL
         );
-        virtualFlow.cellFactoryProperty().bind(comboBox.cellFactoryProperty());
-        virtualFlow.prefWidthProperty().bind(comboBox.widthProperty());
-        virtualFlow.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+        vfxList.getCellFactory().bind(comboBox.cellFactoryProperty());
+        vfxList.prefWidthProperty().bind(comboBox.widthProperty());
+        vfxList.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             if (popup.isShowing()) {
                 popup.hide();
             }
         });
 
         Runnable createBinding = () ->
-                virtualFlow.minHeightProperty().bind(Bindings.createDoubleBinding(
-                        () -> Math.min(comboBox.getRowsCount(), comboBox.getItems().size()) * virtualFlow.getCellHeight(),
-                        comboBox.rowsCountProperty(), comboBox.getItems(), virtualFlow.cellFactoryProperty(), vfInitialized
-                ));
-        virtualFlow.itemsProperty().addListener((observable, oldValue, newValue) -> {
+            vfxList.minHeightProperty().bind(Bindings.createDoubleBinding(
+                () -> Math.min(comboBox.getRowsCount(), comboBox.getItems().size()) * vfxList.getCellSize(),
+                comboBox.rowsCountProperty(), comboBox.getItems(), vfxList.cellSizeProperty(), vfInitialized
+            ));
+        vfxList.itemsProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) createBinding.run();
         });
         createBinding.run();
 
-        VBox container = new VBox(10, searchField, virtualFlow);
+        VBox container = new VBox(10, searchField, vfxList.makeScrollable());
         container.getStyleClass().add("search-container");
         container.setAlignment(Pos.TOP_CENTER);
         return container;

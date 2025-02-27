@@ -18,19 +18,6 @@
 
 package io.github.palexdev.materialfx.controls;
 
-import io.github.palexdev.materialfx.skins.MFXPaginatedTableViewSkin;
-import io.github.palexdev.materialfx.utils.NumberUtils;
-import javafx.beans.InvalidationListener;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ReadOnlyIntegerProperty;
-import javafx.beans.property.ReadOnlyIntegerWrapper;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.Event;
-import javafx.scene.control.Skin;
-import javafx.scene.input.ScrollEvent;
-
 /**
  * This is the implementation of a paginated {@link MFXTableView}.
  * <p>
@@ -47,7 +34,7 @@ import javafx.scene.input.ScrollEvent;
  * @param <T> The type of the data within the table.
  */
 public class MFXPaginatedTableView<T> extends MFXTableView<T> {
-	//================================================================================
+/*	//================================================================================
 	// Properties
 	//================================================================================
 	private final String STYLE_CLASS = "mfx-paginated-table-view";
@@ -96,20 +83,20 @@ public class MFXPaginatedTableView<T> extends MFXTableView<T> {
 		currentPageProperty().addListener(invalidated -> goToPage(getCurrentPage()));
 	}
 
-	/**
+	*//**
 	 * Goes to the given page index.
 	 * <p>
 	 * The given integer is clamped between 1 and the max page index.
-	 */
+     *//*
 	public void goToPage(int index) {
 		int page = NumberUtils.clamp(index, 1, getMaxPage());
 		double pos = (page - 1) * getRowsPerPage() * rowsFlow.getCellHeight();
 		rowsFlow.getVBar().setValue(pos);
 	}
 
-	/**
+	*//**
 	 * Responsible for updating the max page index when needed.
-	 */
+     *//*
 	private void updateMaxPages() {
 		int size = getTransformableList().size();
 		int rowsPerPage = getRowsPerPage();
@@ -121,41 +108,41 @@ public class MFXPaginatedTableView<T> extends MFXTableView<T> {
 	// Overridden Methods
 	//================================================================================
 
-	/**
+	*//**
 	 * Unsupported by the paginated table view.
-	 */
+     *//*
 	@Override
 	public void scrollBy(double pixels) {
 		throw new UnsupportedOperationException("The paginated table view cannot scroll ny pixels");
 	}
 
-	/**
+	*//**
 	 * Calls {@link #goToPage(int)}.
-	 */
+     *//*
 	@Override
 	public void scrollTo(int index) {
 		goToPage(index);
 	}
 
-	/**
+	*//**
 	 * Goes to the first page.
-	 */
+     *//*
 	@Override
 	public void scrollToFirst() {
 		goToPage(1);
 	}
 
-	/**
+	*//**
 	 * Goes to the last page.
-	 */
+     *//*
 	@Override
 	public void scrollToLast() {
 		goToPage(getMaxPage());
 	}
 
-	/**
+	*//**
 	 * Unsupported by the paginated table view.
-	 */
+     *//*
 	@Override
 	public void scrollToPixel(double pixel) {
 		throw new UnsupportedOperationException("The paginated table view cannot scroll to pixel");
@@ -173,9 +160,9 @@ public class MFXPaginatedTableView<T> extends MFXTableView<T> {
 		return currentPage.get();
 	}
 
-	/**
+	*//**
 	 * Specifies the current shown page.
-	 */
+     *//*
 	public IntegerProperty currentPageProperty() {
 		return currentPage;
 	}
@@ -188,9 +175,9 @@ public class MFXPaginatedTableView<T> extends MFXTableView<T> {
 		return maxPage.get();
 	}
 
-	/**
+	*//**
 	 * Specifies the last page index.
-	 */
+     *//*
 	public ReadOnlyIntegerProperty maxPageProperty() {
 		return maxPage.getReadOnlyProperty();
 	}
@@ -203,10 +190,10 @@ public class MFXPaginatedTableView<T> extends MFXTableView<T> {
 		return pagesToShow.get();
 	}
 
-	/**
+	*//**
 	 * Specifies how many pages can be shown at a time by the
 	 * {@link MFXPagination} control used in the skin.
-	 */
+     *//*
 	public IntegerProperty pagesToShowProperty() {
 		return pagesToShow;
 	}
@@ -219,9 +206,9 @@ public class MFXPaginatedTableView<T> extends MFXTableView<T> {
 		return rowsPerPage.get();
 	}
 
-	/**
+	*//**
 	 * Specifies how many rows the table can show per page.
-	 */
+     *//*
 	public IntegerProperty rowsPerPageProperty() {
 		return rowsPerPage;
 	}
@@ -229,4 +216,5 @@ public class MFXPaginatedTableView<T> extends MFXTableView<T> {
 	public void setRowsPerPage(int rowsPerPage) {
 		this.rowsPerPage.set(rowsPerPage);
 	}
+*/
 }

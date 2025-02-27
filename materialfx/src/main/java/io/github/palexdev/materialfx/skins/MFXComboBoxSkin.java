@@ -21,8 +21,9 @@ package io.github.palexdev.materialfx.skins;
 import io.github.palexdev.materialfx.controls.*;
 import io.github.palexdev.materialfx.selection.ComboBoxSelectionModel;
 import io.github.palexdev.materialfx.utils.AnimationUtils;
-import io.github.palexdev.virtualizedfx.cell.Cell;
-import io.github.palexdev.virtualizedfx.unused.simple.SimpleVirtualFlow;
+import io.github.palexdev.virtualizedfx.cells.base.VFXCell;
+import io.github.palexdev.virtualizedfx.list.VFXList;
+import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -55,7 +56,7 @@ public class MFXComboBoxSkin<T> extends MFXTextFieldSkin {
 	private EventHandler<MouseEvent> popupManager;
 
 	protected final BooleanProperty vfInitialized = new SimpleBooleanProperty(false);
-	protected SimpleVirtualFlow<T, Cell<T>> virtualFlow;
+    protected VFXList<T, VFXCell<T>> vfxList;
 
 	//================================================================================
 	// Constructors
@@ -125,8 +126,7 @@ public class MFXComboBoxSkin<T> extends MFXTextFieldSkin {
 	private void selectionBehavior() {
 		MFXComboBox<T> comboBox = getComboBox();
 		ComboBoxSelectionModel<T> selectionModel = comboBox.getSelectionModel();
-
-		selectionModel.selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+        selectionModel.selection().addListener((InvalidationListener) i -> {
 			if (!comboBox.valueProperty().isBound()) {
 				comboBox.setValue(selectionModel.getSelectedItem());
 			}
@@ -155,8 +155,7 @@ public class MFXComboBoxSkin<T> extends MFXTextFieldSkin {
 		popup.showingProperty().addListener((observable, oldValue, newValue) -> {
 			if (!newValue) {
 				comboBox.hide();
-				if (trailingIcon instanceof MFXIconWrapper) {
-					MFXIconWrapper icon = (MFXIconWrapper) trailingIcon;
+				if (trailingIcon instanceof MFXIconWrapper icon) {
 					icon.getRippleGenerator().generateRipple(null);
 				}
 				animateIcon(comboBox.getTrailingIcon(), false);
@@ -187,7 +186,7 @@ public class MFXComboBoxSkin<T> extends MFXTextFieldSkin {
 						.setOnFinished(end -> {
 							if (comboBox.isScrollOnOpen()) {
 								int selectedIndex = comboBox.getSelectedIndex();
-								if (selectedIndex >= 0) virtualFlow.scrollTo(selectedIndex);
+                                if (selectedIndex >= 0) vfxList.scrollToIndex(selectedIndex);
 							}
 						})
 						.getAnimation()
@@ -245,26 +244,26 @@ public class MFXComboBoxSkin<T> extends MFXTextFieldSkin {
 	 */
 	protected Node createPopupContent() {
 		MFXComboBox<T> comboBox = getComboBox();
-		if (virtualFlow == null) {
-			virtualFlow = new SimpleVirtualFlow<>(
+        if (vfxList == null) {
+            vfxList = new VFXList<>(
 					comboBox.itemsProperty(),
 					comboBox.getCellFactory(),
 					Orientation.VERTICAL
 			);
-			virtualFlow.cellFactoryProperty().bind(comboBox.cellFactoryProperty());
-			virtualFlow.prefWidthProperty().bind(comboBox.widthProperty());
+            vfxList.getCellFactory().bind(comboBox.cellFactoryProperty());
+            vfxList.prefWidthProperty().bind(comboBox.widthProperty());
 
 			Runnable createBinding = () ->
-					virtualFlow.prefHeightProperty().bind(Bindings.createDoubleBinding(
-							() -> Math.min(comboBox.getRowsCount(), comboBox.getItems().size()) * virtualFlow.getCellHeight(),
-							comboBox.rowsCountProperty(), comboBox.getItems(), virtualFlow.cellFactoryProperty(), vfInitialized
+                vfxList.prefHeightProperty().bind(Bindings.createDoubleBinding(
+                    () -> Math.min(comboBox.getRowsCount(), comboBox.getItems().size()) * vfxList.getCellSize(),
+                    comboBox.rowsCountProperty(), comboBox.getItems(), vfxList.cellSizeProperty(), vfInitialized
 					));
-			virtualFlow.itemsProperty().addListener((observable, oldValue, newValue) -> {
+            vfxList.itemsProperty().addListener((observable, oldValue, newValue) -> {
 				if (newValue != null) createBinding.run();
 			});
 			createBinding.run();
 		}
-		return virtualFlow;
+        return vfxList.makeScrollable();
 	}
 
 	/**
@@ -283,7 +282,7 @@ public class MFXComboBoxSkin<T> extends MFXTextFieldSkin {
 	protected void layoutChildren(double x, double y, double w, double h) {
 		super.layoutChildren(x, y, w, h);
 
-		if (virtualFlow != null && !vfInitialized.get() && virtualFlow.getCellHeight() != 0)
+        if (vfxList != null && !vfInitialized.get() && vfxList.getCellSize() != 0)
 			vfInitialized.set(true);
 	}
 
@@ -295,6 +294,6 @@ public class MFXComboBoxSkin<T> extends MFXTextFieldSkin {
 			comboBox.getTrailingIcon().removeEventHandler(MouseEvent.MOUSE_PRESSED, popupManager);
 		}
 		popupManager = null;
-		virtualFlow = null;
+        vfxList = null;
 	}
 }

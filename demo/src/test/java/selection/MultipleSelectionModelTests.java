@@ -18,15 +18,16 @@
 
 package selection;
 
-import io.github.palexdev.materialfx.selection.MultipleSelectionModel;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.IntStream;
+
+import io.github.palexdev.materialfx.selection.SelectionModel;
+import io.github.palexdev.materialfx.selection.base.ISelectionModel;
 import io.github.palexdev.materialfx.utils.FXCollectors;
 import javafx.collections.ObservableList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
-import java.util.Set;
-import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -34,23 +35,24 @@ public class MultipleSelectionModelTests {
 	private final ObservableList<String> strings = IntStream.rangeClosed(0, 30)
 			.mapToObj(i -> "String " + i)
 			.collect(FXCollectors.toList());
-	private final MultipleSelectionModel<String> selectionModel = new MultipleSelectionModel<String>(strings);
+	private final ISelectionModel<String> selectionModel = new SelectionModel<>(strings);
 
 	@BeforeEach
 	public void setUp() {
+		selectionModel.setAllowsMultipleSelection(true);
 		selectionModel.clearSelection();
 	}
 
 	@Test
 	public void testOrder() {
 		Integer[] toSelect = {0, 6, 3, 9, 6};
-		selectionModel.selectIndexes(List.of(toSelect));
+		selectionModel.selectIndexes(toSelect);
 
-		assertEquals(4, selectionModel.getSelection().size());
+		assertEquals(4, selectionModel.selection().size());
 
 		// Indexes
 		int i = 0;
-		Set<Integer> indexes = selectionModel.getSelection().keySet();
+		Set<Integer> indexes = selectionModel.selection().keySet();
 		for (int val : indexes) {
 			assertEquals(toSelect[i], val);
 			i++;
@@ -64,7 +66,7 @@ public class MultipleSelectionModelTests {
 				"String 3",
 				"String 9"
 		};
-		List<String> values = selectionModel.getSelectedValues();
+		List<String> values = selectionModel.getSelectedItems();
 		for (String value : values) {
 			assertEquals(expected[i], value);
 			i++;

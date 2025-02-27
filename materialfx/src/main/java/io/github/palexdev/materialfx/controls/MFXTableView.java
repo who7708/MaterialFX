@@ -1,412 +1,446 @@
-/*
- * Copyright (C) 2022 Parisi Alessandro
- * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX).
- *
- * MaterialFX is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * MaterialFX is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with MaterialFX.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package io.github.palexdev.materialfx.controls;
 
-import io.github.palexdev.materialfx.beans.properties.functional.FunctionProperty;
-import io.github.palexdev.materialfx.collections.TransformableList;
-import io.github.palexdev.materialfx.collections.TransformableListWrapper;
+import java.util.List;
+import java.util.Map;
+import java.util.SequencedMap;
+import java.util.function.Function;
+
+import io.github.palexdev.materialfx.collections.RefineList;
 import io.github.palexdev.materialfx.controls.base.Themable;
-import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 import io.github.palexdev.materialfx.filter.base.AbstractFilter;
-import io.github.palexdev.materialfx.selection.MultipleSelectionModel;
-import io.github.palexdev.materialfx.selection.base.IMultipleSelectionModel;
+import io.github.palexdev.materialfx.selection.base.ISelectionModel;
+import io.github.palexdev.materialfx.selection.SelectionModel;
+import io.github.palexdev.materialfx.selection.base.WithSelectionModel;
+import io.github.palexdev.materialfx.controls.cell.MFXTableRow;
 import io.github.palexdev.materialfx.skins.MFXTableViewSkin;
 import io.github.palexdev.materialfx.theming.MaterialFXStylesheets;
 import io.github.palexdev.materialfx.theming.base.Theme;
-import io.github.palexdev.materialfx.utils.ListChangeHelper;
-import io.github.palexdev.materialfx.utils.ListChangeProcessor;
-import io.github.palexdev.materialfx.utils.others.observables.When;
+import io.github.palexdev.mfxcore.base.beans.Size;
 import io.github.palexdev.mfxcore.base.beans.range.IntegerRange;
-import io.github.palexdev.virtualizedfx.unused.simple.SimpleVirtualFlow;
-import javafx.beans.InvalidationListener;
-import javafx.beans.property.*;
+import io.github.palexdev.mfxcore.base.properties.functional.FunctionProperty;
+import io.github.palexdev.mfxcore.base.properties.styleable.StyleableDoubleProperty;
+import io.github.palexdev.mfxcore.base.properties.styleable.StyleableIntegerProperty;
+import io.github.palexdev.mfxcore.base.properties.styleable.StyleableObjectProperty;
+import io.github.palexdev.mfxcore.base.properties.styleable.StyleableSizeProperty;
+import io.github.palexdev.virtualizedfx.base.VFXStyleable;
+import io.github.palexdev.virtualizedfx.cells.base.VFXTableCell;
+import io.github.palexdev.virtualizedfx.enums.BufferSize;
+import io.github.palexdev.virtualizedfx.enums.ColumnsLayoutMode;
+import io.github.palexdev.virtualizedfx.properties.CellFactory;
+import io.github.palexdev.virtualizedfx.table.*;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.geometry.Orientation;
 import javafx.scene.Parent;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 
-import java.util.*;
-import java.util.function.Function;
+// TODO prefer composition over inheritance for virtualized components
+public class MFXTableView<T> extends Control implements WithSelectionModel<T>, Themable, VFXStyleable {
+    //================================================================================
+    // Properties
+    //================================================================================
+    protected final VFXTable<T> vfxTable;
 
-/**
- * This is the implementation of a table view following Google's material design guidelines in JavaFX.
- * <p>
- * Extends {@code Control} and provides a new skin since it is built from scratch.
- *
- * @param <T> The type of the data within the table.
- * @see MFXTableViewSkin
- */
-public class MFXTableView<T> extends Control implements Themable {
-	//================================================================================
-	// Properties
-	//================================================================================
-	private final String STYLE_CLASS = "mfx-table-view";
-	protected final SimpleVirtualFlow<T, MFXTableRow<T>> rowsFlow;
-	protected final ReadOnlyBooleanWrapper virtualFlowInitialized = new ReadOnlyBooleanWrapper();
+    private final RefineList<T> refineList;
+    private final ObservableList<AbstractFilter<T, ?>> filters = FXCollections.observableArrayList();
 
-	private final ObjectProperty<ObservableList<T>> items = new SimpleObjectProperty<>();
-	private final ListChangeListener<? super T> itemsChanged = this::itemsChanged;
+    private final ISelectionModel<T> selectionModel;
 
-	private final IMultipleSelectionModel<T> selectionModel = new MultipleSelectionModel<>(items);
-	private final ObservableList<MFXTableColumn<T>> tableColumns = FXCollections.observableArrayList();
-	private final FunctionProperty<T, MFXTableRow<T>> tableRowFactory = new FunctionProperty<>(item -> new MFXTableRow<>(this, item));
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public MFXTableView() {
+        this(FXCollections.observableArrayList());
+    }
 
-	private final TransformableListWrapper<T> transformableList = new TransformableListWrapper<>(FXCollections.observableArrayList());
-	private final ObservableList<AbstractFilter<T, ?>> filters = FXCollections.observableArrayList();
-	private final InvalidationListener itemsInvalid = invalidated -> transformableList.setAll(getItems());
-	private final BooleanProperty footerVisible = new SimpleBooleanProperty(true);
+    public MFXTableView(ObservableList<T> items) {
+        refineList = new RefineList<>(items);
+        selectionModel = new SelectionModel<>(refineList);
+        vfxTable = new VFXTable<>(refineList) {
+            @Override
+            protected Function<T, VFXTableRow<T>> defaultRowFactory() {
+                return MFXTableRow::new;
+            }
+        };
+        initialize();
+    }
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public MFXTableView() {
-		this(FXCollections.observableArrayList());
-	}
+    //================================================================================
+    // Methods
+    //================================================================================
+    private void initialize() {
+        getStyleClass().setAll(defaultStyleClasses());
+        sceneBuilderIntegration();
+        autosizeColumns();
+    }
 
-	public MFXTableView(ObservableList<T> items) {
-		setItems(items);
-		rowsFlow = new SimpleVirtualFlow<>(
-				transformableList,
-				getTableRowFactory(),
-				Orientation.VERTICAL
-		);
-		rowsFlow.cellFactoryProperty().bind(tableRowFactoryProperty());
-		VBox.setVgrow(rowsFlow, Priority.ALWAYS);
+    //================================================================================
+    // Overridden Methods
+    //================================================================================
+    @Override
+    public ISelectionModel<T> getSelectionModel() {
+        return selectionModel;
+    }
 
-		initialize();
-	}
+    @Override
+    public Parent toParent() {
+        return this;
+    }
 
-	//================================================================================
-	// Methods
-	//================================================================================
-	private void initialize() {
-		getStyleClass().add(STYLE_CLASS);
+    @Override
+    public Theme getTheme() {
+        return MaterialFXStylesheets.TABLE_VIEW;
+    }
 
-		transformableList.setAll(getItems());
-		itemsProperty().addListener((observable, oldValue, newValue) -> {
-			if (oldValue != null) {
-				oldValue.removeListener(itemsChanged);
-				oldValue.removeListener(itemsInvalid);
-			}
-			if (newValue != null) {
-				newValue.addListener(itemsChanged);
-				newValue.addListener(itemsInvalid);
-				transformableList.setAll(newValue);
-			}
-		});
+    @Override
+    public List<String> defaultStyleClasses() {
+        return List.of("mfx-table-view");
+    }
 
-		getItems().addListener(itemsChanged);
-		getItems().addListener(itemsInvalid);
-		sceneBuilderIntegration();
-	}
+    @Override
+    protected Skin<?> createDefaultSkin() {
+        return new MFXTableViewSkin<>(this);
+    }
 
-	/**
-	 * Responsible for updating the selection when the items list changes.
-	 */
-	protected void itemsChanged(ListChangeListener.Change<? extends T> change) {
-		IMultipleSelectionModel<T> selectionModel = getSelectionModel();
-		if (selectionModel.getSelection().isEmpty()) return;
+    //================================================================================
+    // Delegate Methods
+    //================================================================================
+    public VFXTable<T> getVirtualizedContainer() {
+        return vfxTable;
+    }
 
-		if (change.getList().isEmpty()) {
-			selectionModel.clearSelection();
-			return;
-		}
+    public void autosizeColumn(int index) {
+        vfxTable.autosizeColumn(index);
+    }
 
-		ListChangeHelper.Change c = ListChangeHelper.processChange(change, IntegerRange.of(0, Integer.MAX_VALUE));
-		ListChangeProcessor updater = new ListChangeProcessor(new HashSet<>(selectionModel.getSelection().keySet()));
-		c.processReplacement((changed, removed) -> selectionModel.replaceSelection(changed.toArray(Integer[]::new)));
-		c.processAddition((from, to, added) -> {
-			updater.computeAddition(added.size(), from);
-			selectionModel.replaceSelection(updater.getIndexes().toArray(Integer[]::new));
-		});
-		c.processRemoval((from, to, removed) -> {
-			updater.computeRemoval(removed, from);
-			getSelectionModel().replaceSelection(updater.getIndexes().toArray(Integer[]::new));
-		});
-	}
+    public void setVPos(double vPos) {
+        vfxTable.setVPos(vPos);
+    }
 
-	/**
-	 * Allows to programmatically update the table.
-	 * <p>
-	 * Uses {@link MFXTableRow#updateRow()} on the currently built rows, {@link SimpleVirtualFlow#getCells()}.
-	 */
-	public void update() {
-		rowsFlow.getCells().values().forEach(MFXTableRow::updateRow);
-	}
+    public ReadOnlyDoubleProperty virtualMaxYProperty() {
+        return vfxTable.virtualMaxYProperty();
+    }
 
-	/**
-	 * Autosize all the table columns.
-	 */
-	public void autosizeColumns() {
-		tableColumns.forEach(this::autosizeColumn);
-	}
+    public BufferSize getRowsBufferSize() {
+        return vfxTable.getRowsBufferSize();
+    }
 
-	/**
-	 * Autosizes the column at the given index.
-	 * <p>
-	 * This method fails silently if it can not get the column at index.
-	 */
-	public void autosizeColumn(int index) {
-		try {
-			MFXTableColumn<T> column = tableColumns.get(index);
-			autosizeColumn(column);
-		} catch (Exception ignored) {
-		}
-	}
+    public void scrollToLastColumn() {
+        vfxTable.scrollToLastColumn();
+    }
 
-	/**
-	 * Autosizes the given column.
-	 */
-	public void autosizeColumn(MFXTableColumn<T> column) {
-		int index = tableColumns.indexOf(column);
-		if (index == -1) return;
+    public void autosizeColumns() {
+        vfxTable.autosizeColumns();
+    }
 
-		Collection<MFXTableRow<T>> rows = rowsFlow.getCells().values();
-		List<Double> minSizes = new ArrayList<>();
-		minSizes.add(column.getWidth());
-		rows.forEach(row -> {
-			ObservableList<MFXTableRowCell<T, ?>> rowCells = row.getCells();
-			if (rowCells.isEmpty()) return;
-			MFXTableRowCell<T, ?> rowCell = rowCells.get(index);
-			rowCell.requestLayout();
-			minSizes.add(rowCell.computePrefWidth(-1));
-		});
-		double max = minSizes.stream().max(Double::compareTo).orElse(-1.0);
-		if (max != -1.0) {
-			column.setMinWidth(max);
-		}
-	}
+    public Function<ColumnsLayoutMode, VFXTableHelper<T>> getHelperFactory() {
+        return vfxTable.getHelperFactory();
+    }
 
-	/**
-	 * This should be called only if you need to autosize the columns
-	 * before the table is laid out/initialized.
-	 * <p>
-	 * Calling this afterwards won't have any effect.
-	 */
-	public void autosizeColumnsOnInitialization() {
-		if (isVirtualFlowInitialized()) return;
-		When.onChanged(virtualFlowInitialized)
-				.then((oldValue, newValue) -> autosizeColumns())
-				.oneShot()
-				.listen();
-	}
+    public StyleableObjectProperty<BufferSize> columnsBufferSizeProperty() {
+        return vfxTable.columnsBufferSizeProperty();
+    }
 
-	//================================================================================
-	// Delegate Methods
-	//================================================================================
+    public ReadOnlyObjectWrapper<VFXTableHelper<T>> helperProperty() {
+        return vfxTable.helperProperty();
+    }
 
-	/**
-	 * Delegate for {@link SimpleVirtualFlow#getCell(int)}.
-	 */
-	public MFXTableRow<T> getCell(int index) {
-		return rowsFlow.getCell(index);
-	}
+    public ViewportLayoutRequest<T> getViewportLayoutRequest() {
+        return vfxTable.getViewportLayoutRequest();
+    }
 
-	/**
-	 * Delegate for {@link SimpleVirtualFlow#getCells()}.
-	 */
-	public Map<Integer, MFXTableRow<T>> getCells() {
-		return rowsFlow.getCells();
-	}
+    public void scrollToPixelHorizontal(double pixel) {
+        vfxTable.scrollToPixelHorizontal(pixel);
+    }
 
-	/**
-	 * Delegate for {@link SimpleVirtualFlow#scrollBy(double)}.
-	 */
-	public void scrollBy(double pixels) {
-		rowsFlow.scrollBy(pixels);
-	}
+    public int indexOf(VFXTableColumn<T, ?> column) {
+        return vfxTable.indexOf(column);
+    }
 
-	/**
-	 * Delegate for {@link SimpleVirtualFlow#scrollTo(int)}.
-	 */
-	public void scrollTo(int index) {
-		rowsFlow.scrollTo(index);
-	}
+    public IntegerRange getColumnsRange() {
+        return vfxTable.getColumnsRange();
+    }
 
-	/**
-	 * Delegate for {@link SimpleVirtualFlow#scrollToFirst()}.
-	 */
-	public void scrollToFirst() {
-		rowsFlow.scrollToFirst();
-	}
+    public void setExtraAutosizeWidth(double extraAutosizeWidth) {
+        vfxTable.setExtraAutosizeWidth(extraAutosizeWidth);
+    }
 
-	/**
-	 * Delegate for {@link SimpleVirtualFlow#scrollToLast()}.
-	 */
-	public void scrollToLast() {
-		rowsFlow.scrollToLast();
-	}
+    public BufferSize getBufferSize() {
+        return vfxTable.getBufferSize();
+    }
 
-	/**
-	 * Delegate for {@link SimpleVirtualFlow#scrollToPixel(double)}.
-	 */
-	public void scrollToPixel(double pixel) {
-		rowsFlow.scrollToPixel(pixel);
-	}
+    public double getClipBorderRadius() {
+        return vfxTable.getClipBorderRadius();
+    }
 
-	/**
-	 * Delegate for {@link SimpleVirtualFlow#setHSpeed(double, double)}.
-	 */
-	public void setHSpeed(double unit, double block) {
-		rowsFlow.setHSpeed(unit, block);
-	}
+    public double getRowsHeight() {
+        return vfxTable.getRowsHeight();
+    }
 
-	/**
-	 * Delegate for {@link SimpleVirtualFlow#setVSpeed(double, double)}.
-	 */
-	public void setVSpeed(double unit, double block) {
-		rowsFlow.setVSpeed(unit, block);
-	}
+    public VFXTable<T> populateCacheAll() {
+        return vfxTable.populateCacheAll();
+    }
 
-	/**
-	 * Delegate for {@link SimpleVirtualFlow#features()}.
-	 */
-	public SimpleVirtualFlow<T, MFXTableRow<T>>.Features features() {
-		return rowsFlow.features();
-	}
+    public void scrollToFirstColumn() {
+        vfxTable.scrollToFirstColumn();
+    }
 
-	//================================================================================
-	// Overridden Methods
-	//================================================================================
+    public VFXTableState<T> getState() {
+        return vfxTable.getState();
+    }
 
-	@Override
-	public Parent toParent() {
-		return this;
-	}
+    public void scrollToRow(int index) {
+        vfxTable.scrollToRow(index);
+    }
 
-	@Override
-	public Theme getTheme() {
-		return MaterialFXStylesheets.TABLE_VIEW;
-	}
+    public void setRowsCacheCapacity(int rowsCacheCapacity) {
+        vfxTable.setRowsCacheCapacity(rowsCacheCapacity);
+    }
 
-	@Override
-	protected Skin<?> createDefaultSkin() {
-		return new MFXTableViewSkin<>(this, rowsFlow);
-	}
+    public BufferSize getColumnsBufferSize() {
+        return vfxTable.getColumnsBufferSize();
+    }
 
-	@Override
-	protected void layoutChildren() {
-		super.layoutChildren();
-		if (!isVirtualFlowInitialized() && rowsFlow.getCellHeight() > 0) virtualFlowInitialized.set(true);
-	}
+    public double getHPos() {
+        return vfxTable.getHPos();
+    }
 
-	//================================================================================
-	// Getters/Setters
-	//================================================================================
-	public ObservableList<T> getItems() {
-		return items.get();
-	}
+    public ReadOnlyDoubleProperty virtualMaxXProperty() {
+        return vfxTable.virtualMaxXProperty();
+    }
 
-	/**
-	 * Specifies the table's {@link ObservableList} containing the items.
-	 */
-	public ObjectProperty<ObservableList<T>> itemsProperty() {
-		return items;
-	}
+    public void setColumnsWidth(double w) {
+        vfxTable.setColumnsWidth(w);
+    }
 
-	public void setItems(ObservableList<T> items) {
-		this.items.set(items);
-	}
+    public VFXTableHelper<T> getHelper() {
+        return vfxTable.getHelper();
+    }
 
-	/**
-	 * @return the selection model used by the table to handle row selection
-	 */
-	public IMultipleSelectionModel<T> getSelectionModel() {
-		return selectionModel;
-	}
+    public IntegerRange getRowsRange() {
+        return vfxTable.getRowsRange();
+    }
 
-	/**
-	 * @return the list containing the table's columns
-	 */
-	public ObservableList<MFXTableColumn<T>> getTableColumns() {
-		return tableColumns;
-	}
+    public StyleableDoubleProperty extraAutosizeWidthProperty() {
+        return vfxTable.extraAutosizeWidthProperty();
+    }
 
-	public Function<T, MFXTableRow<T>> getTableRowFactory() {
-		return tableRowFactory.get();
-	}
+    public void setColumnsSize(Size columnsSize) {
+        vfxTable.setColumnsSize(columnsSize);
+    }
 
-	/**
-	 * Specifies the {@link Function} used to generate the table rows.
-	 */
-	public FunctionProperty<T, MFXTableRow<T>> tableRowFactoryProperty() {
-		return tableRowFactory;
-	}
+    public void setRowFactory(Function<T, VFXTableRow<T>> rowFactory) {
+        vfxTable.setRowFactory(rowFactory);
+    }
 
-	public void setTableRowFactory(Function<T, MFXTableRow<T>> tableRowFactory) {
-		this.tableRowFactory.set(tableRowFactory);
-	}
+    public VFXTable<T> populateCache() {
+        return vfxTable.populateCache();
+    }
 
-	/**
-	 * @return the list that is effectively used by the {@link SimpleVirtualFlow} (which contains the table rows).
-	 * This list is capable of filtering and sorting.
-	 * @see TransformableListWrapper
-	 * @see TransformableList
-	 */
-	public TransformableListWrapper<T> getTransformableList() {
-		return transformableList;
-	}
+    public ReadOnlyObjectProperty<VFXTableState<T>> stateProperty() {
+        return vfxTable.stateProperty();
+    }
 
-	/**
-	 * @return the list containing the filters' information used by the
-	 * {@link  MFXFilterPane} to filter the table
-	 */
-	public ObservableList<AbstractFilter<T, ?>> getFilters() {
-		return filters;
-	}
+    public void scrollVerticalBy(double pixels) {
+        vfxTable.scrollVerticalBy(pixels);
+    }
 
-	public boolean isFooterVisible() {
-		return footerVisible.get();
-	}
+    public boolean isNeedsViewportLayout() {
+        return vfxTable.isNeedsViewportLayout();
+    }
 
-	/**
-	 * Specifies whether the table's footer is visible
-	 */
-	public BooleanProperty footerVisibleProperty() {
-		return footerVisible;
-	}
+    public void scrollToLastRow() {
+        vfxTable.scrollToLastRow();
+    }
 
-	public void setFooterVisible(boolean footerVisible) {
-		this.footerVisible.set(footerVisible);
-	}
+    public void setColumnsHeight(double h) {
+        vfxTable.setColumnsHeight(h);
+    }
 
-	public boolean isVirtualFlowInitialized() {
-		return virtualFlowInitialized.get();
-	}
+    public Function<T, VFXTableRow<T>> getRowFactory() {
+        return vfxTable.getRowFactory();
+    }
 
-	/**
-	 * Useful property to inform that the table layout
-	 * has been initialized/is ready.
-	 * <p>
-	 * For example it is used by {@link #autosizeColumnsOnInitialization()}
-	 * to autosize the columns before the table is even laid out by using a
-	 * listener.
-	 * <p>
-	 * It is considered initialized as soon as the {@link SimpleVirtualFlow}
-	 * retrieves the cells' height.
-	 */
-	public ReadOnlyBooleanProperty virtualFlowInitializedProperty() {
-		return virtualFlowInitialized.getReadOnlyProperty();
-	}
+    public double getVPos() {
+        return vfxTable.getVPos();
+    }
+
+    public void setRowsBufferSize(BufferSize rowsBufferSize) {
+        vfxTable.setRowsBufferSize(rowsBufferSize);
+    }
+
+    public DoubleProperty hPosProperty() {
+        return vfxTable.hPosProperty();
+    }
+
+    public ReadOnlyDoubleProperty maxHScrollProperty() {
+        return vfxTable.maxHScrollProperty();
+    }
+
+    public void setColumnsSize(double w, double h) {
+        vfxTable.setColumnsSize(w, h);
+    }
+
+    public List<Map.Entry<T, VFXTableRow<T>>> getRowsByItemUnmodifiable() {
+        return vfxTable.getRowsByItemUnmodifiable();
+    }
+
+    public void scrollToColumn(int index) {
+        vfxTable.scrollToColumn(index);
+    }
+
+    public void setHelperFactory(Function<ColumnsLayoutMode, VFXTableHelper<T>> helperFactory) {
+        vfxTable.setHelperFactory(helperFactory);
+    }
+
+    public double getExtraAutosizeWidth() {
+        return vfxTable.getExtraAutosizeWidth();
+    }
+
+    public void setBufferSize(BufferSize bufferSize) {
+        vfxTable.setBufferSize(bufferSize);
+    }
+
+    public int cellsCacheSize() {
+        return vfxTable.cellsCacheSize();
+    }
+
+    public void setClipBorderRadius(double clipBorderRadius) {
+        vfxTable.setClipBorderRadius(clipBorderRadius);
+    }
+
+    public StyleableSizeProperty columnsSizeProperty() {
+        return vfxTable.columnsSizeProperty();
+    }
+
+    public StyleableIntegerProperty rowsCacheCapacityProperty() {
+        return vfxTable.rowsCacheCapacityProperty();
+    }
+
+    public StyleableObjectProperty<BufferSize> bufferSizeProperty() {
+        return vfxTable.bufferSizeProperty();
+    }
+
+    public void setColumnsLayoutMode(ColumnsLayoutMode columnsLayoutMode) {
+        vfxTable.setColumnsLayoutMode(columnsLayoutMode);
+    }
+
+    public CellFactory<T, VFXTableRow<T>> rowFactoryProperty() {
+        return vfxTable.rowFactoryProperty();
+    }
+
+    public ObservableList<VFXTableColumn<T, ? extends VFXTableCell<T>>> getColumns() {
+        return vfxTable.getColumns();
+    }
+
+    public void scrollHorizontalBy(double pixels) {
+        vfxTable.scrollHorizontalBy(pixels);
+    }
+
+    public void setRowsHeight(double rowsHeight) {
+        vfxTable.setRowsHeight(rowsHeight);
+    }
+
+    public void scrollToFirstRow() {
+        vfxTable.scrollToFirstRow();
+    }
+
+    public DoubleProperty vPosProperty() {
+        return vfxTable.vPosProperty();
+    }
+
+    public void update(int... indexes) {
+        vfxTable.update(indexes);
+    }
+
+    public ReadOnlyDoubleProperty maxVScrollProperty() {
+        return vfxTable.maxVScrollProperty();
+    }
+
+    public StyleableObjectProperty<BufferSize> rowsBufferSizeProperty() {
+        return vfxTable.rowsBufferSizeProperty();
+    }
+
+    public ColumnsLayoutMode getColumnsLayoutMode() {
+        return vfxTable.getColumnsLayoutMode();
+    }
+
+    public SequencedMap<Integer, VFXTableRow<T>> getRowsByIndexUnmodifiable() {
+        return vfxTable.getRowsByIndexUnmodifiable();
+    }
+
+    public void setHPos(double hPos) {
+        vfxTable.setHPos(hPos);
+    }
+
+    public void autosizeColumn(VFXTableColumn<T, ?> column) {
+        vfxTable.autosizeColumn(column);
+    }
+
+    public void setColumnsBufferSize(BufferSize columnsBufferSize) {
+        vfxTable.setColumnsBufferSize(columnsBufferSize);
+    }
+
+    public FunctionProperty<ColumnsLayoutMode, VFXTableHelper<T>> helperFactoryProperty() {
+        return vfxTable.helperFactoryProperty();
+    }
+
+    public int getRowsCacheCapacity() {
+        return vfxTable.getRowsCacheCapacity();
+    }
+
+    public void scrollToPixelVertical(double pixel) {
+        vfxTable.scrollToPixelVertical(pixel);
+    }
+
+    public Size getColumnsSize() {
+        return vfxTable.getColumnsSize();
+    }
+
+    public void setHelper(VFXTableHelper<T> helper) {
+        vfxTable.setHelper(helper);
+    }
+
+    public ReadOnlyObjectProperty<ViewportLayoutRequest<T>> needsViewportLayoutProperty() {
+        return vfxTable.needsViewportLayoutProperty();
+    }
+
+    public StyleableObjectProperty<ColumnsLayoutMode> columnsLayoutModeProperty() {
+        return vfxTable.columnsLayoutModeProperty();
+    }
+
+    public void requestViewportLayout() {
+        vfxTable.requestViewportLayout();
+    }
+
+    public StyleableDoubleProperty rowsHeightProperty() {
+        return vfxTable.rowsHeightProperty();
+    }
+
+    public void switchColumnsLayoutMode() {
+        vfxTable.switchColumnsLayoutMode();
+    }
+
+    public int rowsCacheSize() {
+        return vfxTable.rowsCacheSize();
+    }
+
+    public StyleableDoubleProperty clipBorderRadiusProperty() {
+        return vfxTable.clipBorderRadiusProperty();
+    }
+
+    //================================================================================
+    // Getters
+    //================================================================================
+    public ObservableList<T> getItems() {
+        return refineList;
+    }
+
+    public ObservableList<AbstractFilter<T, ?>> getFilters() {
+        return filters;
+    }
 }

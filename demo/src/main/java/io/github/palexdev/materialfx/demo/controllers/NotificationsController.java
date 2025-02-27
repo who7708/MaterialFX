@@ -22,7 +22,6 @@ import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXIconWrapper;
 import io.github.palexdev.materialfx.controls.MFXNotificationCenter;
 import io.github.palexdev.materialfx.controls.MFXSimpleNotification;
-import io.github.palexdev.materialfx.controls.cell.MFXNotificationCell;
 import io.github.palexdev.materialfx.demo.MFXDemoResourcesLoader;
 import io.github.palexdev.materialfx.demo.model.Model;
 import io.github.palexdev.materialfx.enums.NotificationPos;
@@ -59,11 +58,7 @@ public class NotificationsController {
 			MFXNotificationCenterSystem.instance().initOwner(stage);
 
 			MFXNotificationCenter center = MFXNotificationCenterSystem.instance().getCenter();
-			center.setCellFactory(notification -> new MFXNotificationCell(center, notification) {
-				{
-					setPrefHeight(400);
-				}
-			});
+            center.setCellHeight(400.0);
 		});
 	}
 

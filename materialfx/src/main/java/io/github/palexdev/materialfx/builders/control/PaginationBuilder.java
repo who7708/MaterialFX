@@ -18,14 +18,14 @@
 
 package io.github.palexdev.materialfx.builders.control;
 
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import io.github.palexdev.materialfx.builders.base.ControlBuilder;
 import io.github.palexdev.materialfx.controls.MFXPagination;
 import io.github.palexdev.materialfx.controls.cell.MFXPage;
 import javafx.geometry.Orientation;
-
-import java.util.List;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class PaginationBuilder extends ControlBuilder<MFXPagination> {
 

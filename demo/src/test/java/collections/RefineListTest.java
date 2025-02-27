@@ -1,6 +1,8 @@
 package collections;
 
-import io.github.palexdev.materialfx.collections.TransformableList;
+import java.util.Comparator;
+
+import io.github.palexdev.materialfx.collections.RefineList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -9,36 +11,34 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.framework.junit5.ApplicationExtension;
 
-import java.util.Comparator;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(ApplicationExtension.class)
-public class TransformableListTest {
+public class RefineListTest {
 	private final ObservableList<String> source = FXCollections.observableArrayList("A", "B", "C", "D", "E");
 
 	@Test
 	public void sortTest1() {
-		TransformableList<String> transformed = new TransformableList<>(source);
-		transformed.setComparator(Comparator.reverseOrder(), true);
+		RefineList<String> transformed = new RefineList<>(source);
+		transformed.setComparator(Comparator.reverseOrder());
 
-		assertEquals(transformed.get(4), "A");
-		assertEquals(transformed.indexOf("E"), 0);
-		assertEquals(transformed.viewToSource(0), 4);
-		assertEquals(transformed.sourceToView(0), 4);
+		assertEquals("A", transformed.getView().get(4));
+		assertEquals(0, transformed.getView().indexOf("E"));
+		assertEquals(4, transformed.viewToSource(0));
+		assertEquals(4, transformed.sourceToView(0));
 	}
 
 	@Test
 	public void sortAndFilterTest1() {
-		TransformableList<String> transformed = new TransformableList<>(source);
-		transformed.setComparator(Comparator.reverseOrder(), true);
+		RefineList<String> transformed = new RefineList<>(source);
+		transformed.setComparator(Comparator.reverseOrder());
 		transformed.setPredicate(s -> s.equals("A") || s.equals("C") || s.equals("E"));
 
-		assertThrows(IndexOutOfBoundsException.class, () -> transformed.get(4));
-		assertEquals(transformed.get(1), "C");
-		assertEquals(transformed.indexOf("E"), 0);
-		assertEquals(transformed.viewToSource(1), 2);
-		assertEquals(transformed.sourceToView(1), -1);
+		assertThrows(IndexOutOfBoundsException.class, () -> transformed.getView().get(4));
+		assertEquals("C", transformed.getView().get(1));
+		assertEquals(0, transformed.getView().indexOf("E"));
+		assertEquals(2, transformed.viewToSource(1));
+		assertTrue(transformed.sourceToView(1) < 0);
 	}
 
 	@Test
@@ -46,10 +46,10 @@ public class TransformableListTest {
 		SortedList<String> sorted = new SortedList<>(source);
 		sorted.setComparator(Comparator.reverseOrder());
 
-		assertEquals(sorted.get(4), "A");
-		assertEquals(sorted.indexOf("E"), 0);
-		assertEquals(sorted.getSourceIndex(0), 4);
-		assertEquals(sorted.getViewIndex(0), 4);
+		assertEquals("A", sorted.get(4));
+		assertEquals(0, sorted.indexOf("E"));
+		assertEquals(4, sorted.getSourceIndex(0));
+		assertEquals(4, sorted.getViewIndex(0));
 	}
 
 	@Test
@@ -61,9 +61,9 @@ public class TransformableListTest {
 		filtered.setPredicate(s -> s.equals("A") || s.equals("C") || s.equals("E"));
 
 		assertThrows(IndexOutOfBoundsException.class, () -> filtered.get(4));
-		assertEquals(filtered.get(1), "C");
-		assertEquals(filtered.indexOf("E"), 0);
-		assertEquals(filtered.getSourceIndex(1), 2);
+		assertEquals("C", filtered.get(1));
+		assertEquals(0, filtered.indexOf("E"));
+		assertEquals(2, filtered.getSourceIndex(1));
 		assertTrue(filtered.getViewIndex(1) < 0);
 	}
 }

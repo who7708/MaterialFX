@@ -1,5 +1,7 @@
 package combobox;
 
+import java.util.stream.IntStream;
+
 import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -10,8 +12,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import org.scenicview.ScenicView;
-
-import java.util.stream.IntStream;
 
 public class ComboBoxTest extends Application {
 
@@ -34,7 +34,7 @@ public class ComboBoxTest extends Application {
 		MFXFilterComboBox<String> c3 = new MFXFilterComboBox<>(s3);
 
 		c2.valueProperty().bind(c1.valueProperty());
-		c3.getSelectionModel().bindIndexBidirectional(c1.getSelectionModel());
+		c3.selection().bindBidirectional(c1.selection());
 
 		hBox.getChildren().addAll(c1, c2, c3);
 		Scene scene = new Scene(hBox, 800, 800);

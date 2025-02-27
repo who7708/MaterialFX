@@ -18,9 +18,11 @@
 
 package io.github.palexdev.materialfx.controls;
 
+import java.util.function.Function;
+import java.util.function.Predicate;
+
 import io.github.palexdev.materialfx.beans.properties.functional.FunctionProperty;
-import io.github.palexdev.materialfx.collections.TransformableList;
-import io.github.palexdev.materialfx.collections.TransformableListWrapper;
+import io.github.palexdev.materialfx.collections.RefineList;
 import io.github.palexdev.materialfx.controls.cell.MFXComboBoxCell;
 import io.github.palexdev.materialfx.controls.cell.MFXFilterComboBoxCell;
 import io.github.palexdev.materialfx.skins.MFXFilterComboBoxSkin;
@@ -33,9 +35,6 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Skin;
-
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 /**
  * Extends {@link MFXComboBox} and changes the popup's content slightly to
@@ -52,6 +51,7 @@ import java.util.function.Predicate;
  * Note: this combo box do not use {@link MFXComboBoxCell} and while it does allow it it should never be used.
  * Use {@link MFXFilterComboBoxCell} instead for consistent selection behavior.
  */
+// TODO check this mess
 public class MFXFilterComboBox<T> extends MFXComboBox<T> {
 	//================================================================================
 	// Properties
@@ -59,11 +59,11 @@ public class MFXFilterComboBox<T> extends MFXComboBox<T> {
 	private final String STYLECLASS = "mfx-filter-combo-box";
 
 	private final StringProperty searchText = new SimpleStringProperty();
-	private final TransformableListWrapper<T> filterList = new TransformableListWrapper<>(FXCollections.observableArrayList());
+    private final RefineList<T> refineList = new RefineList<>(FXCollections.observableArrayList());
 	private final FunctionProperty<String, Predicate<T>> filterFunction = new FunctionProperty<>(s -> t -> StringUtils.containsIgnoreCase(t.toString(), s));
 	private boolean resetOnPopupHidden = true;
 
-	private final InvalidationListener itemsChanged = invalidated -> filterList.setAll(getItems());
+    private final InvalidationListener itemsChanged = invalidated -> refineList.setAll(getItems());
 
 	//================================================================================
 	// Constructors
@@ -85,12 +85,12 @@ public class MFXFilterComboBox<T> extends MFXComboBox<T> {
 		getStyleClass().add(STYLECLASS);
 		setCellFactory(t -> new MFXFilterComboBoxCell<>(this, getFilterList(), t));
 
-		filterList.setAll(getItems());
+        refineList.setAll(getItems());
 		itemsProperty().addListener((observable, oldValue, newValue) -> {
 			if (oldValue != null) oldValue.removeListener(itemsChanged);
 			if (newValue != null) {
 				newValue.addListener(itemsChanged);
-				filterList.setAll(newValue);
+                refineList.setAll(newValue);
 			}
 		});
 		getItems().addListener(itemsChanged);
@@ -117,8 +117,8 @@ public class MFXFilterComboBox<T> extends MFXComboBox<T> {
 		this.searchText.set(searchText);
 	}
 
-	public TransformableList<T> getFilterList() {
-		return filterList.getTransformableList();
+    public RefineList<T> getFilterList() {
+        return refineList;
 	}
 
 	public Function<String, Predicate<T>> getFilterFunction() {

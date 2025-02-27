@@ -18,15 +18,23 @@
 
 package io.github.palexdev.materialfx.controls;
 
-import io.github.palexdev.materialfx.collections.TransformableListWrapper;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import java.util.stream.IntStream;
+
+import io.github.palexdev.materialfx.collections.RefineList;
 import io.github.palexdev.materialfx.controls.base.MFXMenuControl;
 import io.github.palexdev.materialfx.controls.base.Themable;
 import io.github.palexdev.materialfx.controls.cell.MFXNotificationCell;
 import io.github.palexdev.materialfx.enums.NotificationCounterStyle;
 import io.github.palexdev.materialfx.enums.NotificationState;
 import io.github.palexdev.materialfx.i18n.I18N;
+import io.github.palexdev.materialfx.selection.base.ISelectionModel;
+import io.github.palexdev.materialfx.selection.SelectionModel;
 import io.github.palexdev.materialfx.notifications.base.INotification;
-import io.github.palexdev.materialfx.selection.MultipleSelectionModel;
 import io.github.palexdev.materialfx.skins.MFXNotificationCenterSkin;
 import io.github.palexdev.materialfx.theming.MaterialFXStylesheets;
 import io.github.palexdev.materialfx.theming.base.Theme;
@@ -35,7 +43,6 @@ import io.github.palexdev.materialfx.utils.ListChangeHelper.Change;
 import io.github.palexdev.materialfx.utils.ListChangeProcessor;
 import io.github.palexdev.materialfx.utils.others.ReusableScheduledExecutor;
 import io.github.palexdev.mfxcore.base.beans.range.IntegerRange;
-import io.github.palexdev.virtualizedfx.unused.simple.SimpleVirtualFlow;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.LongBinding;
 import javafx.beans.property.*;
@@ -49,19 +56,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Skin;
 import javafx.scene.input.MouseEvent;
 
-import java.util.Comparator;
-import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-import java.util.stream.IntStream;
-
 import static io.github.palexdev.materialfx.enums.NotificationCounterStyle.NUMBER;
 
 /**
  * A quite complex but easy to use implementation of a modern notification center.
  * <p></p>
- * For the notifications it uses {@link TransformableListWrapper} as list implementation, this allows
+ * For the notifications it uses {@link RefineList} as list implementation, this allows
  * not only basic operations such additions, removals and replacements, but also filter and sort operations.
  * <p></p>
  * It's composed by an icon and a popup that contains the list of notifications.
@@ -99,10 +99,10 @@ public class MFXNotificationCenter extends Control implements MFXMenuControl, Th
 	//================================================================================
 	private final String STYLE_CLASS = "mfx-notification-center";
 
-	private final TransformableListWrapper<INotification> notifications = new TransformableListWrapper<>(FXCollections.observableArrayList());
+    private final RefineList<INotification> notifications = new RefineList<>(FXCollections.observableArrayList());
 
-	private final SimpleVirtualFlow<INotification, MFXNotificationCell> virtualFlow;
-	private final MultipleSelectionModel<INotification> selectionModel = new MultipleSelectionModel<>(notifications);
+    private final MFXListView<INotification, MFXNotificationCell> listView;
+    private final ISelectionModel<INotification> selectionModel = new SelectionModel<>(notifications);
 
 	private final BooleanProperty selectionMode = new SimpleBooleanProperty(false);
 	private final ReadOnlyLongWrapper unreadCount = new ReadOnlyLongWrapper(0);
@@ -136,7 +136,7 @@ public class MFXNotificationCenter extends Control implements MFXMenuControl, Th
 	// Constructors
 	//================================================================================
 	public MFXNotificationCenter() {
-		virtualFlow = new SimpleVirtualFlow<>(
+        listView = new MFXListView<>(
 				notifications,
 				notification -> new MFXNotificationCell(this, notification),
 				Orientation.VERTICAL
@@ -170,12 +170,12 @@ public class MFXNotificationCenter extends Control implements MFXMenuControl, Th
 
 		unreadCount.bind(unreadCountBinding);
 		notifications.addListener((ListChangeListener<? super INotification>) change -> {
-			if (!selectionModel.getSelection().isEmpty()) {
+            if (!selectionModel.isEmpty()) {
 				if (change.getList().isEmpty()) {
 					selectionModel.clearSelection();
 				} else {
 					Change c = ListChangeHelper.processChange(change, IntegerRange.of(0, Integer.MAX_VALUE));
-					ListChangeProcessor updater = new ListChangeProcessor(selectionModel.getSelection().keySet());
+                    ListChangeProcessor updater = new ListChangeProcessor(selectionModel.selection().keySet());
 					c.processReplacement((changed, removed) -> selectionModel.replaceSelection(changed.toArray(new Integer[0])));
 					c.processAddition((from, to, added) -> {
 						updater.computeAddition(added.size(), from);
@@ -288,7 +288,7 @@ public class MFXNotificationCenter extends Control implements MFXMenuControl, Th
 				.get();
 
 
-		contextMenu = MFXContextMenu.Builder.build(virtualFlow)
+        contextMenu = MFXContextMenu.Builder.build(listView)
 				.addSeparator(new Label(I18N.getOrDefault("notificationCenter.contextMenu.selectionSeparator")))
 				.addItems(selectAll, selectRead, selectUnread, clearSelection)
 				.addSeparator(new Label(I18N.getOrDefault("notificationCenter.contextMenu.sortingSeparator")))
@@ -340,7 +340,7 @@ public class MFXNotificationCenter extends Control implements MFXMenuControl, Th
 		markNotificationsAs(
 				state,
 				getCells().values().stream()
-						.map(MFXNotificationCell::getNotification)
+                    .map(MFXNotificationCell::getItem)
 						.toArray(INotification[]::new)
 		);
 	}
@@ -349,7 +349,7 @@ public class MFXNotificationCenter extends Control implements MFXMenuControl, Th
 	 * Sets all the selected notifications' state to the given state.
 	 */
 	public void markSelectedNotificationsAs(NotificationState state) {
-		markNotificationsAs(state, selectionModel.getSelection().values().toArray(INotification[]::new));
+        markNotificationsAs(state, selectionModel.selection().values().toArray(INotification[]::new));
 	}
 
 	/**
@@ -373,14 +373,14 @@ public class MFXNotificationCenter extends Control implements MFXMenuControl, Th
 	 * Sets all the visible notifications' state to READ, then removes them from the notifications list.
 	 */
 	public void dismissVisible() {
-		dismiss(getCells().values().stream().map(MFXNotificationCell::getNotification).toArray(INotification[]::new));
+        dismiss(getCells().values().stream().map(MFXNotificationCell::getItem).toArray(INotification[]::new));
 	}
 
 	/**
 	 * Sets all the selected notifications' state to READ, then removes them from the notifications list.
 	 */
 	public void dismissSelected() {
-		dismiss(getSelectionModel().getSelection().values().toArray(INotification[]::new));
+        dismiss(getSelectionModel().selection().values().toArray(INotification[]::new));
 	}
 
 	/**
@@ -397,14 +397,14 @@ public class MFXNotificationCenter extends Control implements MFXMenuControl, Th
 	/**
 	 * @return the list of notifications
 	 */
-	public TransformableListWrapper<INotification> getNotifications() {
+    public RefineList<INotification> getNotifications() {
 		return notifications;
 	}
 
 	/**
 	 * @return the selection model instance used to keep track of selected notifications
 	 */
-	public MultipleSelectionModel<INotification> getSelectionModel() {
+    public ISelectionModel<INotification> getSelectionModel() {
 		return selectionModel;
 	}
 
@@ -615,95 +615,40 @@ public class MFXNotificationCenter extends Control implements MFXMenuControl, Th
 	// Delegate Methods
 	//================================================================================
 
-	/**
-	 * Delegate method for {@link SimpleVirtualFlow#getCell(int)}.
-	 */
 	public MFXNotificationCell getCell(int index) {
-		return virtualFlow.getCell(index);
+        return listView.getCellsByIndexUnmodifiable().get(index);
 	}
 
-	/**
-	 * Delegate method for {@link SimpleVirtualFlow#getCells()}.
-	 */
 	public Map<Integer, MFXNotificationCell> getCells() {
-		return virtualFlow.getCells();
+        return listView.getCellsByIndexUnmodifiable();
 	}
 
-	/**
-	 * Delegate method for {@link SimpleVirtualFlow#scrollBy(double)}.
-	 */
 	public void scrollBy(double pixels) {
-		virtualFlow.scrollBy(pixels);
+        listView.scrollBy(pixels);
 	}
 
-	/**
-	 * Delegate method for {@link SimpleVirtualFlow#scrollTo(int)}.
-	 */
 	public void scrollTo(int index) {
-		virtualFlow.scrollTo(index);
+        listView.scrollToIndex(index);
 	}
 
-	/**
-	 * Delegate method for {@link SimpleVirtualFlow#scrollToFirst()}.
-	 */
 	public void scrollToFirst() {
-		virtualFlow.scrollToFirst();
+        listView.scrollToFirst();
 	}
 
-	/**
-	 * Delegate method for {@link SimpleVirtualFlow#scrollToLast()}.
-	 */
 	public void scrollToLast() {
-		virtualFlow.scrollToLast();
+        listView.scrollToLast();
 	}
 
-	/**
-	 * Delegate method for {@link SimpleVirtualFlow#scrollToPixel(double)}.
-	 */
 	public void scrollToPixel(double pixel) {
-		virtualFlow.scrollToPixel(pixel);
+        listView.scrollToPixel(pixel);
 	}
 
-	/**
-	 * Delegate method for {@link SimpleVirtualFlow#setHSpeed(double, double)}.
-	 */
-	public void setHSpeed(double unit, double block) {
-		virtualFlow.setHSpeed(unit, block);
-	}
-
-	/**
-	 * Delegate method for {@link SimpleVirtualFlow#setVSpeed(double, double)}.
-	 */
-	public void setVSpeed(double unit, double block) {
-		virtualFlow.setVSpeed(unit, block);
-	}
-
-	/**
-	 * Delegate method for {@link SimpleVirtualFlow#getVerticalPosition()}.
-	 */
-	public double getVerticalPosition() {
-		return virtualFlow.getVerticalPosition();
-	}
-
-	/**
-	 * Delegate method for {@link SimpleVirtualFlow#getHorizontalPosition()}.
-	 */
-	public double getHorizontalPosition() {
-		return virtualFlow.getHorizontalPosition();
-	}
-
-	/**
-	 * Delegate method for {@link SimpleVirtualFlow#setCellFactory(Function)}.
-	 */
 	public void setCellFactory(Function<INotification, MFXNotificationCell> cellFactory) {
-		virtualFlow.setCellFactory(cellFactory);
+        listView.setCellFactory(cellFactory);
 	}
 
-	/**
-	 * Delegate method for {@link SimpleVirtualFlow#features()}.
-	 */
-	public SimpleVirtualFlow<INotification, MFXNotificationCell>.Features features() {
-		return virtualFlow.features();
+    public void setCellHeight(double height) {
+        listView.setCellSize(height);
 	}
 
 	//================================================================================
@@ -722,6 +667,6 @@ public class MFXNotificationCenter extends Control implements MFXMenuControl, Th
 
 	@Override
 	protected Skin<?> createDefaultSkin() {
-		return new MFXNotificationCenterSkin(this, virtualFlow);
+        return new MFXNotificationCenterSkin(this, listView);
 	}
 }

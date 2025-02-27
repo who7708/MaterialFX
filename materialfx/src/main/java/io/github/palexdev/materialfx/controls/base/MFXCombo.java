@@ -18,11 +18,15 @@
 
 package io.github.palexdev.materialfx.controls.base;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 import io.github.palexdev.materialfx.beans.properties.EventHandlerProperty;
 import io.github.palexdev.materialfx.beans.properties.functional.ConsumerProperty;
-import io.github.palexdev.materialfx.selection.base.ISingleSelectionModel;
-import io.github.palexdev.virtualizedfx.cell.Cell;
+import io.github.palexdev.materialfx.selection.base.ISelectionModel;
+import io.github.palexdev.virtualizedfx.cells.base.VFXCell;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
@@ -30,9 +34,6 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.util.StringConverter;
-
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * Public API every combo box must implement.
@@ -123,24 +124,24 @@ public interface MFXCombo<T> {
 	/**
 	 * Specifies the combo box's items list.
 	 */
-	ObjectProperty<ObservableList<T>> itemsProperty();
+    ListProperty<T> itemsProperty();
 
 	void setItems(ObservableList<T> items);
 
-	Function<T, Cell<T>> getCellFactory();
+    Function<T, VFXCell<T>> getCellFactory();
 
 	/**
 	 * Specifies the function used to create the items cells
 	 * in the popup.
 	 */
-	ObjectProperty<Function<T, Cell<T>>> cellFactoryProperty();
+    ObjectProperty<Function<T, VFXCell<T>>> cellFactoryProperty();
 
-	void setCellFactory(Function<T, Cell<T>> cellFactory);
+    void setCellFactory(Function<T, VFXCell<T>> cellFactory);
 
 	/**
 	 * @return the combo box' selection model
 	 */
-	ISingleSelectionModel<T> getSelectionModel();
+    ISelectionModel<T> getSelectionModel();
 
 	EventHandler<ActionEvent> getOnAction();
 

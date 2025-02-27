@@ -370,9 +370,6 @@
 
 /* Combo */
 .mfx-combo-box {
-  -mfx-track-color: rgb(230, 230, 230);
-  -mfx-thumb-color: rgb(137, 137, 137);
-  -mfx-thumb-hover-color: rgb(89, 88, 91);
   -mfx-gap: 0;
   -fx-padding: 3 5 3 5;
 }
@@ -386,10 +383,13 @@
   -mfx-color: -mfx-main;
 }
 
-.mfx-combo-box .combo-popup .virtual-flow {
+.mfx-combo-box .combo-popup .vfx-scroll-pane {
+  -fx-background-color: white;
   -fx-background-radius: 5;
   -fx-border-color: #ebebeb;
   -fx-border-radius: 5;
+  -fx-max-height: 200;
+  -vfx-layout-mode: COMPACT;
 }
 
 .mfx-combo-box:disabled .caret .mfx-font-icon {
@@ -405,10 +405,13 @@
   -mfx-editable: false;
 }
 
-.mfx-filter-combo-box .combo-popup .virtual-flow {
-  -fx-background-color: transparent;
-  -fx-background-radius: 0;
+.mfx-filter-combo-box .combo-popup .vfx-scroll-pane {
+  -fx-background-color: white;
+  -fx-background-radius: 5;
+  -fx-border-color: #ebebeb;
+  -fx-border-radius: 5;
   -fx-max-height: 200;
+  -vfx-layout-mode: COMPACT;
 }
 
 .mfx-filter-combo-box .combo-popup .search-container {
@@ -1002,25 +1005,6 @@ Active Filters
 }
 
 /* List View */
-.mfx-list-view {
-  -mfx-track-color: rgb(230, 230, 230);
-  -mfx-thumb-color: rgb(137, 137, 137);
-  -mfx-thumb-hover-color: rgb(89, 88, 91);
-}
-
-.mfx-list-view .virtual-flow .scroll-bar .track {
-  -fx-background-color: -mfx-track-color;
-}
-
-.mfx-list-view .virtual-flow .scroll-bar .thumb {
-  -fx-background-color: -mfx-thumb-color;
-}
-
-.mfx-list-view .virtual-flow .scroll-bar .thumb:pressed,
-.mfx-list-view .virtual-flow .scroll-bar .thumb:hover {
-  -fx-background-color: -mfx-thumb-hover-color;
-}
-
 .mfx-list-cell {
   -fx-background-color: white;
   -fx-border-color: white;

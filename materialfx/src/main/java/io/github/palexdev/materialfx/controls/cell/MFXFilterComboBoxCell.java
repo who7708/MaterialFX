@@ -18,39 +18,55 @@
 
 package io.github.palexdev.materialfx.controls.cell;
 
-import io.github.palexdev.materialfx.collections.TransformableList;
+import io.github.palexdev.materialfx.collections.RefineList;
 import io.github.palexdev.materialfx.controls.base.MFXCombo;
+import io.github.palexdev.mfxcore.builders.bindings.BooleanBindingBuilder;
+import io.github.palexdev.virtualizedfx.base.VFXContainer;
 
 /**
  * Extends {@link MFXComboBoxCell} to modify the {@link #updateIndex(int)} method.
  */
 public class MFXFilterComboBoxCell<T> extends MFXComboBoxCell<T> {
-	//================================================================================
-	// Properties
-	//================================================================================
-	private final TransformableList<T> filterList;
+    //================================================================================
+    // Properties
+    //================================================================================
+    private final RefineList<T> refineList;
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public MFXFilterComboBoxCell(MFXCombo<T> combo, TransformableList<T> filterList, T data) {
-		super(combo, data);
-		this.filterList = filterList;
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public MFXFilterComboBoxCell(MFXCombo<T> combo, RefineList<T> refineList, T data) {
+        super(combo, data);
+        this.refineList = refineList;
+    }
 
-	//================================================================================
-	// Overridden Methods
-	//================================================================================
+    //================================================================================
+    // Overridden Methods
+    //================================================================================
 
-	/**
-	 * {@inheritDoc}
-	 * <p></p>
-	 * A filter combo box uses a {@link TransformableList} to display the filtered items
-	 * in the list. The thing is, when items are filtered their index changes as well. For
-	 * selection to work properly the index must be converted using {@link TransformableList#viewToSource(int)}.
-	 */
-	@Override
-	public void updateIndex(int index) {
-		super.updateIndex(filterList.viewToSource(index));
-	}
+
+    @Override
+    public void onCreated(VFXContainer<T> container) {
+        super.onCreated(container);
+
+        getSelectionModel().ifPresent(sm ->
+            selected.bind(BooleanBindingBuilder.build()
+                .setMapper(() -> {
+                    int index = getIndex();
+                    if (refineList.getPredicate() != null) {
+                        try {
+                            int toSource = refineList.viewToSource(index);
+                            return sm.contains(toSource);
+                        } catch (IndexOutOfBoundsException ex) {
+                            return false;
+                        }
+                    } else {
+                        return sm.contains(index);
+                    }
+                })
+                .addSources(sm.selection(), indexProperty(), refineList.getView())
+                .get()
+            )
+        );
+    }
 }

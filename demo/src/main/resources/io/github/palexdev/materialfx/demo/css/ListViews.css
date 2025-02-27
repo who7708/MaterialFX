@@ -20,19 +20,28 @@
 @import 'Common.css';
 @import 'MFXColors.css';
 
-.mfx-list-view .virtual-flow .mfx-list-cell .data-label {
+.vfx-scroll-pane {
+  -vfx-smooth-scroll: true;
+  -vfx-layout-mode: COMPACT;
+}
+
+.vfx-scroll-pane .viewport {
+  -fx-padding: 4px;
+}
+
+.mfx-list-view .mfx-list-cell .data-label {
 	-fx-font-family: 'Open Sans Regular';
 }
 
-.mfx-list-view .virtual-flow .mfx-list-cell:selected .data-label {
+.mfx-list-view .mfx-list-cell:selected .data-label {
 	-fx-font-family: 'Open Sans SemiBold';
 }
 
-.mfx-check-list-view .virtual-flow .mfx-check-list-cell .data-label {
+.mfx-check-list-view .mfx-check-list-cell .data-label {
 	-fx-font-family: 'Open Sans Regular';
 }
 
-.mfx-check-list-view .virtual-flow .mfx-check-list-cell:selected .data-label {
+.mfx-check-list-view .mfx-check-list-cell:selected .data-label {
 	-fx-font-family: 'Open Sans SemiBold';
 }
 
@@ -41,43 +50,34 @@
 	-fx-background-radius: 10;
 	-fx-border-color: -mfx-purple;
 	-fx-border-radius: 10;
-	-fx-padding: 4;
-}
-
-#custList .virtual-flow {
-	-fx-background-color: transparent;
 }
 
 #custList:focused {
 	-fx-border-color: -mfx-purple;
 }
 
-#custList .virtual-flow .mfx-list-cell {
+#custList .mfx-list-cell {
 	-fx-background-color: transparent;
 	-fx-border-color: transparent;
 	-fx-background-radius: 10;
-	-fx-border-radius: 10;
 }
 
-#custList .virtual-flow .mfx-list-cell .data-label {
+#custList .mfx-list-cell .label {
 	-fx-text-fill: white;
+  -fx-padding: 2px;
 }
 
-#custList .virtual-flow .mfx-list-cell .user-icon {
+#custList .mfx-list-cell .user-icon {
 	-mfx-color: white;
 }
 
-#custList .virtual-flow .mfx-list-cell:hover,
-#custList .virtual-flow .mfx-list-cell:selected {
+#custList .mfx-list-cell:hover,
+#custList .mfx-list-cell:selected {
 	-fx-background-color: rgba(255, 255, 255, 0.3);
 }
 
-#custList .virtual-flow .mfx-list-cell .mfx-ripple-generator {
-	-mfx-auto-clip: true;
-}
-
-#custList .virtual-flow .mfx-list-cell:selected .mfx-ripple-generator {
-	-mfx-paused: true;
+#custList .mfx-list-cell .mfx-ripple-generator {
+  -mfx-ripple-color: rgba(255, 255, 255, 0.15);
 }
 
 .mfx-button {

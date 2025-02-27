@@ -18,11 +18,11 @@
 
 package io.github.palexdev.materialfx.builders.control;
 
-import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
-
 import java.util.Comparator;
 import java.util.function.Function;
 import java.util.function.Predicate;
+
+import io.github.palexdev.materialfx.controls.MFXFilterComboBox;
 
 public class FilterComboBuilder<T> extends ComboBuilder<T, MFXFilterComboBox<T>> {
 
@@ -71,11 +71,6 @@ public class FilterComboBuilder<T> extends ComboBuilder<T, MFXFilterComboBox<T>>
 	
 	public FilterComboBuilder<T> setComparator(Comparator<T> comparator) {
 		node.getFilterList().setComparator(comparator);
-		return this;
-	}
-
-	public FilterComboBuilder<T> setComparator(Comparator<T> comparator, boolean isReverse) {
-		node.getFilterList().setComparator(comparator, isReverse);
 		return this;
 	}
 }

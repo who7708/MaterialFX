@@ -18,37 +18,40 @@
 
 package io.github.palexdev.materialfx.demo.controllers;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import io.github.palexdev.materialfx.controls.MFXCheckListView;
 import io.github.palexdev.materialfx.controls.MFXListView;
+import io.github.palexdev.materialfx.controls.cell.MFXCheckListCell;
 import io.github.palexdev.materialfx.controls.cell.MFXListCell;
+import io.github.palexdev.materialfx.controls.legacy.MFXLegacyListCell;
+import io.github.palexdev.materialfx.controls.legacy.MFXLegacyListView;
 import io.github.palexdev.materialfx.demo.model.Model;
 import io.github.palexdev.materialfx.demo.model.Person;
-import io.github.palexdev.materialfx.effects.DepthLevel;
-import io.github.palexdev.mfxresources.fonts.MFXFontIcon;
-import io.github.palexdev.materialfx.utils.ColorUtils;
 import io.github.palexdev.materialfx.utils.others.FunctionalStringConverter;
+import io.github.palexdev.mfxeffects.enums.ElevationLevel;
+import io.github.palexdev.mfxresources.fonts.MFXFontIcon;
+import io.github.palexdev.virtualizedfx.cells.base.VFXCell;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.util.StringConverter;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 public class ListViewsController implements Initializable {
 
     @FXML
-    private MFXListView<String> list;
+    private MFXListView<String, VFXCell<String>> list;
 
     @FXML
-    private MFXListView<Person> custList;
+    private MFXListView<Person, VFXCell<Person>> custList;
 
     @FXML
-    private MFXCheckListView<String> checkList;
+    private MFXCheckListView<String, VFXCell<String>> checkList;
 
     @FXML
-    private MFXListView<Person> legacyList;
+    private MFXLegacyListView<Person> legacyList;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -57,45 +60,42 @@ public class ListViewsController implements Initializable {
         StringConverter<Person> converter = FunctionalStringConverter.to(person -> (person == null) ? "" : person.getName() + " " + person.getSurname());
 
         list.setItems(strings);
+        list.setCellFactory(MFXListCell::new);
+
         custList.setItems(people);
+        custList.setCellFactory(p -> new PersonCellFactory(p).setConverter(converter));
+
         checkList.setItems(strings);
-        custList.setConverter(converter);
-        custList.setCellFactory(person -> new PersonCellFactory(custList, person));
-        custList.features().enableBounceEffect();
-        custList.features().enableSmoothScrolling(0.5);
+        checkList.setCellFactory(MFXCheckListCell::new);
 
         legacyList.setItems(people);
-        legacyList.setConverter(converter);
-    }
-
-    @FXML
-    void changeColors(ActionEvent event) {
-        custList.setTrackColor(ColorUtils.getRandomColor());
-        custList.setThumbColor(ColorUtils.getRandomColor());
-        custList.setThumbHoverColor(ColorUtils.getRandomColor());
+        legacyList.setCellFactory(p -> new MFXLegacyListCell<>() {
+            @Override
+            protected void updateItem(Person item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(item != null ? converter.toString(item) : "");
+            }
+        });
     }
 
     @FXML
     void changeDepth(ActionEvent event) {
-        DepthLevel newLevel = (custList.getDepthLevel() == DepthLevel.LEVEL0) ? DepthLevel.LEVEL2 : DepthLevel.LEVEL0;
-        custList.setDepthLevel(newLevel);
+        ElevationLevel depth = list.getDepth();
+        ElevationLevel next = depth == ElevationLevel.LEVEL0 ? ElevationLevel.LEVEL3 : ElevationLevel.LEVEL0;
+
+        list.setDepth(next);
+        custList.setDepth(next);
+        checkList.setDepth(next);
     }
 
     private static class PersonCellFactory extends MFXListCell<Person> {
-        private final MFXFontIcon userIcon;
 
-        public PersonCellFactory(MFXListView<Person> listView, Person data) {
-            super(listView, data);
+        public PersonCellFactory(Person data) {
+            super(data);
 
-            userIcon = new MFXFontIcon("fas-user", 18);
+            MFXFontIcon userIcon = new MFXFontIcon("fas-user", 18);
             userIcon.getStyleClass().add("user-icon");
-            render(data);
-        }
-
-        @Override
-        protected void render(Person data) {
-            super.render(data);
-            if (userIcon != null) getChildren().add(0, userIcon);
+            setGraphic(userIcon);
         }
     }
 }

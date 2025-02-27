@@ -28,7 +28,6 @@ import io.github.palexdev.materialfx.factories.InsetsFactory;
 import io.github.palexdev.materialfx.i18n.I18N;
 import io.github.palexdev.materialfx.notifications.base.INotification;
 import io.github.palexdev.materialfx.utils.NodeUtils;
-import io.github.palexdev.virtualizedfx.unused.simple.SimpleVirtualFlow;
 import javafx.beans.binding.Bindings;
 import javafx.css.Styleable;
 import javafx.geometry.Bounds;
@@ -60,7 +59,7 @@ public class MFXNotificationCenterSkin extends SkinBase<MFXNotificationCenter> {
     //================================================================================
     // Constructors
     //================================================================================
-    public MFXNotificationCenterSkin(MFXNotificationCenter notificationCenter, SimpleVirtualFlow<INotification, MFXNotificationCell> virtualFlow) {
+    public MFXNotificationCenterSkin(MFXNotificationCenter notificationCenter, MFXListView<INotification, MFXNotificationCell> listView) {
         super(notificationCenter);
 
         bellWrapped = new MFXIconWrapper("fas-bell", 36, 56);
@@ -113,7 +112,7 @@ public class MFXNotificationCenterSkin extends SkinBase<MFXNotificationCenter> {
 
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(header);
-        borderPane.setCenter(virtualFlow);
+        borderPane.setCenter(listView);
         borderPane.setBottom(actions);
         borderPane.getStyleClass().add("notifications-container");
 
@@ -121,7 +120,7 @@ public class MFXNotificationCenterSkin extends SkinBase<MFXNotificationCenter> {
         borderPane.setMaxHeight(Region.USE_PREF_SIZE);
         borderPane.prefWidthProperty().bind(notificationCenter.popupWidthProperty());
         borderPane.prefHeightProperty().bind(notificationCenter.popupHeightProperty());
-        BorderPane.setMargin(virtualFlow, InsetsFactory.all(5));
+        BorderPane.setMargin(listView, InsetsFactory.all(5));
 
         popup = new MFXPopup(borderPane) {
             @Override

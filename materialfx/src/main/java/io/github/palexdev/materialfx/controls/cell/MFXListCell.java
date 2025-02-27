@@ -1,164 +1,231 @@
-/*
- * Copyright (C) 2022 Parisi Alessandro
- * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX).
- *
- * MaterialFX is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * MaterialFX is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with MaterialFX.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package io.github.palexdev.materialfx.controls.cell;
 
-import io.github.palexdev.materialfx.beans.PositionBean;
-import io.github.palexdev.materialfx.controls.MFXListView;
-import io.github.palexdev.materialfx.controls.cell.base.AbstractMFXListCell;
-import io.github.palexdev.materialfx.effects.ripple.MFXCircleRippleGenerator;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import io.github.palexdev.materialfx.selection.base.ISelectionModel;
+import io.github.palexdev.materialfx.selection.base.WithSelectionModel;
+import io.github.palexdev.materialfx.skins.MFXListCellSkin;
 import io.github.palexdev.materialfx.theming.MaterialFXStylesheets;
-import io.github.palexdev.materialfx.theming.base.Theme;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.ObjectExpression;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.control.Label;
+import io.github.palexdev.materialfx.theming.PseudoClasses;
+import io.github.palexdev.mfxcore.base.properties.styleable.StyleableDoubleProperty;
+import io.github.palexdev.mfxcore.builders.bindings.BooleanBindingBuilder;
+import io.github.palexdev.mfxcore.controls.SkinBase;
+import io.github.palexdev.mfxcore.utils.fx.SceneBuilderIntegration;
+import io.github.palexdev.mfxcore.utils.fx.StyleUtils;
+import io.github.palexdev.virtualizedfx.base.VFXContainer;
+import io.github.palexdev.virtualizedfx.cells.CellBaseBehavior;
+import io.github.palexdev.virtualizedfx.cells.VFXSimpleCell;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
+import javafx.css.CssMetaData;
+import javafx.css.Styleable;
+import javafx.css.StyleablePropertyFactory;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.util.StringConverter;
 
-/**
- * Simple implementation of {@link AbstractMFXListCell},
- * includes a ripple generator for ripple effects on mouse pressed.
- * <p></p>
- * The label used to display the data is built in the constructor
- * only if the given T data is not a Node, otherwise it's null.
- * <p></p>
- * The label's text is bound to the data property and converted to a String
- * using {@link ObjectExpression#asString()}.
- */
-public class MFXListCell<T> extends AbstractMFXListCell<T> {
-	//================================================================================
-	// Properties
-	//================================================================================
-	private final String STYLE_CLASS = "mfx-list-cell";
-	protected final MFXCircleRippleGenerator rippleGenerator = new MFXCircleRippleGenerator(this);
+public class MFXListCell<T> extends VFXSimpleCell<T> {
+    //================================================================================
+    // Properties
+    //================================================================================
+    protected final ReadOnlyBooleanWrapper selected = new ReadOnlyBooleanWrapper(false) {
+        @Override
+        protected void invalidated() {
+            PseudoClasses.setOn(MFXListCell.this, PseudoClasses.SELECTED, get());
+        }
+    };
 
-	private final Label label;
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public MFXListCell(T item) {
+        super(item);
+    }
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public MFXListCell(MFXListView<T> listView, T data) {
-		super(listView, data);
+    public MFXListCell(T item, StringConverter<T> converter) {
+        super(item, converter);
+    }
 
-		if (!(data instanceof Node)) {
-			label = new Label();
-			label.textProperty().bind(Bindings.createStringBinding(
-					() -> listView.getConverter() != null ? listView.getConverter().toString(getData()) : getData().toString(),
-					dataProperty(), listView.converterProperty()
-			));
-			label.getStyleClass().add("data-label");
-		} else {
-			label = null;
-		}
+    //================================================================================
+    // Overridden Methods
+    //================================================================================
+    @Override
+    public void onCreated(VFXContainer<T> container) {
+        super.onCreated(container);
 
-		initialize();
-	}
+        getSelectionModel().ifPresent(sm ->
+            selected.bind(BooleanBindingBuilder.build()
+                .setMapper(() -> sm.contains(getIndex()))
+                .addSources(sm.selection(), indexProperty())
+                .get()
+            )
+        );
 
-	//================================================================================
-	// Methods
-	//================================================================================
+        sceneBuilderIntegration();
+    }
 
-	/**
-	 * Overridden to add the style class, setup the ripple generator and call {@link #render(Object)}
-	 * for the first time.
-	 */
-	@Override
-	protected void initialize() {
-		super.initialize();
-		getStyleClass().add(STYLE_CLASS);
-		setupRippleGenerator();
-		render(getData());
-		sceneBuilderIntegration();
-	}
+    @Override
+    protected SkinBase<?, ?> buildSkin() {
+        return new MFXListCellSkin<>(this);
+    }
 
-	/**
-	 * Sets up the properties of the ripple generator and adds the mouse pressed filter.
-	 */
-	protected void setupRippleGenerator() {
-		rippleGenerator.setManaged(false);
-		rippleGenerator.setRipplePositionFunction(event -> PositionBean.of(event.getX(), event.getY()));
-		rippleGenerator.rippleRadiusProperty().bind(widthProperty().divide(2.0));
-		addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
-			if (event.getButton() == MouseButton.PRIMARY) {
-				rippleGenerator.generateRipple(event);
-			}
-		});
-	}
+    @Override
+    public Supplier<CellBaseBehavior<T>> defaultBehaviorProvider() {
+        return () -> new MFXListCellBehavior<>(this);
+    }
 
-	//================================================================================
-	// Overridden/Implemented Methods
-	//================================================================================
+    @Override
+    public List<String> defaultStyleClasses() {
+        return List.of("cell-base", "cell", "mfx-list-cell");
+    }
 
-	/**
-	 * Responsible for rendering the cell's content.
-	 * <p>
-	 * If the given data type is a Node, it is added to the children list,
-	 * otherwise a label is used to display the data.
-	 * <p>
-	 * At the end adds a ripple generator at index 0.
-	 */
-	@Override
-	protected void render(T data) {
-		if (data instanceof Node) {
-			getChildren().setAll(rippleGenerator, (Node) data);
-		} else {
-			getChildren().setAll(rippleGenerator, label);
-		}
-	}
+    @Override
+    protected void sceneBuilderIntegration() {
+        SceneBuilderIntegration.ifInSceneBuilder(() -> getStylesheets().add(MaterialFXStylesheets.LIST_CELL.toData()));
+    }
 
-	/**
-	 * Updates the data property of the cell. If the data is a Node
-	 * {@link #render(Object)} is called.
-	 * <p>
-	 * This is called after {@link #updateIndex(int)}.
-	 */
-	@Override
-	public void updateItem(T item) {
-		super.updateItem(item);
-		if (item instanceof Node) render(item);
-	}
+    //================================================================================
+    // Styleable Properties
+    //================================================================================
+    private final StyleableDoubleProperty hGap = new StyleableDoubleProperty(
+        StyleableProperties.HGAP,
+        this,
+        "hGap",
+        10.0
+    );
 
-	@Override
-	public Parent toParent() {
-		return this;
-	}
+    public double getHGap() {
+        return hGap.get();
+    }
 
-	@Override
-	public Theme getTheme() {
-		return MaterialFXStylesheets.LIST_CELL;
-	}
+    public StyleableDoubleProperty hGapProperty() {
+        return hGap;
+    }
 
-	@Override
-	public String toString() {
-		String className = getClass().getName();
-		String simpleName = className.substring(className.lastIndexOf('.') + 1);
-		StringBuilder sb = new StringBuilder();
-		sb.append("[").append(simpleName);
-		sb.append('@');
-		sb.append(Integer.toHexString(hashCode()));
-		sb.append("]");
-		sb.append("[Data:").append(getData()).append("]");
-		if (getId() != null) {
-			sb.append("[id:").append(getId()).append("]");
-		}
+    public void setHGap(double hGap) {
+        this.hGap.set(hGap);
+    }
 
-		return sb.toString();
-	}
+    //================================================================================
+    // CssMetaData
+    //================================================================================
+    private static class StyleableProperties {
+        private static final StyleablePropertyFactory<MFXListCell<?>> FACTORY = new StyleablePropertyFactory<>(VFXSimpleCell.getClassCssMetaData());
+        private static final List<CssMetaData<? extends Styleable, ?>> cssMetaDataList;
+
+        private static final CssMetaData<MFXListCell<?>, Number> HGAP =
+            FACTORY.createSizeCssMetaData(
+                "-fx-hgap",
+                MFXListCell::hGapProperty,
+                10.0
+            );
+
+        static {
+            cssMetaDataList = StyleUtils.cssMetaDataList(
+                VFXSimpleCell.getClassCssMetaData(),
+                HGAP
+            );
+        }
+    }
+
+    public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
+        return StyleableProperties.cssMetaDataList;
+    }
+
+    @Override
+    protected List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
+        return getClassCssMetaData();
+    }
+
+    //================================================================================
+    // Getters
+    //================================================================================
+    @SuppressWarnings("unchecked")
+    public Optional<ISelectionModel<T>> getSelectionModel() {
+        if (getContainer() instanceof WithSelectionModel<?>) {
+            return Optional.of(((WithSelectionModel<T>) getContainer()).getSelectionModel());
+        }
+        return Optional.empty();
+    }
+
+    public boolean isSelected() {
+        return selected.get();
+    }
+
+    public ReadOnlyBooleanProperty selectedProperty() {
+        return selected.getReadOnlyProperty();
+    }
+
+    //================================================================================
+    // Inner Classes
+    //================================================================================
+    public static class MFXListCellBehavior<T> extends CellBaseBehavior<T> {
+
+        //================================================================================
+        // Constructors
+        //================================================================================
+        public MFXListCellBehavior(MFXListCell<T> cell) {
+            super(cell);
+        }
+
+        //================================================================================
+        // Methods
+        //================================================================================
+        protected void updateSelection(SelectionMode mode) {
+            MFXListCell<T> cell = getNode();
+            cell.getSelectionModel().ifPresent(sm -> {
+                int index = cell.getIndex();
+                switch (mode) {
+                    case STANDARD -> {
+                        if (cell.isSelected()) {
+                            sm.deselectIndex(index);
+                        } else {
+                            sm.selectIndex(index);
+                        }
+                    }
+                    case EXTEND -> sm.expandSelection(index, true);
+                    case REPLACE -> sm.replaceSelection(index);
+                }
+            });
+        }
+
+        //================================================================================
+        // Overridden Methods
+        //================================================================================
+        @Override
+        public void mouseClicked(MouseEvent e, Consumer<MouseEvent> callback) {
+            // We use a null event to signal the selection update comes from another node
+            if (e == null) {
+                updateSelection(SelectionMode.STANDARD);
+                return;
+            } else if (e.getButton() == MouseButton.PRIMARY) {
+                SelectionMode sm = SelectionMode.forEvent(e);
+                updateSelection(sm);
+            }
+            if (callback != null) callback.accept(e);
+        }
+
+        @Override
+        public MFXListCell<T> getNode() {
+            return (MFXListCell<T>) super.getNode();
+        }
+
+        public enum SelectionMode {
+            STANDARD,
+            EXTEND,
+            REPLACE,
+            ;
+
+            public static SelectionMode forEvent(MouseEvent me) {
+                if (me.isControlDown())
+                    return SelectionMode.STANDARD;
+                if (me.isShiftDown())
+                    return EXTEND;
+                return REPLACE;
+            }
+        }
+    }
 }

@@ -18,6 +18,12 @@
 
 package io.github.palexdev.materialfx.controls;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import io.github.palexdev.materialfx.beans.properties.functional.FunctionProperty;
 import io.github.palexdev.materialfx.beans.properties.functional.SupplierProperty;
 import io.github.palexdev.materialfx.controls.base.Themable;
@@ -31,12 +37,6 @@ import javafx.geometry.Orientation;
 import javafx.scene.Parent;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * This is the implementation of a smart, material pagination control in JavaFX.
@@ -187,7 +187,7 @@ public class MFXPagination extends Control implements Themable {
 				lastMax++;
 				after = false;
 			} else {
-				indexes.add(0, lastMin);
+                indexes.addFirst(lastMin);
 				lastMin--;
 				after = true;
 			}

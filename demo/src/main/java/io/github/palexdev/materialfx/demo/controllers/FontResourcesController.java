@@ -18,8 +18,10 @@
 
 package io.github.palexdev.materialfx.demo.controllers;
 
+import java.net.URL;
+import java.util.*;
+
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
-import io.github.palexdev.materialfx.controls.MFXTableRow;
 import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 import io.github.palexdev.materialfx.filter.StringFilter;
@@ -34,9 +36,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-
-import java.net.URL;
-import java.util.*;
 
 public class FontResourcesController implements Initializable {
 	private final ObservableList<IconDescriptor> fontResources;
@@ -67,12 +66,13 @@ public class FontResourcesController implements Initializable {
 
 			private void handleProvider(IconDescriptor desc) {
 				if (desc.getClass() == current) return;
-				if (desc instanceof FontAwesomeSolid) {
-					icon.setIconsProvider(IconsProviders.FONTAWESOME_SOLID);
-				} else if (desc instanceof FontAwesomeRegular) {
-					icon.setIconsProvider(IconsProviders.FONTAWESOME_REGULAR);
-				} else if (desc instanceof FontAwesomeBrands) {
-					icon.setIconsProvider(IconsProviders.FONTAWESOME_BRANDS);
+				switch (desc) {
+					case FontAwesomeSolid fontAwesomeSolid -> icon.setIconsProvider(IconsProviders.FONTAWESOME_SOLID);
+					case FontAwesomeRegular fontAwesomeRegular ->
+						icon.setIconsProvider(IconsProviders.FONTAWESOME_REGULAR);
+					case FontAwesomeBrands fontAwesomeBrands ->
+						icon.setIconsProvider(IconsProviders.FONTAWESOME_BRANDS);
+					default -> {}
 				}
 				current = desc.getClass();
 			}
@@ -92,15 +92,10 @@ public class FontResourcesController implements Initializable {
 		});
 		codeColumn.setRowCellFactory(resource -> new MFXTableRowCell<>(IconDescriptor::getCode, character -> Integer.toHexString(character | 0x10000).substring(1).toUpperCase()));
 
-		tableView.setTableRowFactory(resource -> new MFXTableRow<>(tableView, resource) {{
-			setPrefHeight(48);
-		}});
-		tableView.getTableColumns().addAll(iconColumn, descriptionColumn, codeColumn);
+		tableView.setRowsHeight(48.0);
+		//tableView.getColumns().addAll(iconColumn, descriptionColumn, codeColumn);
 		tableView.getFilters().add(new StringFilter<>("Description", IconDescriptor::getDescription));
-		tableView.setItems(fontResources);
-		tableView.features().enableBounceEffect();
-		tableView.features().enableSmoothScrolling(0.7);
-		tableView.autosizeColumnsOnInitialization();
+		tableView.getItems().setAll(fontResources);
 
 		header.setText("MaterialFX Font Resources (" + fontResources.size() + " in total)");
 	}

@@ -18,22 +18,19 @@
 
 package io.github.palexdev.materialfx.selection;
 
-import javafx.beans.property.ObjectProperty;
+import java.util.Map;
+
 import javafx.collections.ObservableList;
 
 /**
- * Extension of {@link SingleSelectionModel} to implement a few more methods for comboboxes.
+ * Extension of {@link SelectionModel} to implement a few more methods for combo boxes.
  */
-public class ComboBoxSelectionModel<T> extends SingleSelectionModel<T> {
+public class ComboBoxSelectionModel<T> extends SelectionModel<T> {
 
 	//================================================================================
 	// Constructors
 	//================================================================================
 	public ComboBoxSelectionModel(ObservableList<T> items) {
-		super(items);
-	}
-
-	public ComboBoxSelectionModel(ObjectProperty<ObservableList<T>> items) {
 		super(items);
 	}
 
@@ -78,17 +75,22 @@ public class ComboBoxSelectionModel<T> extends SingleSelectionModel<T> {
 		selectIndex(index);
 	}
 
+    public int getSelectedIndex() {
+        Map.Entry<Integer, T> e = getSelectedEntry();
+        return (e == null) ? -1 : e.getKey();
+    }
+
 	/**
 	 * Convenience method to get the items list size.
 	 */
 	private int itemsSize() {
-		return items.get().size();
+        return getItems().size();
 	}
 
 	/**
 	 * Convenience method to check if the items list is empty.
 	 */
 	private boolean itemsEmpty() {
-		return items.get().isEmpty();
+        return getItems().isEmpty();
 	}
 }

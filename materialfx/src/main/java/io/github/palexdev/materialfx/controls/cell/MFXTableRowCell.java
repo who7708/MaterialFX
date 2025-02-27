@@ -19,8 +19,6 @@
 package io.github.palexdev.materialfx.controls.cell;
 
 import io.github.palexdev.materialfx.controls.MFXTableColumn;
-import io.github.palexdev.materialfx.controls.MFXTableRow;
-import io.github.palexdev.materialfx.controls.MFXTableView;
 import io.github.palexdev.materialfx.skins.MFXTableRowCellSkin;
 import io.github.palexdev.materialfx.utils.others.FunctionalStringConverter;
 import javafx.beans.property.ObjectProperty;

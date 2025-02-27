@@ -18,6 +18,9 @@
 
 package io.github.palexdev.materialfx.builders.control;
 
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+
 import io.github.palexdev.materialfx.builders.base.ControlBuilder;
 import io.github.palexdev.materialfx.controls.MFXNotificationCenter;
 import io.github.palexdev.materialfx.controls.cell.MFXNotificationCell;
@@ -26,9 +29,6 @@ import io.github.palexdev.materialfx.enums.NotificationState;
 import io.github.palexdev.materialfx.notifications.base.INotification;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
-
-import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 
 public class NotificationCenterBuilder extends ControlBuilder<MFXNotificationCenter> {
 
@@ -190,7 +190,8 @@ public class NotificationCenterBuilder extends ControlBuilder<MFXNotificationCen
 		return this;
 	}
 
-	public NotificationCenterBuilder setHSpeed(double unit, double block) {
+    // TODO fix these
+/*	public NotificationCenterBuilder setHSpeed(double unit, double block) {
 		node.setHSpeed(unit, block);
 		return this;
 	}
@@ -198,14 +199,15 @@ public class NotificationCenterBuilder extends ControlBuilder<MFXNotificationCen
 	public NotificationCenterBuilder setVSpeed(double unit, double block) {
 		node.setVSpeed(unit, block);
 		return this;
-	}
+	}*/
 
 	public NotificationCenterBuilder setCellFactory(Function<INotification, MFXNotificationCell> cellFactory) {
 		node.setCellFactory(cellFactory);
 		return this;
 	}
 
-	public NotificationCenterBuilder enableSmoothScrolling(double speed) {
+    // TODO and these
+/*	public NotificationCenterBuilder enableSmoothScrolling(double speed) {
 		node.features().enableSmoothScrolling(speed);
 		return this;
 	}
@@ -228,5 +230,5 @@ public class NotificationCenterBuilder extends ControlBuilder<MFXNotificationCen
 	public NotificationCenterBuilder enableBounceEffect(double strength, double maxOverscroll) {
 		node.features().enableBounceEffect(strength, maxOverscroll);
 		return this;
-	}
+	}*/
 }

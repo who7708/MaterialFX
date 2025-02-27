@@ -18,23 +18,11 @@
 
 package io.github.palexdev.materialfx.skins;
 
-import io.github.palexdev.materialfx.collections.TransformableList;
-import io.github.palexdev.materialfx.collections.TransformableListWrapper;
-import io.github.palexdev.materialfx.controls.*;
+import io.github.palexdev.materialfx.controls.MFXFilterPane;
 import io.github.palexdev.materialfx.controls.MFXTableColumn.MFXTableColumnEvent;
-import io.github.palexdev.materialfx.dialogs.MFXDialogs;
-import io.github.palexdev.materialfx.dialogs.MFXStageDialog;
-import io.github.palexdev.materialfx.enums.SortState;
-import io.github.palexdev.materialfx.utils.NodeUtils;
-import io.github.palexdev.virtualizedfx.unused.simple.SimpleVirtualFlow;
-import javafx.beans.InvalidationListener;
-import javafx.beans.binding.Bindings;
-import javafx.geometry.Pos;
+import io.github.palexdev.materialfx.controls.MFXTableView;
 import javafx.scene.control.SkinBase;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 /**
@@ -56,7 +44,11 @@ import javafx.scene.layout.VBox;
  * So when extending this class or creating your table view based on this one, be careful and make sure you have fully understood how all of this works.
  */
 public class MFXTableViewSkin<T> extends SkinBase<MFXTableView<T>> {
-	//================================================================================
+    public MFXTableViewSkin(MFXTableView<T> control) {
+        super(control);
+    }
+
+	/*	//================================================================================
 	// Properties
 	//================================================================================
 	protected final VBox container;
@@ -108,13 +100,13 @@ public class MFXTableViewSkin<T> extends SkinBase<MFXTableView<T>> {
 	// Methods
 	//================================================================================
 
-	/**
+	*//**
 	 * Specifies the behavior for the following changes/events:
 	 * <p> - Handles the focus on MOUSE_PRESSED
 	 * <p> - Handles the sorting on {@link MFXTableColumnEvent#SORTING_EVENT}
 	 * <p> - Re-builds the cell when columns change
 	 * <p> - Handles the footer visibility
-	 */
+     *//*
 	@SuppressWarnings("unchecked")
 	private void addListeners() {
 		MFXTableView<T> tableView = getSkinnable();
@@ -158,9 +150,9 @@ public class MFXTableViewSkin<T> extends SkinBase<MFXTableView<T>> {
 		});
 	}
 
-	/**
+	*//**
 	 * Responsible for building the table's footer.
-	 */
+     *//*
 	protected StackPane buildFooter() {
 		MFXTableView<T> tableView = getSkinnable();
 
@@ -205,5 +197,5 @@ public class MFXTableViewSkin<T> extends SkinBase<MFXTableView<T>> {
 	@Override
 	protected double computeMaxHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
 		return getSkinnable().prefHeight(-1);
-	}
+	}*/
 }

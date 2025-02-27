@@ -37,10 +37,13 @@
   -mfx-color: -mfx-main;
 }
 
-.mfx-combo-box .combo-popup .virtual-flow {
+.mfx-combo-box .combo-popup .vfx-scroll-pane {
+  -fx-background-color: white;
   -fx-background-radius: 5;
   -fx-border-color: #ebebeb;
   -fx-border-radius: 5;
+  -fx-max-height: 200;
+  -vfx-layout-mode: COMPACT;
 }
 
 .mfx-combo-box:disabled .caret .mfx-font-icon {

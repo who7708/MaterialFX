@@ -1,168 +1,112 @@
-/*
- * Copyright (C) 2022 Parisi Alessandro
- * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX).
- *
- * MaterialFX is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * MaterialFX is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with MaterialFX.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package io.github.palexdev.materialfx.controls.cell;
 
-import io.github.palexdev.materialfx.controls.MFXDatePicker;
-import io.github.palexdev.materialfx.controls.base.Themable;
-import io.github.palexdev.materialfx.theming.MaterialFXStylesheets;
-import io.github.palexdev.materialfx.theming.base.Theme;
-import io.github.palexdev.virtualizedfx.cell.Cell;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.ReadOnlyBooleanWrapper;
-import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.css.PseudoClass;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
-
 import java.time.LocalDate;
+import java.util.List;
+import java.util.function.Supplier;
 
-/**
- * Simple implementation of a {@link Cell} capable of representing {@link LocalDate} values.
- * <p></p>
- * It has three main states:
- * <p> - selected: when the cell's value is equal to {@link MFXDatePicker#valueProperty()}
- * <p> - current: when the cell's value is equal to {@link MFXDatePicker#currentDateProperty()}
- * <p> - extra: to mark this cells as belonging to a different month
- */
-public class MFXDateCell extends Label implements Cell<LocalDate>, Themable {
-	//================================================================================
-	// Properties
-	//================================================================================
-	private final String STYLE_CLASS = "mfx-date-cell";
+import io.github.palexdev.materialfx.controls.MFXDatePicker;
+import io.github.palexdev.materialfx.skins.MFXListCellSkin;
+import io.github.palexdev.materialfx.theming.MaterialFXStylesheets;
+import io.github.palexdev.materialfx.theming.PseudoClasses;
+import io.github.palexdev.mfxcore.controls.SkinBase;
+import io.github.palexdev.mfxcore.utils.fx.SceneBuilderIntegration;
+import io.github.palexdev.virtualizedfx.cells.CellBaseBehavior;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+import javafx.util.StringConverter;
 
-	private final MFXDatePicker datePicker;
-	private final ReadOnlyObjectWrapper<LocalDate> date = new ReadOnlyObjectWrapper<>();
+public class MFXDateCell extends MFXListCell<LocalDate> {
+    //================================================================================
+    // Properties
+    //================================================================================
+    private MFXDatePicker datePicker;
 
-	private final ReadOnlyBooleanWrapper selected = new ReadOnlyBooleanWrapper();
-	protected static final PseudoClass SELECTED_PSEUDO_CLASS = PseudoClass.getPseudoClass("selected");
+    private final ReadOnlyBooleanWrapper current = new ReadOnlyBooleanWrapper(false) {
+        @Override
+        protected void invalidated() {
+            PseudoClasses.setOn(MFXDateCell.this, PseudoClasses.CURRENT, get());
+        }
+    };
 
-	private final ReadOnlyBooleanWrapper current = new ReadOnlyBooleanWrapper();
-	protected static final PseudoClass CURRENT_PSEUDO_CLASS = PseudoClass.getPseudoClass("current");
+    private boolean extra = false;
 
-	private boolean extra = false;
-	protected static final PseudoClass EXTRA_PSEUDO_CLASS = PseudoClass.getPseudoClass("extra");
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public MFXDateCell(MFXDatePicker datePicker, LocalDate item) {
+        super(item);
+        this.datePicker = datePicker;
+        initialize();
+    }
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public MFXDateCell(MFXDatePicker datePicker, LocalDate date) {
-		this.datePicker = datePicker;
-		updateItem(date);
-		initialize();
-	}
+    public MFXDateCell(MFXDatePicker datePicker, LocalDate item, StringConverter<LocalDate> converter) {
+        super(item, converter);
+        this.datePicker = datePicker;
+        initialize();
+    }
 
-	//================================================================================
-	// Methods
-	//================================================================================
-	private void initialize() {
-		getStyleClass().add(STYLE_CLASS);
-		setAlignment(Pos.CENTER);
-		setBehavior();
-		sceneBuilderIntegration();
-	}
+    //================================================================================
+    // Methods
+    //================================================================================
+    private void initialize() {
+        selected.bind(datePicker.valueProperty().isEqualTo(itemProperty()));
+        current.bind(datePicker.currentDateProperty().isEqualTo(itemProperty()));
+    }
 
-	/**
-	 * Sets the behavior for selected and current states. Binds the text to {@link LocalDate#getDayOfMonth()} (from the current value),
-	 * binds the visible property to the cell's text (hidden if text is empty, visible if text is not empty)
-	 * <p>
-	 * Also handles MOUSE_PRESSED events to change the date picker's value.
-	 */
-	protected void setBehavior() {
-		selected.addListener((observable, oldValue, newValue) -> pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, selected.get()));
-		current.addListener((observable, oldValue, newValue) -> pseudoClassStateChanged(CURRENT_PSEUDO_CLASS, current.get()));
+    /**
+     * Marks/unmarks this cell as an extra cell.
+     */
+    public void setExtra(boolean isExtra) {
+        extra = isExtra;
+        PseudoClasses.setOn(this, PseudoClasses.EXTRA, isExtra);
+    }
 
-		textProperty().bind(Bindings.createStringBinding(
-				() -> getDate() != null ? String.valueOf(getDate().getDayOfMonth()) : "",
-				dateProperty()
-		));
-		visibleProperty().bind(textProperty().isNotEmpty());
+    //================================================================================
+    // Overridden Methods
+    //================================================================================
+    @Override
+    protected void sceneBuilderIntegration() {
+        SceneBuilderIntegration.ifInSceneBuilder(() -> getStylesheets().add(MaterialFXStylesheets.DATE_CELL.toData()));
+    }
 
-		selected.bind(datePicker.valueProperty().isEqualTo(dateProperty()));
-		current.bind(datePicker.currentDateProperty().isEqualTo(dateProperty()));
-		addEventHandler(MouseEvent.MOUSE_PRESSED, event -> datePicker.setValue(getDate()));
-	}
+    @Override
+    protected SkinBase<?, ?> buildSkin() {
+        return new MFXListCellSkin<>(this) {
+            {
+                visibleProperty().bind(label.textProperty().isNotEmpty());
+            }
+        };
+    }
 
-	/**
-	 * Marks this cell as an extra cell.
-	 */
-	public void markAsExtra() {
-		extra = true;
-		pseudoClassStateChanged(EXTRA_PSEUDO_CLASS, true);
-	}
+    @Override
+    public Supplier<CellBaseBehavior<LocalDate>> defaultBehaviorProvider() {
+        return () -> new MFXListCellBehavior<>(this) {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getButton() == MouseButton.PRIMARY) {
+                    datePicker.setValue(getItem());
+                }
+                mouseClicked(e, null);
+            }
+        };
+    }
 
-	/**
-	 * Un-marks this cell as extra.
-	 */
-	public void unmarkAsExtra() {
-		extra = false;
-		pseudoClassStateChanged(EXTRA_PSEUDO_CLASS, false);
-	}
+    @Override
+    public List<String> defaultStyleClasses() {
+        return List.of("mfx-date-cell");
+    }
 
-	//================================================================================
-	// Overridden Methods
-	//================================================================================
-	@Override
-	public Parent toParent() {
-		return this;
-	}
+    @Override
+    public void dispose() {
+        datePicker = null;
+        super.dispose();
+    }
 
-	@Override
-	public Theme getTheme() {
-		return MaterialFXStylesheets.DATE_CELL;
-	}
-
-	@Override
-	public Node getNode() {
-		return this;
-	}
-
-	@Override
-	public void updateItem(LocalDate date) {
-		setDate(date);
-	}
-
-	//================================================================================
-	// Getters/Setters
-	//================================================================================
-	public LocalDate getDate() {
-		return date.get();
-	}
-
-	/**
-	 * Specifies the cell's represented date.
-	 */
-	public ReadOnlyObjectProperty<LocalDate> dateProperty() {
-		return date.getReadOnlyProperty();
-	}
-
-	protected void setDate(LocalDate date) {
-		this.date.set(date);
-	}
-
-	/**
-	 * @return whether the cell is an extra cell
-	 */
-	public boolean isExtra() {
-		return extra;
-	}
+    //================================================================================
+    // Getters
+    //================================================================================
+    public boolean isExtra() {
+        return extra;
+    }
 }

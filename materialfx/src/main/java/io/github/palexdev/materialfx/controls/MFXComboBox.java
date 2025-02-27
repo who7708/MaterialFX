@@ -18,6 +18,11 @@
 
 package io.github.palexdev.materialfx.controls;
 
+import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 import io.github.palexdev.materialfx.beans.Alignment;
 import io.github.palexdev.materialfx.beans.PositionBean;
 import io.github.palexdev.materialfx.beans.properties.EventHandlerProperty;
@@ -33,18 +38,17 @@ import io.github.palexdev.materialfx.selection.ComboBoxSelectionModel;
 import io.github.palexdev.materialfx.skins.MFXComboBoxSkin;
 import io.github.palexdev.materialfx.theming.MaterialFXStylesheets;
 import io.github.palexdev.materialfx.theming.base.Theme;
-import io.github.palexdev.materialfx.utils.*;
+import io.github.palexdev.materialfx.utils.NodeUtils;
+import io.github.palexdev.materialfx.utils.StyleablePropertiesUtils;
 import io.github.palexdev.materialfx.utils.others.FunctionalStringConverter;
-import io.github.palexdev.materialfx.validation.MFXValidator;
-import io.github.palexdev.mfxcore.base.beans.range.IntegerRange;
 import io.github.palexdev.mfxresources.fonts.MFXFontIcon;
-import io.github.palexdev.virtualizedfx.cell.Cell;
+import io.github.palexdev.virtualizedfx.cells.base.VFXCell;
+import io.github.palexdev.virtualizedfx.events.VFXContainerEvent;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.css.CssMetaData;
 import javafx.css.PseudoClass;
@@ -59,13 +63,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Skin;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * A new, completely remade from scratch {@code ComboBox} for JavaFX.
@@ -97,11 +94,17 @@ public class MFXComboBox<T> extends MFXTextField implements MFXCombo<T> {
     private final BiFunctionProperty<Node, Boolean, Animation> animationProvider = new BiFunctionProperty<>();
 
     private final ObjectProperty<T> value = new SimpleObjectProperty<>();
-    private final ObjectProperty<StringConverter<T>> converter = new SimpleObjectProperty<>();
-    private final ObjectProperty<ObservableList<T>> items = new SimpleObjectProperty<>();
+    private final ObjectProperty<StringConverter<T>> converter = new SimpleObjectProperty<>() {
+        @Override
+        protected void invalidated() {
+            // VFX cells already have the converter but in this case we want to use the one from the combo box
+            // Since the cells do not have it as a property we must send an update request to the cells when this changes
+            fireEvent(new VFXContainerEvent(null, MFXComboBox.this, VFXContainerEvent.UPDATE));
+        }
+    };
+    private final ListProperty<T> items = new SimpleListProperty<>();
     private final ComboBoxSelectionModel<T> selectionModel = new ComboBoxSelectionModel<>(items);
-    private final FunctionProperty<T, Cell<T>> cellFactory = new FunctionProperty<>(t -> new MFXComboBoxCell<>(this, t));
-    private final ListChangeListener<? super T> itemsChanged = this::itemsChanged;
+    private final FunctionProperty<T, VFXCell<T>> cellFactory = new FunctionProperty<>(t -> new MFXComboBoxCell<>(this, t));
     private final ConsumerProperty<String> onCommit = new ConsumerProperty<>();
     private final ConsumerProperty<String> onCancel = new ConsumerProperty<>();
 
@@ -155,12 +158,6 @@ public class MFXComboBox<T> extends MFXTextField implements MFXCombo<T> {
         setConverter(FunctionalStringConverter.to(t -> t != null ? t.toString() : ""));
 
         showing.addListener(invalidated -> pseudoClassStateChanged(POPUP_OPEN_PSEUDO_CLASS, showing.get()));
-
-        items.addListener((observable, oldValue, newValue) -> {
-            oldValue.removeListener(itemsChanged);
-            newValue.addListener(itemsChanged);
-        });
-        getItems().addListener(this::itemsChanged);
     }
 
     @Override
@@ -238,40 +235,6 @@ public class MFXComboBox<T> extends MFXTextField implements MFXCombo<T> {
         if (getOnCancel() != null) {
             getOnCancel().accept(text);
         }
-    }
-
-    /**
-     * Responsible for updating the selection when the items list changes.
-     */
-    protected void itemsChanged(ListChangeListener.Change<? extends T> change) {
-        if (getSelectedIndex() == -1) return;
-
-        if (change.getList().isEmpty()) {
-            clearSelection();
-            return;
-        }
-
-        ListChangeHelper.Change c = ListChangeHelper.processChange(change, IntegerRange.of(0, Integer.MAX_VALUE));
-        Set<Integer> indexes = new HashSet<>();
-        indexes.add(getSelectedIndex());
-        ListChangeProcessor updater = new ListChangeProcessor(indexes);
-        c.processReplacement((changed, removed) -> {
-            int selected = getSelectedIndex();
-            if (changed.contains(selected) || removed.contains(selected)) {
-                selectItem(getItems().get(selected));
-            }
-        });
-        c.processAddition((from, to, added) -> {
-            updater.computeAddition(added.size(), from);
-            selectIndex(updater.getIndexes().toArray(new Integer[0])[0]);
-        });
-        c.processRemoval((from, to, removed) -> {
-            updater.computeRemoval(removed, from);
-            int index = NumberUtils.clamp(updater.getIndexes().toArray(new Integer[0])[0], 0, getItems().size() - 1);
-            selectIndex(index);
-        });
-
-        setValue(getSelectedItem());
     }
 
     //================================================================================
@@ -354,13 +317,6 @@ public class MFXComboBox<T> extends MFXTextField implements MFXCombo<T> {
     }
 
     /**
-     * Delegate for {@link ComboBoxSelectionModel#selectedIndexProperty()}.
-     */
-    public ReadOnlyIntegerProperty selectedIndexProperty() {
-        return selectionModel.selectedIndexProperty();
-    }
-
-    /**
      * Delegate for {@link ComboBoxSelectionModel#getSelectedItem()}.
      */
     public T getSelectedItem() {
@@ -368,18 +324,10 @@ public class MFXComboBox<T> extends MFXTextField implements MFXCombo<T> {
     }
 
     /**
-     * Delegate for {@link ComboBoxSelectionModel#selectedItemProperty()}.
+     * Delegate for {@link ComboBoxSelectionModel#selection()}.
      */
-    public ReadOnlyObjectProperty<T> selectedItemProperty() {
-        return selectionModel.selectedItemProperty();
-    }
-
-    //================================================================================
-    // Validation
-    //================================================================================
-    @Override
-    public MFXValidator getValidator() {
-        return validator;
+    public MapProperty<Integer, T> selection() {
+        return selectionModel.selection();
     }
 
     //================================================================================
@@ -606,7 +554,7 @@ public class MFXComboBox<T> extends MFXTextField implements MFXCombo<T> {
     }
 
     @Override
-    public ObjectProperty<ObservableList<T>> itemsProperty() {
+    public ListProperty<T> itemsProperty() {
         return items;
     }
 
@@ -616,17 +564,17 @@ public class MFXComboBox<T> extends MFXTextField implements MFXCombo<T> {
     }
 
     @Override
-    public Function<T, Cell<T>> getCellFactory() {
+    public Function<T, VFXCell<T>> getCellFactory() {
         return cellFactory.get();
     }
 
     @Override
-    public ObjectProperty<Function<T, Cell<T>>> cellFactoryProperty() {
+    public ObjectProperty<Function<T, VFXCell<T>>> cellFactoryProperty() {
         return cellFactory;
     }
 
     @Override
-    public void setCellFactory(Function<T, Cell<T>> cellFactory) {
+    public void setCellFactory(Function<T, VFXCell<T>> cellFactory) {
         this.cellFactory.set(cellFactory);
     }
 

@@ -18,6 +18,18 @@
 
 package io.github.palexdev.materialfx.skins;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import io.github.palexdev.materialfx.beans.NumberRange;
 import io.github.palexdev.materialfx.controls.*;
 import io.github.palexdev.materialfx.controls.cell.MFXDateCell;
@@ -39,18 +51,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.util.StringConverter;
-
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * Skin associated with every {@link MFXDatePicker} by default.
@@ -239,8 +239,7 @@ public class MFXDatePickerSkin extends MFXTextFieldSkin {
         popup.showingProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 datePicker.hide();
-                if (trailingIcon instanceof MFXIconWrapper) {
-                    MFXIconWrapper icon = (MFXIconWrapper) trailingIcon;
+                if (trailingIcon instanceof MFXIconWrapper icon) {
                     icon.getRippleGenerator().generateRipple(null);
                 }
             }
@@ -325,7 +324,7 @@ public class MFXDatePickerSkin extends MFXTextFieldSkin {
         });
         leftArrow.disableProperty().bind(Bindings.createBooleanBinding(
                 () -> Objects.equals(yearCombo.getSelectedItem(), datePicker.getYearsRange().getMin()) && currentYearMonth.getMonth() == Month.JANUARY,
-                datePicker.yearsRangeProperty(), yearCombo.selectedItemProperty(), monthCombo.selectedItemProperty()
+            datePicker.yearsRangeProperty(), yearCombo.selection(), monthCombo.selection()
         ));
 
         rightArrow.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -336,7 +335,7 @@ public class MFXDatePickerSkin extends MFXTextFieldSkin {
         });
         rightArrow.disableProperty().bind(Bindings.createBooleanBinding(
                 () -> Objects.equals(yearCombo.getSelectedItem(), datePicker.getYearsRange().getMax()) && currentYearMonth.getMonth() == Month.DECEMBER,
-                datePicker.yearsRangeProperty(), yearCombo.selectedItemProperty(), monthCombo.selectedItemProperty()
+            datePicker.yearsRangeProperty(), yearCombo.selection(), monthCombo.selection()
         ));
 
         NodeUtils.makeRegionCircular(leftArrow);
@@ -402,8 +401,8 @@ public class MFXDatePickerSkin extends MFXTextFieldSkin {
      * Responsible for updating the days grid, also builds the cells cache or
      * updates it if a reset was not needed.
      * <p></p>
-     * This is also responsible for marking/un-marking some cells as "extra" cells, {@link MFXDateCell#markAsExtra()},
-     * {@link MFXDateCell#unmarkAsExtra()}. Extra cells are those cells that contains days belonging to the previous/next month.
+     * This is also responsible for marking/un-marking some cells as "extra" cells, {@link MFXDateCell#setExtra(boolean)}.
+     * Extra cells are those cells that contains days belonging to the previous/next month.
      */
     private void updateGrid() {
         MFXDatePicker datePicker = getDatePicker();
@@ -433,7 +432,7 @@ public class MFXDatePickerSkin extends MFXTextFieldSkin {
                     cell = getCell(i, j, null);
                     cell.updateItem(null);
                     cells[i][j] = cell;
-                    children.add(cell.toParent());
+                    children.add(cell.toNode());
                     continue;
                 }
 
@@ -441,23 +440,23 @@ public class MFXDatePickerSkin extends MFXTextFieldSkin {
                     YearMonth previous = currentYearMonth.plusMonths(-1);
                     date = LocalDate.of(previous.getYear(), previous.getMonth(), day);
                     cell = getCell(i, j, date);
-                    cell.markAsExtra();
+                    cell.setExtra(true);
                 } else if (index > endIndex) {
                     YearMonth next = currentYearMonth.plusMonths(1);
                     date = LocalDate.of(next.getYear(), next.getMonth(), day);
                     cell = getCell(i, j, date);
-                    cell.markAsExtra();
+                    cell.setExtra(true);
                 } else {
                     date = LocalDate.of(currentYearMonth.getYear(), currentYearMonth.getMonth(), day);
                     cell = getCell(i, j, date);
-                    cell.unmarkAsExtra();
+                    cell.setExtra(false);
                 }
 
                 if (!cellsInitialized) {
                     cells[i][j] = cell;
                 }
                 cell.updateItem(date);
-                children.add(cell.toParent());
+                children.add(cell.toNode());
             }
 
             if (!cellsInitialized) {

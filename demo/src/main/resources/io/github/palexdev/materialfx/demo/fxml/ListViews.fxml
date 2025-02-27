@@ -18,7 +18,11 @@
   ~ along with MaterialFX.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<?import io.github.palexdev.materialfx.controls.*?>
+<?import io.github.palexdev.materialfx.controls.legacy.MFXLegacyListView?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXCheckListView?>
+<?import io.github.palexdev.materialfx.controls.MFXListView?>
+<?import io.github.palexdev.virtualizedfx.controls.VFXScrollPane?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -54,31 +58,34 @@
     <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="header-label" text="Lists"
            GridPane.columnSpan="3"/>
     <Label styleClass="sub-header-label" text="Default" GridPane.rowIndex="1"/>
-    <MFXListView fx:id="list" prefWidth="170.0" GridPane.rowIndex="2" GridPane.rowSpan="3">
+    <VFXScrollPane prefWidth="170.0" GridPane.rowIndex="2" GridPane.rowSpan="3">
+        <content>
+            <MFXListView fx:id="list"/>
+        </content>
         <GridPane.margin>
             <Insets bottom="15.0"/>
         </GridPane.margin>
-    </MFXListView>
+    </VFXScrollPane>
     <Label styleClass="sub-header-label" text="Custom" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-    <MFXListView id="custList" fx:id="custList" prefWidth="170.0" GridPane.columnIndex="1" GridPane.rowIndex="2"
-                 GridPane.rowSpan="3">
+    <VFXScrollPane prefWidth="170.0" GridPane.columnIndex="1" GridPane.rowIndex="2"
+                   GridPane.rowSpan="3">
+        <content>
+            <MFXListView id="custList" fx:id="custList"/>
+        </content>
         <GridPane.margin>
             <Insets bottom="15.0"/>
         </GridPane.margin>
-    </MFXListView>
+    </VFXScrollPane>
     <Label styleClass="sub-header-label" text="Check List" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-    <MFXCheckListView fx:id="checkList" prefWidth="170.0" GridPane.columnIndex="2" GridPane.rowIndex="2"
-                      GridPane.rowSpan="3">
+    <VFXScrollPane prefWidth="170.0" GridPane.columnIndex="2" GridPane.rowIndex="2"
+                   GridPane.rowSpan="3">
+        <content>
+            <MFXCheckListView fx:id="checkList"/>
+        </content>
         <GridPane.margin>
             <Insets bottom="15.0"/>
         </GridPane.margin>
-    </MFXCheckListView>
-    <MFXButton minHeight="32.0" onAction="#changeColors" text="Change Scrollbar Colors" GridPane.columnIndex="1"
-               GridPane.rowIndex="5">
-        <GridPane.margin>
-            <Insets bottom="20.0"/>
-        </GridPane.margin>
-    </MFXButton>
+    </VFXScrollPane>
     <StackPane prefHeight="150.0" prefWidth="200.0" styleClass="grid-background" GridPane.columnIndex="4"
                GridPane.rowSpan="2147483647">
         <GridPane.margin>
@@ -86,12 +93,12 @@
         </GridPane.margin>
     </StackPane>
     <Label styleClass="header-label" text="Legacy" GridPane.columnIndex="4"/>
-    <MFXListView fx:id="legacyList" prefWidth="170.0" GridPane.columnIndex="4" GridPane.rowIndex="2"
-                 GridPane.rowSpan="3">
+    <MFXLegacyListView fx:id="legacyList" prefWidth="170.0" GridPane.columnIndex="4" GridPane.rowIndex="2"
+                       GridPane.rowSpan="3">
         <GridPane.margin>
             <Insets bottom="15.0"/>
         </GridPane.margin>
-    </MFXListView>
+    </MFXLegacyListView>
     <MFXButton minHeight="32.0" onAction="#changeDepth" text="3D/2D" GridPane.columnIndex="1" GridPane.rowIndex="6">
         <GridPane.margin>
             <Insets bottom="20.0"/>

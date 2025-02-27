@@ -20,14 +20,8 @@ package io.github.palexdev.materialfx.skins;
 
 import io.github.palexdev.materialfx.controls.MFXPaginatedTableView;
 import io.github.palexdev.materialfx.controls.MFXPagination;
-import io.github.palexdev.materialfx.controls.MFXTableRow;
-import io.github.palexdev.materialfx.utils.AnimationUtils.PauseBuilder;
-import io.github.palexdev.virtualizedfx.unused.simple.SimpleVirtualFlow;
+import io.github.palexdev.materialfx.controls.MFXTableView;
 import javafx.animation.PauseTransition;
-import javafx.beans.binding.Bindings;
-import javafx.geometry.Pos;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 
 /**
  * This is the default skin implementation for {@link MFXPaginatedTableView}.
@@ -44,7 +38,12 @@ import javafx.scene.layout.StackPane;
  * is thrown.
  */
 public class MFXPaginatedTableViewSkin<T> extends MFXTableViewSkin<T> {
-    //================================================================================
+    public MFXPaginatedTableViewSkin(MFXTableView<T> tableView) {
+        super(tableView);
+    }
+
+
+    /*    //================================================================================
     // Properties
     //================================================================================
     private final MFXPagination pagination;
@@ -53,7 +52,7 @@ public class MFXPaginatedTableViewSkin<T> extends MFXTableViewSkin<T> {
     //================================================================================
     // Constructors
     //================================================================================
-    public MFXPaginatedTableViewSkin(MFXPaginatedTableView<T> tableView, SimpleVirtualFlow<T, MFXTableRow<T>> rowsFlow) {
+    public MFXPaginatedTableViewSkin(MFXPaginatedTableView<T> tableView, VFXList<T, MFXTableRow<T>> rowsFlow) {
         super(tableView, rowsFlow);
 
         rowsFlow.setMinHeight(Region.USE_PREF_SIZE);
@@ -112,5 +111,5 @@ public class MFXPaginatedTableViewSkin<T> extends MFXTableViewSkin<T> {
     protected double computeMinWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
         double footerWidth = leftInset + footer.prefWidth(-1) + pagination.prefWidth(-1) * 2 + 10 + rightInset;
         return Math.max(footerWidth, super.computeMinWidth(height, topInset, rightInset, bottomInset, leftInset));
-    }
+    }*/
 }

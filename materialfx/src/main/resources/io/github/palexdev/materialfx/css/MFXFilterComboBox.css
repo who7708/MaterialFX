@@ -29,12 +29,14 @@
   -mfx-editable: false;
 }
 
-.mfx-filter-combo-box .combo-popup .virtual-flow {
-  -fx-background-color: transparent;
-  -fx-background-radius: 0;
+.mfx-filter-combo-box .combo-popup .vfx-scroll-pane {
+  -fx-background-color: white;
+  -fx-background-radius: 5;
+  -fx-border-color: #ebebeb;
+  -fx-border-radius: 5;
   -fx-max-height: 200;
+  -vfx-layout-mode: COMPACT;
 }
-
 .mfx-filter-combo-box .combo-popup .search-container {
   -fx-background-color: white;
   -fx-background-radius: 5;

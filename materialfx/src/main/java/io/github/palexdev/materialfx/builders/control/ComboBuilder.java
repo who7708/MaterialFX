@@ -18,19 +18,19 @@
 
 package io.github.palexdev.materialfx.builders.control;
 
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 import io.github.palexdev.materialfx.beans.Alignment;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
-import io.github.palexdev.virtualizedfx.cell.Cell;
+import io.github.palexdev.virtualizedfx.cells.base.VFXCell;
 import javafx.animation.Animation;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.util.StringConverter;
-
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class ComboBuilder<T, C extends MFXComboBox<T>> extends TextFieldBuilder<C> {
 
@@ -143,7 +143,7 @@ public class ComboBuilder<T, C extends MFXComboBox<T>> extends TextFieldBuilder<
 		return this;
 	}
 
-	public ComboBuilder<T, C> setCellFactory(Function<T, Cell<T>> cellFactory) {
+    public ComboBuilder<T, C> setCellFactory(Function<T, VFXCell<T>> cellFactory) {
 		node.setCellFactory(cellFactory);
 		return this;
 	}

@@ -18,24 +18,15 @@
 
 package io.github.palexdev.materialfx.demo.controllers;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import io.github.palexdev.materialfx.controls.MFXPaginatedTableView;
-import io.github.palexdev.materialfx.controls.MFXTableColumn;
 import io.github.palexdev.materialfx.controls.MFXTableView;
-import io.github.palexdev.materialfx.controls.cell.MFXTableRowCell;
 import io.github.palexdev.materialfx.demo.model.Device;
-import io.github.palexdev.materialfx.demo.model.Model;
 import io.github.palexdev.materialfx.demo.model.Person;
-import io.github.palexdev.materialfx.filter.EnumFilter;
-import io.github.palexdev.materialfx.filter.IntegerFilter;
-import io.github.palexdev.materialfx.filter.StringFilter;
-import io.github.palexdev.materialfx.utils.others.observables.When;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
-
-import java.net.URL;
-import java.util.Comparator;
-import java.util.ResourceBundle;
 
 public class TableViewsController implements Initializable {
 
@@ -47,7 +38,7 @@ public class TableViewsController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		setupTable();
+/*		setupTable();
 		setupPaginated();
 
 		table.autosizeColumnsOnInitialization();
@@ -55,10 +46,10 @@ public class TableViewsController implements Initializable {
 
 		When.onChanged(paginated.currentPageProperty())
 				.then((oldValue, newValue) -> paginated.autosizeColumns())
-				.listen();
+				.listen();*/
 	}
 
-	private void setupTable() {
+/*	private void setupTable() {
 		MFXTableColumn<Person> nameColumn = new MFXTableColumn<>("Name", true, Comparator.comparing(Person::getName));
 		MFXTableColumn<Person> surnameColumn = new MFXTableColumn<>("Surname", true, Comparator.comparing(Person::getSurname));
 		MFXTableColumn<Person> ageColumn = new MFXTableColumn<>("Age", true, Comparator.comparing(Person::getAge));
@@ -104,5 +95,5 @@ public class TableViewsController implements Initializable {
 				new EnumFilter<>("State", Device::getState, Device.State.class)
 		);
 		paginated.setItems(Model.devices);
-	}
+	}*/
 }

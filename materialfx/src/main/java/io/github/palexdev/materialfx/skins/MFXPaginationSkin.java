@@ -18,11 +18,15 @@
 
 package io.github.palexdev.materialfx.skins;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.github.palexdev.materialfx.beans.NumberRange;
 import io.github.palexdev.materialfx.controls.MFXIconWrapper;
 import io.github.palexdev.materialfx.controls.MFXPagination;
 import io.github.palexdev.materialfx.controls.cell.MFXPage;
 import io.github.palexdev.materialfx.utils.NodeUtils;
+import io.github.palexdev.mfxcore.base.beans.range.IntegerRange;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -33,9 +37,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This is the default skin implementation for {@link MFXPagination}.
@@ -215,7 +216,7 @@ public class MFXPaginationSkin extends SkinBase<MFXPagination> {
 
     /**
      * Computes the indexes list using {@link MFXPagination#indexesSupplierProperty()}
-     * and updates the built pages using {@link MFXPage#updateItem(Integer)}.
+     * and updates the built pages using {@link MFXPage#updateItem(Object)}.
      */
     protected void updatePages() {
         MFXPagination pagination = getSkinnable();
@@ -240,7 +241,7 @@ public class MFXPaginationSkin extends SkinBase<MFXPagination> {
             if (page.getIndex() == -1) {
                 MFXPage pageBefore = pages.get(i - 1);
                 MFXPage pageAfter = pages.get(i + 1);
-                page.setBetween(NumberRange.of(pageBefore.getIndex() + 1, pageAfter.getIndex() - 1));
+                page.setBetween(IntegerRange.of(pageBefore.getIndex() + 1, pageAfter.getIndex() - 1));
             } else {
                 page.setBetween(null);
             }
