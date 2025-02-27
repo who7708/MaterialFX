@@ -77,12 +77,12 @@
 
 *In addition to the properties inherited by MFXComboBox:*
 
-| Property           | Description                                                                                                                              | Type              |
-| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- | -----------------:|
-| searchText         | Specifies the text used to filter the items list.  By default this text is bound bidirectionally with the text-field's used in the popup | String            |
-| filterList         | This is the list on which filtering and sorting are made. The original list remains untouched!                                           | TransformableList |
-| filterFunction     | Specifies the function used to build a Predicate from the search text, the predicate is then used to filter the list                     | Function          |
-| resetOnPopupHidden | Specifies whether to reset the filter state, such as the searchText when the popup is closed                                             | Boolean           |
+| Property           | Description                                                                                                                              |              Type |
+|--------------------|------------------------------------------------------------------------------------------------------------------------------------------|------------------:|
+| searchText         | Specifies the text used to filter the items list.  By default this text is bound bidirectionally with the text-field's used in the popup |            String |
+| refineList         | This is the list on which filtering and sorting are made. The original list remains untouched!                                           | TransformableList |
+| filterFunction     | Specifies the function used to build a Predicate from the search text, the predicate is then used to filter the list                     |          Function |
+| resetOnPopupHidden | Specifies whether to reset the filter state, such as the searchText when the popup is closed                                             |           Boolean |
 
 ### Styleable Properties
 

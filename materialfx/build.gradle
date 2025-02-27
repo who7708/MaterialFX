@@ -69,3 +69,12 @@ mavenPublishing {
     publishToMavenCentral(SonatypeHost.S01)
     signAllPublications()
 }
+
+configurations {
+    // Remove vanniktech non-sense
+    gradle.taskGraph.whenReady { graph ->
+        if (graph.hasTask(plainJavadocJar)) {
+            plainJavadocJar.enabled = false
+        }
+    }
+}
