@@ -18,11 +18,12 @@
 
 package io.github.palexdev.mfxcomponents.theming;
 
-import java.io.InputStream;
-import java.net.URL;
-
 import io.github.palexdev.mfxcomponents.theming.base.Theme;
 import io.github.palexdev.mfxresources.MFXResources;
+import java.io.InputStream;
+import java.net.URL;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 
 /**
  * Enumeration of the standard JavaFX themes. This is useful when used with {@link UserAgentBuilder}.
@@ -39,24 +40,48 @@ public enum JavaFXThemes implements Theme {
     FXVK("javafx/caspian/fxvk.css");
 
     private final String path;
+    private final StylesheetTheme theme;
 
     JavaFXThemes(String path) {
         this.path = path;
+        this.theme = new StylesheetTheme(name(), MFXResources.loadURL(path), assets());
     }
 
     @Override
-    public String path() {
-        return path;
-    }
-
-    @Override
-    public URL asURL(String path) {
-        return MFXResources.loadURL(path);
+    public String load() {
+        return theme.loadCached();
     }
 
     @Override
     public InputStream assets() {
-        String path = path().substring(0, path().lastIndexOf("/") + 1) + "assets.zip";
+        String path = this.path.substring(0, this.path.lastIndexOf("/") + 1) + "assets.zip";
         return MFXResources.loadStream(path);
+    }
+
+    @Override
+    public void applyGlobal() {
+        theme.applyGlobal();
+    }
+
+    @Override
+    public void applyOn(Scene scene) {
+        theme.applyOn(scene);
+    }
+
+    @Override
+    public void applyOn(Parent parent) {
+        theme.applyOn(parent);
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public URL getUrl() {
+        return theme.getUrl();
+    }
+
+    public StylesheetTheme getTheme() {
+        return theme;
     }
 }

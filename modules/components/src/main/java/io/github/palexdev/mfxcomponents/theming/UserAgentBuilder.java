@@ -18,17 +18,11 @@
 
 package io.github.palexdev.mfxcomponents.theming;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
+import io.github.palexdev.mfxcomponents.theming.base.Theme;
+import io.github.palexdev.mfxcore.utils.fx.CSSFragment;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-
-import io.github.palexdev.mfxcomponents.theming.base.Theme;
-import io.github.palexdev.mfxcore.utils.fx.CSSFragment;
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -73,6 +67,8 @@ import javafx.scene.Scene;
  * Imports and URL resources are supported only if the {@link Theme}s have been deployed and their assets are now accessible
  * on the filesystem. The processor will attempt to convert any 'local' resource to a path on the disk, and this is
  * another delicate point of the whole process as the attempt may fail for unexpected reasons.
+ * <p>
+ * Also, since imports must appear at the top of a CSS file, the order is lost and overrides may not work as expected.
  * <p></p>
  * The whole process can be a bit slow, although considering how big are JavaFX's and MaterialFX's themes, and also
  * considering that now they have to deploy their resources on the disk first, it's really not that bad.
@@ -86,6 +82,7 @@ public class UserAgentBuilder {
     // Properties
     //================================================================================
     private final Set<Theme> themes = new LinkedHashSet<>();
+    private boolean overrideLoad = false;
     private boolean resolveAssets = false;
     private boolean deploy = false;
 
@@ -136,31 +133,34 @@ public class UserAgentBuilder {
     }
 
     /**
-     * Loads a stylesheet specified by the given {@link Theme}. To achieve this, two streams are used, an {@link InputStream}
-     * which derives from the theme's URL, {@link URL#openStream()}, and a {@link ByteArrayOutputStream}.
-     * <p>
-     * The stylesheet's contents are read from the input stream and wrote to the output stream. At the end, the latter
-     * is converter to a string by using {@link ByteArrayOutputStream#toString(Charset)} and {@link StandardCharsets#UTF_8}.
-     * <p></p>
-     * In case of errors, an empty string is returned, and the exception printed to the stdout.
+     * Returns the content loaded by {@link Theme#loadCached(boolean)} or an empty string.
      */
     protected String load(Theme theme) {
-        try (InputStream is = theme.get().openStream();
-             ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-            byte[] buffer = new byte[8192];
-            for (int length; (length = is.read(buffer)) != -1; ) {
-                baos.write(buffer, 0, length);
-            }
-            return baos.toString(StandardCharsets.UTF_8);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return "";
-        }
+        return Optional.ofNullable(theme.loadCached(overrideLoad)).orElse("");
     }
 
     //================================================================================
     // Getters/Setters
     //================================================================================
+
+    /**
+     * @return whether the theme load process should invalidate the cache
+     * @see #load(Theme)
+     * @see Theme#loadCached(boolean)
+     */
+    public boolean isOverrideLoad() {
+        return overrideLoad;
+    }
+
+    /**
+     * Sets whether the theme load process should invalidate the cache
+     *
+     * @see #load(Theme)
+     * @see Theme#loadCached(boolean)
+     */
+    public void setOverrideLoad(boolean overrideLoad) {
+        this.overrideLoad = overrideLoad;
+    }
 
     /**
      * @return whether the {@link Processor} should attempt at resolving @import rules and URL resources

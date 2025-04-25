@@ -5,11 +5,10 @@ import io.github.palexdev.mfxcomponents.theming.MaterialThemes;
 import io.github.palexdev.mfxcore.base.properties.EventHandlerProperty;
 import io.github.palexdev.mfxcore.observables.When;
 import io.github.palexdev.mfxcore.utils.fx.SceneBuilderIntegration;
+import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
-
-import java.util.List;
 
 /**
  * Base class for MaterialFX components that are buttons. Extends {@link MFXLabeled} as most buttons are also accompanied
@@ -79,7 +78,7 @@ public abstract class MFXButtonBase<B extends MFXButtonBehaviorBase<?>> extends 
     protected void sceneBuilderIntegration() {
         SceneBuilderIntegration.ifInSceneBuilder(() -> setText("Button"));
         SceneBuilderIntegration.ifInSceneBuilder(() -> {
-            String theme = MaterialThemes.PURPLE_LIGHT.toData();
+            String theme = MaterialThemes.PURPLE_LIGHT.getUrl().toExternalForm();
             When.onChanged(sceneProperty())
                 .condition((o, n) -> n != null && !n.getStylesheets().contains(theme))
                 .then((o, n) -> n.getStylesheets().add(theme))

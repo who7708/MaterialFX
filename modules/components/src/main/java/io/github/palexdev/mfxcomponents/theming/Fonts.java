@@ -18,10 +18,9 @@
 
 package io.github.palexdev.mfxcomponents.theming;
 
-import java.net.URL;
-
 import io.github.palexdev.mfxcomponents.theming.base.Theme;
 import io.github.palexdev.mfxresources.MFXResources;
+import java.net.URL;
 
 /**
  * Enumeration of all the font stylesheets offered by MaterialFX. Implements {@link Theme}.
@@ -32,18 +31,28 @@ public enum Fonts implements Theme {
     ROBOTO("fonts/Roboto/Roboto.css");
 
     private final String path;
+    private final StylesheetTheme theme;
 
     Fonts(String path) {
         this.path = path;
+        this.theme = new StylesheetTheme(name(), MFXResources.loadURL(path));
     }
 
+
     @Override
-    public String path() {
+    public String load() {
+        return theme.load();
+    }
+
+    public String getPath() {
         return path;
     }
 
-    @Override
-    public URL asURL(String path) {
-        return MFXResources.loadURL(path);
+    public URL getUrl() {
+        return theme.getUrl();
+    }
+
+    public StylesheetTheme getTheme() {
+        return theme;
     }
 }

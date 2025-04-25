@@ -18,11 +18,12 @@
 
 package io.github.palexdev.mfxcomponents.theming;
 
-import java.io.InputStream;
-import java.net.URL;
-
 import io.github.palexdev.mfxcomponents.theming.base.Theme;
 import io.github.palexdev.mfxresources.MFXResources;
+import java.io.InputStream;
+import java.net.URL;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 
 /**
  * Enumeration of all the Material Design 3 themes currently offered by MaterialFX. Implements {@link Theme}.
@@ -35,20 +36,17 @@ public enum MaterialThemes implements Theme {
     ;
 
     private final String path;
+    private final StylesheetTheme theme;
     private MaterialThemes variant;
 
     MaterialThemes(String path) {
         this.path = path;
+        this.theme = new StylesheetTheme(name(), MFXResources.loadURL(path), assets());
     }
 
     @Override
-    public String path() {
-        return path;
-    }
-
-    @Override
-    public URL asURL(String path) {
-        return MFXResources.loadURL(path);
+    public String load() {
+        return theme.loadCached();
     }
 
     @Override
@@ -61,6 +59,21 @@ public enum MaterialThemes implements Theme {
         return "mfx-assets";
     }
 
+    @Override
+    public void applyGlobal() {
+        theme.applyGlobal();
+    }
+
+    @Override
+    public void applyOn(Scene scene) {
+        theme.applyOn(scene);
+    }
+
+    @Override
+    public void applyOn(Parent parent) {
+        theme.applyOn(parent);
+    }
+
     /**
      * @return the light/dark variant of this theme.
      */
@@ -71,5 +84,17 @@ public enum MaterialThemes implements Theme {
                 valueOf(name().replace("DARK", "LIGHT"));
         }
         return variant;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public URL getUrl() {
+        return theme.getUrl();
+    }
+
+    public StylesheetTheme getTheme() {
+        return theme;
     }
 }

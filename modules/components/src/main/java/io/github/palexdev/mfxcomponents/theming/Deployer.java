@@ -19,7 +19,6 @@
 package io.github.palexdev.mfxcomponents.theming;
 
 import io.github.palexdev.mfxcomponents.theming.base.Theme;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -142,8 +141,6 @@ public class Deployer {
                     unzip(theme, zf, entry, destDir);
                 }
             }
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
         } finally {
             if (zipPath != null) Files.delete(zipPath);
         }

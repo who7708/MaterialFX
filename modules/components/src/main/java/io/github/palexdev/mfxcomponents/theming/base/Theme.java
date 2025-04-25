@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Parisi Alessandro - alessandro.parisi406@gmail.com
+ * Copyright (C) 2025 Parisi Alessandro - alessandro.parisi406@gmail.com
  * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX)
  *
  * MaterialFX is free software: you can redistribute it and/or
@@ -18,20 +18,26 @@
 
 package io.github.palexdev.mfxcomponents.theming.base;
 
-import java.io.InputStream;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-
 import io.github.palexdev.mfxcomponents.theming.Deployer;
 import io.github.palexdev.mfxcomponents.theming.UserAgentBuilder;
+import io.github.palexdev.mfxcore.utils.fx.CSSFragment;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 /**
- * Public API for all MaterialFX themes/stylesheets. Ideally every theme should have: a name that identifies it,
- * and the path at which it is located.
+ * Public API for all MaterialFX themes/stylesheets. The bare minimum for every theme is their content, which should be
+ * loaded by {@link #load()}. Depending on the implementation, the content could be raw data or a URL resource
+ * (see {@link RawTheme} and {@link StylesheetTheme}).
+ * <p>
+ * Optionally, themes can be loaded with automatic caching by using {@link #load()} or {@link #loadCached(boolean)}.
  * <p></p>
  * Until JavaFX adds support for Themes and multiple user agent stylesheets, this in combination with {@link UserAgentBuilder},
  * offers a workaround for it. I noticed JavaFX themes were correctly merged but were still missing something: assets.
@@ -52,55 +58,32 @@ public interface Theme {
     /**
      * @return the theme's name
      */
-    String name();
-
-    /**
-     * @return the path at which the stylesheet is located as a string
-     */
-    String path();
-
-    /**
-     * This should be used by implementations to define how a resource, identified by a given path, should be loaded.
-     */
-    URL asURL(String path);
-
-    /**
-     * Responsible for loading the stylesheet specified by {@link #path()}.
-     * <p></p>
-     * Themes loaded through this are automatically cached for faster subsequent loadings.
-     */
-    default URL get() {
-        if (Helper.isCached(this) && Helper.getCachedTheme(this) != null)
-            return Helper.getCachedTheme(this);
-        return Helper.cacheTheme(this, asURL(path()));
+    default String name() {
+        return null;
     }
 
     /**
-     * @return the {@link URL} loaded through {@link #get()} as a string, see {@link URL#toExternalForm()}
+     * @return the theme's data/css
      */
-    default String toData() {
-        return get().toExternalForm();
+    String load();
+
+    /**
+     * Delegates to {@link #loadCached(boolean)}, does not override.
+     */
+    default String loadCached() {
+        return loadCached(false);
     }
 
     /**
-     * Applies the theme as the global user agent stylesheet, see {@link Application#setUserAgentStylesheet(String)}.
+     * Responsible for loading and caching the theme's css for faster subsequent loading.
+     * <p>
+     * If the {@code override} parameter is true the cache will be invalidated.
      */
-    default void applyGlobal() {
-        Application.setUserAgentStylesheet(toData());
-    }
-
-    /**
-     * Adds the loaded theme ({@link #toData()}) to the given {@link Scene}.
-     */
-    default void applyOn(Scene scene) {
-        scene.getStylesheets().add(toData());
-    }
-
-    /**
-     * Adds the loaded theme ({@link #toData()}) to the given {@link Parent}.
-     */
-    default void applyOn(Parent parent) {
-        parent.getStylesheets().add(toData());
+    default String loadCached(boolean override) {
+        if (!Helper.isCached(this) || override) {
+            return Helper.cacheTheme(this);
+        }
+        return Helper.getCachedTheme(this);
     }
 
     /**
@@ -111,28 +94,33 @@ public interface Theme {
     }
 
     /**
-     * Asks the {@link Deployer} to deploy this theme's resources.
+     * Tells the {@link Deployer} to deploy this theme's resources.
+     * <p>
+     * This operation does not happen if the {@link #deployName()} is {@code null}.
      *
      * @see Deployer#deploy(Theme)
      */
     default void deploy() {
+        if (deployName() == null) return;
         try {
             Deployer.instance().deploy(this);
         } catch (Exception ex) {
-            System.err.println("Failed to deploy theme: " + name() + ", because: " + ex.getMessage());
+            throw new RuntimeException("Failed to deploy theme: " + name(), ex);
         }
     }
 
     /**
      * This is used by the {@link Deployer} to identify the theme in its cache map, and it is also the parent folder
      * in which assets will be extracted on the disk.
+     * <p></p>
+     * By default, this is the {@link #name()} in lower case.
      */
     default String deployName() {
-        return name().toLowerCase();
+        return Optional.ofNullable(name()).map(String::toLowerCase).orElse(null);
     }
 
     /**
-     * Removes any deployed files from the disk and memory.
+     * Tells the {@link Deployer} to delete any deployed files from the disk and memory.
      *
      * @see Deployer#clean(Theme)
      */
@@ -149,20 +137,160 @@ public interface Theme {
         return Deployer.instance().getDeployed(this) != null;
     }
 
+    /**
+     * Applies the theme as the global user agent stylesheet, see {@link Application#setUserAgentStylesheet(String)}.
+     * <p></p>
+     * Not implemented by default!!
+     */
+    default void applyGlobal() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Adds the loaded theme to the given {@link Scene}.
+     * <p></p>
+     * Not implemented by default!!
+     */
+    default void applyOn(Scene scene) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Adds the loaded theme to the given {@link Parent}.
+     * <p></p>
+     * Not implemented by default!!
+     */
+    default void applyOn(Parent parent) {
+        throw new UnsupportedOperationException();
+    }
+
+    //================================================================================
+    // Helper
+    //================================================================================
     class Helper {
-        private static final Map<Theme, URL> CACHE = new HashMap<>();
+        private static final Map<Theme, String> CACHE = new HashMap<>();
 
         public static boolean isCached(Theme theme) {
             return CACHE.containsKey(theme);
         }
 
-        public static URL cacheTheme(Theme theme, URL url) {
-            CACHE.put(theme, url);
+        public static String cacheTheme(Theme theme) {
+            String content = theme.load();
+            if (content != null) CACHE.put(theme, content);
+            return content;
+        }
+
+        public static String getCachedTheme(Theme theme) {
+            return CACHE.get(theme);
+        }
+    }
+
+    //================================================================================
+    // Impl
+    //================================================================================
+
+    /**
+     * A simple implementation of {@link Theme} to be used for raw CSS data.
+     * <p>
+     * For example, this is ideal when generating themes at runtime.
+     */
+    class RawTheme implements Theme {
+        private final String css;
+
+        public RawTheme(String css) {
+            this.css = css;
+        }
+
+        public static RawTheme wrap(String css) {
+            return new RawTheme(css);
+        }
+
+        @Override
+        public String load() {
+            return css;
+        }
+
+        /**
+         * Caching is disabled for raw themes, just returns the wrapped css content.
+         */
+        @Override
+        public String loadCached(boolean override) {
+            return css;
+        }
+
+        @Override
+        public void applyGlobal() {
+            new CSSFragment(css).setGlobal();
+        }
+
+        @Override
+        public void applyOn(Scene scene) {
+            new CSSFragment(css).applyOn(scene);
+        }
+
+        @Override
+        public void applyOn(Parent parent) {
+            new CSSFragment(css).applyOn(parent);
+        }
+    }
+
+    /**
+     * Implementation of {@link Theme} to be used for themes loaded from URL resources.
+     * <p>
+     * Specifies all the needed properties for loading and deployment.
+     */
+    class StylesheetTheme implements Theme {
+        private final String name;
+        private final URL url;
+        private final InputStream assets;
+
+        public StylesheetTheme(String name, URL url) {
+            this(name, url, null);
+        }
+
+        public StylesheetTheme(String name, URL url, InputStream assets) {
+            this.name = name;
+            this.url = url;
+            this.assets = assets;
+        }
+
+        public URL getUrl() {
             return url;
         }
 
-        public static URL getCachedTheme(Theme theme) {
-            return CACHE.get(theme);
+        @Override
+        public String name() {
+            return name;
+        }
+
+        @Override
+        public String load() {
+            try (InputStream is = url.openStream()) {
+                return new String(is.readAllBytes(), StandardCharsets.UTF_8);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        public InputStream assets() {
+            return assets;
+        }
+
+        @Override
+        public void applyGlobal() {
+            Application.setUserAgentStylesheet(url.toExternalForm());
+        }
+
+        @Override
+        public void applyOn(Scene scene) {
+            scene.getStylesheets().add(url.toExternalForm());
+        }
+
+        @Override
+        public void applyOn(Parent parent) {
+            parent.getStylesheets().add(url.toExternalForm());
         }
     }
 }
