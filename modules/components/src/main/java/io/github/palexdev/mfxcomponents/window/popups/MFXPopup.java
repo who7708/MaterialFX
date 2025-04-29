@@ -1,10 +1,5 @@
 package io.github.palexdev.mfxcomponents.window.popups;
 
-import java.lang.ref.WeakReference;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-
 import io.github.palexdev.mfxcomponents.controls.base.MFXStyleable;
 import io.github.palexdev.mfxcomponents.skins.MFXPopupSkin;
 import io.github.palexdev.mfxcomponents.skins.base.IMFXPopupSkin;
@@ -14,6 +9,10 @@ import io.github.palexdev.mfxcore.base.properties.NodeProperty;
 import io.github.palexdev.mfxcore.base.properties.PositionProperty;
 import io.github.palexdev.mfxcore.events.WhenEvent;
 import io.github.palexdev.mfxcore.observables.When;
+import java.lang.ref.WeakReference;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -55,8 +54,7 @@ public class MFXPopup extends PopupControl implements IMFXPopup {
             if (bounds.getWidth() > 0 && bounds.getHeight() > 0) {
                 if (getOwner() != null) {
                     MFXPopup.this.reposition();
-                }
-                if (getOwnerWindow() != null) {
+                } else if (getOwnerWindow() != null) {
                     windowReposition();
                 }
             }
