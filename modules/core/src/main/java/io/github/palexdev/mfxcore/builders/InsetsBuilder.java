@@ -107,7 +107,7 @@ public class InsetsBuilder {
     }
 
     public InsetsBuilder withBottom(double bottom) {
-        return new InsetsBuilder(new Insets(0, 0, bottom, 0));
+        return new InsetsBuilder(new Insets(insets.getTop(), insets.getRight(), bottom, insets.getLeft()));
     }
 
     public InsetsBuilder withLeft(double left) {
