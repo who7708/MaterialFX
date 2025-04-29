@@ -1,7 +1,5 @@
 package io.github.palexdev.mfxcomponents.window.popups;
 
-import java.lang.ref.WeakReference;
-
 import io.github.palexdev.mfxcomponents.skins.base.IMFXPopupSkin;
 import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.base.beans.Size;
@@ -9,6 +7,7 @@ import io.github.palexdev.mfxcore.base.properties.NodeProperty;
 import io.github.palexdev.mfxcore.base.properties.PositionProperty;
 import io.github.palexdev.mfxcore.utils.PositionUtils;
 import io.github.palexdev.mfxcore.utils.fx.LayoutUtils;
+import java.lang.ref.WeakReference;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -80,7 +79,7 @@ public class MFXPopupBase {
         Node owner = getOwner();
         Size bounds = (owner != null) ?
                 Size.of(owner.getLayoutBounds().getWidth(), owner.getLayoutBounds().getHeight()) :
-                Size.empty();
+            Size.zero();
         Point2D origin = (owner != null) ?
                 owner.localToScreen(0, 0) :
                 Point2D.ZERO;

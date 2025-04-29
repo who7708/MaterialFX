@@ -18,10 +18,9 @@
 
 package io.github.palexdev.mfxcore.base.beans;
 
+import java.util.Objects;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-
-import java.util.Objects;
 
 /**
  * This bean contains two {@link DoubleProperty} to keep track/specify the sizes of something
@@ -52,7 +51,7 @@ public class Size {
 	/**
 	 * @return a new {@code Size} object with both width and height set to 0
 	 */
-	public static Size empty() {
+	public static Size zero() {
 		return of(0, 0);
 	}
 
