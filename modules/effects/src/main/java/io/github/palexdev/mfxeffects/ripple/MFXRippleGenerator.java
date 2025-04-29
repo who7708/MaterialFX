@@ -2,13 +2,17 @@ package io.github.palexdev.mfxeffects.ripple;
 
 import io.github.palexdev.mfxeffects.beans.Position;
 import io.github.palexdev.mfxeffects.beans.Size;
-import io.github.palexdev.mfxeffects.beans.properties.styleable.StyleableSizeProperty;
 import io.github.palexdev.mfxeffects.enums.MouseMode;
 import io.github.palexdev.mfxeffects.enums.RippleState;
 import io.github.palexdev.mfxeffects.ripple.base.Ripple;
 import io.github.palexdev.mfxeffects.ripple.base.RippleGenerator;
 import io.github.palexdev.mfxeffects.ripple.base.RippleGeneratorBase;
 import io.github.palexdev.mfxeffects.utils.StyleUtils;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import javafx.beans.binding.Bindings;
 import javafx.css.*;
 import javafx.event.EventHandler;
@@ -20,11 +24,6 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * Component capable of generating the ripple effect described by the Material Design Guidelines.
@@ -106,6 +105,9 @@ public class MFXRippleGenerator extends RippleGeneratorBase {
     protected GeneratorState state;
 
     private Supplier<Region> clipSupplier = () -> null;
+    private final Consumer<Node> clipPositioner = c -> {
+        if (c != null) c.resizeRelocate(0, 0, getWidth(), getHeight());
+    };
     private Supplier<Ripple<?>> rippleSupplier = defaultRippleSupplier();
     private Function<MouseEvent, Position> meToPosConverter = e -> Position.of(e.getX(), e.getY());
 
@@ -272,7 +274,8 @@ public class MFXRippleGenerator extends RippleGeneratorBase {
     /**
      * Creates the generator's clip node depending on the set {@link #getClipSupplier()}.
      * <p></p>
-     * <p> 1) If you set a {@code null} supplier, the effect will be unbound, it will be able to trespass the bounds
+     * <p> 1) If you set a {@code null} supplier or {@link #noClipProperty()} to {@code true},
+     * the effect will be unbound, it will be able to trespass the bounds
      * <p> 2) If you set the supplier to return {@code null} then the clip node will be automatically generated based on the
      * owner's geometry
      * <p> 3) If you set the supplier to return a valid node than it will be used as the clip
@@ -284,7 +287,7 @@ public class MFXRippleGenerator extends RippleGeneratorBase {
     @Override
     public Region buildClip() {
         Supplier<Region> supplier = getClipSupplier();
-        if (supplier == null) return null;
+        if (isNoClip() || supplier == null) return null;
 
         Region clip = supplier.get();
         if (clip != null) return clip;
@@ -321,19 +324,19 @@ public class MFXRippleGenerator extends RippleGeneratorBase {
         double h = getHeight();
         if (state == null) {
             updateState();
-            state.clip.resizeRelocate(0, 0, w, h);
+            clipPositioner.accept(state.clip);
             return;
         }
 
         if (Size.of(w, h).equals(state.bounds)) {
             if (state.clipUpdated) {
-                state.clip.resizeRelocate(0, 0, w, h);
+                clipPositioner.accept(state.clip);
                 state.clipUpdated = false;
             }
             return;
         }
         updateState();
-        state.clip.resizeRelocate(0, 0, w, h);
+        clipPositioner.accept(state.clip);
     }
 
     //================================================================================
@@ -393,19 +396,6 @@ public class MFXRippleGenerator extends RippleGeneratorBase {
         }
     };
 
-    private final StyleableSizeProperty ripplePrefSize = new StyleableSizeProperty(
-            StyleableProperties.RIPPLE_PREF_SIZE,
-            this,
-            "ripplePrefSize",
-            Size.invalid()
-    ) {
-        @Override
-        protected void invalidated() {
-            if (state != null)
-                state.updateRipple();
-        }
-    };
-
     private final StyleableBooleanProperty checkBounds = new SimpleStyleableBooleanProperty(
             StyleableProperties.CHECK_BOUNDS,
             this,
@@ -435,10 +425,23 @@ public class MFXRippleGenerator extends RippleGeneratorBase {
         }
     };
 
-    @Override
-    public boolean doAnimateBackground() {
-        return animateBackground.get();
-    }
+    private final StyleableBooleanProperty noClip = new SimpleStyleableBooleanProperty(
+        StyleableProperties.NO_CLIP,
+        this,
+        "noClip",
+        false
+    ) {
+        @Override
+        protected void invalidated() {
+            if (state != null)
+                state.updateClip();
+        }
+
+        @Override
+        public StyleOrigin getStyleOrigin() {
+            return StyleOrigin.USER_AGENT;
+        }
+    };
 
     /**
      * {@inheritDoc}
@@ -448,16 +451,6 @@ public class MFXRippleGenerator extends RippleGeneratorBase {
     @Override
     public StyleableBooleanProperty animateBackgroundProperty() {
         return animateBackground;
-    }
-
-    @Override
-    public void setAnimateBackground(boolean animateBackground) {
-        this.animateBackground.set(animateBackground);
-    }
-
-    @Override
-    public Color getBackgroundColor() {
-        return backgroundColor.get();
     }
 
     /**
@@ -470,16 +463,6 @@ public class MFXRippleGenerator extends RippleGeneratorBase {
         return backgroundColor;
     }
 
-    @Override
-    public void setBackgroundColor(Color backgroundColor) {
-        this.backgroundColor.set(backgroundColor);
-    }
-
-    @Override
-    public Color getRippleColor() {
-        return rippleColor.get();
-    }
-
     /**
      * {@inheritDoc}
      * <p></p>
@@ -488,31 +471,6 @@ public class MFXRippleGenerator extends RippleGeneratorBase {
     @Override
     public StyleableObjectProperty<Color> rippleColorProperty() {
         return rippleColor;
-    }
-
-    @Override
-    public void setRippleColor(Color rippleColor) {
-        this.rippleColor.set(rippleColor);
-    }
-
-    @Override
-    public Size getRipplePrefSize() {
-        return ripplePrefSize.get();
-    }
-
-    /**
-     * {@inheritDoc}
-     * <p></p>
-     * Can be set in CSS via the property: '-mfx-ripple-pref-size";
-     */
-    @Override
-    public StyleableSizeProperty ripplePrefSizeProperty() {
-        return ripplePrefSize;
-    }
-
-    @Override
-    public void setRipplePrefSize(Size ripplePrefSize) {
-        this.ripplePrefSize.set(ripplePrefSize);
     }
 
     public boolean isCheckBounds() {
@@ -556,6 +514,15 @@ public class MFXRippleGenerator extends RippleGeneratorBase {
         this.mouseMode.set(mouseMode);
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Can be set in CSS via the property: '-mfx-no-clip'.
+     */
+    public StyleableBooleanProperty noClipProperty() {
+        return noClip;
+    }
+
     private static class StyleableProperties {
         private static final StyleablePropertyFactory<MFXRippleGenerator> FACTORY = new StyleablePropertyFactory<>(Region.getClassCssMetaData());
         private static final List<CssMetaData<? extends Styleable, ?>> cssMetaDataList;
@@ -581,13 +548,6 @@ public class MFXRippleGenerator extends RippleGeneratorBase {
                         DEFAULT_RIPPLE_COLOR
                 );
 
-        private static final CssMetaData<MFXRippleGenerator, Size> RIPPLE_PREF_SIZE =
-                StyleableSizeProperty.metaDataFor(
-                        "-mfx-ripple-pref-size",
-                        MFXRippleGenerator::ripplePrefSizeProperty,
-                        Size.invalid()
-                );
-
         private static final CssMetaData<MFXRippleGenerator, Boolean> CHECK_BOUNDS =
                 FACTORY.createBooleanCssMetaData(
                         "-mfx-check-bounds",
@@ -603,12 +563,19 @@ public class MFXRippleGenerator extends RippleGeneratorBase {
                         MouseMode.MOUSE_TRANSPARENT
                 );
 
+        private static final CssMetaData<MFXRippleGenerator, Boolean> NO_CLIP =
+            FACTORY.createBooleanCssMetaData(
+                "-mfx-no-clip",
+                MFXRippleGenerator::noClipProperty,
+                false
+            );
+
         static {
             cssMetaDataList = StyleUtils.cssMetaDataList(
                     Region.getClassCssMetaData(),
                     ANIMATE_BACKGROUND, BACKGROUND_COLOR,
-                    RIPPLE_COLOR, RIPPLE_PREF_SIZE,
-                    CHECK_BOUNDS, MOUSE_MODE
+                RIPPLE_COLOR,
+                CHECK_BOUNDS, MOUSE_MODE, NO_CLIP
             );
         }
     }

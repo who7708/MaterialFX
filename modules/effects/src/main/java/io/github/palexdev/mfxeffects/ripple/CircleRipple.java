@@ -8,15 +8,17 @@ import io.github.palexdev.mfxeffects.animations.Animations.TimelineBuilder;
 import io.github.palexdev.mfxeffects.animations.ConsumerTransition;
 import io.github.palexdev.mfxeffects.animations.motion.Motion;
 import io.github.palexdev.mfxeffects.beans.Offset;
-import io.github.palexdev.mfxeffects.beans.Size;
 import io.github.palexdev.mfxeffects.ripple.base.Ripple;
 import io.github.palexdev.mfxeffects.ripple.base.RippleGenerator;
 import io.github.palexdev.mfxeffects.ripple.base.RippleGeneratorBase;
 import io.github.palexdev.mfxeffects.utils.ColorUtils;
+import io.github.palexdev.mfxeffects.utils.StyleUtils;
+import java.util.List;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
+import javafx.css.*;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -113,6 +115,7 @@ public class CircleRipple extends Circle implements Ripple<Circle> {
     //================================================================================
     public CircleRipple(RippleGeneratorBase generator) {
         this.generator = generator;
+        getStyleClass().add("ripple");
     }
 
     //================================================================================
@@ -183,10 +186,10 @@ public class CircleRipple extends Circle implements Ripple<Circle> {
      * Determines the ripple's initial radius and target radius as described by {@link CircleRipple}.
      */
     protected void determineRippleSize() {
-        Size pref = generator.getRipplePrefSize();
-        if (!Size.invalid().equals(pref)) {
-            initRad = 0;
-            targetRad = Math.max(pref.getWidth(), pref.getWidth());
+        double prefRadius = getPrefRadius();
+        if (prefRadius > 0.0) {
+            initRad = prefRadius * INIT_RAD_MULTIPLIER;
+            targetRad = prefRadius;
             return;
         }
 
@@ -263,5 +266,68 @@ public class CircleRipple extends Circle implements Ripple<Circle> {
             return;
         }
         fadeOut.playFromStart();
+    }
+
+    //================================================================================
+    // Styleable Properties
+    //================================================================================
+    private final StyleableDoubleProperty prefRadius = new SimpleStyleableDoubleProperty(
+        StyleableProperties.RADIUS,
+        this,
+        "prefRadius",
+        0.0
+    ) {
+        @Override
+        protected void invalidated() {
+            init();
+        }
+
+        @Override
+        public StyleOrigin getStyleOrigin() {
+            return StyleOrigin.USER_AGENT;
+        }
+    };
+
+    public double getPrefRadius() {
+        return prefRadius.get();
+    }
+
+    public StyleableDoubleProperty prefRadiusProperty() {
+        return prefRadius;
+    }
+
+    public void setPrefRadius(double prefRadius) {
+        this.prefRadius.set(prefRadius);
+    }
+
+    //================================================================================
+    // CssMetaData
+    //================================================================================
+    private static class StyleableProperties {
+        private static final StyleablePropertyFactory<CircleRipple> FACTORY = new StyleablePropertyFactory<>(Circle.getClassCssMetaData());
+        private static final List<CssMetaData<? extends Styleable, ?>> cssMetaDataList;
+
+        private static final CssMetaData<CircleRipple, Number> RADIUS =
+            FACTORY.createSizeCssMetaData(
+                "-mfx-radius",
+                CircleRipple::prefRadiusProperty,
+                0.0
+            );
+
+        static {
+            cssMetaDataList = StyleUtils.cssMetaDataList(
+                Circle.getClassCssMetaData(),
+                RADIUS
+            );
+        }
+    }
+
+    public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
+        return StyleableProperties.cssMetaDataList;
+    }
+
+    @Override
+    public List<CssMetaData<? extends Styleable, ?>> getCssMetaData() {
+        return getClassCssMetaData();
     }
 }

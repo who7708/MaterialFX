@@ -1,14 +1,11 @@
 package io.github.palexdev.mfxeffects.ripple.base;
 
 import io.github.palexdev.mfxeffects.beans.Position;
-import io.github.palexdev.mfxeffects.beans.Size;
-import io.github.palexdev.mfxeffects.beans.properties.styleable.StyleableSizeProperty;
+import java.util.function.Supplier;
 import javafx.css.StyleableBooleanProperty;
 import javafx.css.StyleableObjectProperty;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
-
-import java.util.function.Supplier;
 
 /**
  * Public API that all ripple generators should expose.
@@ -98,39 +95,55 @@ public interface RippleGenerator {
      */
     Supplier<Ripple<?>> defaultRippleSupplier();
 
-    boolean doAnimateBackground();
+    default boolean doAnimateBackground() {
+        return animateBackgroundProperty().get();
+    }
 
     /**
      * Specifies whether the generator should also animate its background color.
      */
     StyleableBooleanProperty animateBackgroundProperty();
 
-    void setAnimateBackground(boolean animateBackground);
+    default void setAnimateBackground(boolean animateBackground) {
+        animateBackgroundProperty().set(animateBackground);
+    }
 
-    Color getBackgroundColor();
+    default Color getBackgroundColor() {
+        return backgroundColorProperty().get();
+    }
 
     /**
      * Specifies the background color to use when animating it, see {@link #animateBackgroundProperty()}.
      */
     StyleableObjectProperty<Color> backgroundColorProperty();
 
-    void setBackgroundColor(Color backgroundColor);
+    default void setBackgroundColor(Color backgroundColor) {
+        backgroundColorProperty().set(backgroundColor);
+    }
 
-    Color getRippleColor();
+    default Color getRippleColor() {
+        return rippleColorProperty().get();
+    }
 
     /**
      * Specifies ripple node color.
      */
     StyleableObjectProperty<Color> rippleColorProperty();
 
-    void setRippleColor(Color rippleColor);
+    default void setRippleColor(Color rippleColor) {
+        rippleColorProperty().set(rippleColor);
+    }
 
-    Size getRipplePrefSize();
+    default boolean isNoClip() {
+        return noClipProperty().get();
+    }
 
     /**
-     * Specifies the preferred size of the ripple node.
+     * Instructs the ripple generator to not clip itself, giving the user a finer control over the ripple effect.
      */
-    StyleableSizeProperty ripplePrefSizeProperty();
+    StyleableBooleanProperty noClipProperty();
 
-    void setRipplePrefSize(Size ripplePrefSize);
+    default void setNoClip(boolean noClip) {
+        noClipProperty().set(noClip);
+    }
 }
