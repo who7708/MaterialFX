@@ -8,7 +8,7 @@ plugins {
 apply from: "$scriptsDir/updateJFXRes.gradle"
 apply from: "$scriptsDir/processCSS.gradle"
 
-version = "$mfxresources"
+version = "$resources"
 
 dependencies {
     api(project(":effects"))

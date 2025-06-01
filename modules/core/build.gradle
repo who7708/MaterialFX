@@ -1,6 +1,6 @@
 import com.vanniktech.maven.publish.SonatypeHost
 
-version = "$mfxcore"
+version = "$core"
 
 dependencies {
     api(project(":localization"))

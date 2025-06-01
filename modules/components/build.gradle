@@ -1,6 +1,6 @@
 import com.vanniktech.maven.publish.SonatypeHost
 
-version = "$mfx"
+version = "$components"
 
 dependencies {
     api(project(":core"))

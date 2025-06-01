@@ -1,6 +1,6 @@
 import com.vanniktech.maven.publish.SonatypeHost
 
-version = "$mfxeffects"
+version = "$effects"
 
 java {
     withSourcesJar()

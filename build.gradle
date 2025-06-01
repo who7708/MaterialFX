@@ -16,8 +16,8 @@ subprojects {
 
     // Remove vanniktech nonsense
     gradle.taskGraph.whenReady { graph ->
-        if (graph.hasTask(plainJavadocJar)) {
-            plainJavadocJar.enabled = false
+        if (graph.hasTask(mavenPlainJavadocJar)) {
+            mavenPlainJavadocJar.enabled = false
         }
     }
 
@@ -47,11 +47,6 @@ subprojects {
     compileJava {
         sourceCompatibility = "$jdk"
         targetCompatibility = "$jdk"
-    }
-
-    compileTestJava {
-        sourceCompatibility = "$testJdk"
-        targetCompatibility = "$testJdk"
     }
 
     test {
