@@ -1,7 +1,0 @@
-@use 'progress/progress-indicators-circular' as *;
-@use 'progress/progress-indicators-linear' as *;
-
-@mixin MaterialProgress() {
-  @include MaterialCircular();
-  @include MaterialLinear();
-}
