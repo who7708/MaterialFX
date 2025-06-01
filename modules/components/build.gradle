@@ -18,7 +18,7 @@ java {
     tasks.withType(Jar).each { it.archiveBaseName.set("components") }
 }
 
-task testRun(type: JavaExec) {
+tasks.register('testRun', JavaExec) {
     classpath = sourceSets.test.runtimeClasspath
     mainClass = 'app.ComponentsLauncher'
 }
