@@ -1,0 +1,19 @@
+name: 'Update Changelogs'
+
+on:
+  workflow_call: { }
+
+jobs:
+  update-changelogs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Run script
+        run: python scripts/update_changelogs.py
+
+
