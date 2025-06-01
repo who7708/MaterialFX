@@ -9,11 +9,11 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/modules/aio" />
             <option value="$PROJECT_DIR$/modules/components" />
             <option value="$PROJECT_DIR$/modules/core" />
             <option value="$PROJECT_DIR$/modules/effects" />
             <option value="$PROJECT_DIR$/modules/localization" />
-            <option value="$PROJECT_DIR$/modules/release" />
             <option value="$PROJECT_DIR$/modules/resources" />
           </set>
         </option>
