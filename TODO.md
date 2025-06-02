@@ -1,65 +1,18 @@
-## This is a temporary roadmap just to get things started
+## Progressive Roadmap.
 
-### Components (from material-web)
+*New goals and features will be added on the go*
 
-- [x] Button
-- [x] Checkbox
-- [ ] Field
-- [ ] Radio button
-- [ ] Switch
-- [ ] Text field
-- [x] FAB
-- [x] Icon Button
-- [ ] Chips
-- [ ] Dialog
-- [ ] Divider
-- [x] Elevation
-- [ ] Focus Ring/Focus Indicator
-- [ ] Dragged state layer (only surface needs to be changed)
-- [x] Icon
-- [ ] List
-- [ ] Menu
-- [x] Popups/Tooltips
-- [x] Progress indicator (circular)
-- [x] Progress indicator (linear)
-- [x] Ripple
-- [ ] Select
-- [ ] Slider
-- [ ] Tabs
+#### Components
 
-### Module: MaterialFX
+- Buttons
+    - [ ] Button and toggle modes
+    - [ ] Variants: elevated, filled, tonal, outlined, text)
+    - [ ] Preset sizes: extra small, small, medium, large, extra large
+    - [ ] Preset shapes: round and square
+    - [ ] Shape morphs when pressed and selected
+    - [ ] Focus ring
 
-- [ ] Behavior API (Done, Experimental/WIP)
-- [x] Buttons
-- [x] Checkboxes
-- [ ] Radio Buttons
-- [ ] Toggles
-- [ ] Combo-boxes
-- [ ] Dialogs
-- [ ] Fields
-- [ ] Lists
-- [ ] Notifications
-- [ ] DatePicker
-- [ ] ProgressBars & ProgressSpinners
-- [ ] ScrollPanes
-- [ ] Sliders
-- [ ] Stepper
-- [ ] Tables
+#### Misc
 
-#### Roadmap
-
-- [ ] Time to make a Demo app
-- [ ] Theme API and Dark theme (Done, Experimental/WIP)
-- [ ] ColorPicker
-- [ ] TextArea
-- [ ] Cards
-- [ ] TimePicker (and combined with date)
-- [ ] Check Combo-boxes
-- [ ] Split Button
-- [ ] Progress Button
-
-#### Misc/Remainders
-
-- Rename scss files
-- Allow generating themes at runtime
-- StyleableProperties should be split. The ones dependent on the skin from the ones dependent on the control
+- [ ] Theme API
+- [ ] Variants API
