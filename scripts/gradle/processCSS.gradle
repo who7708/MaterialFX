@@ -8,7 +8,9 @@ tasks.register("processCSS") {
     doLast {
         def rootDir = rootProject.projectDir.absolutePath
         def resDir = "$rootDir/modules/resources/src/main/resources/io/github/palexdev/mfxresources/sass/themes"
-        List<File> themesDirs = Arrays.stream(new File(resDir).listFiles())
+        def dirs = new File(resDir).listFiles()
+        if (dirs == null || dirs.length == 0) return
+        List<File> themesDirs = Arrays.stream(dirs)
             .filter(File::isDirectory)
             .toList()
 

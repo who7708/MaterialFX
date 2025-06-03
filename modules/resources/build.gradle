@@ -48,11 +48,14 @@ compileSass {
     sourceMap = none
 }
 
+// TODO temporarily disabled
+/*
 processResources {
     // This makes gradle compile sass to css before copying the resources
     dependsOn compileSass
     dependsOn processCSS
 }
+*/
 
 mavenPublishing {
     publishToMavenCentral(SonatypeHost.S01)
