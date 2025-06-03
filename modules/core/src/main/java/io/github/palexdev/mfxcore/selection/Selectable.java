@@ -21,7 +21,9 @@ package io.github.palexdev.mfxcore.selection;
  */
 public interface Selectable {
 
-    boolean isSelected();
+    default boolean isSelected() {
+        return selectedProperty().get();
+    }
 
     /**
      * Specifies the selection state.
@@ -30,14 +32,27 @@ public interface Selectable {
      */
     SelectionProperty selectedProperty();
 
-    void setSelected(boolean selected);
+    default void setSelected(boolean selected) {
+        selectedProperty().set(selected);
+    }
 
-    SelectionGroup getSelectionGroup();
+    default SelectionGroup getSelectionGroup() {
+        return selectionGroupProperty().get();
+    }
 
     /**
      * Specifies the {@link SelectionGroup} at which this {@code Selectable} is assigned.
      */
     SelectionGroupProperty selectionGroupProperty();
 
-    void setSelectionGroup(SelectionGroup group);
+    default void setSelectionGroup(SelectionGroup group) {
+        selectionGroupProperty().set(group);
+    }
+
+    /**
+     * Optional API for controls that can act both as standard buttons or toggles.
+     */
+    default boolean isSelectable() {
+        return true;
+    }
 }
