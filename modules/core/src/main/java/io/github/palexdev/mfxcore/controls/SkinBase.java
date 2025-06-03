@@ -18,15 +18,15 @@
 
 package io.github.palexdev.mfxcore.controls;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import io.github.palexdev.mfxcore.behavior.BehaviorBase;
 import io.github.palexdev.mfxcore.behavior.DisposableAction;
 import io.github.palexdev.mfxcore.behavior.WithBehavior;
 import io.github.palexdev.mfxcore.events.WhenEvent;
 import io.github.palexdev.mfxcore.observables.When;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Extension of {@link javafx.scene.control.SkinBase} used by components that want a seamless integration with the new Behavior API.
@@ -77,66 +77,19 @@ public abstract class SkinBase<C extends javafx.scene.control.Control & WithBeha
 	protected SkinBase(C control) {super(control);}
 
 	//================================================================================
-	// Abstract Methods
-	//================================================================================
-
-	/**
-	 * This is responsible for initializing the behavior every time it changes, the given parameter
-	 * is the current uninitialized behavior.
-	 */
-	protected abstract void initBehavior(B behavior);
-
-	//================================================================================
 	// Methods
 	//================================================================================
 
 	/**
-	 * Convenience method for {@link #computeMinWidth(double, double, double, double, double)} without the need to pass
-	 * the insets.
+	 * This is responsible for initializing the behavior every time it changes.
+	 * The given parameter is the current uninitialized behavior.
+	 * <p>
+	 * To avoid boilerplate code this already calls {@link BehaviorBase#init()}.
 	 */
-	protected double computeMinWidth(double height) {
-		return computeMinWidth(height, snappedTopInset(), snappedRightInset(), snappedBottomInset(), snappedLeftInset());
+	protected void initBehavior(B behavior) {
+		behavior.init();
 	}
 
-	/**
-	 * Convenience method for {@link #computeMinHeight(double, double, double, double, double)} without the need to pass
-	 * the insets.
-	 */
-	protected double computeMinHeight(double width) {
-		return computeMinHeight(width, snappedTopInset(), snappedRightInset(), snappedBottomInset(), snappedLeftInset());
-	}
-
-	/**
-	 * Convenience method for {@link #computePrefWidth(double, double, double, double, double)} without the need to pass
-	 * the insets.
-	 */
-	protected double computePrefWidth(double height) {
-		return computePrefWidth(height, snappedTopInset(), snappedRightInset(), snappedBottomInset(), snappedLeftInset());
-	}
-
-	/**
-	 * Convenience method for {@link #computePrefHeight(double, double, double, double, double)} without the need to pass
-	 * the insets.
-	 */
-	protected double computePrefHeight(double width) {
-		return computePrefHeight(width, snappedTopInset(), snappedRightInset(), snappedBottomInset(), snappedLeftInset());
-	}
-
-	/**
-	 * Convenience method for {@link #computeMaxWidth(double, double, double, double, double)} without the need to pass
-	 * the insets.
-	 */
-	protected double computeMaxWidth(double height) {
-		return computeMaxWidth(height, snappedTopInset(), snappedRightInset(), snappedBottomInset(), snappedLeftInset());
-	}
-
-	/**
-	 * Convenience method for {@link #computeMaxHeight(double, double, double, double, double)} without the need to pass
-	 * the insets.
-	 */
-	protected double computeMaxHeight(double width) {
-		return computeMaxHeight(width, snappedTopInset(), snappedRightInset(), snappedBottomInset(), snappedLeftInset());
-	}
 
 	//================================================================================
 	// Delegate Methods
