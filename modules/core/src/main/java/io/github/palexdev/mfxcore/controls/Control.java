@@ -18,14 +18,14 @@
 
 package io.github.palexdev.mfxcore.controls;
 
+import java.util.Optional;
+import java.util.function.Supplier;
+
 import io.github.palexdev.mfxcore.base.properties.functional.SupplierProperty;
 import io.github.palexdev.mfxcore.behavior.BehaviorBase;
 import io.github.palexdev.mfxcore.behavior.WithBehavior;
 import javafx.scene.Node;
 import javafx.scene.control.Skin;
-
-import java.util.Optional;
-import java.util.function.Supplier;
 
 /**
  * Base class that can be used as a starting point to implement UI components that perfectly integrate with the new Behavior
@@ -72,6 +72,13 @@ public abstract class Control<B extends BehaviorBase<? extends Node>> extends ja
 	};
 
 	//================================================================================
+	// Constructors
+	//================================================================================
+	public Control() {
+		init();
+	}
+
+	//================================================================================
 	// Abstract Methods
 	//================================================================================
 
@@ -83,6 +90,10 @@ public abstract class Control<B extends BehaviorBase<? extends Node>> extends ja
 	//================================================================================
 	// Methods
 	//================================================================================
+
+	protected void init() {
+		setDefaultBehaviorProvider();
+	}
 
 	/**
 	 * Since this is deeply integrated with the new behavior API, and since the {@link #setSkin(Skin)} method cannot

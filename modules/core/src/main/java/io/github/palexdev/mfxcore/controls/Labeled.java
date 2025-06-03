@@ -18,13 +18,13 @@
 
 package io.github.palexdev.mfxcore.controls;
 
+import java.util.function.Supplier;
+
 import io.github.palexdev.mfxcore.base.properties.functional.SupplierProperty;
 import io.github.palexdev.mfxcore.behavior.BehaviorBase;
 import io.github.palexdev.mfxcore.behavior.WithBehavior;
 import javafx.scene.Node;
 import javafx.scene.control.Skin;
-
-import java.util.function.Supplier;
 
 /**
  * Base class that can be used as a starting point to implement text-based UI components that perfectly integrate with the
@@ -75,14 +75,18 @@ public abstract class Labeled<B extends BehaviorBase<? extends Node>> extends ja
 	//================================================================================
 	// Constructors
 	//================================================================================
-	public Labeled() {}
+	public Labeled() {
+		init();
+	}
 
 	public Labeled(String text) {
 		super(text);
+		init();
 	}
 
 	public Labeled(String text, Node graphic) {
 		super(text, graphic);
+		init();
 	}
 
 	//================================================================================
@@ -97,6 +101,10 @@ public abstract class Labeled<B extends BehaviorBase<? extends Node>> extends ja
 	//================================================================================
 	// Methods
 	//================================================================================
+
+	protected void init() {
+		setDefaultBehaviorProvider();
+	}
 
 	/**
 	 * Since this is deeply integrated with the new behavior API, and since the {@link #setSkin(Skin)} method cannot
