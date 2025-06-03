@@ -19,7 +19,6 @@
 package io.github.palexdev.mfxcomponents.controls;
 
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -32,32 +31,67 @@ import io.github.palexdev.mfxcore.utils.fx.StyleUtils;
 import io.github.palexdev.mfxeffects.animations.Animations;
 import io.github.palexdev.mfxeffects.animations.Animations.KeyFrames;
 import io.github.palexdev.mfxeffects.animations.Animations.TimelineBuilder;
-import io.github.palexdev.mfxeffects.animations.base.Curve;
-import io.github.palexdev.mfxeffects.animations.motion.Cubic;
 import io.github.palexdev.mfxeffects.animations.motion.M3Motion;
 import io.github.palexdev.mfxeffects.enums.ElevationLevel;
-import io.github.palexdev.mfxeffects.ripple.MFXRippleGenerator;
 import javafx.animation.Animation;
 import javafx.beans.InvalidationListener;
 import javafx.css.CssMetaData;
 import javafx.css.PseudoClass;
 import javafx.css.StyleablePropertyFactory;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Effect;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 
+/// Material Design 3 components are stratified. Different layers have different purposes. Two are particularly important:
+/// the `state layer` and the `focus ring layer`.
+///
+/// The `state layer` is a transparent region at rest, with a color in contrast to the main layer. Depending on the
+/// interaction with the component, the state layer opacity changes. Here are the defaults:
+/// - On mouse hover: 8%
+/// - On focused: 10%
+/// - On pressed: 12%
+/// - On dragged: 16%
+/// The system is designed to be extensible, so you can add your own states. A state is represented by the [State] record.
+/// Each state has a priority, which determines the order in which the states are applied. Only one can be active at a time.
+///
+/// The `focus ring layer` is an effect applied only when the component is being focused by a keyboard event, so
+/// [Node#focusVisibleProperty()]. It's like an extra border spaced around the component.
+///
+/// On top of that, some components may also need a shadow effect to further separate themselves from other UI elements,
+/// making them appear 3D. This is implemented with some caveats through the [#elevationProperty()]
+///
+/// The goal of this region is to replicate the effects seen in the Material Design 3 Guidelines easily, while still
+/// keeping the nodes count as low as possible. Animating background in JavaFX is complicated and not very performant
+/// through the [Region#setBackground(Background)] method. Recent versions introduced the possibility of animating them
+/// in CSS but there are two issues still:
+/// 1) It feels like magic, there doesn't seem to be any public [Animation]
+/// implementation for the task, so I'm guessing it's all internal APIs (fuck that shit honestly)
+/// 2) Technically, we are not simply animating a background. We are overlaying a color on top of another, so the result
+/// is a combination of the two, exactly as intended by the guidelines.
+///
+/// The other impact on performance may come from animations. Both the opacity and the elevation (so the shadow) are
+/// by default animated. You can disable them per-surface via the [#animatedProperty()] or **globally** by setting
+/// [MFXSurface#ANIMATED] to `false`.
+///
+/// ###### Note
+/// When a `MFXSurface` is not needed anymore, it should be disposed by calling [#dispose()].
+// TODO implement 'dragged' state
 public class MFXSurface extends Region implements Styleable {
     //================================================================================
     // Static Properties
     //================================================================================
+
+    /// Global flag to disable surfaces' animations throughout the entire app.
+    /// For a finer control use the [#animatedProperty()].
     public static boolean ANIMATED = true;
 
     //================================================================================
     // Properties
     //================================================================================
     private Parent owner;
-    private MFXRippleGenerator rg;
 
     private InvalidationListener stateListener;
     private final Queue<State> states = new PriorityQueue<>(Comparator.comparing(State::priority));
@@ -86,15 +120,13 @@ public class MFXSurface extends Region implements Styleable {
         owner.getPseudoClassStates().addListener(stateListener);
     }
 
-    public MFXSurface initRipple(Consumer<MFXRippleGenerator> config) {
-        if (rg == null) {
-            rg = new MFXRippleGenerator(this);
-            getChildren().add(rg);
-        }
-        if (config != null) config.accept(rg);
-        return this;
-    }
-
+    /// This is the core method responsible for setting the surface's opacity according to the current interaction state
+    /// with its `owner`. A common place where we can capture state changes is the [javafx.css.Styleable#getPseudoClassStates()].
+    /// However, note that before performing a lookup in that [Set], preset states first check properties
+    /// on the node (such as [Node#isHover()], [Node#isPressed()], etc...), which is faster.
+    ///
+    /// The new opacity value is determined by [#getTargetOpacity()], and it can be set immediately or by an animation
+    /// started in [#animate(double)].
     public void updateOpacity() {
         double target = getTargetOpacity();
         if (lastOpacity == target) return;
@@ -106,15 +138,18 @@ public class MFXSurface extends Region implements Styleable {
         lastOpacity = target;
     }
 
+    /// Stops the previous animation if still playing, creates a new one and brings the surface's opacity to the given
+    /// target value.
     protected void animate(double opacity) {
         if (Animations.isPlaying(animation)) animation.stop();
-        Curve curve = new Cubic(0.34, 0.80, 0.34, 1.00);
         animation = TimelineBuilder.build()
             .add(KeyFrames.of(M3Motion.SHORT4, opacityProperty(), opacity))
             .getAnimation();
         animation.play();
     }
 
+    /// Iterates over the [#getStates()] queue, finds the first that is active and retrieves the associated target opacity.
+    /// If no state is active [State#FALLBACK] is used, which will result in a transparent surface.
     public double getTargetOpacity() {
         return states.stream()
             .filter(s -> s.isActive(owner))
@@ -123,12 +158,8 @@ public class MFXSurface extends Region implements Styleable {
             .orElse(State.FALLBACK.opacity(this));
     }
 
+    /// Disposes the surface by unregistering any listener and setting the `owner` to `null`.
     public void dispose() {
-        getChildren().clear();
-        if (rg != null) {
-            rg.dispose();
-            rg = null;
-        }
         states.clear();
         owner.getPseudoClassStates().removeListener(stateListener);
         stateListener = null;
@@ -141,13 +172,6 @@ public class MFXSurface extends Region implements Styleable {
     @Override
     public List<String> defaultStyleClasses() {
         return Styleable.styleClasses("surface");
-    }
-
-    @Override
-    protected void layoutChildren() {
-        if (rg != null) {
-            rg.resizeRelocate(0, 0, getWidth(), getHeight());
-        }
     }
 
     //================================================================================
@@ -178,7 +202,7 @@ public class MFXSurface extends Region implements Styleable {
         StyleableProperties.PRESSED_OPACITY,
         this,
         "pressedOpacity",
-        0.0
+        0.12
     ) {
         @Override
         public void set(double v) {
@@ -192,7 +216,7 @@ public class MFXSurface extends Region implements Styleable {
         StyleableProperties.FOCUSED_OPACITY,
         this,
         "focusedOpacity",
-        0.0
+        0.10
     ) {
         @Override
         public void set(double v) {
@@ -206,7 +230,7 @@ public class MFXSurface extends Region implements Styleable {
         StyleableProperties.HOVER_OPACITY,
         this,
         "hoverOpacity",
-        0.0
+        0.08
     ) {
         @Override
         public void set(double v) {
@@ -368,21 +392,21 @@ public class MFXSurface extends Region implements Styleable {
             FACTORY.createSizeCssMetaData(
                 "-mfx-press-opacity",
                 MFXSurface::pressedOpacityProperty,
-                0.0
+                0.12
             );
 
         private static final CssMetaData<MFXSurface, Number> FOCUSED_OPACITY =
             FACTORY.createSizeCssMetaData(
                 "-mfx-focus-opacity",
                 MFXSurface::focusedOpacityProperty,
-                0.0
+                0.10
             );
 
         private static final CssMetaData<MFXSurface, Number> HOVER_OPACITY =
             FACTORY.createSizeCssMetaData(
                 "-mfx-hover-opacity",
                 MFXSurface::hoverOpacityProperty,
-                0.0
+                0.08
             );
 
         private static final CssMetaData<MFXSurface, ElevationLevel> ELEVATION =
@@ -415,14 +439,13 @@ public class MFXSurface extends Region implements Styleable {
     //================================================================================
     // Getters
     //================================================================================
+
+    /// @return the [Parent] on which this surface is applied.
     public Parent getOwner() {
         return owner;
     }
 
-    public Optional<MFXRippleGenerator> getRippleGenerator() {
-        return Optional.ofNullable(rg);
-    }
-
+    /// @return the [PriorityQueue] which determines the order of the various interaction states with the surface's owner.
     public Queue<State> getStates() {
         return states;
     }
@@ -430,6 +453,19 @@ public class MFXSurface extends Region implements Styleable {
     //================================================================================
     // Inner Classes
     //================================================================================
+
+    /// This record represents interaction states for a [MFXSurface]. There are three values:
+    /// 1) the [#priority()] of the state, which determines the order in which the states are considered.
+    /// 2) the [#condition()] which determines whether the state is active or not.
+    /// 3) the [#opacity()] function which determines the opacity of the surface when the condition is met.
+    ///
+    /// There are five default states:
+    /// 1) [#FALLBACK]
+    /// 2) [#DISABLED]
+    /// 3) [#PRESSED]
+    /// 4) [#FOCUSED]
+    /// 5) [#HOVER]
+    /// All included in a pre-made list for convenience, [#DEFAULT_STATES].
     public record State(
         int priority,
         Predicate<Parent> condition,
