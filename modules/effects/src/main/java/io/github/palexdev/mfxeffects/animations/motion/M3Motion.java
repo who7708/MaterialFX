@@ -19,7 +19,6 @@
 package io.github.palexdev.mfxeffects.animations.motion;
 
 import io.github.palexdev.mfxeffects.animations.base.Curve;
-import javafx.animation.Interpolator;
 import javafx.util.Duration;
 
 import static javafx.util.Duration.millis;
@@ -49,23 +48,15 @@ import static javafx.util.Duration.millis;
  * <p> - {@link #EXTRA_LONG3}: 900ms
  * <p> - {@link #EXTRA_LONG4}: 1000ms
  *
+ * <p>Material Expressive Update</p>
+ * Quoting the official documentation:
+ * <p> - Expressive is Material’s opinionated motion scheme, and should be used for most situations,
+ * particularly hero moments (whatever that means) and key interactions.
+ * <p> - Standard feels more functional with minimal bounce, and should be used for utilitarian products.
+ *
  * @see <a href=https://m3.material.io/styles/motion/overview>Material 3 Guidelines</a>
  */
 public class M3Motion {
-	//================================================================================
-	// Curves
-	//================================================================================
-	public static final Interpolator LINEAR = Motion.LINEAR;
-	public static final Interpolator STANDARD = new Cubic(0.2, 0.0, 0.0, 1.0);
-	public static final Interpolator STANDARD_ACCELERATE = new Cubic(0.3, 0, 1.0, 1.0);
-	public static final Interpolator STANDARD_DECELERATE = new Cubic(0, 0, 0, 1.0);
-	public static final Interpolator EMPHASIZED = Motion.EASE_IN_OUT_CUBIC_EMPHASIZED;
-	public static final Interpolator EMPHASIZED_ACCELERATE = new Cubic(0.3, 0.0, 0.8, 0.15);
-	public static final Interpolator EMPHASIZED_DECELERATE = new Cubic(0.05, 0.7, 0.1, 1.0);
-	public static final Interpolator LEGACY = new Cubic(0.4, 0, 0.2, 1.0);
-	public static final Interpolator LEGACY_ACCELERATE = new Cubic(0.4, 0, 1.0, 1.0);
-	public static final Interpolator LEGACY_DECELERATE = new Cubic(0, 0, 0.2, 1.0);
-
 	//================================================================================
 	// Durations
 	//================================================================================
@@ -90,8 +81,84 @@ public class M3Motion {
 	public static final Duration EXTRA_LONG4 = millis(1000);
 
 	//================================================================================
+	// Curves
+	//================================================================================
+	public static final Curve LINEAR = Motion.LINEAR;
+	public static final Curve STANDARD = new Cubic(0.2, 0.0, 0.0, 1.0);
+	public static final Curve STANDARD_ACCELERATE = new Cubic(0.3, 0, 1.0, 1.0);
+	public static final Curve STANDARD_DECELERATE = new Cubic(0, 0, 0, 1.0);
+	public static final Curve EMPHASIZED = Motion.EASE_IN_OUT_CUBIC_EMPHASIZED;
+	public static final Curve EMPHASIZED_ACCELERATE = new Cubic(0.3, 0.0, 0.8, 0.15);
+	public static final Curve EMPHASIZED_DECELERATE = new Cubic(0.05, 0.7, 0.1, 1.0);
+	public static final Curve LEGACY = new Cubic(0.4, 0, 0.2, 1.0);
+	public static final Curve LEGACY_ACCELERATE = new Cubic(0.4, 0, 1.0, 1.0);
+	public static final Curve LEGACY_DECELERATE = new Cubic(0, 0, 0.2, 1.0);
+
+	public static final MotionPreset EXPRESSIVE_FAST_SPACIAL = MotionPreset.of(
+		new Cubic(0.42, 1.67, 0.21, 0.90),
+		MEDIUM3
+	);
+	public static final MotionPreset EXPRESSIVE_DEFAULT_SPACIAL = MotionPreset.of(
+		new Cubic(0.38, 1.21, 0.22, 1.0),
+		LONG2
+	);
+	public static final MotionPreset EXPRESSIVE_SLOW_SPACIAL = MotionPreset.of(
+		new Cubic(0.39, 1.29, 0.35, 0.98),
+		650
+	);
+
+	public static final MotionPreset EXPRESSIVE_FAST_EFFECTS = MotionPreset.of(
+		new Cubic(0.31, 0.94, 0.34, 1.0),
+		SHORT3
+	);
+	public static final MotionPreset EXPRESSIVE_DEFAULT_EFFECTS = MotionPreset.of(
+		new Cubic(0.34, 0.80, 0.34, 1.0),
+		SHORT4
+	);
+	public static final MotionPreset EXPRESSIVE_SLOW_EFFECTS = MotionPreset.of(
+		new Cubic(0.34, 0.88, 0.34, 1.0),
+		MEDIUM2
+	);
+
+	public static final MotionPreset STANDARD_FAST_SPATIAL = MotionPreset.of(
+		new Cubic(0.27, 1.06, 0.18, 1.0),
+		MEDIUM3
+	);
+	public static final MotionPreset STANDARD_DEFAULT_SPATIAL = MotionPreset.of(
+		STANDARD_FAST_SPATIAL.curve,
+		LONG2
+	);
+	public static final MotionPreset STANDARD_SLOW_SPATIAL = MotionPreset.of(
+		STANDARD_FAST_SPATIAL.curve,
+		750
+	);
+
+	public static final MotionPreset STANDARD_FAST_EFFECTS = EXPRESSIVE_FAST_EFFECTS;
+	public static final MotionPreset STANDARD_DEFAULT_EFFECTS = EXPRESSIVE_DEFAULT_EFFECTS;
+	public static final MotionPreset STANDARD_SLOW_EFFECTS = EXPRESSIVE_SLOW_EFFECTS;
+
+	//================================================================================
 	// Constructors
 	//================================================================================
-	private M3Motion() {
+	private M3Motion() {}
+
+	//================================================================================
+	// Inner Classes
+	//================================================================================
+	public record MotionPreset(
+		Curve curve,
+		Duration duration
+	) {
+		public static MotionPreset of(Curve curve, double millis) {
+			return of(curve, Duration.millis(millis));
+		}
+
+		public static MotionPreset of(Curve curve, Duration duration) {
+			return new MotionPreset(curve, duration);
+		}
+
+		public double millis() {
+			return duration.toMillis();
+		}
 	}
 }
