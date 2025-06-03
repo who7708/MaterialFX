@@ -18,6 +18,11 @@
 
 package io.github.palexdev.mfxcore.controls;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.BiConsumer;
+
 import io.github.palexdev.mfxcore.base.properties.styleable.StyleableDoubleProperty;
 import io.github.palexdev.mfxcore.base.properties.styleable.StyleableObjectProperty;
 import io.github.palexdev.mfxcore.observables.When;
@@ -33,11 +38,6 @@ import javafx.scene.control.skin.LabelSkin;
 import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.Text;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Consumer;
-
 /**
  * Simple extension of {@link javafx.scene.control.Label} to set the wrapping width in a more intuitive way.
  * By default, only {@link Text} has the capability of specifying the wrapping width. For {@code Labels}
@@ -50,22 +50,25 @@ import java.util.function.Consumer;
  * as the label's max width. Otherwise, use the default computation.
  * <p></p>
  * This also adds a new feature/workaround. In JavaFX Labels are composed by two nodes at max: the icon/graphic and the
- * text. For performance reasons, probably the text node is not added to the control until the text is not null and not empty.
- * A mechanism to detect the addition and retrieval of such node has been added, allowing custom text-based controls to
+ * text. For performance reasons, probably, the text node is not added to the control until the text is not null and not empty.
+ * A mechanism to detect the addition and retrieval of such node has been added, allowing custom text-based components to
  * take full control of the text node itself rather than the label as a whole.
  * <p>
- * This allows to implement three other useful tricks:
+ * This allows implementing three other useful tricks:
  * <p> 1) 'Backport' the {@link Text#fontSmoothingTypeProperty()} here, allowing to set the antialiasing
  * method directly on the label. The default font smoothing type for this is set to {@link FontSmoothingType#LCD}.
  * <p> 2) A way to completely disable the text truncation by always showing the full text and removing the clip
- * <p> 3) A way to detect when the label's text is truncated, {@link #truncatedProperty()}
+ * <p> 3) A way to detect when the label's text is truncated, {@link #truncatedProperty()}.
+ * Note: in newer version of JavaFX this feature has been added through the {@link #textTruncatedProperty()}, but I didn't
+ * test it with the clip removal feature. Since I'm not sure if it works properly, I'll keep my custom property for now.
+ * // TODO test this
  */
 public class Label extends javafx.scene.control.Label {
     //================================================================================
     // Properties
     //================================================================================
     protected Node textNode;
-	private Consumer<Node> onSetTextNode = n -> {};
+    private BiConsumer<Node, Node> onSetTextNode = (o, n) -> {};
 
 	private When<?> whenFDTE;
 	private boolean forceDisableTextEllipsis = false;
@@ -91,19 +94,18 @@ public class Label extends javafx.scene.control.Label {
 
     /**
      * Responsible for setting the text node instance as well as running the user specified callback,
-	 * {@link #onSetTextNode(Consumer)}, and invoking {@link #updateFDTE()}.
+     * {@link #onSetTextNode(BiConsumer)}, and invoking {@link #updateFDTE()}.
      */
     protected void setTextNode(Node textNode) {
-        this.textNode = textNode;
-		if (textNode instanceof Text) {
-			Text tn = (Text) textNode;
-			tn.fontSmoothingTypeProperty().bind(fontSmoothingTypeProperty());
-            onSetTextNode.accept(textNode);
+        if (textNode instanceof Text tn) {
+            tn.fontSmoothingTypeProperty().bind(fontSmoothingTypeProperty());
+            onSetTextNode.accept(this.textNode, textNode);
 			updateFDTE();
 			truncated.bind(tn.textProperty().map(s -> {
 				if (forceDisableTextEllipsis) return false;
 				return !Objects.equals(s, getText());
 			}));
+            this.textNode = textNode;
         }
     }
 
@@ -282,7 +284,7 @@ public class Label extends javafx.scene.control.Label {
 	/**
 	 * Sets the callback that executes when the text node is detected and stored.
 	 */
-	public void onSetTextNode(Consumer<Node> action) {
+    public void onSetTextNode(BiConsumer<Node, Node> action) {
 		this.onSetTextNode = action;
 	}
 
