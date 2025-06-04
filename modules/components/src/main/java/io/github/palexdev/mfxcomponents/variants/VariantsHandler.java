@@ -18,7 +18,10 @@
 
 package io.github.palexdev.mfxcomponents.variants;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.SequencedSet;
+import java.util.Set;
 
 import javafx.css.Styleable;
 
@@ -61,13 +64,14 @@ public class VariantsHandler<S extends Styleable, V extends Variant> {
     @SafeVarargs
     public final void setVariants(V... variants) {
         // Remove previous
-        List<String> copy = new ArrayList<>(styleable.getStyleClass());
+        Set<String> copy = new LinkedHashSet<>(styleable.getStyleClass());
         this.variants.forEach(v -> copy.remove(v.variantStyleClass()));
         this.variants.clear();
 
         // Add new
         for (V v : variants) {
             copy.add(v.variantStyleClass());
+            this.variants.add(v);
         }
         styleable.getStyleClass().setAll(copy);
     }
