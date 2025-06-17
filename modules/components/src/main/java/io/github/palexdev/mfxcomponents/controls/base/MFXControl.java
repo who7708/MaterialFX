@@ -31,6 +31,7 @@ import javafx.scene.Node;
 /// public.
 ///
 /// **Note:** the correct way to change the skin is to call [#changeSkin(SkinBase)].
+// TODO tooltip integration
 public abstract class MFXControl<B extends BehaviorBase<? extends Node>> extends Control<B> implements Styleable {
 
 

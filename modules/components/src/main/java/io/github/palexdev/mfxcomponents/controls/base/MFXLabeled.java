@@ -24,12 +24,21 @@ import io.github.palexdev.mfxcomponents.skins.base.MFXLabeledSkin;
 import io.github.palexdev.mfxcore.base.properties.styleable.StyleableDoubleProperty;
 import io.github.palexdev.mfxcore.behavior.BehaviorBase;
 import io.github.palexdev.mfxcore.controls.Labeled;
+import io.github.palexdev.mfxcore.controls.SkinBase;
 import io.github.palexdev.mfxcore.controls.Styleable;
 import io.github.palexdev.mfxcore.utils.fx.StyleUtils;
 import javafx.css.CssMetaData;
 import javafx.css.StyleablePropertyFactory;
 import javafx.scene.Node;
 
+/// Extension of [Labeled] and base class for all text-based `MaterialFX` components. The goal is to have a separate hierarchy of
+/// controls from the JavaFX one that perfectly integrates with the new behavior and theming APIs.
+///
+/// In addition to the features brought by [Labeled], this also implements [Styleable] and makes size computation methods
+/// public.
+///
+/// **Note:** the correct way to change the skin is to call [#changeSkin(SkinBase)].
+// TODO tooltip integration
 public abstract class MFXLabeled<B extends BehaviorBase<? extends Node>> extends Labeled<B> implements Styleable {
 
     //================================================================================

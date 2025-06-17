@@ -76,7 +76,7 @@ import javafx.scene.layout.Region;
 /// by default animated. You can disable them per-surface via the [#animatedProperty()] or **globally** by setting
 /// [MFXSurface#ANIMATED] to `false`.
 ///
-/// ###### Note
+/// #### Note
 /// When a `MFXSurface` is not needed anymore, it should be disposed by calling [#dispose()].
 // TODO implement 'dragged' state
 public class MFXSurface extends Region implements Styleable {
@@ -112,10 +112,13 @@ public class MFXSurface extends Region implements Styleable {
     // Methods
     //================================================================================
     private void init() {
+        defaultStyleClasses(this);
         setManaged(false);
         setMaxSize(USE_PREF_SIZE, USE_PREF_SIZE);
-        defaultStyleClasses(this);
 
+        double initOpacity = getTargetOpacity();
+        setOpacity(initOpacity);
+        lastOpacity = initOpacity;
         stateListener = _ -> updateOpacity();
         owner.getPseudoClassStates().addListener(stateListener);
     }
@@ -188,7 +191,7 @@ public class MFXSurface extends Region implements Styleable {
         StyleableProperties.DISABLED_OPACITY,
         this,
         "disabledOpacity",
-        0.0
+        0.1
     ) {
         @Override
         public void set(double v) {
@@ -244,31 +247,23 @@ public class MFXSurface extends Region implements Styleable {
         StyleableProperties.ELEVATION,
         this,
         "elevation",
-        ElevationLevel.LEVEL0
+        ElevationLevel.NONE
     ) {
         @Override
-        public void set(ElevationLevel newValue) {
-            if (newValue == ElevationLevel.LEVEL0) {
+        protected void invalidated() {
+            ElevationLevel lvl = get();
+            if (lvl == ElevationLevel.NONE) {
                 owner.setEffect(null);
-                super.set(newValue);
                 return;
             }
 
             Effect effect = owner.getEffect();
             if (effect == null) {
-                owner.setEffect(newValue.toShadow());
-                super.set(newValue);
+                owner.setEffect(lvl.toShadow());
                 return;
             }
-            if (!(effect instanceof DropShadow)) {
-                return;
-            }
-
-
-            ElevationLevel oldValue = get();
-            if (oldValue != null && newValue != null && oldValue != newValue)
-                oldValue.animateTo((DropShadow) effect, newValue);
-            super.set(newValue);
+            if (effect instanceof DropShadow ds)
+                ElevationLevel.animate(ds, lvl);
         }
     };
 
@@ -385,7 +380,7 @@ public class MFXSurface extends Region implements Styleable {
             FACTORY.createSizeCssMetaData(
                 "-mfx-disabled-opacity",
                 MFXSurface::disabledOpacityProperty,
-                0.0
+                0.1
             );
 
         private static final CssMetaData<MFXSurface, Number> PRESSED_OPACITY =
@@ -414,7 +409,7 @@ public class MFXSurface extends Region implements Styleable {
                 ElevationLevel.class,
                 "-mfx-elevation",
                 MFXSurface::elevationProperty,
-                ElevationLevel.LEVEL0
+                ElevationLevel.NONE
             );
 
         static {

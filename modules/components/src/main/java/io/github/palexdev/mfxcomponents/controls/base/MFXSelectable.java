@@ -23,10 +23,19 @@ import java.util.function.Consumer;
 import io.github.palexdev.mfxcomponents.behaviors.MFXSelectableBehavior;
 import io.github.palexdev.mfxcomponents.theming.PseudoClasses;
 import io.github.palexdev.mfxcore.selection.Selectable;
+import io.github.palexdev.mfxcore.selection.SelectionGroup;
 import io.github.palexdev.mfxcore.selection.SelectionGroupProperty;
 import io.github.palexdev.mfxcore.selection.SelectionProperty;
 import javafx.scene.Node;
 
+/// Base class for all `MaterialFX` components which behave like buttons and are selectable.
+/// Extends [MFXButtonBase] and implements the selection API defined by the [Selectable] interface.
+///
+/// Expects behaviors of type [MFXSelectableBehavior].
+///
+/// @see SelectionProperty
+/// @see SelectionGroupProperty
+/// @see SelectionGroup
 public abstract class MFXSelectable<B extends MFXSelectableBehavior<?>> extends MFXButtonBase<B> implements Selectable {
     //================================================================================
     // Properties

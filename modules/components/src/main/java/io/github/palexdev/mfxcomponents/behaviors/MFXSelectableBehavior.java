@@ -21,12 +21,13 @@ package io.github.palexdev.mfxcomponents.behaviors;
 import java.util.function.Consumer;
 
 import io.github.palexdev.mfxcomponents.controls.base.MFXSelectable;
-import io.github.palexdev.mfxcore.selection.Selectable;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
+/// Defines the common behavior for all [MFXSelectable] components and overrides some methods from [MFXButtonBehaviorBase]
+/// to redirect to [#handleSelection()].
 public class MFXSelectableBehavior<S extends MFXSelectable<?>> extends MFXButtonBehaviorBase<S> {
 
     //================================================================================
@@ -42,27 +43,17 @@ public class MFXSelectableBehavior<S extends MFXSelectable<?>> extends MFXButton
 
     /// Toggles the selection state of the [MFXSelectable] node.
     ///
-    /// It's crucial to understand how this method works. There's a big difference between `MaterialFX` selectable components
-    /// and JavaFX ones.
+    /// Because [MFXSelectable] inherits all properties and behaviors from a generic button, we have to make a distinction
+    /// between the action and selection states. By design, the triggering of an action simply indicates user interaction with
+    /// the component but does not necessarily mean that the selection state has changed.
     ///
-    /// For starters, not all of 'MaterialFX' selectable components can be selected by default. For example, basic buttons
-    /// and icon buttons can act both as standard buttons and toggle buttons.
-    /// This method toggles the selection state only if [Selectable#isSelectable()] returns `true` and the property is not
-    /// bound.
-    ///
-    /// However, there's a distinction between the click state and the selection state. In fact, this method will always
-    /// invoke the [MFXSelectable#trigger()] method, and comes after updating the selection state.
-    ///
-    /// ### TL;DR
-    ///
-    /// If you strictly want to perform some action when the selection state changes, you should add a listener on the
-    /// [Selectable#selectedProperty()] or use [MFXSelectable#setOnSelectionChanged(Consumer)].
+    /// So, if you strictly want to perform some action when the selection state changes, you can add a listener on the
+    /// [MFXSelectable#selectedProperty()] or use [MFXSelectable#setOnSelectionChanged(Consumer)].
     ///
     /// Otherwise, you can use the [MFXSelectable#onActionProperty()] and still query the selection state if needed.
     protected void handleSelection() {
         S selectable = getNode();
-
-        if (selectable.isSelectable() && !selectable.selectedProperty().isBound()) {
+        if (!selectable.selectedProperty().isBound()) {
             selectable.setSelected(!selectable.isSelected());
         }
         selectable.trigger();
@@ -82,7 +73,7 @@ public class MFXSelectableBehavior<S extends MFXSelectable<?>> extends MFXButton
     /// Calls [#handleSelection()] if the pressed key was [KeyCode#ENTER].
     @Override
     public void keyPressed(KeyEvent e, Consumer<KeyEvent> callback) {
-        if (e.getCode() == KeyCode.ENTER) handleSelection();
+        if (e.getCode() == KeyCode.ENTER || e.getCode() == KeyCode.SPACE) handleSelection();
         if (callback != null) callback.accept(e);
     }
 }
