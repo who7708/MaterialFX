@@ -1,5 +1,7 @@
 package io.github.palexdev.mfxeffects.ripple;
 
+import java.util.List;
+
 import io.github.palexdev.mfxeffects.animations.Animations;
 import io.github.palexdev.mfxeffects.animations.Animations.KeyFrames;
 import io.github.palexdev.mfxeffects.animations.Animations.ParallelBuilder;
@@ -13,7 +15,6 @@ import io.github.palexdev.mfxeffects.ripple.base.RippleGenerator;
 import io.github.palexdev.mfxeffects.ripple.base.RippleGeneratorBase;
 import io.github.palexdev.mfxeffects.utils.ColorUtils;
 import io.github.palexdev.mfxeffects.utils.StyleUtils;
-import java.util.List;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -123,11 +124,11 @@ public class CircleRipple extends Circle implements Ripple<Circle> {
     //================================================================================
 
     /**
-     * Sets the ripple's fill to {@link RippleGenerator#rippleColorProperty()}, determines the sizes by calling
+     * Binds the ripple's fill to {@link RippleGenerator#rippleColorProperty()}, determines the sizes by calling
      * {@link #determineRippleSize()} and finally initializes the animations by calling {@link #buildAnimations()}
      */
     public void init() {
-        setFill(generator.getRippleColor());
+        fillProperty().bind(generator.rippleColorProperty());
         determineRippleSize();
         buildAnimations();
     }

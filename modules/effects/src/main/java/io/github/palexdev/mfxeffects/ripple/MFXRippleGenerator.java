@@ -1,5 +1,11 @@
 package io.github.palexdev.mfxeffects.ripple;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import io.github.palexdev.mfxeffects.beans.Position;
 import io.github.palexdev.mfxeffects.beans.Size;
 import io.github.palexdev.mfxeffects.enums.MouseMode;
@@ -8,11 +14,6 @@ import io.github.palexdev.mfxeffects.ripple.base.Ripple;
 import io.github.palexdev.mfxeffects.ripple.base.RippleGenerator;
 import io.github.palexdev.mfxeffects.ripple.base.RippleGeneratorBase;
 import io.github.palexdev.mfxeffects.utils.StyleUtils;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
 import javafx.beans.binding.Bindings;
 import javafx.css.*;
 import javafx.event.EventHandler;
@@ -384,12 +385,6 @@ public class MFXRippleGenerator extends RippleGeneratorBase {
             "rippleColor",
             DEFAULT_RIPPLE_COLOR
     ) {
-        @Override
-        protected void invalidated() {
-            if (state != null)
-                state.updateRipple();
-        }
-
         @Override
         public StyleOrigin getStyleOrigin() {
             return StyleOrigin.USER_AGENT;
