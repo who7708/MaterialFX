@@ -12,7 +12,9 @@ dependencies {
     api(project(":effects"))
     api(project(':localization'))
     api(project(':resources'))
-    api "io.github.palexdev:virtualizedfx:$vfx"
+    api("io.github.palexdev:virtualizedfx:$vfx") {
+        exclude group: 'io.github.palexdev'
+    }
 }
 
 java {
