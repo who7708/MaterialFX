@@ -16,11 +16,16 @@
  * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.palexdev.mfxcomponents.variants;
+package io.github.palexdev.mfxcomponents.variants.button;
 
-public enum ShapeVariant implements Variant {
-    ROUNDED,
-    SQUARED,
+import io.github.palexdev.mfxcomponents.variants.Variant;
+
+public enum StyleVariant implements Variant {
+    ELEVATED,
+    FILLED,
+    OUTLINED,
+    TEXT,
+    TONAL,
     ;
 
     @Override

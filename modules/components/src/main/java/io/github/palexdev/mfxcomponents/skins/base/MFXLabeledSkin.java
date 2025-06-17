@@ -59,6 +59,7 @@ public abstract class MFXLabeledSkin<L extends MFXLabeled<B>, B extends Behavior
     protected BoundLabel buildLabelNode() {
         L labeled = getSkinnable();
         BoundLabel bl = new BoundLabel(labeled);
+        bl.setMouseTransparent(true);
         bl.onSetTextNode((o, n) -> {
             if (o != null) o.opacityProperty().unbind();
             n.opacityProperty().bind(labeled.textOpacityProperty());

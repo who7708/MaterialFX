@@ -16,19 +16,21 @@
  * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.palexdev.mfxcomponents.variants;
+package io.github.palexdev.mfxcomponents.variants.button;
 
-public enum StyleVariant implements Variant {
-    ELEVATED,
-    FILLED,
-    FILLED_TONAL,
-    OUTLINED,
-    TEXT,
+import io.github.palexdev.mfxcomponents.variants.Variant;
+
+public enum SizeVariant implements Variant {
+    // Size
+    XS,
+    S,
+    M,
+    L,
+    XL,
     ;
 
     @Override
     public String variantStyleClass() {
-        if (this == FILLED_TONAL) return "filled-tonal";
         return name().toLowerCase();
     }
 }
