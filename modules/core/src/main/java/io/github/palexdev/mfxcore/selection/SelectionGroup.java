@@ -1,5 +1,7 @@
 package io.github.palexdev.mfxcore.selection;
 
+import java.util.*;
+
 import io.github.palexdev.mfxcore.enums.SelectionMode;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -8,8 +10,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
-
-import java.util.*;
 
 /**
  * Custom implementation and expansion of that pitiful thing that is {@link javafx.scene.control.ToggleGroup}.
@@ -113,11 +113,10 @@ public class SelectionGroup {
      * When adding a {@code Selectable} to a group, there are a bunch of things to consider. The group has no guarantees
      * that the given objects are in a state such that its rules won't be broken. For this reason, it's mandatory to perform
      * a check on the {@code Selectable}'s state by invoking {@link #handleSelection(Selectable, boolean)}. If the returned
-     * correct state is different then it's important to also fix it by invoking {@link Selectable#setSelected(boolean)}.
+     * correct state is different, then it's important to also fix it by invoking {@link Selectable#setSelected(boolean)}.
      */
     public SelectionGroup add(Selectable selectable) {
-        if (selectable == null || selectables.contains(selectable)) return this;
-        selectables.add(selectable);
+        if (selectable == null || !selectables.add(selectable)) return this;
 
         SelectionGroup group = selectable.getSelectionGroup();
         if (group != this) {

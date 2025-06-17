@@ -8,7 +8,7 @@ import javafx.beans.property.SimpleBooleanProperty;
  * This property overrides the {@link #set(boolean)} method to correctly handle the selection when a group is/is not present,
  * see {@link #set(boolean)} for more info.
  * <p>
- * Note that for this purpose this property needs the reference to the {@link Selectable} on which it will operate, in order
+ * Note that for this purpose this property needs the reference to the {@link Selectable} on which it will operate,
  * to get the {@code Selectable}'s {@link SelectionGroup}.
  * <p></p>
  * Last note but not least, if for whatever reason you need to override the {@code set(...)} method beware that the
@@ -52,15 +52,15 @@ public class SelectionProperty extends SimpleBooleanProperty {
      * This is because there are cases in which the selection cannot be set to true/false at the user will,
      * the group's rules will prevail.
      * <p></p>
-     * For example the group will not allow a {@link Selectable} to be deselected if {@link SelectionGroup#isAtLeastOneSelected()}
-     * is true and it is the only one present in the selection list. Cases like this, but not limited to, must be handled
+     * For example, the group will not allow a {@link Selectable} to be deselected if {@link SelectionGroup#isAtLeastOneSelected()}
+     * is true, and it is the only one present in the selection list. Cases like this, but not limited to, must be handled
      * by the group.
      * <p></p>
      * Now there can be two cases:
-     * <p> 1) The returned state is "selected" and the group' selection Set doesn't contain the {@code Selectable}
-     * <p> 2) The returned state is "deselected" and the group' selection Set contains the {@code Selectable}
+     * <p> 1) The returned state is "selected" and the group's selection Set doesn't contain the {@code Selectable}
+     * <p> 2) The returned state is "deselected" and the group's selection Set contains the {@code Selectable}
      * <p>
-     * In either cases the {@link #invalidated()} is invoked!
+     * In either case the {@link #invalidated()} is invoked!
      */
     @Override
     public void set(boolean newValue) {
