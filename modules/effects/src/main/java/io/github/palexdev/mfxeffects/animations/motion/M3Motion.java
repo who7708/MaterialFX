@@ -94,15 +94,15 @@ public class M3Motion {
 	public static final Curve LEGACY_ACCELERATE = new Cubic(0.4, 0, 1.0, 1.0);
 	public static final Curve LEGACY_DECELERATE = new Cubic(0, 0, 0.2, 1.0);
 
-	public static final MotionPreset EXPRESSIVE_FAST_SPACIAL = MotionPreset.of(
+	public static final MotionPreset EXPRESSIVE_FAST_SPATIAL = MotionPreset.of(
 		new Cubic(0.42, 1.67, 0.21, 0.90),
 		MEDIUM3
 	);
-	public static final MotionPreset EXPRESSIVE_DEFAULT_SPACIAL = MotionPreset.of(
+	public static final MotionPreset EXPRESSIVE_DEFAULT_SPATIAL = MotionPreset.of(
 		new Cubic(0.38, 1.21, 0.22, 1.0),
 		LONG2
 	);
-	public static final MotionPreset EXPRESSIVE_SLOW_SPACIAL = MotionPreset.of(
+	public static final MotionPreset EXPRESSIVE_SLOW_SPATIAL = MotionPreset.of(
 		new Cubic(0.39, 1.29, 0.35, 0.98),
 		650
 	);
