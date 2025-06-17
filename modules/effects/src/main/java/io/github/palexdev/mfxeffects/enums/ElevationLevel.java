@@ -18,22 +18,23 @@
 
 package io.github.palexdev.mfxeffects.enums;
 
+import java.util.Arrays;
+
 import io.github.palexdev.mfxeffects.animations.Animations.KeyFrames;
 import io.github.palexdev.mfxeffects.animations.Animations.TimelineBuilder;
-import io.github.palexdev.mfxeffects.animations.motion.Motion;
-import javafx.animation.Interpolator;
+import io.github.palexdev.mfxeffects.animations.motion.M3Motion;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
-
-import java.util.Arrays;
 
 /**
  * Enumerator which defines 6 levels of {@code DropShadow} effects from {@code LEVEL0} to {@code LEVEL5}.
  */
 public enum ElevationLevel {
+	NONE(Color.TRANSPARENT, 0, 0, 0, 0),
+
 	// 0dp
-	LEVEL0(Color.rgb(0, 0, 0, 0), 0, 0, 0, 0),
+	LEVEL0(0, 0, 0, 0),
 
 	// 1dp
 	LEVEL1(3, 0.12, 0, 2),
@@ -97,22 +98,22 @@ public enum ElevationLevel {
 		return values()[(this.ordinal() + 1) % values().length];
 	}
 
-	public void animateTo(DropShadow current, ElevationLevel next) {
-		Interpolator i = Motion.EASE;
-		TimelineBuilder.build()
-				.add(KeyFrames.of(1, current.offsetXProperty(), next.getOffsetX(), i))
-				.add(KeyFrames.of(1, current.offsetYProperty(), next.getOffsetY(), i))
-				.add(KeyFrames.of(250, current.radiusProperty(), next.getRadius(), i))
-				.add(KeyFrames.of(250, current.spreadProperty(), next.getSpread(), i))
-				.getAnimation().play();
-	}
-
 	public DropShadow toShadow() {
 		return new DropShadow(
-				BlurType.GAUSSIAN, getColor(),
-				getRadius(), getSpread(),
-				getOffsetX(), getOffsetY()
+			BlurType.GAUSSIAN, getColor(),
+			getRadius(), getSpread(),
+			getOffsetX(), getOffsetY()
 		);
+	}
+
+	public static void animate(DropShadow current, ElevationLevel next) {
+		M3Motion.MotionPreset m = M3Motion.EXPRESSIVE_SLOW_EFFECTS;
+		TimelineBuilder.build()
+			.add(KeyFrames.of(1, current.offsetXProperty(), next.getOffsetX(), m.curve()))
+			.add(KeyFrames.of(1, current.offsetYProperty(), next.getOffsetY(), m.curve()))
+			.add(KeyFrames.of(m.duration(), current.radiusProperty(), next.getRadius(), m.curve()))
+			.add(KeyFrames.of(m.duration(), current.spreadProperty(), next.getSpread(), m.curve()))
+			.getAnimation().play();
 	}
 
 	/**
