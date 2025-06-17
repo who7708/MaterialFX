@@ -881,8 +881,13 @@ public class CSSFragment {
             return this;
         }
 
+        public Builder transitionDuration(double millis) {
+            style("transition-duration: " + millis + "ms");
+            return this;
+        }
+
         public Builder transitionDuration(Duration duration) {
-            style("transition-duration: " + duration);
+            style("transition-duration: " + duration.toString().replace(" ", ""));
             return this;
         }
 
