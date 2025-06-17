@@ -19,7 +19,7 @@
 package io.github.palexdev.mfxcomponents.variants;
 
 /// Some UI components may have different styles. This interface defines how variants are implemented.
-/// A variant simply is a style class that can be applied on a component implementing the [WithVariants] API.
+/// A variant simply is a style class that can be applied on a component to change its appearance or behavior.
 public interface Variant {
 
     /// @return the style class that identifies this variant

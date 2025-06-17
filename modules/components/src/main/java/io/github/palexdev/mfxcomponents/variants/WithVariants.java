@@ -19,18 +19,23 @@
 package io.github.palexdev.mfxcomponents.variants;
 
 
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /// A simple interface indicating that a component supports variants.
 ///
 /// They are handled internally by the [VariantsHandler] class.
-public interface WithVariants<V extends Variant> {
+public interface WithVariants {
 
     /// @return a [Set] containing all the applied variants
-    Set<V> getAppliedVariants();
+    Map<Class<?>, Variant> getAppliedVariants();
 
     /// @return whether the given variant is contained in [#getAppliedVariants()]
-    default boolean isVariantApplied(V variant) {
-        return getAppliedVariants().contains(variant);
+    default boolean isVariantApplied(Variant variant) {
+        return Optional.ofNullable(getAppliedVariants().get(variant.getClass()))
+            .map(v -> Objects.equals(v, variant))
+            .orElse(false);
     }
 }

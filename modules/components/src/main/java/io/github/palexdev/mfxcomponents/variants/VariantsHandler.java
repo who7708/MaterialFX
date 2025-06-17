@@ -18,92 +18,72 @@
 
 package io.github.palexdev.mfxcomponents.variants;
 
-import java.util.Arrays;
 import java.util.LinkedHashSet;
-import java.util.SequencedSet;
+import java.util.Map;
 import java.util.Set;
 
+import javafx.collections.FXCollections;
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableMap;
 import javafx.css.Styleable;
 
-/// Utility class that handles variants for those components that feature them. Favors composition over inheritance
-/// and allows hiding the API from the user if the component needs a specific combination of variants.
-public class VariantsHandler<S extends Styleable, V extends Variant> {
+public class VariantsHandler<S extends Styleable & WithVariants> {
     //================================================================================
     // Properties
     //================================================================================
     private final S styleable;
-    private final SequencedSet<V> variants;
+    private final ObservableMap<Class<?>, Variant> variantsMap;
+    private boolean batchUpdate = false;
 
     //================================================================================
     // Constructors
     //================================================================================
     public VariantsHandler(S styleable) {
         this.styleable = styleable;
-        this.variants = new LinkedHashSet<>();
+        this.variantsMap = FXCollections.observableHashMap();
+        variantsMap.addListener(this::update);
     }
 
     //================================================================================
     // Methods
     //================================================================================
 
-    /// Adds all the given variants to the component and automatically handles duplicates (ignored).
-    @SafeVarargs
-    public final void addVariants(V... variants) {
-        styleable.getStyleClass().addAll(
-            Arrays.stream(variants)
-                .filter(this.variants::add)
-                .map(Variant::variantStyleClass)
-                .toArray(String[]::new)
-        );
-    }
-
-    /// Removes any previously applied variants and adds the new given ones.
-    ///
-    /// To make the operation appear "atomic" to JavaFX, the removal and addition
-    /// are performed on a copy of the style class list.
-    @SafeVarargs
-    public final void setVariants(V... variants) {
-        // Remove previous
-        Set<String> copy = new LinkedHashSet<>(styleable.getStyleClass());
-        this.variants.forEach(v -> copy.remove(v.variantStyleClass()));
-        this.variants.clear();
-
-        // Add new
-        for (V v : variants) {
-            copy.add(v.variantStyleClass());
-            this.variants.add(v);
+    protected void update(MapChangeListener.Change<? extends Class<?>, ? extends Variant> change) {
+        if (batchUpdate) return;
+        if (change.wasRemoved()) {
+            styleable.getStyleClass().remove(change.getValueRemoved().variantStyleClass());
         }
-        styleable.getStyleClass().setAll(copy);
+        if (change.wasAdded()) {
+            styleable.getStyleClass().add(change.getValueAdded().variantStyleClass());
+        }
     }
 
-    /// Removes all the given variants from the component.
     @SafeVarargs
-    public final void removeVariants(V... variants) {
-        styleable.getStyleClass().removeAll(
-            Arrays.stream(variants)
-                .filter(this.variants::remove)
-                .map(Variant::variantStyleClass)
-                .toArray(String[]::new)
-        );
+    public final <E extends Enum<?> & Variant> void setVariants(E... variants) {
+        batchUpdate = true;
+        Set<String> tmp = new LinkedHashSet<>(styleable.getStyleClass());
+        for (E variant : variants) {
+            setVariant(variant);
+            tmp.add(variant.variantStyleClass());
+        }
+        styleable.getStyleClass().setAll(tmp);
+        batchUpdate = false;
     }
 
-    /// Removes all the variants currently applied to the component.
+    public <E extends Enum<?> & Variant> void setVariant(E variant) {
+        variantsMap.put(variant.getClass(), variant);
+    }
+
+    public <E extends Enum<?> & Variant> void unsetVariant(Class<E> klass) {
+        variantsMap.remove(klass);
+    }
+
     public final void clearVariants() {
-        styleable.getStyleClass().removeAll(
-            variants.stream()
-                .map(Variant::variantStyleClass)
-                .toArray(String[]::new)
-        );
+        variantsMap.clear();
     }
 
-    /// @return the set of variants currently applied to the component.
-    public SequencedSet<V> getAppliedVariants() {
-        return variants;
+    public Map<Class<?>, Variant> getAppliedVariants() {
+        return variantsMap;
 
-    }
-
-    /// @return whether the given variant is currently applied to the component.
-    public boolean isVariantApplied(V variant) {
-        return variants.contains(variant);
     }
 }
