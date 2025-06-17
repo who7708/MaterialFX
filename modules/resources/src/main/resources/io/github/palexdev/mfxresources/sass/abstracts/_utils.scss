@@ -1,0 +1,14 @@
+@use 'sass:string';
+
+@function last-index-of($string, $sub) {
+  $length : string.length($string);
+  $sub-length : string.length($sub);
+
+  @for $i from ($length - $sub-length + 1) through 1 {
+    @if string.slice($string, $i, $i + $sub-length - 1) == $sub {
+      @return $i;
+    }
+  }
+
+  @return null;
+}

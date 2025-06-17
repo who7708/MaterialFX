@@ -1,0 +1,77 @@
+/*
+ * Copyright (C) 2025 Parisi Alessandro - alessandro.parisi406@gmail.com
+ * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX)
+ *
+ * MaterialFX is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * MaterialFX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@mixin MaterialButtonsFilled() {
+  .mfx-button.filled {
+    -fx-background-color : -md-sys-color-primary;
+    -fx-text-fill        : -md-sys-color-on-primary;
+
+    > .label > .mfx-font-icon {
+      -mfx-color : -md-sys-color-on-primary;
+    }
+
+    > .surface {
+      -fx-background-color : -md-sys-color-on-primary;
+    }
+
+    > .mfx-ripple-generator {
+      -mfx-ripple-color : -md-sys-color-on-primary;
+    }
+
+    // Hover
+    &:hover > .surface {
+      -mfx-elevation : LEVEL1;
+    }
+
+    // Unselected
+    &.toggle {
+      -fx-background-color : -md-sys-color-surface-container;
+      -fx-text-fill        : -md-sys-color-on-surface-variant;
+
+      > .label > .mfx-font-icon {
+        -mfx-color : -md-sys-color-on-surface-variant;
+      }
+
+      > .surface {
+        -fx-background-color : -md-sys-color-on-surface-variant;
+      }
+
+      > .mfx-ripple-generator {
+        -mfx-ripple-color : -md-sys-color-on-surface-variant;
+      }
+    }
+
+    // Selected
+    &.toggle:selected {
+      -fx-background-color : -md-sys-color-primary;
+      -fx-text-fill        : -md-sys-color-on-primary;
+
+      > .label > .mfx-font-icon {
+        -mfx-color : -md-sys-color-on-primary;
+      }
+
+      > .surface {
+        -fx-background-color : -md-sys-color-on-primary;
+      }
+
+      > .mfx-ripple-generator {
+        -mfx-ripple-color : -md-sys-color-on-primary;
+      }
+    }
+  }
+}

@@ -1,0 +1,399 @@
+/*!
+ * Copyright (C) 2025 Parisi Alessandro - alessandro.parisi406@gmail.com
+ * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX)
+ *
+ * MaterialFX is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * MaterialFX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
+ */
+* {
+  -fx-font-smoothing-type: GRAY
+}
+
+.surface-ripple {
+  -fx-opacity: 36%
+}
+
+.mfx-button {
+  -fx-alignment: CENTER
+}
+
+.mfx-button > .surface {
+  -mfx-elevation: LEVEL0
+}
+
+.mfx-button.xs {
+  -fx-font-family: "MontSerrat Medium";
+  -fx-font-size: 14px;
+  -fx-line-spacing: 20px;
+  -fx-background-radius: 16px;
+  -fx-border-radius: 32px;
+  -fx-min-height: 32px;
+  -fx-padding: 0px 12px 0px 12px;
+  -fx-graphic-text-gap: 4px
+}
+
+.mfx-button.xs > .label > .mfx-font-icon {
+  -mfx-size: 20px
+}
+
+.mfx-button.xs > .surface {
+  -fx-background-radius: 16px
+}
+
+.mfx-button.s {
+  -fx-font-family: "MontSerrat Medium";
+  -fx-font-size: 14px;
+  -fx-line-spacing: 20px;
+  -fx-background-radius: 20px;
+  -fx-border-radius: 40px;
+  -fx-min-height: 40px;
+  -fx-padding: 0px 16px 0px 16px;
+  -fx-graphic-text-gap: 8px
+}
+
+.mfx-button.s > .label > .mfx-font-icon {
+  -mfx-size: 20px
+}
+
+.mfx-button.s > .surface {
+  -fx-background-radius: 20px
+}
+
+.mfx-button.m {
+  -fx-font-family: "MontSerrat Medium";
+  -fx-font-size: 16px;
+  -fx-line-spacing: 24px;
+  -fx-background-radius: 28px;
+  -fx-border-radius: 56px;
+  -fx-min-height: 56px;
+  -fx-padding: 0px 24px 0px 24px;
+  -fx-graphic-text-gap: 8px
+}
+
+.mfx-button.m > .label > .mfx-font-icon {
+  -mfx-size: 24px
+}
+
+.mfx-button.m > .surface {
+  -fx-background-radius: 28px
+}
+
+.mfx-button.l {
+  -fx-font-family: "MontSerrat Regular";
+  -fx-font-size: 24px;
+  -fx-line-spacing: 32px;
+  -fx-background-radius: 48px;
+  -fx-border-radius: 96px;
+  -fx-min-height: 96px;
+  -fx-padding: 0px 48px 0px 48px;
+  -fx-graphic-text-gap: 12px
+}
+
+.mfx-button.l > .label > .mfx-font-icon {
+  -mfx-size: 32px
+}
+
+.mfx-button.l > .surface {
+  -fx-background-radius: 48px
+}
+
+.mfx-button.xl {
+  -fx-font-family: "MontSerrat Regular";
+  -fx-font-size: 32px;
+  -fx-line-spacing: 40px;
+  -fx-background-radius: 68px;
+  -fx-border-radius: 136px;
+  -fx-min-height: 136px;
+  -fx-padding: 0px 64px 0px 64px;
+  -fx-graphic-text-gap: 16px
+}
+
+.mfx-button.xl > .label > .mfx-font-icon {
+  -mfx-size: 40px
+}
+
+.mfx-button.xl > .surface {
+  -fx-background-radius: 68px
+}
+
+.mfx-button.s.squared,
+.mfx-button.s:selected,
+.mfx-button.xs.squared,
+.mfx-button.xs:selected {
+  -fx-background-radius: 12px;
+  -fx-border-radius: 12px
+}
+
+.mfx-button.s.squared > .surface,
+.mfx-button.s:selected > .surface,
+.mfx-button.xs.squared > .surface,
+.mfx-button.xs:selected > .surface {
+  -fx-background-radius: 12px
+}
+
+.mfx-button.m.squared,
+.mfx-button.m:selected {
+  -fx-background-radius: 16px;
+  -fx-border-radius: 16px
+}
+
+.mfx-button.m.squared > .surface,
+.mfx-button.m:selected > .surface {
+  -fx-background-radius: 16px
+}
+
+.mfx-button.l.squared,
+.mfx-button.l:selected,
+.mfx-button.xl.squared,
+.mfx-button.xl:selected {
+  -fx-background-radius: 28px;
+  -fx-border-radius: 28px
+}
+
+.mfx-button.l.squared > .surface,
+.mfx-button.l:selected > .surface,
+.mfx-button.xl.squared > .surface,
+.mfx-button.xl:selected > .surface {
+  -fx-background-radius: 28px
+}
+
+.mfx-button:focus-visible {
+  -fx-border-color: -md-sys-color-secondary;
+  -fx-border-insets: -4px;
+  -fx-border-width: 3px
+}
+
+.mfx-button:disabled {
+  -fx-background-color: transparent !important;
+  -fx-text-fill: -md-sys-color-on-surface !important;
+  -mfx-text-opacity: 38% !important
+}
+
+.mfx-button:disabled > .label > .mfx-font-icon {
+  -fx-opacity: 38% !important;
+  -mfx-color: -md-sys-color-on-surface !important
+}
+
+.mfx-button:disabled > .surface {
+  -fx-background-color: -md-sys-color-on-surface !important
+}
+
+.mfx-button.elevated {
+  -fx-background-color: -md-sys-color-surface-container-low;
+  -fx-border-insets: -6px;
+  -fx-text-fill: -md-sys-color-primary
+}
+
+.mfx-button.elevated > .label > .mfx-font-icon {
+  -mfx-color: -md-sys-color-primary
+}
+
+.mfx-button.elevated > .surface {
+  -fx-background-color: -md-sys-color-primary;
+  -fx-background-insets: -1px;
+  -mfx-elevation: LEVEL1
+}
+
+.mfx-button.elevated > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-primary
+}
+
+.mfx-button.elevated:hover > .surface {
+  -mfx-elevation: LEVEL2
+}
+
+.mfx-button.elevated:pressed > .surface {
+  -mfx-elevation: LEVEL1
+}
+
+.mfx-button.elevated.toggle:selected {
+  -fx-background-color: -md-sys-color-primary;
+  -fx-text-fill: -md-sys-color-on-primary
+}
+
+.mfx-button.elevated.toggle:selected > .label > .mfx-font-icon {
+  -mfx-color: -md-sys-color-on-primary
+}
+
+.mfx-button.elevated.toggle:selected > .surface {
+  -fx-background-color: -md-sys-color-on-primary
+}
+
+.mfx-button.elevated.toggle:selected > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-on-primary
+}
+
+.mfx-button.elevated:disabled > .surface {
+  -mfx-elevation: LEVEL0
+}
+
+.mfx-button.filled {
+  -fx-background-color: -md-sys-color-primary;
+  -fx-text-fill: -md-sys-color-on-primary
+}
+
+.mfx-button.filled > .label > .mfx-font-icon {
+  -mfx-color: -md-sys-color-on-primary
+}
+
+.mfx-button.filled > .surface {
+  -fx-background-color: -md-sys-color-on-primary
+}
+
+.mfx-button.filled > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-on-primary
+}
+
+.mfx-button.filled:hover > .surface {
+  -mfx-elevation: LEVEL1
+}
+
+.mfx-button.filled.toggle {
+  -fx-background-color: -md-sys-color-surface-container;
+  -fx-text-fill: -md-sys-color-on-surface-variant
+}
+
+.mfx-button.filled.toggle > .label > .mfx-font-icon {
+  -mfx-color: -md-sys-color-on-surface-variant
+}
+
+.mfx-button.filled.toggle > .surface {
+  -fx-background-color: -md-sys-color-on-surface-variant
+}
+
+.mfx-button.filled.toggle > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-on-surface-variant
+}
+
+.mfx-button.filled.toggle:selected {
+  -fx-background-color: -md-sys-color-primary;
+  -fx-text-fill: -md-sys-color-on-primary
+}
+
+.mfx-button.filled.toggle:selected > .label > .mfx-font-icon {
+  -mfx-color: -md-sys-color-on-primary
+}
+
+.mfx-button.filled.toggle:selected > .surface {
+  -fx-background-color: -md-sys-color-on-primary
+}
+
+.mfx-button.filled.toggle:selected > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-on-primary
+}
+
+.mfx-button.outlined {
+  -fx-background-color: transparent;
+  -fx-border-color: -md-sys-color-outline-variant;
+  -fx-border-insets: -1px;
+  -fx-text-fill: -md-sys-color-on-surface-variant
+}
+
+.mfx-button.outlined > .label > .mfx-font-icon {
+  -mfx-color: -md-sys-color-on-surface-variant
+}
+
+.mfx-button.outlined > .surface {
+  -fx-background-color: -md-sys-color-on-surface-variant
+}
+
+.mfx-button.outlined > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-on-surface-variant
+}
+
+.mfx-button.outlined:focus-visible {
+  -fx-border-color: -md-sys-color-outline-variant, -md-sys-color-secondary;
+  -fx-border-insets: -1px, -6px;
+  -fx-border-width: 1px, 3px
+}
+
+.mfx-button.outlined.toggle:selected {
+  -fx-background-color: -md-sys-color-inverse-surface;
+  -fx-border-color: transparent;
+  -fx-text-fill: -md-sys-color-inverse-on-surface
+}
+
+.mfx-button.outlined.toggle:selected > .label > .mfx-font-icon {
+  -mfx-color: -md-sys-color-inverse-on-surface
+}
+
+.mfx-button.outlined.toggle:selected > .surface {
+  -fx-background-color: -md-sys-color-inverse-on-surface
+}
+
+.mfx-button.outlined.toggle:selected > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-inverse-on-surface
+}
+
+.mfx-button.text {
+  -fx-background-color: transparent;
+  -fx-text-fill: -md-sys-color-primary
+}
+
+.mfx-button.text > .label > .mfx-font-icon {
+  -mfx-color: -md-sys-color-primary
+}
+
+.mfx-button.text > .surface {
+  -fx-background-color: -md-sys-color-primary
+}
+
+.mfx-button.text > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-primary
+}
+
+.mfx-button.text.toggle {
+  -fx-text-fill: -md-sys-color-on-surface
+}
+
+.mfx-button.text.toggle:selected {
+  -fx-text-fill: -md-sys-color-primary
+}
+
+.mfx-button.tonal {
+  -fx-background-color: -md-sys-color-secondary-container;
+  -fx-text-fill: -md-sys-color-on-secondary-container
+}
+
+.mfx-button.tonal > .label > .mfx-font-icon {
+  -mfx-color: -md-sys-color-on-secondary-container
+}
+
+.mfx-button.tonal > .surface {
+  -fx-background-color: -md-sys-color-on-secondary-container
+}
+
+.mfx-button.tonal > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-on-secondary-container
+}
+
+.mfx-button.tonal:hover > .surface {
+  -mfx-elevation: LEVEL1
+}
+
+.mfx-button.tonal.toggle:selected {
+  -fx-background-color: -md-sys-color-secondary;
+  -fx-text-fill: -md-sys-color-on-primary
+}
+
+.mfx-button.tonal.toggle:selected > .label > .mfx-font-icon {
+  -mfx-color: -md-sys-color-on-secondary
+}
+
+.mfx-button.tonal.toggle:selected > .surface {
+  -fx-background-color: -md-sys-color-on-secondary
+}
+
+.mfx-button.tonal.toggle:selected > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-on-secondary
+}

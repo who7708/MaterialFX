@@ -1,0 +1,72 @@
+/*
+ * Copyright (C) 2025 Parisi Alessandro - alessandro.parisi406@gmail.com
+ * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX)
+ *
+ * MaterialFX is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * MaterialFX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@mixin MaterialButtonsElevated() {
+  .mfx-button.elevated {
+    -fx-background-color : -md-sys-color-surface-container-low;
+    -fx-border-insets    : -6px; // Take shadow into account
+    -fx-text-fill        : -md-sys-color-primary;
+
+    > .label > .mfx-font-icon {
+      -mfx-color : -md-sys-color-primary;
+    }
+
+    > .surface {
+      -fx-background-color  : -md-sys-color-primary;
+      -fx-background-insets : -1px; // Needed to have consistent motion
+      -mfx-elevation        : LEVEL1;
+    }
+
+    > .mfx-ripple-generator {
+      -mfx-ripple-color : -md-sys-color-primary;
+    }
+
+    // Hover
+    &:hover > .surface {
+      -mfx-elevation : LEVEL2;
+    }
+
+    // Pressed
+    &:pressed > .surface {
+      -mfx-elevation : LEVEL1;
+    }
+
+    // Selected
+    &.toggle:selected {
+      -fx-background-color : -md-sys-color-primary;
+      -fx-text-fill        : -md-sys-color-on-primary;
+
+      > .label > .mfx-font-icon {
+        -mfx-color : -md-sys-color-on-primary;
+      }
+
+      > .surface {
+        -fx-background-color : -md-sys-color-on-primary;
+      }
+
+      > .mfx-ripple-generator {
+        -mfx-ripple-color : -md-sys-color-on-primary;
+      }
+    }
+
+    // Disabled
+    &:disabled > .surface {
+      -mfx-elevation : LEVEL0;
+    }
+  }
+}
