@@ -18,7 +18,7 @@
 
 package io.github.palexdev.mfxcore.controls;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,7 +31,7 @@ public interface Styleable {
     }
 
     static List<String> styleClasses(String... styleClasses) {
-        return Arrays.asList(styleClasses);
+        return new ArrayList<>(List.of(styleClasses));
     }
 
     static List<String> extend(List<String> base, String... styleClasses) {
