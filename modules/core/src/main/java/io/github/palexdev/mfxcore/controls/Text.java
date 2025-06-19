@@ -1,5 +1,7 @@
 package io.github.palexdev.mfxcore.controls;
 
+import java.util.List;
+
 import io.github.palexdev.mfxcore.base.properties.styleable.StyleableDoubleProperty;
 import io.github.palexdev.mfxcore.utils.fx.StyleUtils;
 import javafx.css.CssMetaData;
@@ -7,8 +9,6 @@ import javafx.css.Styleable;
 import javafx.css.StyleableObjectProperty;
 import javafx.css.StyleablePropertyFactory;
 import javafx.scene.text.FontSmoothingType;
-
-import java.util.List;
 
 /**
  * Simple extension of {@link javafx.scene.text.Text} to allow setting the wrapping width property in CSS, as well
@@ -25,18 +25,13 @@ public class Text extends javafx.scene.text.Text {
 
     public Text(String text) {
         super(text);
-        initialize();
     }
 
     public Text(double x, double y, String text) {
         super(x, y, text);
-        initialize();
     }
 
-    //================================================================================
-    // Methods
-    //================================================================================
-    private void initialize() {
+    {
         getStyleClass().setAll("text");
         wrappingWidthProperty().bind(cssWrappingWidthProperty());
         ((StyleableObjectProperty<FontSmoothingType>) fontSmoothingTypeProperty()).applyStyle(null, FontSmoothingType.LCD);

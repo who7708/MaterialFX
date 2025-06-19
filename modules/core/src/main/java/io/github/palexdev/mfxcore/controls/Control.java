@@ -74,8 +74,10 @@ public abstract class Control<B extends BehaviorBase<? extends Node>> extends ja
 	//================================================================================
 	// Constructors
 	//================================================================================
-	public Control() {
-		init();
+	public Control() {}
+
+	{
+		setDefaultBehaviorProvider();
 	}
 
 	//================================================================================
@@ -90,10 +92,6 @@ public abstract class Control<B extends BehaviorBase<? extends Node>> extends ja
 	//================================================================================
 	// Methods
 	//================================================================================
-
-	protected void init() {
-		setDefaultBehaviorProvider();
-	}
 
 	/**
 	 * Since this is deeply integrated with the new behavior API, and since the {@link #setSkin(Skin)} method cannot

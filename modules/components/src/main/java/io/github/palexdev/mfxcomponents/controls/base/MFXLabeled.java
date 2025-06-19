@@ -54,15 +54,13 @@ public abstract class MFXLabeled<B extends BehaviorBase<? extends Node>> extends
         super(text, graphic);
     }
 
+    {
+        defaultStyleClasses(this);
+    }
+
     //================================================================================
     // Overridden Methods
     //================================================================================
-    @Override
-    protected void init() {
-        defaultStyleClasses(this);
-        super.init();
-    }
-
     @Override
     public double computeMinWidth(double height) {
         return super.computeMinWidth(height);

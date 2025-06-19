@@ -34,16 +34,16 @@ import javafx.scene.Node;
 // TODO tooltip integration
 public abstract class MFXControl<B extends BehaviorBase<? extends Node>> extends Control<B> implements Styleable {
 
+    //================================================================================
+    // Constructors
+    //================================================================================
+    {
+        defaultStyleClasses(this);
+    }
 
     //================================================================================
     // Overridden Methods
     //================================================================================
-    @Override
-    protected void init() {
-        defaultStyleClasses(this);
-        super.init();
-    }
-
     @Override
     public double computeMinWidth(double height) {
         return super.computeMinWidth(height);

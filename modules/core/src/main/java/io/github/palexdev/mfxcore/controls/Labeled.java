@@ -75,18 +75,18 @@ public abstract class Labeled<B extends BehaviorBase<? extends Node>> extends ja
 	//================================================================================
 	// Constructors
 	//================================================================================
-	public Labeled() {
-		init();
-	}
+	public Labeled() {}
 
 	public Labeled(String text) {
 		super(text);
-		init();
 	}
 
 	public Labeled(String text, Node graphic) {
 		super(text, graphic);
-		init();
+	}
+
+	{
+		setDefaultBehaviorProvider();
 	}
 
 	//================================================================================
@@ -101,10 +101,6 @@ public abstract class Labeled<B extends BehaviorBase<? extends Node>> extends ja
 	//================================================================================
 	// Methods
 	//================================================================================
-
-	protected void init() {
-		setDefaultBehaviorProvider();
-	}
 
 	/**
 	 * Since this is deeply integrated with the new behavior API, and since the {@link #setSkin(Skin)} method cannot
