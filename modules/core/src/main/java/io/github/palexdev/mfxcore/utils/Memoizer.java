@@ -32,13 +32,13 @@ import java.util.function.Function;
  * which you can use from now on to store/cache the results.
  */
 public class Memoizer<T, U> {
-	public final Map<T, U> cache = new HashMap<>();
+    public final Map<T, U> cache = new HashMap<>();
 
-	public Function<T, U> doMemoize(final Function<T, U> function) {
-		return value -> cache.computeIfAbsent(value, function);
-	}
+    public Function<T, U> doMemoize(final Function<T, U> function) {
+        return value -> cache.computeIfAbsent(value, function);
+    }
 
-	public static <T, U> Function<T, U> memoize(final Function<T, U> function) {
-		return new Memoizer<T, U>().doMemoize(function);
-	}
+    public static <T, U> Function<T, U> memoize(final Function<T, U> function) {
+        return new Memoizer<T, U>().doMemoize(function);
+    }
 }

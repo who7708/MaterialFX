@@ -164,10 +164,10 @@ public class TextUtils {
         Node graphic = label.getGraphic();
         double gap = (graphic != null) ? label.getGraphicTextGap() : 0.0;
         return label.snappedLeftInset() +
-            (graphic != null ? graphic.getBoundsInParent().getWidth() : 0) +
-            TextUtils.computeTextWidth(label.getFont(), label.getText()) +
-            label.snappedRightInset() +
-            gap;
+               (graphic != null ? graphic.getBoundsInParent().getWidth() : 0) +
+               TextUtils.computeTextWidth(label.getFont(), label.getText()) +
+               label.snappedRightInset() +
+               gap;
     }
 
     /**
@@ -181,8 +181,8 @@ public class TextUtils {
     public static double computeLabelHeight(Label label) {
         Node graphic = label.getGraphic();
         return label.snappedTopInset() +
-            (graphic != null ? graphic.getBoundsInParent().getHeight() : 0) +
-            TextUtils.computeTextHeight(label.getFont(), label.getText()) +
-            label.snappedTopInset();
+               (graphic != null ? graphic.getBoundsInParent().getHeight() : 0) +
+               TextUtils.computeTextHeight(label.getFont(), label.getText()) +
+               label.snappedTopInset();
     }
 }

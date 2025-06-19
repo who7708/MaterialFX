@@ -70,15 +70,15 @@ public class Label extends javafx.scene.control.Label {
     protected Node textNode;
     private BiConsumer<Node, Node> onSetTextNode = (o, n) -> {};
 
-	private When<?> whenFDTE;
-	private boolean forceDisableTextEllipsis = false;
+    private When<?> whenFDTE;
+    private boolean forceDisableTextEllipsis = false;
 
-	private final ReadOnlyBooleanWrapper truncated = new ReadOnlyBooleanWrapper(false);
+    private final ReadOnlyBooleanWrapper truncated = new ReadOnlyBooleanWrapper(false);
 
     //================================================================================
     // Constructors
     //================================================================================
-	public Label() {}
+    public Label() {}
 
     public Label(String text) {
         super(text);
@@ -100,54 +100,54 @@ public class Label extends javafx.scene.control.Label {
         if (textNode instanceof Text tn) {
             tn.fontSmoothingTypeProperty().bind(fontSmoothingTypeProperty());
             onSetTextNode.accept(this.textNode, textNode);
-			updateFDTE();
-			truncated.bind(tn.textProperty().map(s -> {
-				if (forceDisableTextEllipsis) return false;
-				return !Objects.equals(s, getText());
-			}));
+            updateFDTE();
+            truncated.bind(tn.textProperty().map(s -> {
+                if (forceDisableTextEllipsis) return false;
+                return !Objects.equals(s, getText());
+            }));
             this.textNode = textNode;
         }
     }
 
     /**
-	 * This is responsible for completely removing the text truncation capability of the label. Runs only after the text
-	 * node has been retrieved by {@link #setTextNode(Node)}.
-	 * <p></p>
-	 * <b>How does it work?</b>
-	 * <p>
-	 * First things first, how the JavaFX truncation mechanism works. There are effectively two separate text properties:
-	 * one comes from the label itself, and the other is from the text node in its skin. The two are not bound. In fact,
-	 * the property that specifies what's being shown by the label is the one from the text node (yeah, the one we forcefully
-	 * retrieve here). When the text is truncated, the property from the label will return the full text, instead the one from
-	 * the text node will return the truncated text.
-	 * <p>
-	 * Knowing this, we use a {@link When} construct (so a listener) on the text node's property so that every time it
-	 * changes (it is truncated) we set it back to the full string. Yes, it's a brute force approach, but as far as I know
-	 * it's the only way, you know how it is JavaFX... private, final, immutable, boring...
-	 * <p>
-	 * Additionally, the listener is also responsible for removing the clip applied to the text node. It appears that
-	 * the text is not only truncated but also clipped for some reason, so restoring the full text may not be enough in some
-	 * cases.
+     * This is responsible for completely removing the text truncation capability of the label. Runs only after the text
+     * node has been retrieved by {@link #setTextNode(Node)}.
+     * <p></p>
+     * <b>How does it work?</b>
+     * <p>
+     * First things first, how the JavaFX truncation mechanism works. There are effectively two separate text properties:
+     * one comes from the label itself, and the other is from the text node in its skin. The two are not bound. In fact,
+     * the property that specifies what's being shown by the label is the one from the text node (yeah, the one we forcefully
+     * retrieve here). When the text is truncated, the property from the label will return the full text, instead the one from
+     * the text node will return the truncated text.
+     * <p>
+     * Knowing this, we use a {@link When} construct (so a listener) on the text node's property so that every time it
+     * changes (it is truncated) we set it back to the full string. Yes, it's a brute force approach, but as far as I know
+     * it's the only way, you know how it is JavaFX... private, final, immutable, boring...
+     * <p>
+     * Additionally, the listener is also responsible for removing the clip applied to the text node. It appears that
+     * the text is not only truncated but also clipped for some reason, so restoring the full text may not be enough in some
+     * cases.
      */
-	protected void updateFDTE() {
-		if (!forceDisableTextEllipsis) {
-			if (whenFDTE != null) {
-				whenFDTE.dispose();
-				whenFDTE = null;
-			}
-			return;
-		}
+    protected void updateFDTE() {
+        if (!forceDisableTextEllipsis) {
+            if (whenFDTE != null) {
+                whenFDTE.dispose();
+                whenFDTE = null;
+            }
+            return;
+        }
 
-		Text textNode = (Text) this.textNode;
-		if (textNode == null || whenFDTE != null) return;
-		whenFDTE = When.onChanged(textNode.textProperty())
-			.then((o, n) -> {
-				textNode.setClip(null);
-				textNode.setText(getText());
-			})
-			.invalidating(textNode.clipProperty())
-			.executeNow()
-			.listen();
+        Text textNode = (Text) this.textNode;
+        if (textNode == null || whenFDTE != null) return;
+        whenFDTE = When.onChanged(textNode.textProperty())
+            .then((o, n) -> {
+                textNode.setClip(null);
+                textNode.setText(getText());
+            })
+            .invalidating(textNode.clipProperty())
+            .executeNow()
+            .listen();
     }
 
     //================================================================================
@@ -218,7 +218,7 @@ public class Label extends javafx.scene.control.Label {
     }
 
     /**
-	 * Allows specifying a maximum width for the label that is applied only when it is greater than 0 and
+     * Allows specifying a maximum width for the label that is applied only when it is greater than 0 and
      * {@link #wrapTextProperty()} set to true.
      * <p>
      * Can be set in CSS via the property: '-fx-wrapping-width'.
@@ -270,47 +270,47 @@ public class Label extends javafx.scene.control.Label {
         return getClassCssMetaData();
     }
 
-	//================================================================================
-	// Getters/Setters
-	//================================================================================
+    //================================================================================
+    // Getters/Setters
+    //================================================================================
 
-	/**
-	 * Null-safe getter for retrieving the instance of the text node for this label.
-	 */
-	public Optional<Node> getTextNode() {
-		return Optional.ofNullable(textNode);
-	}
+    /**
+     * Null-safe getter for retrieving the instance of the text node for this label.
+     */
+    public Optional<Node> getTextNode() {
+        return Optional.ofNullable(textNode);
+    }
 
-	/**
-	 * Sets the callback that executes when the text node is detected and stored.
-	 */
+    /**
+     * Sets the callback that executes when the text node is detected and stored.
+     */
     public void onSetTextNode(BiConsumer<Node, Node> action) {
-		this.onSetTextNode = action;
-	}
+        this.onSetTextNode = action;
+    }
 
-	public boolean isForceDisableTextEllipsis() {
-		return forceDisableTextEllipsis;
-	}
+    public boolean isForceDisableTextEllipsis() {
+        return forceDisableTextEllipsis;
+    }
 
-	/**
-	 * Enables/disables the listener responsible for completely removing the text truncation capabilities from the label.
-	 *
-	 * @see #updateFDTE()
-	 */
-	public void setForceDisableTextEllipsis(boolean forceDisableTextEllipsis) {
-		this.forceDisableTextEllipsis = forceDisableTextEllipsis;
-		updateFDTE();
-	}
+    /**
+     * Enables/disables the listener responsible for completely removing the text truncation capabilities from the label.
+     *
+     * @see #updateFDTE()
+     */
+    public void setForceDisableTextEllipsis(boolean forceDisableTextEllipsis) {
+        this.forceDisableTextEllipsis = forceDisableTextEllipsis;
+        updateFDTE();
+    }
 
-	public boolean isTruncated() {
-		return truncated.get();
-	}
+    public boolean isTruncated() {
+        return truncated.get();
+    }
 
-	/**
-	 * This property allows user's to observe the text property that corresponds to the visualized string, to check
-	 * whether the full text is truncated or not
-	 */
-	public ReadOnlyBooleanProperty truncatedProperty() {
-		return truncated.getReadOnlyProperty();
-	}
+    /**
+     * This property allows user's to observe the text property that corresponds to the visualized string, to check
+     * whether the full text is truncated or not
+     */
+    public ReadOnlyBooleanProperty truncatedProperty() {
+        return truncated.getReadOnlyProperty();
+    }
 }

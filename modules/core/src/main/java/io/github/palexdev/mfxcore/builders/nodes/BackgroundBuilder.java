@@ -27,51 +27,51 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BackgroundBuilder {
-	//================================================================================
-	// Properties
-	//================================================================================
-	private final List<BackgroundFill> fills = new ArrayList<>();
-	private final List<BackgroundImage> images = new ArrayList<>();
+    //================================================================================
+    // Properties
+    //================================================================================
+    private final List<BackgroundFill> fills = new ArrayList<>();
+    private final List<BackgroundImage> images = new ArrayList<>();
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public static BackgroundBuilder build() {
-		return new BackgroundBuilder();
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public static BackgroundBuilder build() {
+        return new BackgroundBuilder();
+    }
 
-	//================================================================================
-	// Methods
-	//================================================================================
-	public BackgroundBuilder addFill(BackgroundFill fill) {
-		fills.add(fill);
-		return this;
-	}
+    //================================================================================
+    // Methods
+    //================================================================================
+    public BackgroundBuilder addFill(BackgroundFill fill) {
+        fills.add(fill);
+        return this;
+    }
 
-	public BackgroundBuilder addFill(Paint fill) {
-		return addFill(fill, CornerRadii.EMPTY);
-	}
+    public BackgroundBuilder addFill(Paint fill) {
+        return addFill(fill, CornerRadii.EMPTY);
+    }
 
-	public BackgroundBuilder addFill(Paint fill, CornerRadii cornerRadii) {
-		return addFill(fill, cornerRadii, Insets.EMPTY);
-	}
+    public BackgroundBuilder addFill(Paint fill, CornerRadii cornerRadii) {
+        return addFill(fill, cornerRadii, Insets.EMPTY);
+    }
 
-	public BackgroundBuilder addFill(Paint fill, CornerRadii cornerRadii, Insets insets) {
-		fills.add(new BackgroundFill(fill, cornerRadii, insets));
-		return this;
-	}
+    public BackgroundBuilder addFill(Paint fill, CornerRadii cornerRadii, Insets insets) {
+        fills.add(new BackgroundFill(fill, cornerRadii, insets));
+        return this;
+    }
 
-	public BackgroundBuilder addImage(BackgroundImage image) {
-		images.add(image);
-		return this;
-	}
+    public BackgroundBuilder addImage(BackgroundImage image) {
+        images.add(image);
+        return this;
+    }
 
-	public BackgroundBuilder addImage(Image image, BackgroundRepeat repeatX, BackgroundRepeat repeatY, BackgroundPosition position, BackgroundSize size) {
-		images.add(new BackgroundImage(image, repeatX, repeatY, position, size));
-		return this;
-	}
+    public BackgroundBuilder addImage(Image image, BackgroundRepeat repeatX, BackgroundRepeat repeatY, BackgroundPosition position, BackgroundSize size) {
+        images.add(new BackgroundImage(image, repeatX, repeatY, position, size));
+        return this;
+    }
 
-	public Background get() {
-		return new Background(fills, images);
-	}
+    public Background get() {
+        return new Background(fills, images);
+    }
 }

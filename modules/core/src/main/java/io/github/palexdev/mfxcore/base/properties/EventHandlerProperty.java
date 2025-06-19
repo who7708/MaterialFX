@@ -30,21 +30,21 @@ import javafx.event.EventHandler;
  */
 public class EventHandlerProperty<T extends Event> extends ReadOnlyObjectWrapper<EventHandler<T>> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public EventHandlerProperty() {
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public EventHandlerProperty() {
+    }
 
-	public EventHandlerProperty(EventHandler<T> initialValue) {
-		super(initialValue);
-	}
+    public EventHandlerProperty(EventHandler<T> initialValue) {
+        super(initialValue);
+    }
 
-	public EventHandlerProperty(Object bean, String name) {
-		super(bean, name);
-	}
+    public EventHandlerProperty(Object bean, String name) {
+        super(bean, name);
+    }
 
-	public EventHandlerProperty(Object bean, String name, EventHandler<T> initialValue) {
-		super(bean, name, initialValue);
-	}
+    public EventHandlerProperty(Object bean, String name, EventHandler<T> initialValue) {
+        super(bean, name, initialValue);
+    }
 }

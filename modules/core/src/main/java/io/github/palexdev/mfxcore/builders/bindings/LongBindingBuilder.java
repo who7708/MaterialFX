@@ -24,15 +24,15 @@ import javafx.beans.binding.LongBinding;
 
 public class LongBindingBuilder extends BindingBuilder<Long, LongBinding> {
 
-	public static LongBindingBuilder build() {
-		return new LongBindingBuilder();
-	}
+    public static LongBindingBuilder build() {
+        return new LongBindingBuilder();
+    }
 
-	@Override
-	protected LongBinding create() {
-		if (mapper == null) {
-			throw new IllegalStateException("Mapper has not been set!");
-		}
-		return Bindings.createLongBinding(mapper, getSourcesArray());
-	}
+    @Override
+    protected LongBinding create() {
+        if (mapper == null) {
+            throw new IllegalStateException("Mapper has not been set!");
+        }
+        return Bindings.createLongBinding(mapper, getSourcesArray());
+    }
 }

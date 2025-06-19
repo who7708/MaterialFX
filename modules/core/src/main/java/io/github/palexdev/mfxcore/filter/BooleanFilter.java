@@ -39,32 +39,32 @@ import java.util.stream.Stream;
  */
 public class BooleanFilter<T> extends AbstractFilter<T, Boolean> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public BooleanFilter(String name, Function<T, Boolean> extractor) {
-		this(name, extractor, new BooleanStringConverter());
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public BooleanFilter(String name, Function<T, Boolean> extractor) {
+        this(name, extractor, new BooleanStringConverter());
+    }
 
-	public BooleanFilter(String name, Function<T, Boolean> extractor, StringConverter<Boolean> converter) {
-		super(name, extractor, converter);
-	}
+    public BooleanFilter(String name, Function<T, Boolean> extractor, StringConverter<Boolean> converter) {
+        super(name, extractor, converter);
+    }
 
-	//================================================================================
-	// Overridden Methods
-	//================================================================================
-	@Override
-	protected ObservableList<BiPredicateBean<Boolean, Boolean>> defaultPredicates() {
-		return Stream.<BiPredicateBean<Boolean, Boolean>>of(
-				new BiPredicateBean<>(I18N.getOrDefault("filter.is"), Boolean::equals),
-				new BiPredicateBean<>(I18N.getOrDefault("filter.isNot"), (aBoolean, aBoolean2) -> !aBoolean.equals(aBoolean2))
-		).collect(FXCollectors.toList());
-	}
+    //================================================================================
+    // Overridden Methods
+    //================================================================================
+    @Override
+    protected ObservableList<BiPredicateBean<Boolean, Boolean>> defaultPredicates() {
+        return Stream.<BiPredicateBean<Boolean, Boolean>>of(
+            new BiPredicateBean<>(I18N.getOrDefault("filter.is"), Boolean::equals),
+            new BiPredicateBean<>(I18N.getOrDefault("filter.isNot"), (aBoolean, aBoolean2) -> !aBoolean.equals(aBoolean2))
+        ).collect(FXCollectors.toList());
+    }
 
-	@SafeVarargs
-	@Override
-	protected final BooleanFilter<T> extend(BiPredicateBean<Boolean, Boolean>... predicateBeans) {
-		Collections.addAll(super.predicates, predicateBeans);
-		return this;
-	}
+    @SafeVarargs
+    @Override
+    protected final BooleanFilter<T> extend(BiPredicateBean<Boolean, Boolean>... predicateBeans) {
+        Collections.addAll(super.predicates, predicateBeans);
+        return this;
+    }
 }

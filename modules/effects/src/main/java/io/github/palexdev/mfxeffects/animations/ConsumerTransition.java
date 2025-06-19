@@ -31,95 +31,95 @@ import java.util.function.Consumer;
  * a {@link Consumer}.
  */
 public class ConsumerTransition extends FluentTransition {
-	//================================================================================
-	// Properties
-	//================================================================================
-	private Consumer<Double> interpolateConsumer;
+    //================================================================================
+    // Properties
+    //================================================================================
+    private Consumer<Double> interpolateConsumer;
 
-	//================================================================================
-	// Methods
-	//================================================================================
+    //================================================================================
+    // Methods
+    //================================================================================
 
-	/**
-	 * Sets the consumer used by the {@link #interpolate(double)} method.
-	 */
-	public ConsumerTransition setInterpolateConsumer(Consumer<Double> interpolateConsumer) {
-		this.interpolateConsumer = interpolateConsumer;
-		return this;
-	}
+    /**
+     * Sets the consumer used by the {@link #interpolate(double)} method.
+     */
+    public ConsumerTransition setInterpolateConsumer(Consumer<Double> interpolateConsumer) {
+        this.interpolateConsumer = interpolateConsumer;
+        return this;
+    }
 
-	/**
-	 * Calls {@link #setInterpolateConsumer(Consumer)} and then starts the animation.
-	 */
-	public void playWithConsumer(Consumer<Double> interpolateConsumer) {
-		setInterpolateConsumer(interpolateConsumer);
-		this.play();
-	}
+    /**
+     * Calls {@link #setInterpolateConsumer(Consumer)} and then starts the animation.
+     */
+    public void playWithConsumer(Consumer<Double> interpolateConsumer) {
+        setInterpolateConsumer(interpolateConsumer);
+        this.play();
+    }
 
-	//================================================================================
-	// Overridden Methods
-	//================================================================================
+    //================================================================================
+    // Overridden Methods
+    //================================================================================
 
-	/**
-	 * {@inheritDoc}
-	 * <p></p>
-	 * Implementation to make use of a {@link Consumer}.
-	 */
-	@Override
-	protected void interpolate(double frac) {
-		this.interpolateConsumer.accept(frac);
-	}
+    /**
+     * {@inheritDoc}
+     * <p></p>
+     * Implementation to make use of a {@link Consumer}.
+     */
+    @Override
+    protected void interpolate(double frac) {
+        this.interpolateConsumer.accept(frac);
+    }
 
-	//================================================================================
-	// Static Methods
-	//================================================================================
+    //================================================================================
+    // Static Methods
+    //================================================================================
 
-	/**
-	 * Creates a new {@code ConsumerTransition} with the given consumer.
-	 */
-	public static ConsumerTransition of(Consumer<Double> interpolateConsumer) {
-		return (new ConsumerTransition()).setInterpolateConsumer(interpolateConsumer);
-	}
+    /**
+     * Creates a new {@code ConsumerTransition} with the given consumer.
+     */
+    public static ConsumerTransition of(Consumer<Double> interpolateConsumer) {
+        return (new ConsumerTransition()).setInterpolateConsumer(interpolateConsumer);
+    }
 
-	/**
-	 * Creates a new {@code ConsumerTransition} with the given consumer and duration.
-	 */
-	public static FluentTransition of(Consumer<Double> interpolateConsumer, Duration duration) {
-		return (new ConsumerTransition()).setInterpolateConsumer(interpolateConsumer).setDuration(duration);
-	}
+    /**
+     * Creates a new {@code ConsumerTransition} with the given consumer and duration.
+     */
+    public static FluentTransition of(Consumer<Double> interpolateConsumer, Duration duration) {
+        return (new ConsumerTransition()).setInterpolateConsumer(interpolateConsumer).setDuration(duration);
+    }
 
-	/**
-	 * Creates a new {@code ConsumerTransition} with the given consumer and duration in milliseconds.
-	 */
-	public static FluentTransition of(Consumer<Double> interpolateConsumer, double duration) {
-		return (new ConsumerTransition()).setInterpolateConsumer(interpolateConsumer).setDuration(duration);
-	}
+    /**
+     * Creates a new {@code ConsumerTransition} with the given consumer and duration in milliseconds.
+     */
+    public static FluentTransition of(Consumer<Double> interpolateConsumer, double duration) {
+        return (new ConsumerTransition()).setInterpolateConsumer(interpolateConsumer).setDuration(duration);
+    }
 
-	/**
-	 * Creates a new {@code ConsumerTransition} with the given consumer, duration and interpolator.
-	 */
-	public static FluentTransition of(Consumer<Double> interpolateConsumer, Duration duration, Interpolator interpolator) {
-		return (new ConsumerTransition()).setInterpolateConsumer(interpolateConsumer).setDuration(duration).setInterpolatorFluent(interpolator);
-	}
+    /**
+     * Creates a new {@code ConsumerTransition} with the given consumer, duration and interpolator.
+     */
+    public static FluentTransition of(Consumer<Double> interpolateConsumer, Duration duration, Interpolator interpolator) {
+        return (new ConsumerTransition()).setInterpolateConsumer(interpolateConsumer).setDuration(duration).setInterpolatorFluent(interpolator);
+    }
 
-	/**
-	 * Creates a new {@code ConsumerTransition} with the given consumer, duration in milliseconds and interpolator.
-	 */
-	public static FluentTransition of(Consumer<Double> interpolateConsumer, double duration, Interpolator interpolator) {
-		return (new ConsumerTransition()).setInterpolateConsumer(interpolateConsumer).setDuration(duration).setInterpolatorFluent(interpolator);
-	}
+    /**
+     * Creates a new {@code ConsumerTransition} with the given consumer, duration in milliseconds and interpolator.
+     */
+    public static FluentTransition of(Consumer<Double> interpolateConsumer, double duration, Interpolator interpolator) {
+        return (new ConsumerTransition()).setInterpolateConsumer(interpolateConsumer).setDuration(duration).setInterpolatorFluent(interpolator);
+    }
 
-	/**
-	 * Creates a new {@code ConsumerTransition} with the given consumer, duration and interpolator.
-	 */
-	public static FluentTransition of(Consumer<Double> interpolateConsumer, Duration duration, Interpolators interpolator) {
-		return (new ConsumerTransition()).setInterpolateConsumer(interpolateConsumer).setDuration(duration).setInterpolatorFluent(interpolator.toInterpolator());
-	}
+    /**
+     * Creates a new {@code ConsumerTransition} with the given consumer, duration and interpolator.
+     */
+    public static FluentTransition of(Consumer<Double> interpolateConsumer, Duration duration, Interpolators interpolator) {
+        return (new ConsumerTransition()).setInterpolateConsumer(interpolateConsumer).setDuration(duration).setInterpolatorFluent(interpolator.toInterpolator());
+    }
 
-	/**
-	 * Creates a new {@code ConsumerTransition} with the given consumer, duration in milliseconds and interpolator.
-	 */
-	public static FluentTransition of(Consumer<Double> interpolateConsumer, double duration, Interpolators interpolator) {
-		return (new ConsumerTransition()).setInterpolateConsumer(interpolateConsumer).setDuration(duration).setInterpolatorFluent(interpolator.toInterpolator());
-	}
+    /**
+     * Creates a new {@code ConsumerTransition} with the given consumer, duration in milliseconds and interpolator.
+     */
+    public static FluentTransition of(Consumer<Double> interpolateConsumer, double duration, Interpolators interpolator) {
+        return (new ConsumerTransition()).setInterpolateConsumer(interpolateConsumer).setDuration(duration).setInterpolatorFluent(interpolator.toInterpolator());
+    }
 }

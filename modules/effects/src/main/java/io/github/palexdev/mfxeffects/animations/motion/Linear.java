@@ -26,8 +26,8 @@ import io.github.palexdev.mfxeffects.animations.base.Curve;
  * <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_linear.mp4>Linear</a>
  */
 public class Linear extends Curve {
-	@Override
-	public double curve(double t) {
-		return t;
-	}
+    @Override
+    public double curve(double t) {
+        return t;
+    }
 }

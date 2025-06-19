@@ -30,21 +30,21 @@ import java.util.Comparator;
  */
 public class ComparatorProperty<T> extends ReadOnlyObjectWrapper<Comparator<T>> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public ComparatorProperty() {
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public ComparatorProperty() {
+    }
 
-	public ComparatorProperty(Comparator<T> initialValue) {
-		super(initialValue);
-	}
+    public ComparatorProperty(Comparator<T> initialValue) {
+        super(initialValue);
+    }
 
-	public ComparatorProperty(Object bean, String name) {
-		super(bean, name);
-	}
+    public ComparatorProperty(Object bean, String name) {
+        super(bean, name);
+    }
 
-	public ComparatorProperty(Object bean, String name, Comparator<T> initialValue) {
-		super(bean, name, initialValue);
-	}
+    public ComparatorProperty(Object bean, String name, Comparator<T> initialValue) {
+        super(bean, name, initialValue);
+    }
 }

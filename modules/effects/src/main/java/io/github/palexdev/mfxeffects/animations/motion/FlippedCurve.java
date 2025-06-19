@@ -26,14 +26,14 @@ import io.github.palexdev.mfxeffects.animations.base.Curve;
  * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_flipped.mp4>Flipped BounceIn</a>
  */
 public class FlippedCurve extends Curve {
-	private final Curve curve;
+    private final Curve curve;
 
-	public FlippedCurve(Curve curve) {
-		this.curve = curve;
-	}
+    public FlippedCurve(Curve curve) {
+        this.curve = curve;
+    }
 
-	@Override
-	public double curve(double t) {
-		return 1.0 - curve.curve(1.0 - t);
-	}
+    @Override
+    public double curve(double t) {
+        return 1.0 - curve.curve(1.0 - t);
+    }
 }

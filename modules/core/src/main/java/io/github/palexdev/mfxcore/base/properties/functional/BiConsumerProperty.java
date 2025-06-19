@@ -31,21 +31,21 @@ import java.util.function.BiConsumer;
  */
 public class BiConsumerProperty<T, U> extends ReadOnlyObjectWrapper<BiConsumer<T, U>> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public BiConsumerProperty() {
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public BiConsumerProperty() {
+    }
 
-	public BiConsumerProperty(BiConsumer<T, U> initialValue) {
-		super(initialValue);
-	}
+    public BiConsumerProperty(BiConsumer<T, U> initialValue) {
+        super(initialValue);
+    }
 
-	public BiConsumerProperty(Object bean, String name) {
-		super(bean, name);
-	}
+    public BiConsumerProperty(Object bean, String name) {
+        super(bean, name);
+    }
 
-	public BiConsumerProperty(Object bean, String name, BiConsumer<T, U> initialValue) {
-		super(bean, name, initialValue);
-	}
+    public BiConsumerProperty(Object bean, String name, BiConsumer<T, U> initialValue) {
+        super(bean, name, initialValue);
+    }
 }

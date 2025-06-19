@@ -42,981 +42,981 @@ import java.util.function.Supplier;
  */
 public class Animations {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	private Animations() {
-	}
-
-	//================================================================================
-	// Static Methods
-	//================================================================================
-
-	/**
-	 * Temporarily disables the given node for the specified duration.
-	 */
-	public static void disableTemporarily(Duration duration, Node node) {
-		node.setDisable(true);
-		PauseBuilder.build()
-				.setOnFinished(event -> node.setDisable(false))
-				.setDuration(duration)
-				.getAnimation()
-				.play();
-	}
-
-	/**
-	 * Calls {@link #disableTemporarily(Duration, Node)} by converting the given millis value
-	 * with {@link Duration#millis(double)}.
-	 */
-	public static void disableTemporarily(double millis, Node node) {
-		disableTemporarily(Duration.millis(millis), node);
-	}
-
-	/**
-	 * Executes the given onFinished action after the specified duration of time.
-	 * (Uses a PauseTransition)
-	 */
-	public static void executeLater(Duration duration, EventHandler<ActionEvent> onFinished) {
-		PauseBuilder.build().setDuration(duration).setOnFinished(onFinished).getAnimation().play();
-	}
-
-	/**
-	 * Calls {@link #executeLater(Duration, EventHandler)} by converting the given millis value
-	 * with {@link Duration#millis(double)}.
-	 */
-	public static void executeLater(double millis, EventHandler<ActionEvent> onFinished) {
-		executeLater(Duration.millis(millis), onFinished);
-	}
-
-	/**
-	 * Sets the text of the given {@link Labeled} with a fade out/fade in transition.
-	 *
-	 * @param labeled  the labeled control to change the text to
-	 * @param duration the fade in and fade out speed
-	 * @param nexText  the new text to set
-	 * @return an instance of {@link AbstractBuilder}
-	 */
-	public static AbstractBuilder transitionText(Labeled labeled, Duration duration, String nexText) {
-		return SequentialBuilder.build()
-				.hide(AnimationsData.of(labeled, duration, event -> labeled.setText(nexText)))
-				.show(AnimationsData.of(labeled, duration));
-	}
-
-	/**
-	 * Calls {@link #transitionText(Labeled, Duration, String)} by converting the given millis value
-	 * with {@link Duration#millis(double)}.
-	 */
-	public static AbstractBuilder transitionText(Labeled labeled, double millis, String nexText) {
-		return transitionText(labeled, Duration.millis(millis), nexText);
-	}
-
-	/**
-	 * Sets the text of the given {@link Text} with a fade out/fade in transition.
-	 *
-	 * @param text     the text control to change the text to
-	 * @param duration the fade in and fade out speed
-	 * @param nexText  the new text to set
-	 * @return an instance of {@link AbstractBuilder}
-	 */
-	public static AbstractBuilder transitionText(Text text, Duration duration, String nexText) {
-		return SequentialBuilder.build()
-				.hide(AnimationsData.of(text, duration, event -> text.setText(nexText)))
-				.show(AnimationsData.of(text, duration));
-	}
-
-	/**
-	 * Calls {@link #transitionText(Text, Duration, String)} by converting the given millis value
-	 * with {@link Duration#millis(double)}.
-	 */
-	public static AbstractBuilder transitionText(Text text, double millis, String nexText) {
-		return transitionText(text, Duration.millis(millis), nexText);
-	}
-
-	/**
-	 * Allows to perform a given action as a {@link Runnable} as soon as the given {@link Animation} reaches the given
-	 * {@link Animation.Status}. This is simply done by attaching an {@link InvalidationListener} to the animation's
-	 * {@link Animation#statusProperty()}.
-	 * <p></p>
-	 * <b>Trivia</b>
-	 * <p></p>
-	 * {@link Animation}s have a feature that allows user to specify an action to perform as soon as it ends, I'm talking
-	 * about the {@link Animation#onFinishedProperty()}. There is an issue though. If the animation is stopped,
-	 * {@link Animation#stop()}, the action won't trigger. 'Stop' and 'Finish' are two different states, but JavaFX devs
-	 * didn't make such distinction explicit, in fact when an animation ends, its status property will be set to
-	 * {@link Animation.Status#STOPPED}.
-	 * <p>
-	 * It may be useful in some occasions to perform an action once the animation stops, rather than just on finish.
-	 * And so I created this generic method to fill this gap, working on any state you need.
-	 *
-	 * @param oneShot specifies whether the listener should be removed after the first execution
-	 */
-	public static void onStatus(Animation animation, Animation.Status status, Runnable action, boolean oneShot) {
-		if (animation == null) return;
-		InvalidationListener l = new InvalidationListener() {
-			@Override
-			public void invalidated(Observable observable) {
-				if (animation.getStatus() == status) {
-					action.run();
-					if (oneShot) animation.statusProperty().removeListener(this);
-				}
-			}
-		};
-		animation.statusProperty().addListener(l);
-	}
-
-	/**
-	 * Convenience method for {@link #onStatus(Animation, Animation.Status, Runnable, boolean)}, performs the given
-	 * action on {@link Animation.Status#PAUSED}.
-	 */
-	public static void onPaused(Animation animation, Runnable action, boolean oneShot) {
-		onStatus(animation, Animation.Status.PAUSED, action, oneShot);
-	}
-
-	/**
-	 * Convenience method for {@link #onStatus(Animation, Animation.Status, Runnable, boolean)}, performs the given
-	 * action on {@link Animation.Status#STOPPED}.
-	 */
-	public static void onStopped(Animation animation, Runnable action, boolean oneShot) {
-		onStatus(animation, Animation.Status.STOPPED, action, oneShot);
-	}
-
-	/**
-	 * @return true if the given animation status is RUNNING, otherwise false
-	 */
-	public static boolean isPlaying(Animation animation) {
-		if (animation == null) return false;
-		return animation.getStatus() == Animation.Status.RUNNING;
-	}
-
-	/**
-	 * @return true if the given animation status is PAUSED, otherwise false
-	 */
-	public static boolean isPaused(Animation animation) {
-		if (animation == null) return false;
-		return animation.getStatus() == Animation.Status.PAUSED;
-	}
-
-	public static boolean isStopped(Animation animation) {
-		if (animation == null) return false;
-		return animation.getStatus() == Animation.Status.STOPPED;
-	}
-
-	//================================================================================
-	// Builders
-	//================================================================================
-
-	/**
-	 * Common base class for {@link ParallelBuilder} and {@link SequentialBuilder}.
-	 * <p></p>
-	 * This builder, designed with fluent api, allows you to create simple and complex animations with just a few lines of code.
-	 * <p></p>
-	 * The builder keeps the reference of the "main" animation (depending on the subclass can be ParallelTransition or SequentialTransition, in
-	 * the AbstractBuilder the type is a generic {@link Animation}), and defines and abstract method that subclasses must implement
-	 * to properly add animations to the "main".
-	 */
-	public static abstract class AbstractBuilder {
-		//================================================================================
-		// Properties
-		//================================================================================
-		protected Animation animation;
-
-		//================================================================================
-		// Abstract Methods
-		//================================================================================
-
-		/**
-		 * Adds the given animation to the "main" animation.
-		 */
-		protected abstract void addAnimation(Animation animation);
-
-		/**
-		 * @return the "main" animation instance
-		 */
-		public abstract Animation getAnimation();
-
-		//================================================================================
-		// Methods
-		//================================================================================
-		protected void init(Animation animation) {
-			this.animation = animation;
-		}
-
-		/**
-		 * Adds the given animation to the "main" animation by calling {@link #addAnimation(Animation)}.
-		 */
-		public AbstractBuilder add(Animation animation) {
-			addAnimation(animation);
-			return this;
-		}
-
-		/**
-		 * Sets the given onFinished action to the given animation and then adds it to the
-		 * "main" animation by calling {@link #addAnimation(Animation)}.
-		 */
-		public AbstractBuilder add(Animation animation, EventHandler<ActionEvent> onFinished) {
-			animation.setOnFinished(onFinished);
-			addAnimation(animation);
-			return this;
-		}
-
-		/**
-		 * Gets the animation from the supplier and adds it to the "main" animation by calling {@link #addAnimation(Animation)}.
-		 */
-		public AbstractBuilder add(Supplier<Animation> animationSupplier) {
-			addAnimation(animationSupplier.get());
-			return this;
-		}
-
-		/**
-		 * Gets the animation from the supplier, sets the given onFinished action to it and then adds it to the
-		 * "main" animation by calling {@link #addAnimation(Animation)}.
-		 */
-		public AbstractBuilder add(Supplier<Animation> animationSupplier, EventHandler<ActionEvent> onFinished) {
-			Animation animation = animationSupplier.get();
-			animation.setOnFinished(onFinished);
-			addAnimation(animation);
-			return this;
-		}
-
-		/**
-		 * Builds a {@link Timeline} with the given keyframes and adds it to the "main" animation by calling {@link #addAnimation(Animation)}.
-		 */
-		public AbstractBuilder add(KeyFrame... keyFrames) {
-			addAnimation(new Timeline(keyFrames));
-			return this;
-		}
-
-		/**
-		 * If the given condition is true, then a new {@link Timeline} is built with the given keyframe and added to
-		 * the 'main' animation by calling {@link #addAnimation(Animation)}.
-		 */
-		public AbstractBuilder addIf(boolean condition, KeyFrame keyFrame) {
-			if (condition) addAnimation(new Timeline(keyFrame));
-			return this;
-		}
-
-		/**
-		 * If the given condition is true, then a new {@link Timeline} is built with a KeyFrame build by the given supplier and added to
-		 * the 'main' animation by calling {@link #addAnimation(Animation)}.
-		 */
-		public AbstractBuilder addIf(boolean condition, Supplier<KeyFrame> keyFrame) {
-			if (condition) addAnimation(new Timeline(keyFrame.get()));
-			return this;
-		}
-
-		/**
-		 * If the given condition returns true, then a new {@link Timeline} is built with the given keyframe and added to
-		 * the 'main' animation by calling {@link #addAnimation(Animation)}.
-		 */
-		public AbstractBuilder addIf(Supplier<Boolean> condition, KeyFrame keyFrame) {
-			if (condition.get()) addAnimation(new Timeline(keyFrame));
-			return this;
-		}
-
-		/**
-		 * If the given condition returns true, then a new {@link Timeline} is built with a KeyFrame built by the given supplier and added to
-		 * the 'main' animation by calling {@link #addAnimation(Animation)}.
-		 */
-		public AbstractBuilder addIf(Supplier<Boolean> condition, Supplier<KeyFrame> keyFrame) {
-			if (condition.get()) addAnimation(new Timeline(keyFrame.get()));
-			return this;
-		}
-
-		/**
-		 * Builds a {@link Timeline} with the given keyframes, sets the given onFinished action to it and then adds it to the
-		 * "main" animation by calling {@link #addAnimation(Animation)}.
-		 */
-		public AbstractBuilder add(EventHandler<ActionEvent> onFinished, KeyFrame... keyFrames) {
-			addAnimation(TimelineBuilder.build().add(keyFrames).setOnFinished(onFinished).getAnimation());
-			return this;
-		}
-
-
-		/**
-		 * For each given node builds and adds an animation that disables the node
-		 * after the given duration of time.
-		 *
-		 * @param duration the time after which the nodes are disabled
-		 */
-		public AbstractBuilder disable(Duration duration, Node... nodes) {
-			for (Node node : nodes) {
-				addAnimation(
-						PauseBuilder.build()
-								.setDuration(duration)
-								.setOnFinished(end -> node.setDisable(true))
-								.getAnimation()
-				);
-			}
-			return this;
-		}
-
-		/**
-		 * For each given node builds and adds an animation that enables the node
-		 * after the given duration of time.
-		 *
-		 * @param duration the duration after which the nodes are enabled
-		 */
-		public AbstractBuilder enable(Duration duration, Node... nodes) {
-			for (Node node : nodes) {
-				addAnimation(
-						PauseBuilder.build()
-								.setDuration(duration)
-								.setOnFinished(end -> node.setDisable(false))
-								.getAnimation()
-				);
-			}
-			return this;
-		}
-
-		/**
-		 * For each given window builds and adds an animation that hides the window by fading it out.
-		 *
-		 * @param duration the fade animation speed
-		 */
-		public AbstractBuilder hide(Duration duration, Window... windows) {
-			for (Window window : windows) {
-				addAnimation(TimelineBuilder.build().add(KeyFrames.of(duration, window.opacityProperty(), 0)).getAnimation());
-			}
-			return this;
-		}
-
-		/**
-		 * Calls {@link #hide(Duration, Window...)} by converting the given millis value
-		 * with {@link Duration#millis(double)}.
-		 */
-		public AbstractBuilder hide(double millis, Window... windows) {
-			return hide(Duration.millis(millis), windows);
-		}
-
-		/**
-		 * For each given node builds and adds an animation that hides the node by fading it out.
-		 *
-		 * @param duration the fade animation speed
-		 */
-		public AbstractBuilder hide(Duration duration, Node... nodes) {
-			for (Node node : nodes) {
-				addAnimation(TimelineBuilder.build().hide(duration, node).getAnimation());
-			}
-			return this;
-		}
-
-		/**
-		 * Calls {@link #hide(Duration, Node...)} by converting the given millis value
-		 * with {@link Duration#millis(double)}.
-		 */
-		public AbstractBuilder hide(double millis, Node... nodes) {
-			return hide(Duration.millis(millis), nodes);
-		}
-
-		/**
-		 * Creates and adds a fade out animation for each given {@link AnimationsData}.
-		 */
-		public final AbstractBuilder hide(AnimationsData... data) {
-			for (AnimationsData animData : data) {
-				addAnimation(TimelineBuilder.build().hide(animData).getAnimation());
-			}
-			return this;
-		}
-
-		/**
-		 * For each given window builds and adds an animation that shows the window by fading it in.
-		 *
-		 * @param duration the fade animation speed
-		 */
-		public AbstractBuilder show(Duration duration, Window... windows) {
-			for (Window window : windows) {
-				addAnimation(TimelineBuilder.build().show(duration, window).getAnimation());
-			}
-			return this;
-		}
-
-		/**
-		 * Calls {@link #show(Duration, Window...)} by converting the given millis value
-		 * with {@link Duration#millis(double)}.
-		 */
-		public AbstractBuilder show(double millis, Window... windows) {
-			return show(Duration.millis(millis), windows);
-		}
-
-		/**
-		 * For each given node builds and adds an animation that shows the node by fading it in.
-		 *
-		 * @param duration the fade animation speed
-		 */
-		public AbstractBuilder show(Duration duration, Node... nodes) {
-			for (Node node : nodes) {
-				addAnimation(TimelineBuilder.build().show(duration, node).getAnimation());
-			}
-			return this;
-		}
-
-		/**
-		 * Calls {@link #show(Duration, Node...)} by converting the given millis value
-		 * with {@link Duration#millis(double)}.
-		 */
-		public AbstractBuilder show(double millis, Node... nodes) {
-			return show(Duration.millis(millis), nodes);
-		}
-
-		/**
-		 * Creates and adds a fade in animation for each given {@link AnimationsData}.
-		 */
-		public final AbstractBuilder show(AnimationsData... data) {
-			for (AnimationsData animData : data) {
-				addAnimation(TimelineBuilder.build().show(animData).getAnimation());
-			}
-			return this;
-		}
-
-		/**
-		 * Sets the action to perform when the "main" animation ends.
-		 */
-		public AbstractBuilder setOnFinished(EventHandler<ActionEvent> onFinished) {
-			animation.setOnFinished(onFinished);
-			return this;
-		}
-
-		/**
-		 * Sets the "main" animation cycle count.
-		 */
-		public AbstractBuilder setCycleCount(int cycleCount) {
-			animation.setCycleCount(cycleCount);
-			return this;
-		}
-
-		/**
-		 * Sets the "main" animation delay.
-		 */
-		public AbstractBuilder setDelay(Duration delay) {
-			animation.setDelay(delay);
-			return this;
-		}
-
-		/**
-		 * Sets the "main" animation delay.
-		 */
-		public AbstractBuilder setDelay(double millis) {
-			animation.setDelay(Duration.millis(millis));
-			return this;
-		}
-
-		/**
-		 * Sets the "main" animation rate/speed.
-		 */
-		public AbstractBuilder setRate(double rate) {
-			animation.setRate(rate);
-			return this;
-		}
-	}
-
-	/**
-	 * Implementation of {@link AbstractBuilder} that uses a {@link SequentialTransition} as "main" animation.
-	 */
-	public static class SequentialBuilder extends AbstractBuilder {
-		//================================================================================
-		// Properties
-		//================================================================================
-		private final SequentialTransition sequentialTransition = new SequentialTransition();
-
-		//================================================================================
-		// Constructors
-		//================================================================================
-		public SequentialBuilder() {
-			init(sequentialTransition);
-		}
-
-		//================================================================================
-		// Static Methods
-		//================================================================================
-
-		/**
-		 * @return a new SequentialBuilder instance. Equivalent to calling the constructor,
-		 * it's just a way to omit the new keyword
-		 */
-		public static SequentialBuilder build() {
-			return new SequentialBuilder();
-		}
-
-		//================================================================================
-		// Override Methods
-		//================================================================================
-		@Override
-		protected void addAnimation(Animation animation) {
-			sequentialTransition.getChildren().add(animation);
-		}
-
-		@Override
-		public SequentialTransition getAnimation() {
-			return sequentialTransition;
-		}
-	}
-
-	/**
-	 * Implementation of {@link AbstractBuilder} that uses a {@link ParallelTransition} as "main" animation.
-	 */
-	public static class ParallelBuilder extends AbstractBuilder {
-		//================================================================================
-		// Properties
-		//================================================================================
-		private final ParallelTransition parallelTransition = new ParallelTransition();
-
-		//================================================================================
-		// Constructors
-		//================================================================================
-		public ParallelBuilder() {
-			init(parallelTransition);
-		}
-
-		//================================================================================
-		// Static Methods
-		//================================================================================
-
-		/**
-		 * @return a new ParallelBuilder instance. Equivalent to calling the constructor,
-		 * it's just a way to omit the new keyword
-		 */
-		public static ParallelBuilder build() {
-			return new ParallelBuilder();
-		}
-
-		//================================================================================
-		// Override Methods
-		//================================================================================
-		@Override
-		protected void addAnimation(Animation animation) {
-			parallelTransition.getChildren().add(animation);
-		}
-
-		@Override
-		public ParallelTransition getAnimation() {
-			return parallelTransition;
-		}
-	}
-
-	/**
-	 * Builder class to easily create a {@link Timeline} with fluent api.
-	 */
-	public static class TimelineBuilder {
-		//================================================================================
-		// Properties
-		//================================================================================
-		private final Timeline timeline = new Timeline();
-
-		/**
-		 * @return a new TimelineBuilder instance. Equivalent to calling the constructor,
-		 * it's just a way to omit the new keyword
-		 */
-		public static TimelineBuilder build() {
-			return new TimelineBuilder();
-		}
-
-		//================================================================================
-		// Methods
-		//================================================================================
-
-		/**
-		 * Adds the specified KeyFrames to the timeline.
-		 */
-		public TimelineBuilder add(KeyFrame... keyFrames) {
-			timeline.getKeyFrames().addAll(Arrays.asList(keyFrames));
-			return this;
-		}
-
-		/**
-		 * Adds the specified KeyFrame to the timeline only if the given condition is true.
-		 */
-		public TimelineBuilder addIf(boolean condition, KeyFrame keyFrame) {
-			if (condition) timeline.getKeyFrames().add(keyFrame);
-			return this;
-		}
-
-		/**
-		 * Adds a KeyFrame build by the given supplier only if the given condition is true.
-		 */
-		public TimelineBuilder addIf(boolean condition, Supplier<KeyFrame> keyFrameSupplier) {
-			if (condition) timeline.getKeyFrames().add(keyFrameSupplier.get());
-			return this;
-		}
-
-		/**
-		 * Adds the specified KeyFrame to the timeline only if the given condition is true.
-		 */
-		public TimelineBuilder addIf(Supplier<Boolean> condition, KeyFrame keyFrame) {
-			if (condition.get()) timeline.getKeyFrames().add(keyFrame);
-			return this;
-		}
-
-		/**
-		 * Adds a KeyFrame built by the given supplier only if the given condition is true.
-		 */
-		public TimelineBuilder addIf(Supplier<Boolean> condition, Supplier<KeyFrame> keyFrame) {
-			if (condition.get()) timeline.getKeyFrames().add(keyFrame.get());
-			return this;
-		}
-
-		/**
-		 * Builds a KeyFrame to hide the given Window by fading it out.
-		 *
-		 * @param duration the fade animation speed
-		 */
-		public TimelineBuilder hide(Duration duration, Window window) {
-			add(KeyFrames.of(duration, window.opacityProperty(), 0));
-			return this;
-		}
-
-		/**
-		 * Calls {@link #hide(Duration, Window)} by converting the given millis value
-		 * with {@link Duration#millis(double)}.
-		 */
-		public TimelineBuilder hide(double millis, Window window) {
-			return hide(Duration.millis(millis), window);
-		}
-
-		/**
-		 * Builds the KeyFrames to hide the given node by fading it out.
-		 *
-		 * @param duration the fade animation speed
-		 */
-		public TimelineBuilder hide(Duration duration, Node node) {
-			add(
-					KeyFrames.of(Duration.ZERO, node.opacityProperty(), 1.0, AnimationFactory.INTERPOLATOR_V1),
-					KeyFrames.of(duration, node.opacityProperty(), 0, AnimationFactory.INTERPOLATOR_V1)
-			);
-			return this;
-		}
-
-		/**
-		 * Calls {@link #hide(Duration, Node)} by converting the given millis value
-		 * with {@link Duration#millis(double)}.
-		 */
-		public TimelineBuilder hide(double millis, Node node) {
-			return hide(Duration.millis(millis), node);
-		}
-
-		/**
-		 * Builds the KeyFrames to hide the specified node in the AnimationsData bean, by fading it out.
-		 */
-		public final TimelineBuilder hide(AnimationsData data) {
-			add(
-					KeyFrames.of(Duration.ZERO, data.getNode().opacityProperty(), 1.0),
-					KeyFrames.of(data.getDuration(), data.getNode().opacityProperty(), 0.0)
-			);
-			setOnFinished(data.getOnFinished());
-			return this;
-		}
-
-		/**
-		 * Builds a KeyFrame to show the given Window by fading it in.
-		 *
-		 * @param duration the fade animation speed
-		 */
-		public TimelineBuilder show(Duration duration, Window window) {
-			add(KeyFrames.of(duration, window.opacityProperty(), 1.0));
-			return this;
-		}
-
-		/**
-		 * Calls {@link #show(Duration, Window)} by converting the given millis value
-		 * with {@link Duration#millis(double)}.
-		 */
-		public TimelineBuilder show(double millis, Window window) {
-			return show(Duration.millis(millis), window);
-		}
-
-		/**
-		 * Builds the KeyFrames to show the given node by fading it in.
-		 *
-		 * @param duration the fade animation speed
-		 */
-		public TimelineBuilder show(Duration duration, Node node) {
-			add(
-					KeyFrames.of(Duration.ZERO, node.opacityProperty(), 0.0),
-					KeyFrames.of(duration, node.opacityProperty(), 1.0)
-			);
-			return this;
-		}
-
-		/**
-		 * Calls {@link #show(Duration, Node)} by converting the given millis value
-		 * with {@link Duration#millis(double)}.
-		 */
-		public TimelineBuilder show(double millis, Node node) {
-			return show(Duration.millis(millis), node);
-		}
-
-		/**
-		 * Creates and adds a fade in animation for each given {@link AnimationsData}.
-		 */
-		public final TimelineBuilder show(AnimationsData data) {
-			add(
-					KeyFrames.of(Duration.ZERO, data.getNode().opacityProperty(), 0.0),
-					KeyFrames.of(data.getDuration(), data.getNode().opacityProperty(), 1.0)
-			);
-			setOnFinished(data.getOnFinished());
-			return this;
-		}
-
-		/**
-		 * Sets the {@link Timeline#autoReverseProperty()}.
-		 */
-		public TimelineBuilder setAutoReverse(boolean autoReverse) {
-			timeline.setAutoReverse(autoReverse);
-			return this;
-		}
-
-		/**
-		 * Sets the timeline cycle count.
-		 */
-		public TimelineBuilder setCycleCount(int cycleCount) {
-			timeline.setCycleCount(cycleCount);
-			return this;
-		}
-
-		/**
-		 * Sets the timeline delay.
-		 */
-		public TimelineBuilder setDelay(Duration delay) {
-			timeline.setDelay(delay);
-			return this;
-		}
-
-		/**
-		 * Sets the timeline delay.
-		 */
-		public TimelineBuilder setDelay(double millis) {
-			timeline.setDelay(Duration.millis(millis));
-			return this;
-		}
-
-		/**
-		 * Sets the timeline rate/speed.
-		 */
-		public TimelineBuilder setRate(double rate) {
-			timeline.setRate(rate);
-			return this;
-		}
-
-		/**
-		 * Sets the action to perform when the timeline ends.
-		 */
-		public TimelineBuilder setOnFinished(EventHandler<ActionEvent> onFinished) {
-			timeline.setOnFinished(onFinished);
-			return this;
-		}
-
-		/**
-		 * @return the instance of the Timeline
-		 */
-		public Timeline getAnimation() {
-			return timeline;
-		}
-	}
-
-	/**
-	 * Builder class to easily create a {@link PauseTransition} with fluent api.
-	 */
-	public static class PauseBuilder {
-		//================================================================================
-		// Properties
-		//================================================================================
-		private final PauseTransition pauseTransition = new PauseTransition();
-
-		//================================================================================
-		// Static Methods
-		//================================================================================
-
-		/**
-		 * @return a new PauseBuilder instance. Equivalent to calling the constructor,
-		 * it's just a way to omit the new keyword
-		 */
-		public static PauseBuilder build() {
-			return new PauseBuilder();
-		}
-
-		//================================================================================
-		// Methods
-		//================================================================================
-
-		public PauseBuilder setDelay(Duration duration) {
-			pauseTransition.setDelay(duration);
-			return this;
-		}
-
-		public PauseBuilder setDelay(double millis) {
-			pauseTransition.setDelay(Duration.millis(millis));
-			return this;
-		}
-
-		/**
-		 * Sets the pause transition duration.
-		 */
-		public PauseBuilder setDuration(Duration duration) {
-			pauseTransition.setDuration(duration);
-			return this;
-		}
-
-		/**
-		 * Calls {@link #setDuration(Duration)} by converting the given millis value
-		 * with {@link Duration#millis(double)}.
-		 */
-		public PauseBuilder setDuration(double millis) {
-			pauseTransition.setDuration(Duration.millis(millis));
-			return this;
-		}
-
-		/**
-		 * Sets the action to perform when the pause transition ends.
-		 */
-		public PauseBuilder setOnFinished(EventHandler<ActionEvent> onFinished) {
-			pauseTransition.setOnFinished(onFinished);
-			return this;
-		}
-
-		/**
-		 * @return the instance of the PauseTransition
-		 */
-		public PauseTransition getAnimation() {
-			return pauseTransition;
-		}
-
-		/**
-		 * This method can be considered an utility.
-		 * <p></p>
-		 * A {@link PauseTransition} with the previously set duration runs while the given boolean boolean expression
-		 * is false. When the expression is evaluated and it is false the given retryAction is run and the transition
-		 * is restarted. When it ends the expression is re-evaluated. When the expression becomes true the onSuccessAction is run.
-		 * <p></p>
-		 * So you have a {@link PauseTransition} that runs every tot unit of time and stops only when the given expression is true.
-		 *
-		 * @param booleanExpression the expression to check at a fixed time rate
-		 * @param retryAction       the action to perform when the expression is false
-		 * @param onSuccessAction   the action to perform when the expression is true
-		 */
-		public void runWhile(BooleanExpression booleanExpression, Runnable retryAction, Runnable onSuccessAction) {
-			setOnFinished(event -> {
-				if (!booleanExpression.get()) {
-					retryAction.run();
-					getAnimation().playFromStart();
-				} else {
-					onSuccessAction.run();
-				}
-			});
-			getAnimation().play();
-		}
-
-		/**
-		 * Same method as {@link #runWhile(BooleanExpression, Runnable, Runnable)} but instead of running
-		 * until the given expression is true, it is limited to a maximum number of retries.
-		 *
-		 * @param maxRetryCount the max number of times the transition can be restarted
-		 */
-		public void runWhile(BooleanExpression booleanExpression, Runnable retryAction, Runnable onSuccessAction, int maxRetryCount) {
-			AtomicInteger retryCount = new AtomicInteger(0);
-			setOnFinished(event -> {
-				if (!booleanExpression.get() && retryCount.get() < maxRetryCount) {
-					retryCount.getAndIncrement();
-					retryAction.run();
-					getAnimation().playFromStart();
-				} else {
-					onSuccessAction.run();
-				}
-			});
-			getAnimation().play();
-		}
-	}
-
-	/**
-	 * Builder class for keyframes and keyvalues.
-	 */
-	public static class KeyFrames {
-
-		//================================================================================
-		// Constructors
-		//================================================================================
-		private KeyFrames() {
-		}
-
-		//================================================================================
-		// Static Methods
-		//================================================================================
-
-		/**
-		 * Returns a new KeyFrame with the given duration and action.
-		 */
-		public static KeyFrame of(Duration duration, EventHandler<ActionEvent> action) {
-			return new KeyFrame(duration, action);
-		}
-
-		/**
-		 * Calls {@link #of(Duration, EventHandler)} by converting the given millis value
-		 * with {@link Duration#millis(double)}.
-		 */
-		public static KeyFrame of(double millis, EventHandler<ActionEvent> action) {
-			return of(Duration.millis(millis), action);
-		}
-
-		/**
-		 * Returns a new KeyFrame with the given duration and keyvalues.
-		 */
-		public static KeyFrame of(Duration duration, KeyValue... keyValues) {
-			return new KeyFrame(duration, keyValues);
-		}
-
-		/**
-		 * Calls {@link #of(Duration, KeyValue[])} by converting the given millis value
-		 * with {@link Duration#millis(double)}.
-		 */
-		public static KeyFrame of(double millis, KeyValue... keyValues) {
-			return of(Duration.millis(millis), keyValues);
-		}
-
-		/**
-		 * Returns a new KeyFrame with the given duration and builds a new KeyValue for it
-		 * with the given writable property and endValue.
-		 */
-		public static <T> KeyFrame of(Duration duration, WritableValue<T> writableValue, T endValue) {
-			return of(duration, new KeyValue(writableValue, endValue));
-		}
-
-		/**
-		 * Calls {@link #of(Duration, WritableValue, Object)} by converting the given millis value
-		 * with {@link Duration#millis(double)}.
-		 */
-		public static <T> KeyFrame of(double millis, WritableValue<T> writableValue, T endValue) {
-			return of(Duration.millis(millis), writableValue, endValue);
-		}
-
-		/**
-		 * Returns a new KeyFrame with the given duration and builds a new KeyValue for it
-		 * with the given writable property, endValue and interpolator.
-		 */
-		public static <T> KeyFrame of(Duration duration, WritableValue<T> writableValue, T endValue, Interpolator interpolator) {
-			return of(duration, new KeyValue(writableValue, endValue, interpolator));
-		}
-
-		/**
-		 * Calls {@link #of(Duration, WritableValue, Object, Interpolator)} by converting the given millis value
-		 * with {@link Duration#millis(double)}.
-		 */
-		public static <T> KeyFrame of(double millis, WritableValue<T> writableValue, T endValue, Interpolator interpolator) {
-			return of(Duration.millis(millis), writableValue, endValue, interpolator);
-		}
-
-		/**
-		 * Returns a new KeyFrame with the given duration and builds a new KeyValue for it
-		 * with the given writable property, endValue and interpolator.
-		 */
-		public static <T> KeyFrame of(Duration duration, WritableValue<T> writableValue, T endValue, Interpolators interpolator) {
-			return of(duration, new KeyValue(writableValue, endValue, interpolator.toInterpolator()));
-		}
-
-		/**
-		 * Calls {@link #of(Duration, WritableValue, Object, Interpolators)} by converting the given millis value
-		 * with {@link Duration#millis(double)}.
-		 */
-		public static <T> KeyFrame of(double millis, WritableValue<T> writableValue, T endValue, Interpolators interpolator) {
-			return of(Duration.millis(millis), writableValue, endValue, interpolator.toInterpolator());
-		}
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    private Animations() {
+    }
+
+    //================================================================================
+    // Static Methods
+    //================================================================================
+
+    /**
+     * Temporarily disables the given node for the specified duration.
+     */
+    public static void disableTemporarily(Duration duration, Node node) {
+        node.setDisable(true);
+        PauseBuilder.build()
+            .setOnFinished(event -> node.setDisable(false))
+            .setDuration(duration)
+            .getAnimation()
+            .play();
+    }
+
+    /**
+     * Calls {@link #disableTemporarily(Duration, Node)} by converting the given millis value
+     * with {@link Duration#millis(double)}.
+     */
+    public static void disableTemporarily(double millis, Node node) {
+        disableTemporarily(Duration.millis(millis), node);
+    }
+
+    /**
+     * Executes the given onFinished action after the specified duration of time.
+     * (Uses a PauseTransition)
+     */
+    public static void executeLater(Duration duration, EventHandler<ActionEvent> onFinished) {
+        PauseBuilder.build().setDuration(duration).setOnFinished(onFinished).getAnimation().play();
+    }
+
+    /**
+     * Calls {@link #executeLater(Duration, EventHandler)} by converting the given millis value
+     * with {@link Duration#millis(double)}.
+     */
+    public static void executeLater(double millis, EventHandler<ActionEvent> onFinished) {
+        executeLater(Duration.millis(millis), onFinished);
+    }
+
+    /**
+     * Sets the text of the given {@link Labeled} with a fade out/fade in transition.
+     *
+     * @param labeled  the labeled control to change the text to
+     * @param duration the fade in and fade out speed
+     * @param nexText  the new text to set
+     * @return an instance of {@link AbstractBuilder}
+     */
+    public static AbstractBuilder transitionText(Labeled labeled, Duration duration, String nexText) {
+        return SequentialBuilder.build()
+            .hide(AnimationsData.of(labeled, duration, event -> labeled.setText(nexText)))
+            .show(AnimationsData.of(labeled, duration));
+    }
+
+    /**
+     * Calls {@link #transitionText(Labeled, Duration, String)} by converting the given millis value
+     * with {@link Duration#millis(double)}.
+     */
+    public static AbstractBuilder transitionText(Labeled labeled, double millis, String nexText) {
+        return transitionText(labeled, Duration.millis(millis), nexText);
+    }
+
+    /**
+     * Sets the text of the given {@link Text} with a fade out/fade in transition.
+     *
+     * @param text     the text control to change the text to
+     * @param duration the fade in and fade out speed
+     * @param nexText  the new text to set
+     * @return an instance of {@link AbstractBuilder}
+     */
+    public static AbstractBuilder transitionText(Text text, Duration duration, String nexText) {
+        return SequentialBuilder.build()
+            .hide(AnimationsData.of(text, duration, event -> text.setText(nexText)))
+            .show(AnimationsData.of(text, duration));
+    }
+
+    /**
+     * Calls {@link #transitionText(Text, Duration, String)} by converting the given millis value
+     * with {@link Duration#millis(double)}.
+     */
+    public static AbstractBuilder transitionText(Text text, double millis, String nexText) {
+        return transitionText(text, Duration.millis(millis), nexText);
+    }
+
+    /**
+     * Allows to perform a given action as a {@link Runnable} as soon as the given {@link Animation} reaches the given
+     * {@link Animation.Status}. This is simply done by attaching an {@link InvalidationListener} to the animation's
+     * {@link Animation#statusProperty()}.
+     * <p></p>
+     * <b>Trivia</b>
+     * <p></p>
+     * {@link Animation}s have a feature that allows user to specify an action to perform as soon as it ends, I'm talking
+     * about the {@link Animation#onFinishedProperty()}. There is an issue though. If the animation is stopped,
+     * {@link Animation#stop()}, the action won't trigger. 'Stop' and 'Finish' are two different states, but JavaFX devs
+     * didn't make such distinction explicit, in fact when an animation ends, its status property will be set to
+     * {@link Animation.Status#STOPPED}.
+     * <p>
+     * It may be useful in some occasions to perform an action once the animation stops, rather than just on finish.
+     * And so I created this generic method to fill this gap, working on any state you need.
+     *
+     * @param oneShot specifies whether the listener should be removed after the first execution
+     */
+    public static void onStatus(Animation animation, Animation.Status status, Runnable action, boolean oneShot) {
+        if (animation == null) return;
+        InvalidationListener l = new InvalidationListener() {
+            @Override
+            public void invalidated(Observable observable) {
+                if (animation.getStatus() == status) {
+                    action.run();
+                    if (oneShot) animation.statusProperty().removeListener(this);
+                }
+            }
+        };
+        animation.statusProperty().addListener(l);
+    }
+
+    /**
+     * Convenience method for {@link #onStatus(Animation, Animation.Status, Runnable, boolean)}, performs the given
+     * action on {@link Animation.Status#PAUSED}.
+     */
+    public static void onPaused(Animation animation, Runnable action, boolean oneShot) {
+        onStatus(animation, Animation.Status.PAUSED, action, oneShot);
+    }
+
+    /**
+     * Convenience method for {@link #onStatus(Animation, Animation.Status, Runnable, boolean)}, performs the given
+     * action on {@link Animation.Status#STOPPED}.
+     */
+    public static void onStopped(Animation animation, Runnable action, boolean oneShot) {
+        onStatus(animation, Animation.Status.STOPPED, action, oneShot);
+    }
+
+    /**
+     * @return true if the given animation status is RUNNING, otherwise false
+     */
+    public static boolean isPlaying(Animation animation) {
+        if (animation == null) return false;
+        return animation.getStatus() == Animation.Status.RUNNING;
+    }
+
+    /**
+     * @return true if the given animation status is PAUSED, otherwise false
+     */
+    public static boolean isPaused(Animation animation) {
+        if (animation == null) return false;
+        return animation.getStatus() == Animation.Status.PAUSED;
+    }
+
+    public static boolean isStopped(Animation animation) {
+        if (animation == null) return false;
+        return animation.getStatus() == Animation.Status.STOPPED;
+    }
+
+    //================================================================================
+    // Builders
+    //================================================================================
+
+    /**
+     * Common base class for {@link ParallelBuilder} and {@link SequentialBuilder}.
+     * <p></p>
+     * This builder, designed with fluent api, allows you to create simple and complex animations with just a few lines of code.
+     * <p></p>
+     * The builder keeps the reference of the "main" animation (depending on the subclass can be ParallelTransition or SequentialTransition, in
+     * the AbstractBuilder the type is a generic {@link Animation}), and defines and abstract method that subclasses must implement
+     * to properly add animations to the "main".
+     */
+    public static abstract class AbstractBuilder {
+        //================================================================================
+        // Properties
+        //================================================================================
+        protected Animation animation;
+
+        //================================================================================
+        // Abstract Methods
+        //================================================================================
+
+        /**
+         * Adds the given animation to the "main" animation.
+         */
+        protected abstract void addAnimation(Animation animation);
+
+        /**
+         * @return the "main" animation instance
+         */
+        public abstract Animation getAnimation();
+
+        //================================================================================
+        // Methods
+        //================================================================================
+        protected void init(Animation animation) {
+            this.animation = animation;
+        }
+
+        /**
+         * Adds the given animation to the "main" animation by calling {@link #addAnimation(Animation)}.
+         */
+        public AbstractBuilder add(Animation animation) {
+            addAnimation(animation);
+            return this;
+        }
+
+        /**
+         * Sets the given onFinished action to the given animation and then adds it to the
+         * "main" animation by calling {@link #addAnimation(Animation)}.
+         */
+        public AbstractBuilder add(Animation animation, EventHandler<ActionEvent> onFinished) {
+            animation.setOnFinished(onFinished);
+            addAnimation(animation);
+            return this;
+        }
+
+        /**
+         * Gets the animation from the supplier and adds it to the "main" animation by calling {@link #addAnimation(Animation)}.
+         */
+        public AbstractBuilder add(Supplier<Animation> animationSupplier) {
+            addAnimation(animationSupplier.get());
+            return this;
+        }
+
+        /**
+         * Gets the animation from the supplier, sets the given onFinished action to it and then adds it to the
+         * "main" animation by calling {@link #addAnimation(Animation)}.
+         */
+        public AbstractBuilder add(Supplier<Animation> animationSupplier, EventHandler<ActionEvent> onFinished) {
+            Animation animation = animationSupplier.get();
+            animation.setOnFinished(onFinished);
+            addAnimation(animation);
+            return this;
+        }
+
+        /**
+         * Builds a {@link Timeline} with the given keyframes and adds it to the "main" animation by calling {@link #addAnimation(Animation)}.
+         */
+        public AbstractBuilder add(KeyFrame... keyFrames) {
+            addAnimation(new Timeline(keyFrames));
+            return this;
+        }
+
+        /**
+         * If the given condition is true, then a new {@link Timeline} is built with the given keyframe and added to
+         * the 'main' animation by calling {@link #addAnimation(Animation)}.
+         */
+        public AbstractBuilder addIf(boolean condition, KeyFrame keyFrame) {
+            if (condition) addAnimation(new Timeline(keyFrame));
+            return this;
+        }
+
+        /**
+         * If the given condition is true, then a new {@link Timeline} is built with a KeyFrame build by the given supplier and added to
+         * the 'main' animation by calling {@link #addAnimation(Animation)}.
+         */
+        public AbstractBuilder addIf(boolean condition, Supplier<KeyFrame> keyFrame) {
+            if (condition) addAnimation(new Timeline(keyFrame.get()));
+            return this;
+        }
+
+        /**
+         * If the given condition returns true, then a new {@link Timeline} is built with the given keyframe and added to
+         * the 'main' animation by calling {@link #addAnimation(Animation)}.
+         */
+        public AbstractBuilder addIf(Supplier<Boolean> condition, KeyFrame keyFrame) {
+            if (condition.get()) addAnimation(new Timeline(keyFrame));
+            return this;
+        }
+
+        /**
+         * If the given condition returns true, then a new {@link Timeline} is built with a KeyFrame built by the given supplier and added to
+         * the 'main' animation by calling {@link #addAnimation(Animation)}.
+         */
+        public AbstractBuilder addIf(Supplier<Boolean> condition, Supplier<KeyFrame> keyFrame) {
+            if (condition.get()) addAnimation(new Timeline(keyFrame.get()));
+            return this;
+        }
+
+        /**
+         * Builds a {@link Timeline} with the given keyframes, sets the given onFinished action to it and then adds it to the
+         * "main" animation by calling {@link #addAnimation(Animation)}.
+         */
+        public AbstractBuilder add(EventHandler<ActionEvent> onFinished, KeyFrame... keyFrames) {
+            addAnimation(TimelineBuilder.build().add(keyFrames).setOnFinished(onFinished).getAnimation());
+            return this;
+        }
+
+
+        /**
+         * For each given node builds and adds an animation that disables the node
+         * after the given duration of time.
+         *
+         * @param duration the time after which the nodes are disabled
+         */
+        public AbstractBuilder disable(Duration duration, Node... nodes) {
+            for (Node node : nodes) {
+                addAnimation(
+                    PauseBuilder.build()
+                        .setDuration(duration)
+                        .setOnFinished(end -> node.setDisable(true))
+                        .getAnimation()
+                );
+            }
+            return this;
+        }
+
+        /**
+         * For each given node builds and adds an animation that enables the node
+         * after the given duration of time.
+         *
+         * @param duration the duration after which the nodes are enabled
+         */
+        public AbstractBuilder enable(Duration duration, Node... nodes) {
+            for (Node node : nodes) {
+                addAnimation(
+                    PauseBuilder.build()
+                        .setDuration(duration)
+                        .setOnFinished(end -> node.setDisable(false))
+                        .getAnimation()
+                );
+            }
+            return this;
+        }
+
+        /**
+         * For each given window builds and adds an animation that hides the window by fading it out.
+         *
+         * @param duration the fade animation speed
+         */
+        public AbstractBuilder hide(Duration duration, Window... windows) {
+            for (Window window : windows) {
+                addAnimation(TimelineBuilder.build().add(KeyFrames.of(duration, window.opacityProperty(), 0)).getAnimation());
+            }
+            return this;
+        }
+
+        /**
+         * Calls {@link #hide(Duration, Window...)} by converting the given millis value
+         * with {@link Duration#millis(double)}.
+         */
+        public AbstractBuilder hide(double millis, Window... windows) {
+            return hide(Duration.millis(millis), windows);
+        }
+
+        /**
+         * For each given node builds and adds an animation that hides the node by fading it out.
+         *
+         * @param duration the fade animation speed
+         */
+        public AbstractBuilder hide(Duration duration, Node... nodes) {
+            for (Node node : nodes) {
+                addAnimation(TimelineBuilder.build().hide(duration, node).getAnimation());
+            }
+            return this;
+        }
+
+        /**
+         * Calls {@link #hide(Duration, Node...)} by converting the given millis value
+         * with {@link Duration#millis(double)}.
+         */
+        public AbstractBuilder hide(double millis, Node... nodes) {
+            return hide(Duration.millis(millis), nodes);
+        }
+
+        /**
+         * Creates and adds a fade out animation for each given {@link AnimationsData}.
+         */
+        public final AbstractBuilder hide(AnimationsData... data) {
+            for (AnimationsData animData : data) {
+                addAnimation(TimelineBuilder.build().hide(animData).getAnimation());
+            }
+            return this;
+        }
+
+        /**
+         * For each given window builds and adds an animation that shows the window by fading it in.
+         *
+         * @param duration the fade animation speed
+         */
+        public AbstractBuilder show(Duration duration, Window... windows) {
+            for (Window window : windows) {
+                addAnimation(TimelineBuilder.build().show(duration, window).getAnimation());
+            }
+            return this;
+        }
+
+        /**
+         * Calls {@link #show(Duration, Window...)} by converting the given millis value
+         * with {@link Duration#millis(double)}.
+         */
+        public AbstractBuilder show(double millis, Window... windows) {
+            return show(Duration.millis(millis), windows);
+        }
+
+        /**
+         * For each given node builds and adds an animation that shows the node by fading it in.
+         *
+         * @param duration the fade animation speed
+         */
+        public AbstractBuilder show(Duration duration, Node... nodes) {
+            for (Node node : nodes) {
+                addAnimation(TimelineBuilder.build().show(duration, node).getAnimation());
+            }
+            return this;
+        }
+
+        /**
+         * Calls {@link #show(Duration, Node...)} by converting the given millis value
+         * with {@link Duration#millis(double)}.
+         */
+        public AbstractBuilder show(double millis, Node... nodes) {
+            return show(Duration.millis(millis), nodes);
+        }
+
+        /**
+         * Creates and adds a fade in animation for each given {@link AnimationsData}.
+         */
+        public final AbstractBuilder show(AnimationsData... data) {
+            for (AnimationsData animData : data) {
+                addAnimation(TimelineBuilder.build().show(animData).getAnimation());
+            }
+            return this;
+        }
+
+        /**
+         * Sets the action to perform when the "main" animation ends.
+         */
+        public AbstractBuilder setOnFinished(EventHandler<ActionEvent> onFinished) {
+            animation.setOnFinished(onFinished);
+            return this;
+        }
+
+        /**
+         * Sets the "main" animation cycle count.
+         */
+        public AbstractBuilder setCycleCount(int cycleCount) {
+            animation.setCycleCount(cycleCount);
+            return this;
+        }
+
+        /**
+         * Sets the "main" animation delay.
+         */
+        public AbstractBuilder setDelay(Duration delay) {
+            animation.setDelay(delay);
+            return this;
+        }
+
+        /**
+         * Sets the "main" animation delay.
+         */
+        public AbstractBuilder setDelay(double millis) {
+            animation.setDelay(Duration.millis(millis));
+            return this;
+        }
+
+        /**
+         * Sets the "main" animation rate/speed.
+         */
+        public AbstractBuilder setRate(double rate) {
+            animation.setRate(rate);
+            return this;
+        }
+    }
+
+    /**
+     * Implementation of {@link AbstractBuilder} that uses a {@link SequentialTransition} as "main" animation.
+     */
+    public static class SequentialBuilder extends AbstractBuilder {
+        //================================================================================
+        // Properties
+        //================================================================================
+        private final SequentialTransition sequentialTransition = new SequentialTransition();
+
+        //================================================================================
+        // Constructors
+        //================================================================================
+        public SequentialBuilder() {
+            init(sequentialTransition);
+        }
+
+        //================================================================================
+        // Static Methods
+        //================================================================================
+
+        /**
+         * @return a new SequentialBuilder instance. Equivalent to calling the constructor,
+         * it's just a way to omit the new keyword
+         */
+        public static SequentialBuilder build() {
+            return new SequentialBuilder();
+        }
+
+        //================================================================================
+        // Override Methods
+        //================================================================================
+        @Override
+        protected void addAnimation(Animation animation) {
+            sequentialTransition.getChildren().add(animation);
+        }
+
+        @Override
+        public SequentialTransition getAnimation() {
+            return sequentialTransition;
+        }
+    }
+
+    /**
+     * Implementation of {@link AbstractBuilder} that uses a {@link ParallelTransition} as "main" animation.
+     */
+    public static class ParallelBuilder extends AbstractBuilder {
+        //================================================================================
+        // Properties
+        //================================================================================
+        private final ParallelTransition parallelTransition = new ParallelTransition();
+
+        //================================================================================
+        // Constructors
+        //================================================================================
+        public ParallelBuilder() {
+            init(parallelTransition);
+        }
+
+        //================================================================================
+        // Static Methods
+        //================================================================================
+
+        /**
+         * @return a new ParallelBuilder instance. Equivalent to calling the constructor,
+         * it's just a way to omit the new keyword
+         */
+        public static ParallelBuilder build() {
+            return new ParallelBuilder();
+        }
+
+        //================================================================================
+        // Override Methods
+        //================================================================================
+        @Override
+        protected void addAnimation(Animation animation) {
+            parallelTransition.getChildren().add(animation);
+        }
+
+        @Override
+        public ParallelTransition getAnimation() {
+            return parallelTransition;
+        }
+    }
+
+    /**
+     * Builder class to easily create a {@link Timeline} with fluent api.
+     */
+    public static class TimelineBuilder {
+        //================================================================================
+        // Properties
+        //================================================================================
+        private final Timeline timeline = new Timeline();
+
+        /**
+         * @return a new TimelineBuilder instance. Equivalent to calling the constructor,
+         * it's just a way to omit the new keyword
+         */
+        public static TimelineBuilder build() {
+            return new TimelineBuilder();
+        }
+
+        //================================================================================
+        // Methods
+        //================================================================================
+
+        /**
+         * Adds the specified KeyFrames to the timeline.
+         */
+        public TimelineBuilder add(KeyFrame... keyFrames) {
+            timeline.getKeyFrames().addAll(Arrays.asList(keyFrames));
+            return this;
+        }
+
+        /**
+         * Adds the specified KeyFrame to the timeline only if the given condition is true.
+         */
+        public TimelineBuilder addIf(boolean condition, KeyFrame keyFrame) {
+            if (condition) timeline.getKeyFrames().add(keyFrame);
+            return this;
+        }
+
+        /**
+         * Adds a KeyFrame build by the given supplier only if the given condition is true.
+         */
+        public TimelineBuilder addIf(boolean condition, Supplier<KeyFrame> keyFrameSupplier) {
+            if (condition) timeline.getKeyFrames().add(keyFrameSupplier.get());
+            return this;
+        }
+
+        /**
+         * Adds the specified KeyFrame to the timeline only if the given condition is true.
+         */
+        public TimelineBuilder addIf(Supplier<Boolean> condition, KeyFrame keyFrame) {
+            if (condition.get()) timeline.getKeyFrames().add(keyFrame);
+            return this;
+        }
+
+        /**
+         * Adds a KeyFrame built by the given supplier only if the given condition is true.
+         */
+        public TimelineBuilder addIf(Supplier<Boolean> condition, Supplier<KeyFrame> keyFrame) {
+            if (condition.get()) timeline.getKeyFrames().add(keyFrame.get());
+            return this;
+        }
+
+        /**
+         * Builds a KeyFrame to hide the given Window by fading it out.
+         *
+         * @param duration the fade animation speed
+         */
+        public TimelineBuilder hide(Duration duration, Window window) {
+            add(KeyFrames.of(duration, window.opacityProperty(), 0));
+            return this;
+        }
+
+        /**
+         * Calls {@link #hide(Duration, Window)} by converting the given millis value
+         * with {@link Duration#millis(double)}.
+         */
+        public TimelineBuilder hide(double millis, Window window) {
+            return hide(Duration.millis(millis), window);
+        }
+
+        /**
+         * Builds the KeyFrames to hide the given node by fading it out.
+         *
+         * @param duration the fade animation speed
+         */
+        public TimelineBuilder hide(Duration duration, Node node) {
+            add(
+                KeyFrames.of(Duration.ZERO, node.opacityProperty(), 1.0, AnimationFactory.INTERPOLATOR_V1),
+                KeyFrames.of(duration, node.opacityProperty(), 0, AnimationFactory.INTERPOLATOR_V1)
+            );
+            return this;
+        }
+
+        /**
+         * Calls {@link #hide(Duration, Node)} by converting the given millis value
+         * with {@link Duration#millis(double)}.
+         */
+        public TimelineBuilder hide(double millis, Node node) {
+            return hide(Duration.millis(millis), node);
+        }
+
+        /**
+         * Builds the KeyFrames to hide the specified node in the AnimationsData bean, by fading it out.
+         */
+        public final TimelineBuilder hide(AnimationsData data) {
+            add(
+                KeyFrames.of(Duration.ZERO, data.getNode().opacityProperty(), 1.0),
+                KeyFrames.of(data.getDuration(), data.getNode().opacityProperty(), 0.0)
+            );
+            setOnFinished(data.getOnFinished());
+            return this;
+        }
+
+        /**
+         * Builds a KeyFrame to show the given Window by fading it in.
+         *
+         * @param duration the fade animation speed
+         */
+        public TimelineBuilder show(Duration duration, Window window) {
+            add(KeyFrames.of(duration, window.opacityProperty(), 1.0));
+            return this;
+        }
+
+        /**
+         * Calls {@link #show(Duration, Window)} by converting the given millis value
+         * with {@link Duration#millis(double)}.
+         */
+        public TimelineBuilder show(double millis, Window window) {
+            return show(Duration.millis(millis), window);
+        }
+
+        /**
+         * Builds the KeyFrames to show the given node by fading it in.
+         *
+         * @param duration the fade animation speed
+         */
+        public TimelineBuilder show(Duration duration, Node node) {
+            add(
+                KeyFrames.of(Duration.ZERO, node.opacityProperty(), 0.0),
+                KeyFrames.of(duration, node.opacityProperty(), 1.0)
+            );
+            return this;
+        }
+
+        /**
+         * Calls {@link #show(Duration, Node)} by converting the given millis value
+         * with {@link Duration#millis(double)}.
+         */
+        public TimelineBuilder show(double millis, Node node) {
+            return show(Duration.millis(millis), node);
+        }
+
+        /**
+         * Creates and adds a fade in animation for each given {@link AnimationsData}.
+         */
+        public final TimelineBuilder show(AnimationsData data) {
+            add(
+                KeyFrames.of(Duration.ZERO, data.getNode().opacityProperty(), 0.0),
+                KeyFrames.of(data.getDuration(), data.getNode().opacityProperty(), 1.0)
+            );
+            setOnFinished(data.getOnFinished());
+            return this;
+        }
+
+        /**
+         * Sets the {@link Timeline#autoReverseProperty()}.
+         */
+        public TimelineBuilder setAutoReverse(boolean autoReverse) {
+            timeline.setAutoReverse(autoReverse);
+            return this;
+        }
+
+        /**
+         * Sets the timeline cycle count.
+         */
+        public TimelineBuilder setCycleCount(int cycleCount) {
+            timeline.setCycleCount(cycleCount);
+            return this;
+        }
+
+        /**
+         * Sets the timeline delay.
+         */
+        public TimelineBuilder setDelay(Duration delay) {
+            timeline.setDelay(delay);
+            return this;
+        }
+
+        /**
+         * Sets the timeline delay.
+         */
+        public TimelineBuilder setDelay(double millis) {
+            timeline.setDelay(Duration.millis(millis));
+            return this;
+        }
+
+        /**
+         * Sets the timeline rate/speed.
+         */
+        public TimelineBuilder setRate(double rate) {
+            timeline.setRate(rate);
+            return this;
+        }
+
+        /**
+         * Sets the action to perform when the timeline ends.
+         */
+        public TimelineBuilder setOnFinished(EventHandler<ActionEvent> onFinished) {
+            timeline.setOnFinished(onFinished);
+            return this;
+        }
+
+        /**
+         * @return the instance of the Timeline
+         */
+        public Timeline getAnimation() {
+            return timeline;
+        }
+    }
+
+    /**
+     * Builder class to easily create a {@link PauseTransition} with fluent api.
+     */
+    public static class PauseBuilder {
+        //================================================================================
+        // Properties
+        //================================================================================
+        private final PauseTransition pauseTransition = new PauseTransition();
+
+        //================================================================================
+        // Static Methods
+        //================================================================================
+
+        /**
+         * @return a new PauseBuilder instance. Equivalent to calling the constructor,
+         * it's just a way to omit the new keyword
+         */
+        public static PauseBuilder build() {
+            return new PauseBuilder();
+        }
+
+        //================================================================================
+        // Methods
+        //================================================================================
+
+        public PauseBuilder setDelay(Duration duration) {
+            pauseTransition.setDelay(duration);
+            return this;
+        }
+
+        public PauseBuilder setDelay(double millis) {
+            pauseTransition.setDelay(Duration.millis(millis));
+            return this;
+        }
+
+        /**
+         * Sets the pause transition duration.
+         */
+        public PauseBuilder setDuration(Duration duration) {
+            pauseTransition.setDuration(duration);
+            return this;
+        }
+
+        /**
+         * Calls {@link #setDuration(Duration)} by converting the given millis value
+         * with {@link Duration#millis(double)}.
+         */
+        public PauseBuilder setDuration(double millis) {
+            pauseTransition.setDuration(Duration.millis(millis));
+            return this;
+        }
+
+        /**
+         * Sets the action to perform when the pause transition ends.
+         */
+        public PauseBuilder setOnFinished(EventHandler<ActionEvent> onFinished) {
+            pauseTransition.setOnFinished(onFinished);
+            return this;
+        }
+
+        /**
+         * @return the instance of the PauseTransition
+         */
+        public PauseTransition getAnimation() {
+            return pauseTransition;
+        }
+
+        /**
+         * This method can be considered an utility.
+         * <p></p>
+         * A {@link PauseTransition} with the previously set duration runs while the given boolean boolean expression
+         * is false. When the expression is evaluated and it is false the given retryAction is run and the transition
+         * is restarted. When it ends the expression is re-evaluated. When the expression becomes true the onSuccessAction is run.
+         * <p></p>
+         * So you have a {@link PauseTransition} that runs every tot unit of time and stops only when the given expression is true.
+         *
+         * @param booleanExpression the expression to check at a fixed time rate
+         * @param retryAction       the action to perform when the expression is false
+         * @param onSuccessAction   the action to perform when the expression is true
+         */
+        public void runWhile(BooleanExpression booleanExpression, Runnable retryAction, Runnable onSuccessAction) {
+            setOnFinished(event -> {
+                if (!booleanExpression.get()) {
+                    retryAction.run();
+                    getAnimation().playFromStart();
+                } else {
+                    onSuccessAction.run();
+                }
+            });
+            getAnimation().play();
+        }
+
+        /**
+         * Same method as {@link #runWhile(BooleanExpression, Runnable, Runnable)} but instead of running
+         * until the given expression is true, it is limited to a maximum number of retries.
+         *
+         * @param maxRetryCount the max number of times the transition can be restarted
+         */
+        public void runWhile(BooleanExpression booleanExpression, Runnable retryAction, Runnable onSuccessAction, int maxRetryCount) {
+            AtomicInteger retryCount = new AtomicInteger(0);
+            setOnFinished(event -> {
+                if (!booleanExpression.get() && retryCount.get() < maxRetryCount) {
+                    retryCount.getAndIncrement();
+                    retryAction.run();
+                    getAnimation().playFromStart();
+                } else {
+                    onSuccessAction.run();
+                }
+            });
+            getAnimation().play();
+        }
+    }
+
+    /**
+     * Builder class for keyframes and keyvalues.
+     */
+    public static class KeyFrames {
+
+        //================================================================================
+        // Constructors
+        //================================================================================
+        private KeyFrames() {
+        }
+
+        //================================================================================
+        // Static Methods
+        //================================================================================
+
+        /**
+         * Returns a new KeyFrame with the given duration and action.
+         */
+        public static KeyFrame of(Duration duration, EventHandler<ActionEvent> action) {
+            return new KeyFrame(duration, action);
+        }
+
+        /**
+         * Calls {@link #of(Duration, EventHandler)} by converting the given millis value
+         * with {@link Duration#millis(double)}.
+         */
+        public static KeyFrame of(double millis, EventHandler<ActionEvent> action) {
+            return of(Duration.millis(millis), action);
+        }
+
+        /**
+         * Returns a new KeyFrame with the given duration and keyvalues.
+         */
+        public static KeyFrame of(Duration duration, KeyValue... keyValues) {
+            return new KeyFrame(duration, keyValues);
+        }
+
+        /**
+         * Calls {@link #of(Duration, KeyValue[])} by converting the given millis value
+         * with {@link Duration#millis(double)}.
+         */
+        public static KeyFrame of(double millis, KeyValue... keyValues) {
+            return of(Duration.millis(millis), keyValues);
+        }
+
+        /**
+         * Returns a new KeyFrame with the given duration and builds a new KeyValue for it
+         * with the given writable property and endValue.
+         */
+        public static <T> KeyFrame of(Duration duration, WritableValue<T> writableValue, T endValue) {
+            return of(duration, new KeyValue(writableValue, endValue));
+        }
+
+        /**
+         * Calls {@link #of(Duration, WritableValue, Object)} by converting the given millis value
+         * with {@link Duration#millis(double)}.
+         */
+        public static <T> KeyFrame of(double millis, WritableValue<T> writableValue, T endValue) {
+            return of(Duration.millis(millis), writableValue, endValue);
+        }
+
+        /**
+         * Returns a new KeyFrame with the given duration and builds a new KeyValue for it
+         * with the given writable property, endValue and interpolator.
+         */
+        public static <T> KeyFrame of(Duration duration, WritableValue<T> writableValue, T endValue, Interpolator interpolator) {
+            return of(duration, new KeyValue(writableValue, endValue, interpolator));
+        }
+
+        /**
+         * Calls {@link #of(Duration, WritableValue, Object, Interpolator)} by converting the given millis value
+         * with {@link Duration#millis(double)}.
+         */
+        public static <T> KeyFrame of(double millis, WritableValue<T> writableValue, T endValue, Interpolator interpolator) {
+            return of(Duration.millis(millis), writableValue, endValue, interpolator);
+        }
+
+        /**
+         * Returns a new KeyFrame with the given duration and builds a new KeyValue for it
+         * with the given writable property, endValue and interpolator.
+         */
+        public static <T> KeyFrame of(Duration duration, WritableValue<T> writableValue, T endValue, Interpolators interpolator) {
+            return of(duration, new KeyValue(writableValue, endValue, interpolator.toInterpolator()));
+        }
+
+        /**
+         * Calls {@link #of(Duration, WritableValue, Object, Interpolators)} by converting the given millis value
+         * with {@link Duration#millis(double)}.
+         */
+        public static <T> KeyFrame of(double millis, WritableValue<T> writableValue, T endValue, Interpolators interpolator) {
+            return of(Duration.millis(millis), writableValue, endValue, interpolator.toInterpolator());
+        }
+    }
 }
 

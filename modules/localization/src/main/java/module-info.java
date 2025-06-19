@@ -1,6 +1,6 @@
 module mfx.localization {
-	requires transitive javafx.graphics;
+    requires transitive javafx.graphics;
 
-	// Base
-	exports io.github.palexdev.mfxlocalization;
+    // Base
+    exports io.github.palexdev.mfxlocalization;
 }

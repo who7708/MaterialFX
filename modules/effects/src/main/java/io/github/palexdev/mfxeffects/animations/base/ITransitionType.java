@@ -23,7 +23,7 @@ import javafx.animation.Animation;
 import javafx.scene.Node;
 
 public interface ITransitionType {
-	Animation open(TransitionPane pane, Node openNode, Node closedNode);
+    Animation open(TransitionPane pane, Node openNode, Node closedNode);
 
-	Animation close(TransitionPane pane, Node openNode, Node closedNode);
+    Animation close(TransitionPane pane, Node openNode, Node closedNode);
 }

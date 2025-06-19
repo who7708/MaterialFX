@@ -23,5 +23,5 @@ package io.github.palexdev.mfxcore.validation;
  * unmet {@link Constraint}.
  */
 public enum Severity {
-	INFO, WARNING, ERROR
+    INFO, WARNING, ERROR
 }

@@ -68,7 +68,7 @@ public class SelectionProperty extends SimpleBooleanProperty {
         if (group != null) {
             newValue = group.check(selectable, newValue);
             if ((newValue && !group.getSelection().contains(selectable)) ||
-                    !newValue && group.getSelection().contains(selectable)) {
+                !newValue && group.getSelection().contains(selectable)) {
                 invalidated();
             }
         }

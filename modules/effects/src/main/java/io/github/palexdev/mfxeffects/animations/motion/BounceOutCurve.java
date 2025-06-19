@@ -26,8 +26,8 @@ import io.github.palexdev.mfxeffects.animations.base.Curve;
  * <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_bounce_out.mp4>Bounce Out</a>
  */
 public class BounceOutCurve extends Curve {
-	@Override
-	public double curve(double t) {
-		return Motion.bounce(t);
-	}
+    @Override
+    public double curve(double t) {
+        return Motion.bounce(t);
+    }
 }

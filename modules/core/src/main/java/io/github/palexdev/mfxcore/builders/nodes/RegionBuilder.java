@@ -26,111 +26,111 @@ import javafx.scene.shape.Shape;
 
 public class RegionBuilder<R extends Region> extends ParentBuilder<R> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	@SuppressWarnings("unchecked")
-	public RegionBuilder() {
-		this((R) new Region());
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    @SuppressWarnings("unchecked")
+    public RegionBuilder() {
+        this((R) new Region());
+    }
 
-	public RegionBuilder(R region) {
-		super(region);
-	}
+    public RegionBuilder(R region) {
+        super(region);
+    }
 
-	public static <R extends Region> RegionBuilder<R> region() {
-		return new RegionBuilder<>();
-	}
+    public static <R extends Region> RegionBuilder<R> region() {
+        return new RegionBuilder<>();
+    }
 
-	public static <R extends Region> RegionBuilder<R> region(R region) {
-		return new RegionBuilder<>(region);
-	}
+    public static <R extends Region> RegionBuilder<R> region(R region) {
+        return new RegionBuilder<>(region);
+    }
 
-	//================================================================================
-	// Delegate Methods
-	//================================================================================
-	public RegionBuilder<R> setSnapToPixel(boolean snapToPixel) {
-		node.setSnapToPixel(snapToPixel);
-		return this;
-	}
+    //================================================================================
+    // Delegate Methods
+    //================================================================================
+    public RegionBuilder<R> setSnapToPixel(boolean snapToPixel) {
+        node.setSnapToPixel(snapToPixel);
+        return this;
+    }
 
-	public RegionBuilder<R> setPadding(Insets padding) {
-		node.setPadding(padding);
-		return this;
-	}
+    public RegionBuilder<R> setPadding(Insets padding) {
+        node.setPadding(padding);
+        return this;
+    }
 
-	public RegionBuilder<R> setBackground(Background background) {
-		node.setBackground(background);
-		return this;
-	}
+    public RegionBuilder<R> setBackground(Background background) {
+        node.setBackground(background);
+        return this;
+    }
 
-	public RegionBuilder<R> setBorder(Border border) {
-		node.setBorder(border);
-		return this;
-	}
+    public RegionBuilder<R> setBorder(Border border) {
+        node.setBorder(border);
+        return this;
+    }
 
-	public RegionBuilder<R> setMinWidth(double minWidth) {
-		node.setMinWidth(minWidth);
-		return this;
-	}
+    public RegionBuilder<R> setMinWidth(double minWidth) {
+        node.setMinWidth(minWidth);
+        return this;
+    }
 
-	public RegionBuilder<R> setMinHeight(double minHeight) {
-		node.setMinHeight(minHeight);
-		return this;
-	}
+    public RegionBuilder<R> setMinHeight(double minHeight) {
+        node.setMinHeight(minHeight);
+        return this;
+    }
 
-	public RegionBuilder<R> setMinSize(double minWidth, double minHeight) {
-		node.setMinSize(minWidth, minHeight);
-		return this;
-	}
+    public RegionBuilder<R> setMinSize(double minWidth, double minHeight) {
+        node.setMinSize(minWidth, minHeight);
+        return this;
+    }
 
-	public RegionBuilder<R> setPrefWidth(double prefWidth) {
-		node.setPrefWidth(prefWidth);
-		return this;
-	}
+    public RegionBuilder<R> setPrefWidth(double prefWidth) {
+        node.setPrefWidth(prefWidth);
+        return this;
+    }
 
-	public RegionBuilder<R> setPrefHeight(double prefHeight) {
-		node.setPrefHeight(prefHeight);
-		return this;
-	}
+    public RegionBuilder<R> setPrefHeight(double prefHeight) {
+        node.setPrefHeight(prefHeight);
+        return this;
+    }
 
-	public RegionBuilder<R> setPrefSize(double prefWidth, double prefHeight) {
-		node.setPrefSize(prefWidth, prefHeight);
-		return this;
-	}
+    public RegionBuilder<R> setPrefSize(double prefWidth, double prefHeight) {
+        node.setPrefSize(prefWidth, prefHeight);
+        return this;
+    }
 
-	public RegionBuilder<R> setMaxWidth(double maxWidth) {
-		node.setMaxWidth(maxWidth);
-		return this;
-	}
+    public RegionBuilder<R> setMaxWidth(double maxWidth) {
+        node.setMaxWidth(maxWidth);
+        return this;
+    }
 
-	public RegionBuilder<R> setMaxHeight(double maxHeight) {
-		node.setMaxHeight(maxHeight);
-		return this;
-	}
+    public RegionBuilder<R> setMaxHeight(double maxHeight) {
+        node.setMaxHeight(maxHeight);
+        return this;
+    }
 
-	public RegionBuilder<R> setMaxSize(double maxWidth, double maxHeight) {
-		node.setMaxSize(maxWidth, maxHeight);
-		return this;
-	}
+    public RegionBuilder<R> setMaxSize(double maxWidth, double maxHeight) {
+        node.setMaxSize(maxWidth, maxHeight);
+        return this;
+    }
 
-	public RegionBuilder<R> setShape(Shape value) {
-		node.setShape(value);
-		return this;
-	}
+    public RegionBuilder<R> setShape(Shape value) {
+        node.setShape(value);
+        return this;
+    }
 
-	public RegionBuilder<R> setScaleShape(boolean scaleShape) {
-		node.setScaleShape(scaleShape);
-		return this;
-	}
+    public RegionBuilder<R> setScaleShape(boolean scaleShape) {
+        node.setScaleShape(scaleShape);
+        return this;
+    }
 
-	public RegionBuilder<R> setCenterShape(boolean centerShape) {
-		node.setCenterShape(centerShape);
-		return this;
-	}
+    public RegionBuilder<R> setCenterShape(boolean centerShape) {
+        node.setCenterShape(centerShape);
+        return this;
+    }
 
-	public RegionBuilder<R> setCacheShape(boolean cacheShape) {
-		node.setCacheShape(cacheShape);
-		return this;
-	}
+    public RegionBuilder<R> setCacheShape(boolean cacheShape) {
+        node.setCacheShape(cacheShape);
+        return this;
+    }
 }

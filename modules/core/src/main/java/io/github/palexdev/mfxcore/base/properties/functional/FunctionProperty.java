@@ -31,21 +31,21 @@ import java.util.function.Function;
  */
 public class FunctionProperty<T, R> extends ReadOnlyObjectWrapper<Function<T, R>> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public FunctionProperty() {
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public FunctionProperty() {
+    }
 
-	public FunctionProperty(Function<T, R> initialValue) {
-		super(initialValue);
-	}
+    public FunctionProperty(Function<T, R> initialValue) {
+        super(initialValue);
+    }
 
-	public FunctionProperty(Object bean, String name) {
-		super(bean, name);
-	}
+    public FunctionProperty(Object bean, String name) {
+        super(bean, name);
+    }
 
-	public FunctionProperty(Object bean, String name, Function<T, R> initialValue) {
-		super(bean, name, initialValue);
-	}
+    public FunctionProperty(Object bean, String name, Function<T, R> initialValue) {
+        super(bean, name, initialValue);
+    }
 }

@@ -33,34 +33,34 @@ import io.github.palexdev.mfxeffects.utils.NumberUtils;
  * <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_interval.mp4>Interval</a>
  */
 public class Interval extends Curve {
-	private final double begin;
-	private final double end;
-	private final Curve curve;
+    private final double begin;
+    private final double end;
+    private final Curve curve;
 
-	public Interval(double begin, double end) {
-		this.begin = begin;
-		this.end = end;
-		this.curve = Motion.LINEAR;
-	}
+    public Interval(double begin, double end) {
+        this.begin = begin;
+        this.end = end;
+        this.curve = Motion.LINEAR;
+    }
 
-	public Interval(double begin, double end, Curve curve) {
-		this.begin = begin;
-		this.end = end;
-		this.curve = curve;
-	}
+    public Interval(double begin, double end, Curve curve) {
+        this.begin = begin;
+        this.end = end;
+        this.curve = curve;
+    }
 
-	@Override
-	public double curve(double t) {
-		assert (begin >= 0.0);
-		assert (begin <= 1.0);
-		assert (end >= 0.0);
-		assert (end <= 1.0);
-		assert (end >= begin);
-		t = NumberUtils.clamp((t - begin) / (end - begin), 0.0, 1.0);
-		if (t == 0.0 || t == 1.0) {
-			return t;
-		}
-		return curve.curve(t);
-	}
+    @Override
+    public double curve(double t) {
+        assert (begin >= 0.0);
+        assert (begin <= 1.0);
+        assert (end >= 0.0);
+        assert (end <= 1.0);
+        assert (end >= begin);
+        t = NumberUtils.clamp((t - begin) / (end - begin), 0.0, 1.0);
+        if (t == 0.0 || t == 1.0) {
+            return t;
+        }
+        return curve.curve(t);
+    }
 
 }

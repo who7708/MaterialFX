@@ -43,74 +43,74 @@ import java.util.Set;
  * of {@link StackFrame}s to process.
  */
 public class SceneBuilderIntegration {
-	//================================================================================
-	// Static Properties
-	//================================================================================
-	private static Boolean inSceneBuilder = null;
-	private static int depth = 10;
-	private static boolean isDepthInvalid = false;
-	public static final Path DEFAULT_DEBUG_FILE = Path.of(System.getProperty("user.home") + "/SceneBuilderIntegrationDebug.log");
+    //================================================================================
+    // Static Properties
+    //================================================================================
+    private static Boolean inSceneBuilder = null;
+    private static int depth = 10;
+    private static boolean isDepthInvalid = false;
+    public static final Path DEFAULT_DEBUG_FILE = Path.of(System.getProperty("user.home") + "/SceneBuilderIntegrationDebug.log");
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	private SceneBuilderIntegration() {
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    private SceneBuilderIntegration() {
+    }
 
-	//================================================================================
-	// Static Methods
-	//================================================================================
+    //================================================================================
+    // Static Methods
+    //================================================================================
 
-	/**
-	 * If {@link #isInSceneBuilder()} returns true executes the given action.
-	 */
-	public static void ifInSceneBuilder(Runnable action) {
-		if (isInSceneBuilder()) action.run();
-	}
+    /**
+     * If {@link #isInSceneBuilder()} returns true executes the given action.
+     */
+    public static void ifInSceneBuilder(Runnable action) {
+        if (isInSceneBuilder()) action.run();
+    }
 
-	/**
-	 * This is the core method responsible for detecting the caller of a constructor/method.
-	 * The {@link StackWalker} API used to do so, will detect all the classes involved in the calling.
-	 * SceneBuilder can be detected because classes loading custom controls are in a package containing the
-	 * following string: ".javafx.scenebuilder.kit."
-	 * <p></p>
-	 * Subsequent calls to this will return the cached result (if it was called at least once of course), so there
-	 * should be little to no performance impact in the app. If the search depth is changed the cached result is ignored
-	 * and the research is repeated.
-	 */
-	public static boolean isInSceneBuilder() {
-		if (inSceneBuilder == null || isDepthInvalid) {
-			StackWalker sw = StackWalker.getInstance(
-					Set.of(Option.RETAIN_CLASS_REFERENCE, Option.SHOW_REFLECT_FRAMES),
-					depth
-			);
-			inSceneBuilder = sw.walk(sfs -> sfs.anyMatch(sf ->
-					sf.getClassName() != null && sf.getClassName().contains(".javafx.scenebuilder.kit.")));
-			isDepthInvalid = false;
-		}
-		return inSceneBuilder;
-	}
+    /**
+     * This is the core method responsible for detecting the caller of a constructor/method.
+     * The {@link StackWalker} API used to do so, will detect all the classes involved in the calling.
+     * SceneBuilder can be detected because classes loading custom controls are in a package containing the
+     * following string: ".javafx.scenebuilder.kit."
+     * <p></p>
+     * Subsequent calls to this will return the cached result (if it was called at least once of course), so there
+     * should be little to no performance impact in the app. If the search depth is changed the cached result is ignored
+     * and the research is repeated.
+     */
+    public static boolean isInSceneBuilder() {
+        if (inSceneBuilder == null || isDepthInvalid) {
+            StackWalker sw = StackWalker.getInstance(
+                Set.of(Option.RETAIN_CLASS_REFERENCE, Option.SHOW_REFLECT_FRAMES),
+                depth
+            );
+            inSceneBuilder = sw.walk(sfs -> sfs.anyMatch(sf ->
+                sf.getClassName() != null && sf.getClassName().contains(".javafx.scenebuilder.kit.")));
+            isDepthInvalid = false;
+        }
+        return inSceneBuilder;
+    }
 
-	/**
-	 * Sets the 'search' depth used by the {@link StackWalker} API.
-	 */
-	public static void setDepth(int depth) {
-		SceneBuilderIntegration.depth = depth;
-		SceneBuilderIntegration.isDepthInvalid = true;
-	}
+    /**
+     * Sets the 'search' depth used by the {@link StackWalker} API.
+     */
+    public static void setDepth(int depth) {
+        SceneBuilderIntegration.depth = depth;
+        SceneBuilderIntegration.isDepthInvalid = true;
+    }
 
-	/**
-	 * Creates a new file at the given {@link Path} if non-existent, then writes the given debug String
-	 * in it. The 'truncate' boolean flag specifies whether to append the string or clear the file content first.
-	 * <p></p>
-	 * For the path you can also use {@link #DEFAULT_DEBUG_FILE} which points at the 'user.home' directory, and
-	 * creates a 'SceneBuilderIntegrationDebug.log' file in it.
-	 */
-	public static void debug(Path file, boolean truncate, String debug) {
-		try {
-			StandardOpenOption wrOpt = truncate ? StandardOpenOption.TRUNCATE_EXISTING : StandardOpenOption.APPEND;
-			Files.writeString(file, debug + "\n", StandardOpenOption.CREATE, StandardOpenOption.WRITE, wrOpt);
-		} catch (IOException ignored) {
-		}
-	}
+    /**
+     * Creates a new file at the given {@link Path} if non-existent, then writes the given debug String
+     * in it. The 'truncate' boolean flag specifies whether to append the string or clear the file content first.
+     * <p></p>
+     * For the path you can also use {@link #DEFAULT_DEBUG_FILE} which points at the 'user.home' directory, and
+     * creates a 'SceneBuilderIntegrationDebug.log' file in it.
+     */
+    public static void debug(Path file, boolean truncate, String debug) {
+        try {
+            StandardOpenOption wrOpt = truncate ? StandardOpenOption.TRUNCATE_EXISTING : StandardOpenOption.APPEND;
+            Files.writeString(file, debug + "\n", StandardOpenOption.CREATE, StandardOpenOption.WRITE, wrOpt);
+        } catch (IOException ignored) {
+        }
+    }
 }

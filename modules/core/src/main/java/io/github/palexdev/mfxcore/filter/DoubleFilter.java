@@ -43,36 +43,36 @@ import java.util.stream.Stream;
  */
 public class DoubleFilter<T> extends NumberFilter<T, Double> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public DoubleFilter(String name, Function<T, Double> extractor) {
-		this(name, extractor, new DoubleStringConverter());
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public DoubleFilter(String name, Function<T, Double> extractor) {
+        this(name, extractor, new DoubleStringConverter());
+    }
 
-	public DoubleFilter(String name, Function<T, Double> extractor, StringConverter<Double> converter) {
-		super(name, extractor, converter);
-	}
+    public DoubleFilter(String name, Function<T, Double> extractor, StringConverter<Double> converter) {
+        super(name, extractor, converter);
+    }
 
-	//================================================================================
-	// Overridden Methods
-	//================================================================================
-	@Override
-	protected ObservableList<BiPredicateBean<Double, Double>> defaultPredicates() {
-		return Stream.<BiPredicateBean<Double, Double>>of(
-				new BiPredicateBean<>(I18N.getOrDefault("filter.is"), Double::equals),
-				new BiPredicateBean<>(I18N.getOrDefault("filter.isNot"), (aDouble, aDouble2) -> !aDouble.equals(aDouble2)),
-				new BiPredicateBean<>(I18N.getOrDefault("filter.greater"), (aDouble, aDouble2) -> aDouble > aDouble2),
-				new BiPredicateBean<>(I18N.getOrDefault("filter.greaterEqual"), (aDouble, aDouble2) -> aDouble >= aDouble2),
-				new BiPredicateBean<>(I18N.getOrDefault("filter.lesser"), (aDouble, aDouble2) -> aDouble < aDouble2),
-				new BiPredicateBean<>(I18N.getOrDefault("filter.lesserEqual"), (aDouble, aDouble2) -> aDouble <= aDouble2)
-		).collect(FXCollectors.toList());
-	}
+    //================================================================================
+    // Overridden Methods
+    //================================================================================
+    @Override
+    protected ObservableList<BiPredicateBean<Double, Double>> defaultPredicates() {
+        return Stream.<BiPredicateBean<Double, Double>>of(
+            new BiPredicateBean<>(I18N.getOrDefault("filter.is"), Double::equals),
+            new BiPredicateBean<>(I18N.getOrDefault("filter.isNot"), (aDouble, aDouble2) -> !aDouble.equals(aDouble2)),
+            new BiPredicateBean<>(I18N.getOrDefault("filter.greater"), (aDouble, aDouble2) -> aDouble > aDouble2),
+            new BiPredicateBean<>(I18N.getOrDefault("filter.greaterEqual"), (aDouble, aDouble2) -> aDouble >= aDouble2),
+            new BiPredicateBean<>(I18N.getOrDefault("filter.lesser"), (aDouble, aDouble2) -> aDouble < aDouble2),
+            new BiPredicateBean<>(I18N.getOrDefault("filter.lesserEqual"), (aDouble, aDouble2) -> aDouble <= aDouble2)
+        ).collect(FXCollectors.toList());
+    }
 
-	@SafeVarargs
-	@Override
-	protected final DoubleFilter<T> extend(BiPredicateBean<Double, Double>... predicateBeans) {
-		Collections.addAll(super.predicates, predicateBeans);
-		return this;
-	}
+    @SafeVarargs
+    @Override
+    protected final DoubleFilter<T> extend(BiPredicateBean<Double, Double>... predicateBeans) {
+        Collections.addAll(super.predicates, predicateBeans);
+        return this;
+    }
 }

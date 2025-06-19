@@ -26,8 +26,8 @@ import io.github.palexdev.mfxeffects.animations.base.Curve;
  * <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_bounce_in.mp4>Bounce In</a>
  */
 public class BounceInCurve extends Curve {
-	@Override
-	public double curve(double t) {
-		return 1.0 - Motion.bounce(1.0 - t);
-	}
+    @Override
+    public double curve(double t) {
+        return 1.0 - Motion.bounce(1.0 - t);
+    }
 }

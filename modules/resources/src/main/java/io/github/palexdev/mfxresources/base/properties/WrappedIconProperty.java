@@ -32,121 +32,121 @@ import java.util.function.Function;
  */
 public class WrappedIconProperty extends ReadOnlyObjectWrapper<MFXIconWrapper> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public WrappedIconProperty() {
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public WrappedIconProperty() {
+    }
 
-	public WrappedIconProperty(MFXIconWrapper initialValue) {
-		super(initialValue);
-	}
+    public WrappedIconProperty(MFXIconWrapper initialValue) {
+        super(initialValue);
+    }
 
-	public WrappedIconProperty(Object bean, String name) {
-		super(bean, name);
-	}
+    public WrappedIconProperty(Object bean, String name) {
+        super(bean, name);
+    }
 
-	public WrappedIconProperty(Object bean, String name, MFXIconWrapper initialValue) {
-		super(bean, name, initialValue);
-	}
+    public WrappedIconProperty(Object bean, String name, MFXIconWrapper initialValue) {
+        super(bean, name, initialValue);
+    }
 
-	//================================================================================
-	// Setters
-	//================================================================================
+    //================================================================================
+    // Setters
+    //================================================================================
 
-	/**
-	 * Sets the {@link MFXIconWrapper#iconProperty()} to the given {@link MFXFontIcon}.
-	 * <p>
-	 * This is null-safe, meaning that if the current value of the property is null a new {@link MFXIconWrapper} will
-	 * be created and no exception will be raised.
-	 */
-	public WrappedIconProperty setIcon(MFXFontIcon icon) {
-		MFXIconWrapper val = get();
-		if (val == null) {
-			set(new MFXIconWrapper(icon));
-		} else {
-			val.setIcon(icon);
-		}
-		return this;
-	}
+    /**
+     * Sets the {@link MFXIconWrapper#iconProperty()} to the given {@link MFXFontIcon}.
+     * <p>
+     * This is null-safe, meaning that if the current value of the property is null a new {@link MFXIconWrapper} will
+     * be created and no exception will be raised.
+     */
+    public WrappedIconProperty setIcon(MFXFontIcon icon) {
+        MFXIconWrapper val = get();
+        if (val == null) {
+            set(new MFXIconWrapper(icon));
+        } else {
+            val.setIcon(icon);
+        }
+        return this;
+    }
 
-	/**
-	 * Delegate for {@link MFXIconWrapper#enableRippleGenerator(boolean)}.
-	 * <p>
-	 * This is null-safe, meaning that if the current value of the property is null a new {@link MFXIconWrapper} will
-	 * be created and no exception will be raised.
-	 */
-	public WrappedIconProperty enableRippleGenerator(boolean enable) {
-		MFXIconWrapper val = get();
-		if (val == null) {
-			set(new MFXIconWrapper().enableRippleGenerator(enable));
-		} else {
-			val.enableRippleGenerator(enable);
-		}
-		return this;
-	}
+    /**
+     * Delegate for {@link MFXIconWrapper#enableRippleGenerator(boolean)}.
+     * <p>
+     * This is null-safe, meaning that if the current value of the property is null a new {@link MFXIconWrapper} will
+     * be created and no exception will be raised.
+     */
+    public WrappedIconProperty enableRippleGenerator(boolean enable) {
+        MFXIconWrapper val = get();
+        if (val == null) {
+            set(new MFXIconWrapper().enableRippleGenerator(enable));
+        } else {
+            val.enableRippleGenerator(enable);
+        }
+        return this;
+    }
 
-	/**
-	 * Delegate for {@link MFXIconWrapper#enableRippleGenerator(boolean, Function)}.
-	 * <p>
-	 * This is null-safe, meaning that if the current value of the property is null a new {@link MFXIconWrapper} will
-	 * be created and no exception will be raised.
-	 */
-	public WrappedIconProperty enableRippleGenerator(boolean enable, Function<MouseEvent, Position> positionFunction) {
-		MFXIconWrapper val = get();
-		if (val == null) {
-			set(new MFXIconWrapper().enableRippleGenerator(enable, positionFunction));
-		} else {
-			val.enableRippleGenerator(enable, positionFunction);
-		}
-		return this;
-	}
+    /**
+     * Delegate for {@link MFXIconWrapper#enableRippleGenerator(boolean, Function)}.
+     * <p>
+     * This is null-safe, meaning that if the current value of the property is null a new {@link MFXIconWrapper} will
+     * be created and no exception will be raised.
+     */
+    public WrappedIconProperty enableRippleGenerator(boolean enable, Function<MouseEvent, Position> positionFunction) {
+        MFXIconWrapper val = get();
+        if (val == null) {
+            set(new MFXIconWrapper().enableRippleGenerator(enable, positionFunction));
+        } else {
+            val.enableRippleGenerator(enable, positionFunction);
+        }
+        return this;
+    }
 
-	/**
-	 * Delegate for {@link MFXIconWrapper#makeRound(boolean)}.
-	 * <p>
-	 * This is null-safe, meaning that if the current value of the property is null a new {@link MFXIconWrapper} will
-	 * be created and no exception will be raised.
-	 */
-	public WrappedIconProperty makeRound(boolean state) {
-		MFXIconWrapper val = get();
-		if (val == null) {
-			set(new MFXIconWrapper().makeRound(state));
-		} else {
-			val.makeRound(state);
-		}
-		return this;
-	}
+    /**
+     * Delegate for {@link MFXIconWrapper#makeRound(boolean)}.
+     * <p>
+     * This is null-safe, meaning that if the current value of the property is null a new {@link MFXIconWrapper} will
+     * be created and no exception will be raised.
+     */
+    public WrappedIconProperty makeRound(boolean state) {
+        MFXIconWrapper val = get();
+        if (val == null) {
+            set(new MFXIconWrapper().makeRound(state));
+        } else {
+            val.makeRound(state);
+        }
+        return this;
+    }
 
-	/**
-	 * Delegate for {@link MFXIconWrapper#makeRound(boolean, double)}.
-	 * <p>
-	 * This is null-safe, meaning that if the current value of the property is null a new {@link MFXIconWrapper} will
-	 * be created and no exception will be raised.
-	 */
-	public WrappedIconProperty makeRound(boolean state, double radius) {
-		MFXIconWrapper val = get();
-		if (val == null) {
-			set(new MFXIconWrapper().makeRound(state, radius));
-		} else {
-			val.makeRound(state, radius);
-		}
-		return this;
-	}
+    /**
+     * Delegate for {@link MFXIconWrapper#makeRound(boolean, double)}.
+     * <p>
+     * This is null-safe, meaning that if the current value of the property is null a new {@link MFXIconWrapper} will
+     * be created and no exception will be raised.
+     */
+    public WrappedIconProperty makeRound(boolean state, double radius) {
+        MFXIconWrapper val = get();
+        if (val == null) {
+            set(new MFXIconWrapper().makeRound(state, radius));
+        } else {
+            val.makeRound(state, radius);
+        }
+        return this;
+    }
 
-	/**
-	 * Delegate for {@link MFXIconWrapper#setSize(double)}.
-	 * <p>
-	 * This is null-safe, meaning that if the current value of the property is null a new {@link MFXIconWrapper} will
-	 * be created and no exception will be raised.
-	 */
-	public WrappedIconProperty setSize(double size) {
-		MFXIconWrapper val = get();
-		if (val == null) {
-			set(new MFXIconWrapper(null, size));
-		} else {
-			val.setSize(size);
-		}
-		return this;
-	}
+    /**
+     * Delegate for {@link MFXIconWrapper#setSize(double)}.
+     * <p>
+     * This is null-safe, meaning that if the current value of the property is null a new {@link MFXIconWrapper} will
+     * be created and no exception will be raised.
+     */
+    public WrappedIconProperty setSize(double size) {
+        MFXIconWrapper val = get();
+        if (val == null) {
+            set(new MFXIconWrapper(null, size));
+        } else {
+            val.setSize(size);
+        }
+        return this;
+    }
 }

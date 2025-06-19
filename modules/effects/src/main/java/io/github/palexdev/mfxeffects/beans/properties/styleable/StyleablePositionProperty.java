@@ -46,7 +46,7 @@ public class StyleablePositionProperty extends SimpleStyleableObjectProperty<Pos
     }
 
     public static <S extends Styleable> CssMetaData<S, Position> metaDataFor(
-            String propId, Function<S, StyleablePositionProperty> property, Position initialValue
+        String propId, Function<S, StyleablePositionProperty> property, Position initialValue
     ) {
         return new CssMetaData<>(propId, PositionConverter.getInstance(), initialValue) {
             @Override
@@ -113,8 +113,8 @@ public class StyleablePositionProperty extends SimpleStyleableObjectProperty<Pos
         public Position convert(ParsedValue<String, Position> value, Font font) {
             try {
                 double[] sizes = Arrays.stream(value.getValue().split(" "))
-                        .mapToDouble(Double::parseDouble)
-                        .toArray();
+                    .mapToDouble(Double::parseDouble)
+                    .toArray();
                 return Position.of(sizes[0], sizes[1]);
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());

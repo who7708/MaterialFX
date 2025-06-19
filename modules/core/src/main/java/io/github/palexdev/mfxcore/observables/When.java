@@ -64,7 +64,7 @@ public abstract class When<T> implements DisposableAction {
     protected ObservableValue<T> observable;
     protected boolean oneShot = false;
     protected boolean execNowOneShot = false;
-	protected boolean active = false;
+    protected boolean active = false;
 
     protected Set<Observable> invalidating;
     protected InvalidationListener invalidatingListener;
@@ -114,7 +114,7 @@ public abstract class When<T> implements DisposableAction {
         invalidating.forEach(o -> o.addListener(invalidatingListener));
         WeakHashSet<When<?>> set = whens.computeIfAbsent(observable, o -> new WeakHashSet<>());
         set.add(this);
-		active = true;
+        active = true;
     }
 
     /**
@@ -187,14 +187,14 @@ public abstract class When<T> implements DisposableAction {
      * <p>
      * Subclasses should expand this behavior by also disposing: the observable, actions, and any other listener.
      */
-	@Override
+    @Override
     public void dispose() {
         if (isDisposed()) return;
         invalidating.forEach(o -> o.removeListener(invalidatingListener));
         invalidating.clear();
         invalidating = null;
         invalidatingListener = null;
-		active = false;
+        active = false;
     }
 
     /**
@@ -205,18 +205,18 @@ public abstract class When<T> implements DisposableAction {
     }
 
     /**
-	 * Calls {@link #dispose(When)} on each of the given {@code When} constructs.
+     * Calls {@link #dispose(When)} on each of the given {@code When} constructs.
      */
     public static void dispose(When<?>... whens) {
         for (When<?> w : whens) dispose(w);
     }
 
-	/**
-	 * @return whether the construct is active and not disposed, the flag is set if {@link #register()} run successfully
-	 */
-	public boolean isActive() {
-		return active;
-	}
+    /**
+     * @return whether the construct is active and not disposed, the flag is set if {@link #register()} run successfully
+     */
+    public boolean isActive() {
+        return active;
+    }
 
     /**
      * @return whether this construct has been disposed before. By default, checks if the given {@link ObservableValue}
@@ -225,12 +225,12 @@ public abstract class When<T> implements DisposableAction {
      */
     public boolean isDisposed() {
         return observable == null &&
-            invalidating == null &&
-            invalidatingListener == null;
+               invalidating == null &&
+               invalidatingListener == null;
     }
 
     /**
-	 * @return the total number of existing {@code When} constructs for a given {@link ObservableValue}
+     * @return the total number of existing {@code When} constructs for a given {@link ObservableValue}
      */
     public static int size(ObservableValue<?> observable) {
         return Optional.ofNullable(whens.get(observable))
@@ -239,7 +239,7 @@ public abstract class When<T> implements DisposableAction {
     }
 
     /**
-	 * @return the total number of existing {@code When} constructs for any registered {@link ObservableValue}
+     * @return the total number of existing {@code When} constructs for any registered {@link ObservableValue}
      */
     public static int totalSize() {
         return whens.keySet().stream()
@@ -286,5 +286,5 @@ public abstract class When<T> implements DisposableAction {
      * @see WeakHashMap
      * @see WeakHashSet
      */
-	public static class WhensMap extends WeakHashMap<ObservableValue<?>, WeakHashSet<When<?>>> {}
+    public static class WhensMap extends WeakHashMap<ObservableValue<?>, WeakHashSet<When<?>>> {}
 }

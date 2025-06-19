@@ -36,246 +36,246 @@ import javafx.scene.layout.StackPane;
 import java.util.function.Supplier;
 
 public class TransitionPane extends StackPane {
-	//================================================================================
-	// Properties
-	//================================================================================
-	private final String STYLE_CLASS = "transition-pane";
-	public static final PseudoClass CLOSED_PSEUDO_CLASS = PseudoClass.getPseudoClass("closed");
-	public static final PseudoClass OPEN_PSEUDO_CLASS = PseudoClass.getPseudoClass("open");
+    //================================================================================
+    // Properties
+    //================================================================================
+    private final String STYLE_CLASS = "transition-pane";
+    public static final PseudoClass CLOSED_PSEUDO_CLASS = PseudoClass.getPseudoClass("closed");
+    public static final PseudoClass OPEN_PSEUDO_CLASS = PseudoClass.getPseudoClass("open");
 
-	private final ObjectProperty<Node> closedNode = new SimpleObjectProperty<>() {
-		@Override
-		public void set(Node newValue) {
-			Node oldValue = get();
-			if (oldValue != null)
-				TransitionPane.super.getChildren().remove(oldValue);
+    private final ObjectProperty<Node> closedNode = new SimpleObjectProperty<>() {
+        @Override
+        public void set(Node newValue) {
+            Node oldValue = get();
+            if (oldValue != null)
+                TransitionPane.super.getChildren().remove(oldValue);
 
-			if (newValue != null)
-				TransitionPane.super.getChildren().add(newValue);
-			super.set(newValue);
-		}
-	};
-	private final ObjectProperty<Node> openNode = new SimpleObjectProperty<>() {
-		@Override
-		public void set(Node newValue) {
-			Node oldValue = get();
-			if (oldValue != null)
-				TransitionPane.super.getChildren().remove(oldValue);
+            if (newValue != null)
+                TransitionPane.super.getChildren().add(newValue);
+            super.set(newValue);
+        }
+    };
+    private final ObjectProperty<Node> openNode = new SimpleObjectProperty<>() {
+        @Override
+        public void set(Node newValue) {
+            Node oldValue = get();
+            if (oldValue != null)
+                TransitionPane.super.getChildren().remove(oldValue);
 
-			if (newValue != null) {
-				TransitionPane.super.getChildren().add(newValue);
-				newValue.setManaged(false);
-				newValue.setVisible(false);
-				newValue.setOpacity(0.0);
-			}
-			super.set(newValue);
-		}
-	};
-	private final ReadOnlyBooleanWrapper open = new ReadOnlyBooleanWrapper(false);
+            if (newValue != null) {
+                TransitionPane.super.getChildren().add(newValue);
+                newValue.setManaged(false);
+                newValue.setVisible(false);
+                newValue.setOpacity(0.0);
+            }
+            super.set(newValue);
+        }
+    };
+    private final ReadOnlyBooleanWrapper open = new ReadOnlyBooleanWrapper(false);
 
-	private final ObjectProperty<Supplier<Size>> targetSize = new SimpleObjectProperty<>() {
-		@Override
-		protected void invalidated() {
-			cachedClosedSize = null;
-			cachedOpenSize = null;
-		}
-	};
-	private final ObjectProperty<Supplier<Position>> targetOffset = new SimpleObjectProperty<>(Position::origin);
-	private Size cachedClosedSize;
-	private Size cachedOpenSize;
+    private final ObjectProperty<Supplier<Size>> targetSize = new SimpleObjectProperty<>() {
+        @Override
+        protected void invalidated() {
+            cachedClosedSize = null;
+            cachedOpenSize = null;
+        }
+    };
+    private final ObjectProperty<Supplier<Position>> targetOffset = new SimpleObjectProperty<>(Position::origin);
+    private Size cachedClosedSize;
+    private Size cachedOpenSize;
 
-	private final ObjectProperty<TriFunction<TransitionPane, Node, Node, Animation>> closeAnimationFactory = new SimpleObjectProperty<>();
-	private final ObjectProperty<TriFunction<TransitionPane, Node, Node, Animation>> openAnimationFactory = new SimpleObjectProperty<>();
-	private Animation cachedCloseAnimation;
-	private Animation cachedOpenAnimation;
+    private final ObjectProperty<TriFunction<TransitionPane, Node, Node, Animation>> closeAnimationFactory = new SimpleObjectProperty<>();
+    private final ObjectProperty<TriFunction<TransitionPane, Node, Node, Animation>> openAnimationFactory = new SimpleObjectProperty<>();
+    private Animation cachedCloseAnimation;
+    private Animation cachedOpenAnimation;
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public TransitionPane() {
-		this(null, null);
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public TransitionPane() {
+        this(null, null);
+    }
 
-	public TransitionPane(Node closedNode, Node openNode) {
-		setClosedNode(closedNode);
-		setOpenNode(openNode);
-		initialize();
-	}
+    public TransitionPane(Node closedNode, Node openNode) {
+        setClosedNode(closedNode);
+        setOpenNode(openNode);
+        initialize();
+    }
 
-	//================================================================================
-	// Methods
-	//================================================================================
-	private void initialize() {
-		getStyleClass().add(STYLE_CLASS);
-		pseudoClassStateChanged(CLOSED_PSEUDO_CLASS, true);
-		setTargetSize(() -> {
-			Node node = getOpenNode();
-			if (node == null) return Size.invalid();
-			return Size.of(
-				LayoutUtils.boundWidth(node),
-				LayoutUtils.boundHeight(node)
-			);
-		});
+    //================================================================================
+    // Methods
+    //================================================================================
+    private void initialize() {
+        getStyleClass().add(STYLE_CLASS);
+        pseudoClassStateChanged(CLOSED_PSEUDO_CLASS, true);
+        setTargetSize(() -> {
+            Node node = getOpenNode();
+            if (node == null) return Size.invalid();
+            return Size.of(
+                LayoutUtils.boundWidth(node),
+                LayoutUtils.boundHeight(node)
+            );
+        });
 
-		setMinSize(USE_PREF_SIZE, USE_PREF_SIZE);
-		setMaxSize(USE_PREF_SIZE, USE_PREF_SIZE);
-	}
+        setMinSize(USE_PREF_SIZE, USE_PREF_SIZE);
+        setMaxSize(USE_PREF_SIZE, USE_PREF_SIZE);
+    }
 
-	public void open() {
-		if (isOpen()) return;
-		Node openNode = getOpenNode();
-		Size size = getOpenSize();
-		if (openNode == null || Size.invalid().equals(size)) return;
+    public void open() {
+        if (isOpen()) return;
+        Node openNode = getOpenNode();
+        Size size = getOpenSize();
+        if (openNode == null || Size.invalid().equals(size)) return;
 
-		setOpen(true);
-		if (cachedOpenAnimation == null)
-			cachedOpenAnimation = getOpenAnimationFactory().apply(this, openNode, getClosedNode());
-		if (cachedCloseAnimation != null) cachedCloseAnimation.stop();
-		cachedOpenAnimation.playFromStart();
-	}
+        setOpen(true);
+        if (cachedOpenAnimation == null)
+            cachedOpenAnimation = getOpenAnimationFactory().apply(this, openNode, getClosedNode());
+        if (cachedCloseAnimation != null) cachedCloseAnimation.stop();
+        cachedOpenAnimation.playFromStart();
+    }
 
-	public void close() {
-		if (!isOpen()) return;
-		Node closedNode = getClosedNode();
-		if (closedNode == null) return;
-		getClosedSize();
+    public void close() {
+        if (!isOpen()) return;
+        Node closedNode = getClosedNode();
+        if (closedNode == null) return;
+        getClosedSize();
 
-		setOpen(false);
-		if (cachedCloseAnimation == null)
-			cachedCloseAnimation = getCloseAnimationFactory().apply(this, getOpenNode(), closedNode);
-		if (cachedOpenAnimation != null) cachedOpenAnimation.stop();
-		cachedCloseAnimation.playFromStart();
-	}
+        setOpen(false);
+        if (cachedCloseAnimation == null)
+            cachedCloseAnimation = getCloseAnimationFactory().apply(this, getOpenNode(), closedNode);
+        if (cachedOpenAnimation != null) cachedOpenAnimation.stop();
+        cachedCloseAnimation.playFromStart();
+    }
 
-	public void setAnimationType(ITransitionType type) {
-		setOpenAnimationFactory(type::open);
-		setCloseAnimationFactory(type::close);
-	}
+    public void setAnimationType(ITransitionType type) {
+        setOpenAnimationFactory(type::open);
+        setCloseAnimationFactory(type::close);
+    }
 
-	public Size getOpenSize() {
-		if (cachedOpenSize == null || Size.invalid().equals(cachedOpenSize)) {
-			cachedOpenSize = getTargetSize().get();
-		}
-		return cachedOpenSize;
-	}
+    public Size getOpenSize() {
+        if (cachedOpenSize == null || Size.invalid().equals(cachedOpenSize)) {
+            cachedOpenSize = getTargetSize().get();
+        }
+        return cachedOpenSize;
+    }
 
-	public Size getClosedSize() {
-		if (cachedClosedSize == null || Size.invalid().equals(cachedClosedSize)) {
-			Node closedNode = getClosedNode();
-			cachedClosedSize = (closedNode != null) ?
-				Size.of(
-					LayoutUtils.boundWidth(closedNode),
-					LayoutUtils.boundHeight(closedNode)
-				) :
-				Size.invalid();
-		}
-		return cachedClosedSize;
-	}
+    public Size getClosedSize() {
+        if (cachedClosedSize == null || Size.invalid().equals(cachedClosedSize)) {
+            Node closedNode = getClosedNode();
+            cachedClosedSize = (closedNode != null) ?
+                Size.of(
+                    LayoutUtils.boundWidth(closedNode),
+                    LayoutUtils.boundHeight(closedNode)
+                ) :
+                Size.invalid();
+        }
+        return cachedClosedSize;
+    }
 
-	//================================================================================
-	// Overridden Methods
-	//================================================================================
-	@Override
-	public ObservableList<Node> getChildren() {
-		return getChildrenUnmodifiable();
-	}
+    //================================================================================
+    // Overridden Methods
+    //================================================================================
+    @Override
+    public ObservableList<Node> getChildren() {
+        return getChildrenUnmodifiable();
+    }
 
-	@Override
-	protected void layoutChildren() {
-		super.layoutChildren();
+    @Override
+    protected void layoutChildren() {
+        super.layoutChildren();
 
-		Node node = getOpenNode();
-		if (node == null) return;
-		node.resizeRelocate(0, 0, getWidth(), getHeight());
-	}
+        Node node = getOpenNode();
+        if (node == null) return;
+        node.resizeRelocate(0, 0, getWidth(), getHeight());
+    }
 
-	//================================================================================
-	// Getters/Setters
-	//================================================================================
+    //================================================================================
+    // Getters/Setters
+    //================================================================================
 
-	public Node getClosedNode() {
-		return closedNode.get();
-	}
+    public Node getClosedNode() {
+        return closedNode.get();
+    }
 
-	public ObjectProperty<Node> closedNodeProperty() {
-		return closedNode;
-	}
+    public ObjectProperty<Node> closedNodeProperty() {
+        return closedNode;
+    }
 
-	public void setClosedNode(Node closedNode) {
-		this.closedNode.set(closedNode);
-	}
+    public void setClosedNode(Node closedNode) {
+        this.closedNode.set(closedNode);
+    }
 
-	public Node getOpenNode() {
-		return openNode.get();
-	}
+    public Node getOpenNode() {
+        return openNode.get();
+    }
 
-	public ObjectProperty<Node> openNodeProperty() {
-		return openNode;
-	}
+    public ObjectProperty<Node> openNodeProperty() {
+        return openNode;
+    }
 
-	public void setOpenNode(Node openNode) {
-		this.openNode.set(openNode);
-	}
+    public void setOpenNode(Node openNode) {
+        this.openNode.set(openNode);
+    }
 
-	public boolean isOpen() {
-		return open.get();
-	}
+    public boolean isOpen() {
+        return open.get();
+    }
 
-	public ReadOnlyBooleanProperty openProperty() {
-		return open.getReadOnlyProperty();
-	}
+    public ReadOnlyBooleanProperty openProperty() {
+        return open.getReadOnlyProperty();
+    }
 
-	protected void setOpen(boolean open) {
-		this.open.set(open);
-		pseudoClassStateChanged(CLOSED_PSEUDO_CLASS, !open);
-		pseudoClassStateChanged(OPEN_PSEUDO_CLASS, open);
-	}
+    protected void setOpen(boolean open) {
+        this.open.set(open);
+        pseudoClassStateChanged(CLOSED_PSEUDO_CLASS, !open);
+        pseudoClassStateChanged(OPEN_PSEUDO_CLASS, open);
+    }
 
-	public Supplier<Size> getTargetSize() {
-		return targetSize.get();
-	}
+    public Supplier<Size> getTargetSize() {
+        return targetSize.get();
+    }
 
-	public ObjectProperty<Supplier<Size>> targetSizeProperty() {
-		return targetSize;
-	}
+    public ObjectProperty<Supplier<Size>> targetSizeProperty() {
+        return targetSize;
+    }
 
-	public void setTargetSize(Supplier<Size> targetSize) {
-		this.targetSize.set(targetSize);
-	}
+    public void setTargetSize(Supplier<Size> targetSize) {
+        this.targetSize.set(targetSize);
+    }
 
-	public Supplier<Position> getTargetOffset() {
-		return targetOffset.get();
-	}
+    public Supplier<Position> getTargetOffset() {
+        return targetOffset.get();
+    }
 
-	public ObjectProperty<Supplier<Position>> targetOffsetProperty() {
-		return targetOffset;
-	}
+    public ObjectProperty<Supplier<Position>> targetOffsetProperty() {
+        return targetOffset;
+    }
 
-	public void setTargetOffset(Supplier<Position> targetOffset) {
-		this.targetOffset.set(targetOffset);
-	}
+    public void setTargetOffset(Supplier<Position> targetOffset) {
+        this.targetOffset.set(targetOffset);
+    }
 
-	public TriFunction<TransitionPane, Node, Node, Animation> getCloseAnimationFactory() {
-		return closeAnimationFactory.get();
-	}
+    public TriFunction<TransitionPane, Node, Node, Animation> getCloseAnimationFactory() {
+        return closeAnimationFactory.get();
+    }
 
-	public ObjectProperty<TriFunction<TransitionPane, Node, Node, Animation>> closeAnimationFactoryProperty() {
-		return closeAnimationFactory;
-	}
+    public ObjectProperty<TriFunction<TransitionPane, Node, Node, Animation>> closeAnimationFactoryProperty() {
+        return closeAnimationFactory;
+    }
 
-	public void setCloseAnimationFactory(TriFunction<TransitionPane, Node, Node, Animation> closeAnimationFactory) {
-		this.closeAnimationFactory.set(closeAnimationFactory);
-	}
+    public void setCloseAnimationFactory(TriFunction<TransitionPane, Node, Node, Animation> closeAnimationFactory) {
+        this.closeAnimationFactory.set(closeAnimationFactory);
+    }
 
-	public TriFunction<TransitionPane, Node, Node, Animation> getOpenAnimationFactory() {
-		return openAnimationFactory.get();
-	}
+    public TriFunction<TransitionPane, Node, Node, Animation> getOpenAnimationFactory() {
+        return openAnimationFactory.get();
+    }
 
-	public ObjectProperty<TriFunction<TransitionPane, Node, Node, Animation>> openAnimationFactoryProperty() {
-		return openAnimationFactory;
-	}
+    public ObjectProperty<TriFunction<TransitionPane, Node, Node, Animation>> openAnimationFactoryProperty() {
+        return openAnimationFactory;
+    }
 
-	public void setOpenAnimationFactory(TriFunction<TransitionPane, Node, Node, Animation> openAnimationFactory) {
-		this.openAnimationFactory.set(openAnimationFactory);
-	}
+    public void setOpenAnimationFactory(TriFunction<TransitionPane, Node, Node, Animation> openAnimationFactory) {
+        this.openAnimationFactory.set(openAnimationFactory);
+    }
 }

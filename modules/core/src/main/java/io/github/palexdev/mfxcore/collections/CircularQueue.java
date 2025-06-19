@@ -26,66 +26,66 @@ import java.util.LinkedList;
  * by the new one.
  */
 public class CircularQueue<E> extends LinkedList<E> {
-	//================================================================================
-	// Properties
-	//================================================================================
-	private int capacity;
+    //================================================================================
+    // Properties
+    //================================================================================
+    private int capacity;
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public CircularQueue(int capacity) {
-		super();
-		this.capacity = capacity;
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public CircularQueue(int capacity) {
+        super();
+        this.capacity = capacity;
+    }
 
-	//================================================================================
-	// Override Methods
-	//================================================================================
+    //================================================================================
+    // Override Methods
+    //================================================================================
 
-	/**
-	 * Adds the specified element to the queue and if it is full removes the oldest element
-	 * and then adds the new one.
-	 * <p></p>
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean add(E e) {
-		if (super.size() == this.capacity) {
-			super.remove();
-		}
-		return super.add(e);
-	}
+    /**
+     * Adds the specified element to the queue and if it is full removes the oldest element
+     * and then adds the new one.
+     * <p></p>
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean add(E e) {
+        if (super.size() == this.capacity) {
+            super.remove();
+        }
+        return super.add(e);
+    }
 
-	//================================================================================
-	// Getters/Setters
-	//================================================================================
+    //================================================================================
+    // Getters/Setters
+    //================================================================================
 
-	/**
-	 * @return the maximum number of elements the queue can contain before it starts deleting them
-	 * from the head
-	 */
-	public int getCapacity() {
-		return capacity;
-	}
+    /**
+     * @return the maximum number of elements the queue can contain before it starts deleting them
+     * from the head
+     */
+    public int getCapacity() {
+        return capacity;
+    }
 
-	/**
-	 * Sets the maximum size of the queue and removes exceeding elements
-	 * if the specified size is lesser than the number of elements.
-	 *
-	 * @param capacity The new desired size
-	 * @throws IllegalArgumentException if the desired size is 0
-	 */
-	public void setCapacity(int capacity) {
-		if (capacity == 0) {
-			throw new IllegalArgumentException("Size cannot be 0!");
-		}
+    /**
+     * Sets the maximum size of the queue and removes exceeding elements
+     * if the specified size is lesser than the number of elements.
+     *
+     * @param capacity The new desired size
+     * @throws IllegalArgumentException if the desired size is 0
+     */
+    public void setCapacity(int capacity) {
+        if (capacity == 0) {
+            throw new IllegalArgumentException("Size cannot be 0!");
+        }
 
-		if (capacity < super.size()) {
-			for (int i = 0; i < (super.size() - capacity); i++) {
-				super.remove();
-			}
-		}
-		this.capacity = capacity;
-	}
+        if (capacity < super.size()) {
+            for (int i = 0; i < (super.size() - capacity); i++) {
+                super.remove();
+            }
+        }
+        this.capacity = capacity;
+    }
 }

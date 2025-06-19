@@ -25,21 +25,21 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
  */
 public class CharProperty extends ReadOnlyObjectWrapper<Character> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public CharProperty() {
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public CharProperty() {
+    }
 
-	public CharProperty(Character initialValue) {
-		super(initialValue);
-	}
+    public CharProperty(Character initialValue) {
+        super(initialValue);
+    }
 
-	public CharProperty(Object bean, String name) {
-		super(bean, name);
-	}
+    public CharProperty(Object bean, String name) {
+        super(bean, name);
+    }
 
-	public CharProperty(Object bean, String name, Character initialValue) {
-		super(bean, name, initialValue);
-	}
+    public CharProperty(Object bean, String name, Character initialValue) {
+        super(bean, name, initialValue);
+    }
 }

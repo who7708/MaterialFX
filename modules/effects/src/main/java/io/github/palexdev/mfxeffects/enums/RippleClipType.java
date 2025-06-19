@@ -19,8 +19,8 @@
 package io.github.palexdev.mfxeffects.enums;
 
 public enum RippleClipType {
-	CIRCLE,
-	RECTANGLE,
-	ROUNDED_RECTANGLE,
-	NO_CLIP,
+    CIRCLE,
+    RECTANGLE,
+    ROUNDED_RECTANGLE,
+    NO_CLIP,
 }

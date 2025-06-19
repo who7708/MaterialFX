@@ -29,32 +29,32 @@ import java.util.Locale;
  * A {@link StringConverter} capable of converting {@link Month} to/from Strings.
  */
 public class MonthStringConverter extends StringConverter<Month> {
-	//================================================================================
-	// Properties
-	//================================================================================
-	private final Locale locale;
-	private final TextStyle textStyle;
+    //================================================================================
+    // Properties
+    //================================================================================
+    private final Locale locale;
+    private final TextStyle textStyle;
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public MonthStringConverter(Locale locale, TextStyle textStyle) {
-		this.locale = locale;
-		this.textStyle = textStyle;
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public MonthStringConverter(Locale locale, TextStyle textStyle) {
+        this.locale = locale;
+        this.textStyle = textStyle;
+    }
 
-	//================================================================================
-	// Overridden Methods
-	//================================================================================
-	@Override
-	public String toString(Month month) {
-		if (month == null) return "";
-		return month.getDisplayName(textStyle, locale);
-	}
+    //================================================================================
+    // Overridden Methods
+    //================================================================================
+    @Override
+    public String toString(Month month) {
+        if (month == null) return "";
+        return month.getDisplayName(textStyle, locale);
+    }
 
-	@Override
-	public Month fromString(String string) {
-		if (string == null) return null;
-		return EnumUtils.valueOfIgnoreCase(Month.class, string);
-	}
+    @Override
+    public Month fromString(String string) {
+        if (string == null) return null;
+        return EnumUtils.valueOfIgnoreCase(Month.class, string);
+    }
 }

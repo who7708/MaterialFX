@@ -111,194 +111,194 @@ import java.util.function.Consumer;
  * That said, I still do not recommend removing the overshoot effect as it makes animations more appealing.
  */
 public class MomentumTransition extends FluentTransition {
-	//================================================================================
-	// Properties
-	//================================================================================
-	private double momentum;
-	private double acceleration;
-	private double displacement;
-	private int direction = 1;
+    //================================================================================
+    // Properties
+    //================================================================================
+    private double momentum;
+    private double acceleration;
+    private double displacement;
+    private int direction = 1;
 
-	private double displacementDelta;
-	private double lastFrameTime;
-	private Consumer<Double> onUpdate = delta -> {};
+    private double displacementDelta;
+    private double lastFrameTime;
+    private Consumer<Double> onUpdate = delta -> {};
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	protected MomentumTransition() {
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    protected MomentumTransition() {
+    }
 
-	public MomentumTransition(double momentum, double acceleration, double displacement) {
-		assert acceleration < 0;
-		this.momentum = momentum;
-		this.acceleration = acceleration;
-		this.direction = (displacement < 0) ? -1 : 1;
-		this.displacement = Math.abs(displacement);
-	}
+    public MomentumTransition(double momentum, double acceleration, double displacement) {
+        assert acceleration < 0;
+        this.momentum = momentum;
+        this.acceleration = acceleration;
+        this.direction = (displacement < 0) ? -1 : 1;
+        this.displacement = Math.abs(displacement);
+    }
 
-	//================================================================================
-	// Static Methods
-	//================================================================================
+    //================================================================================
+    // Static Methods
+    //================================================================================
 
-	/**
-	 * Builds a {@code MomentumTransition} given the displacement and the duration of the animation.
-	 * <p>
-	 * The momentum and the deceleration are computed automatically by using {@link #timeToMomentum(double, double)}
-	 * and {@link #momentumToDeceleration(double, double)}.
-	 */
-	public static MomentumTransition fromTime(double displacement, double millis) {
-		MomentumTransition mt = new MomentumTransition();
-		mt.direction = (displacement < 0) ? -1 : 1;
-		double absDisplacement = Math.abs(displacement);
-		mt.displacement = absDisplacement;
-		mt.setCycleDuration(Duration.millis(millis));
-		mt.momentum = timeToMomentum(absDisplacement, millis);
-		mt.acceleration = momentumToDeceleration(mt.momentum, millis);
-		return mt;
-	}
+    /**
+     * Builds a {@code MomentumTransition} given the displacement and the duration of the animation.
+     * <p>
+     * The momentum and the deceleration are computed automatically by using {@link #timeToMomentum(double, double)}
+     * and {@link #momentumToDeceleration(double, double)}.
+     */
+    public static MomentumTransition fromTime(double displacement, double millis) {
+        MomentumTransition mt = new MomentumTransition();
+        mt.direction = (displacement < 0) ? -1 : 1;
+        double absDisplacement = Math.abs(displacement);
+        mt.displacement = absDisplacement;
+        mt.setCycleDuration(Duration.millis(millis));
+        mt.momentum = timeToMomentum(absDisplacement, millis);
+        mt.acceleration = momentumToDeceleration(mt.momentum, millis);
+        return mt;
+    }
 
-	/**
-	 * Builds a {@code MomentumTransition} given the displacement and the deceleration.
-	 * <p>
-	 * The momentum and the duration of the animation are computed automatically by using {@link #decelerationToMomentum(double, double)}
-	 * and {@link #momentumToTime(double, double)}.
-	 * <p></p>
-	 * Please note that the {@code deceleration} param must be a negative number.
-	 */
-	public static MomentumTransition fromDeceleration(double displacement, double deceleration) {
-		assert deceleration < 0;
-		MomentumTransition mt = new MomentumTransition();
-		mt.direction = (displacement < 0) ? -1 : 1;
-		double absDisplacement = Math.abs(displacement);
-		mt.displacement = absDisplacement;
-		mt.acceleration = deceleration;
-		mt.momentum = decelerationToMomentum(absDisplacement, deceleration);
-		mt.setCycleDuration(Duration.millis(momentumToTime(mt.momentum, deceleration)));
-		return mt;
-	}
+    /**
+     * Builds a {@code MomentumTransition} given the displacement and the deceleration.
+     * <p>
+     * The momentum and the duration of the animation are computed automatically by using {@link #decelerationToMomentum(double, double)}
+     * and {@link #momentumToTime(double, double)}.
+     * <p></p>
+     * Please note that the {@code deceleration} param must be a negative number.
+     */
+    public static MomentumTransition fromDeceleration(double displacement, double deceleration) {
+        assert deceleration < 0;
+        MomentumTransition mt = new MomentumTransition();
+        mt.direction = (displacement < 0) ? -1 : 1;
+        double absDisplacement = Math.abs(displacement);
+        mt.displacement = absDisplacement;
+        mt.acceleration = deceleration;
+        mt.momentum = decelerationToMomentum(absDisplacement, deceleration);
+        mt.setCycleDuration(Duration.millis(momentumToTime(mt.momentum, deceleration)));
+        return mt;
+    }
 
-	/**
-	 * Given the displacement and the time, computes the momentum.
-	 * <p></p>
-	 * Formula: {@code (2 * displacement) / time}
-	 */
-	public static double timeToMomentum(double displacement, double time) {
-		return (2 * displacement) / time;
-	}
+    /**
+     * Given the displacement and the time, computes the momentum.
+     * <p></p>
+     * Formula: {@code (2 * displacement) / time}
+     */
+    public static double timeToMomentum(double displacement, double time) {
+        return (2 * displacement) / time;
+    }
 
-	/**
-	 * Given the momentum and duration, computes the deceleration.
-	 * <p></p>
-	 * Formula: {@code -(momentum / time)}
-	 */
-	public static double momentumToDeceleration(double momentum, double time) {
-		return -(momentum / time);
-	}
+    /**
+     * Given the momentum and duration, computes the deceleration.
+     * <p></p>
+     * Formula: {@code -(momentum / time)}
+     */
+    public static double momentumToDeceleration(double momentum, double time) {
+        return -(momentum / time);
+    }
 
-	/**
-	 * Given the displacement and the deceleration, computes the momentum.
-	 * <p></p>
-	 * Formula: {@code Math.sqrt(-2 * deceleration * displacement)}
-	 */
-	public static double decelerationToMomentum(double displacement, double deceleration) {
-		return Math.sqrt(-2 * deceleration * displacement);
-	}
+    /**
+     * Given the displacement and the deceleration, computes the momentum.
+     * <p></p>
+     * Formula: {@code Math.sqrt(-2 * deceleration * displacement)}
+     */
+    public static double decelerationToMomentum(double displacement, double deceleration) {
+        return Math.sqrt(-2 * deceleration * displacement);
+    }
 
-	/**
-	 * Given the momentum and the deceleration, computes the duration.
-	 * <p></p>
-	 * Formula: {@code -(momentum / deceleration)}
-	 */
-	public static double momentumToTime(double momentum, double deceleration) {
-		return -(momentum / deceleration);
-	}
+    /**
+     * Given the momentum and the deceleration, computes the duration.
+     * <p></p>
+     * Formula: {@code -(momentum / deceleration)}
+     */
+    public static double momentumToTime(double momentum, double deceleration) {
+        return -(momentum / deceleration);
+    }
 
-	//================================================================================
-	// Overridden Methods
-	//================================================================================
-	@Override
-	protected void interpolate(double frac) {
-		double deltaFrameTime = getDeltaFrameTime(frac);
-		displacementDelta = momentum * deltaFrameTime;
-		momentum += acceleration * deltaFrameTime;
-		update();
-	}
+    //================================================================================
+    // Overridden Methods
+    //================================================================================
+    @Override
+    protected void interpolate(double frac) {
+        double deltaFrameTime = getDeltaFrameTime(frac);
+        displacementDelta = momentum * deltaFrameTime;
+        momentum += acceleration * deltaFrameTime;
+        update();
+    }
 
-	//================================================================================
-	// Methods
-	//================================================================================
+    //================================================================================
+    // Methods
+    //================================================================================
 
-	/**
-	 * Runs every frame to call the {@link #getOnUpdate()} consumer.
-	 * <p>
-	 * The delta displacement given by the {@link Consumer} is first multiplied by the direction detected when building
-	 * the animation, -1 for negative displacements, 1 for positive displacements.
-	 */
-	public void update() {
-		if (onUpdate != null) onUpdate.accept(displacementDelta * direction);
-	}
+    /**
+     * Runs every frame to call the {@link #getOnUpdate()} consumer.
+     * <p>
+     * The delta displacement given by the {@link Consumer} is first multiplied by the direction detected when building
+     * the animation, -1 for negative displacements, 1 for positive displacements.
+     */
+    public void update() {
+        if (onUpdate != null) onUpdate.accept(displacementDelta * direction);
+    }
 
-	/**
-	 * Computes the difference between the current frame time and the last frame time.
-	 * <p>
-	 * The current frame time is not computed by simply calling {@link #getCurrentTime()}, but rather we use the 'frac'
-	 * parameter of the {@link #interpolate(double)} method. This is crucial because {@link Interpolator}s in JavaFX
-	 * directly affect the value of the 'frac' parameter, in other words by getting the current frame time as
-	 * {@code getCycleDuration().toMillis() * frac} we automatically take into account the animation's interpolator.
-	 */
-	private double getDeltaFrameTime(double frac) {
-		double frameTime = getCycleDuration().toMillis() * frac;
-		double deltaFrameTime = frameTime - lastFrameTime;
-		lastFrameTime = frameTime;
-		return deltaFrameTime;
-	}
+    /**
+     * Computes the difference between the current frame time and the last frame time.
+     * <p>
+     * The current frame time is not computed by simply calling {@link #getCurrentTime()}, but rather we use the 'frac'
+     * parameter of the {@link #interpolate(double)} method. This is crucial because {@link Interpolator}s in JavaFX
+     * directly affect the value of the 'frac' parameter, in other words by getting the current frame time as
+     * {@code getCycleDuration().toMillis() * frac} we automatically take into account the animation's interpolator.
+     */
+    private double getDeltaFrameTime(double frac) {
+        double frameTime = getCycleDuration().toMillis() * frac;
+        double deltaFrameTime = frameTime - lastFrameTime;
+        lastFrameTime = frameTime;
+        return deltaFrameTime;
+    }
 
-	//================================================================================
-	// Getters/Setters
-	//================================================================================
+    //================================================================================
+    // Getters/Setters
+    //================================================================================
 
-	/**
-	 * @return the momentum of the transition
-	 */
-	public double getMomentum() {
-		return momentum;
-	}
+    /**
+     * @return the momentum of the transition
+     */
+    public double getMomentum() {
+        return momentum;
+    }
 
-	/**
-	 * @return the acceleration of the transition
-	 */
-	public double getAcceleration() {
-		return acceleration;
-	}
+    /**
+     * @return the acceleration of the transition
+     */
+    public double getAcceleration() {
+        return acceleration;
+    }
 
-	/**
-	 * @return the displacement of the transition
-	 */
-	public double getDisplacement() {
-		return displacement;
-	}
+    /**
+     * @return the displacement of the transition
+     */
+    public double getDisplacement() {
+        return displacement;
+    }
 
-	/**
-	 * @return the displacement's direction
-	 */
-	public int getDirection() {
-		return direction;
-	}
+    /**
+     * @return the displacement's direction
+     */
+    public int getDirection() {
+        return direction;
+    }
 
-	/**
-	 * @return the action that runs every frame of the animation. The {@link Consumer}
-	 * carries the progress made during the last frame (relative to the given displacement)
-	 */
-	public Consumer<Double> getOnUpdate() {
-		return onUpdate;
-	}
+    /**
+     * @return the action that runs every frame of the animation. The {@link Consumer}
+     * carries the progress made during the last frame (relative to the given displacement)
+     */
+    public Consumer<Double> getOnUpdate() {
+        return onUpdate;
+    }
 
-	/**
-	 * @see #getOnUpdate()
-	 */
-	public MomentumTransition setOnUpdate(Consumer<Double> onUpdate) {
-		this.onUpdate = onUpdate;
-		return this;
-	}
+    /**
+     * @see #getOnUpdate()
+     */
+    public MomentumTransition setOnUpdate(Consumer<Double> onUpdate) {
+        this.onUpdate = onUpdate;
+        return this;
+    }
 }

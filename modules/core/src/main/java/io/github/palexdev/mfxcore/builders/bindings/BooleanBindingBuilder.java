@@ -24,15 +24,15 @@ import javafx.beans.binding.BooleanBinding;
 
 public class BooleanBindingBuilder extends BindingBuilder<Boolean, BooleanBinding> {
 
-	public static BooleanBindingBuilder build() {
-		return new BooleanBindingBuilder();
-	}
+    public static BooleanBindingBuilder build() {
+        return new BooleanBindingBuilder();
+    }
 
-	@Override
-	protected BooleanBinding create() {
-		if (mapper == null) {
-			throw new IllegalStateException("Mapper has not been set!");
-		}
-		return Bindings.createBooleanBinding(mapper, getSourcesArray());
-	}
+    @Override
+    protected BooleanBinding create() {
+        if (mapper == null) {
+            throw new IllegalStateException("Mapper has not been set!");
+        }
+        return Bindings.createBooleanBinding(mapper, getSourcesArray());
+    }
 }

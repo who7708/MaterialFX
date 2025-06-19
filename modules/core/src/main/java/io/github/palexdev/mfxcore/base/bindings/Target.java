@@ -32,70 +32,70 @@ import javafx.beans.value.ObservableValue;
  * @param <T> the observable's type
  */
 public class Target<T> {
-	//================================================================================
-	// Properties
-	//================================================================================
-	private ObservableValue<? extends T> observable;
-	protected boolean fromSource;
-	protected boolean ignoreBinding;
-	protected BindingType bindingType;
+    //================================================================================
+    // Properties
+    //================================================================================
+    private ObservableValue<? extends T> observable;
+    protected boolean fromSource;
+    protected boolean ignoreBinding;
+    protected BindingType bindingType;
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public Target(ObservableValue<? extends T> observable) {
-		assert observable != null;
-		this.observable = observable;
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public Target(ObservableValue<? extends T> observable) {
+        assert observable != null;
+        this.observable = observable;
+    }
 
-	//================================================================================
-	// Methods
-	//================================================================================
+    //================================================================================
+    // Methods
+    //================================================================================
 
-	/**
-	 * Disposes this target by setting tha observable to null.
-	 */
-	protected void dispose() {
-		observable = null;
-		fromSource = false;
-	}
+    /**
+     * Disposes this target by setting tha observable to null.
+     */
+    protected void dispose() {
+        observable = null;
+        fromSource = false;
+    }
 
-	/**
-	 * @return whether the update comes from a change of the target that is propagating to the sources
-	 */
-	public boolean isFromSource() {
-		return fromSource;
-	}
+    /**
+     * @return whether the update comes from a change of the target that is propagating to the sources
+     */
+    public boolean isFromSource() {
+        return fromSource;
+    }
 
-	/**
-	 * @return whether the update should be done anyway, regardless the binding status
-	 */
-	public boolean isIgnoreBinding() {
-		return ignoreBinding;
-	}
+    /**
+     * @return whether the update should be done anyway, regardless the binding status
+     */
+    public boolean isIgnoreBinding() {
+        return ignoreBinding;
+    }
 
-	/**
-	 * @return the type of binding shared between the {@link IBinding} and its sources
-	 */
-	public BindingType bindingType() {
-		return bindingType;
-	}
+    /**
+     * @return the type of binding shared between the {@link IBinding} and its sources
+     */
+    public BindingType bindingType() {
+        return bindingType;
+    }
 
-	//================================================================================
-	// Getters/Setters
-	//================================================================================
+    //================================================================================
+    // Getters/Setters
+    //================================================================================
 
-	/**
-	 * Shortcut for {@code getObservable().getValue}.
-	 */
-	public T getValue() {
-		return observable.getValue();
-	}
+    /**
+     * Shortcut for {@code getObservable().getValue}.
+     */
+    public T getValue() {
+        return observable.getValue();
+    }
 
-	/**
-	 * @return the target's observable
-	 */
-	public ObservableValue<? extends T> getObservable() {
-		return observable;
-	}
+    /**
+     * @return the target's observable
+     */
+    public ObservableValue<? extends T> getObservable() {
+        return observable;
+    }
 }

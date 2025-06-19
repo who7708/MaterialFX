@@ -24,38 +24,38 @@ import javafx.scene.control.ButtonBase;
 
 public class ButtonBaseBuilder<B extends ButtonBase> extends LabeledBuilder<B> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public ButtonBaseBuilder(B buttonBase) {
-		super(buttonBase);
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public ButtonBaseBuilder(B buttonBase) {
+        super(buttonBase);
+    }
 
-	public static ButtonBaseBuilder<ButtonBase> control(ButtonBase buttonBase) {
-		return new ButtonBaseBuilder<>(buttonBase);
-	}
+    public static ButtonBaseBuilder<ButtonBase> control(ButtonBase buttonBase) {
+        return new ButtonBaseBuilder<>(buttonBase);
+    }
 
-	//================================================================================
-	// Delegate Methods
-	//================================================================================
+    //================================================================================
+    // Delegate Methods
+    //================================================================================
 
-	public ButtonBaseBuilder<B> setOnAction(EventHandler<ActionEvent> handler) {
-		node.setOnAction(handler);
-		return this;
-	}
+    public ButtonBaseBuilder<B> setOnAction(EventHandler<ActionEvent> handler) {
+        node.setOnAction(handler);
+        return this;
+    }
 
-	public ButtonBaseBuilder<B> arm() {
-		node.arm();
-		return this;
-	}
+    public ButtonBaseBuilder<B> arm() {
+        node.arm();
+        return this;
+    }
 
-	public ButtonBaseBuilder<B> disarm() {
-		node.disarm();
-		return this;
-	}
+    public ButtonBaseBuilder<B> disarm() {
+        node.disarm();
+        return this;
+    }
 
-	public ButtonBaseBuilder<B> fire() {
-		node.fire();
-		return this;
-	}
+    public ButtonBaseBuilder<B> fire() {
+        node.fire();
+        return this;
+    }
 }

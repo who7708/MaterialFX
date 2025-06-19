@@ -24,66 +24,66 @@ import io.github.palexdev.mfxcore.collections.ObservableGrid;
  * Enumeration used by {@link ObservableGrid.Change} to specify the type of change.
  */
 public enum GridChangeType {
-	/**
-	 * Specifies that the {@code Change} occurred because of a grid initialization
-	 */
-	INIT,
+    /**
+     * Specifies that the {@code Change} occurred because of a grid initialization
+     */
+    INIT,
 
-	/**
-	 * Specifies that the {@code Change} occurred because of a clear of the grid's data
-	 */
-	CLEAR,
+    /**
+     * Specifies that the {@code Change} occurred because of a clear of the grid's data
+     */
+    CLEAR,
 
-	/**
-	 * Specifies that the {@code Change} occurred because of a replacement of a single element.
-	 * <p>
-	 * The "removed" list carries the replaced element, the "added" list carries the new element.
-	 */
-	REPLACE_ELEMENT,
+    /**
+     * Specifies that the {@code Change} occurred because of a replacement of a single element.
+     * <p>
+     * The "removed" list carries the replaced element, the "added" list carries the new element.
+     */
+    REPLACE_ELEMENT,
 
-	/**
-	 * Specifies that the {@code Change} occurred because of a replacement of a row.
-	 * <p>
-	 * The "removed" list carries the replaced row, thr "added" list carries the new row.
-	 */
-	REPLACE_ROW,
+    /**
+     * Specifies that the {@code Change} occurred because of a replacement of a row.
+     * <p>
+     * The "removed" list carries the replaced row, thr "added" list carries the new row.
+     */
+    REPLACE_ROW,
 
-	/**
-	 * Specifies that the {@code Change} occurred because of a replacement of a column.
-	 * <p>
-	 * The "removed" list carries the replaced column, thr "added" list carries the new column.
-	 */
-	REPLACE_COLUMN,
+    /**
+     * Specifies that the {@code Change} occurred because of a replacement of a column.
+     * <p>
+     * The "removed" list carries the replaced column, thr "added" list carries the new column.
+     */
+    REPLACE_COLUMN,
 
-	/**
-	 * Specifies that the {@code Change} occurred because of a replacement of the diagonal.
-	 * <p>
-	 * The "removed" list carries the replaced diagonal, thr "added" list carries the new diagonal.
-	 */
-	REPLACE_DIAGONAL,
+    /**
+     * Specifies that the {@code Change} occurred because of a replacement of the diagonal.
+     * <p>
+     * The "removed" list carries the replaced diagonal, thr "added" list carries the new diagonal.
+     */
+    REPLACE_DIAGONAL,
 
-	/**
-	 * Specifies that the {@code Change} occurred because of the addition of a row.
-	 */
-	ADD_ROW,
+    /**
+     * Specifies that the {@code Change} occurred because of the addition of a row.
+     */
+    ADD_ROW,
 
-	/**
-	 * Specifies that the {@code Change} occurred because of the addition of a column.
-	 */
-	ADD_COLUMN,
+    /**
+     * Specifies that the {@code Change} occurred because of the addition of a column.
+     */
+    ADD_COLUMN,
 
-	/**
-	 * Specifies that the {@code Change} occurred because of the removal of a row.
-	 */
-	REMOVE_ROW,
+    /**
+     * Specifies that the {@code Change} occurred because of the removal of a row.
+     */
+    REMOVE_ROW,
 
-	/**
-	 * Specifies that the {@code Change} occurred because of the removal of a column.
-	 */
-	REMOVE_COLUMN,
+    /**
+     * Specifies that the {@code Change} occurred because of the removal of a column.
+     */
+    REMOVE_COLUMN,
 
-	/**
-	 * Specifies that the {@code Change} occurred because of a transposition.
-	 */
-	TRANSPOSE
+    /**
+     * Specifies that the {@code Change} occurred because of a transposition.
+     */
+    TRANSPOSE
 }

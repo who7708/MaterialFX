@@ -46,40 +46,40 @@ import io.github.palexdev.mfxeffects.beans.Offset;
  * </pre>
  */
 public class ThreePointCubic extends Curve {
-	private final Offset a1;
-	private final Offset b1;
-	private final Offset midpoint;
-	private final Offset a2;
-	private final Offset b2;
+    private final Offset a1;
+    private final Offset b1;
+    private final Offset midpoint;
+    private final Offset a2;
+    private final Offset b2;
 
-	public ThreePointCubic(Offset a1, Offset b1, Offset midpoint, Offset a2, Offset b2) {
-		this.a1 = a1;
-		this.b1 = b1;
-		this.midpoint = midpoint;
-		this.a2 = a2;
-		this.b2 = b2;
-	}
+    public ThreePointCubic(Offset a1, Offset b1, Offset midpoint, Offset a2, Offset b2) {
+        this.a1 = a1;
+        this.b1 = b1;
+        this.midpoint = midpoint;
+        this.a2 = a2;
+        this.b2 = b2;
+    }
 
-	@Override
-	public double curve(double t) {
-		boolean firstCurve = t < midpoint.getDx();
-		double scaleX = firstCurve ? midpoint.getDx() : 1.0 - midpoint.getDx();
-		double scaleY = firstCurve ? midpoint.getDy() : 1.0 - midpoint.getDy();
-		double scaledT = (t - (firstCurve ? 0.0 : midpoint.getDx())) / scaleX;
-		if (firstCurve) {
-			return new Cubic(
-					a1.getDx() / scaleX,
-					a1.getDy() / scaleY,
-					b1.getDx() / scaleX,
-					b1.getDy() / scaleY
-			).curve(scaledT) * scaleY;
-		} else {
-			return new Cubic(
-					(a2.getDx() - midpoint.getDx()) / scaleX,
-					(a2.getDy() - midpoint.getDy()) / scaleY,
-					(b2.getDx() - midpoint.getDx()) / scaleX,
-					(b2.getDy() - midpoint.getDy()) / scaleY
-			).curve(scaledT) * scaleY + midpoint.getDy();
-		}
-	}
+    @Override
+    public double curve(double t) {
+        boolean firstCurve = t < midpoint.getDx();
+        double scaleX = firstCurve ? midpoint.getDx() : 1.0 - midpoint.getDx();
+        double scaleY = firstCurve ? midpoint.getDy() : 1.0 - midpoint.getDy();
+        double scaledT = (t - (firstCurve ? 0.0 : midpoint.getDx())) / scaleX;
+        if (firstCurve) {
+            return new Cubic(
+                a1.getDx() / scaleX,
+                a1.getDy() / scaleY,
+                b1.getDx() / scaleX,
+                b1.getDy() / scaleY
+            ).curve(scaledT) * scaleY;
+        } else {
+            return new Cubic(
+                (a2.getDx() - midpoint.getDx()) / scaleX,
+                (a2.getDy() - midpoint.getDy()) / scaleY,
+                (b2.getDx() - midpoint.getDx()) / scaleX,
+                (b2.getDy() - midpoint.getDy()) / scaleY
+            ).curve(scaledT) * scaleY + midpoint.getDy();
+        }
+    }
 }

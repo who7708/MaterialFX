@@ -43,224 +43,224 @@ import javafx.stage.Screen;
 
 public class NodeUtils {
 
-	private NodeUtils() {
-	}
+    private NodeUtils() {
+    }
 
-	/**
-	 * Centers the specified node in an {@code AnchorPane}.
-	 */
-	public static void centerNodeInAnchorPane(Node node, double topBottom, double leftRight) {
-		AnchorPane.setTopAnchor(node, topBottom);
-		AnchorPane.setBottomAnchor(node, topBottom);
-		AnchorPane.setLeftAnchor(node, leftRight);
-		AnchorPane.setRightAnchor(node, leftRight);
-	}
+    /**
+     * Centers the specified node in an {@code AnchorPane}.
+     */
+    public static void centerNodeInAnchorPane(Node node, double topBottom, double leftRight) {
+        AnchorPane.setTopAnchor(node, topBottom);
+        AnchorPane.setBottomAnchor(node, topBottom);
+        AnchorPane.setLeftAnchor(node, leftRight);
+        AnchorPane.setRightAnchor(node, leftRight);
+    }
 
-	/**
-	 * Checks if the specified element is in the hierarchy of the specified node.
-	 */
-	public static boolean inHierarchy(Node node, Node element) {
-		if (element == null) {
-			return true;
-		}
-		while (node != null) {
-			if (node == element) {
-				return true;
-			}
-			node = node.getParent();
-		}
-		return false;
-	}
+    /**
+     * Checks if the specified element is in the hierarchy of the specified node.
+     */
+    public static boolean inHierarchy(Node node, Node element) {
+        if (element == null) {
+            return true;
+        }
+        while (node != null) {
+            if (node == element) {
+                return true;
+            }
+            node = node.getParent();
+        }
+        return false;
+    }
 
-	/**
-	 * Checks if the pressed node is in the hierarchy of the specified node, {@link PickResult#getIntersectedNode()}.
-	 */
-	public static boolean inHierarchy(Node node, MouseEvent event) {
-		return inHierarchy(node, event.getPickResult().getIntersectedNode());
-	}
+    /**
+     * Checks if the pressed node is in the hierarchy of the specified node, {@link PickResult#getIntersectedNode()}.
+     */
+    public static boolean inHierarchy(Node node, MouseEvent event) {
+        return inHierarchy(node, event.getPickResult().getIntersectedNode());
+    }
 
-	/**
-	 * Checks if the pressed node is in the hierarchy of the specified node, {@link PickResult#getIntersectedNode()}.
-	 */
-	public static boolean inHierarchy(Node node, GestureEvent event) {
-		return inHierarchy(node, event.getPickResult().getIntersectedNode());
-	}
+    /**
+     * Checks if the pressed node is in the hierarchy of the specified node, {@link PickResult#getIntersectedNode()}.
+     */
+    public static boolean inHierarchy(Node node, GestureEvent event) {
+        return inHierarchy(node, event.getPickResult().getIntersectedNode());
+    }
 
-	/**
-	 * Checks if the specified node is in hierarchy of the pressed node, {@link PickResult#getIntersectedNode()}.
-	 */
-	public static boolean inHierarchy(MouseEvent event, Node node) {
-		return inHierarchy(event.getPickResult().getIntersectedNode(), node);
-	}
+    /**
+     * Checks if the specified node is in hierarchy of the pressed node, {@link PickResult#getIntersectedNode()}.
+     */
+    public static boolean inHierarchy(MouseEvent event, Node node) {
+        return inHierarchy(event.getPickResult().getIntersectedNode(), node);
+    }
 
-	/**
-	 * Checks if the specified node is in hierarchy of the pressed node, {@link PickResult#getIntersectedNode()}.
-	 */
-	public static boolean inHierarchy(GestureEvent event, Node node) {
-		return inHierarchy(event.getPickResult().getIntersectedNode(), node);
-	}
+    /**
+     * Checks if the specified node is in hierarchy of the pressed node, {@link PickResult#getIntersectedNode()}.
+     */
+    public static boolean inHierarchy(GestureEvent event, Node node) {
+        return inHierarchy(event.getPickResult().getIntersectedNode(), node);
+    }
 
-	/**
-	 * Convenience method to check if a {@code Node} is visible by checking
-	 * both {@link Node#visibleProperty()} and {@link Node#opacityProperty()}.
-	 *
-	 * @return true if the {@code Node} is visible and opacity is not 0.0
-	 */
-	public static boolean isVisible(Node node) {
-		return node.isVisible() && node.getOpacity() != 0.0;
-	}
+    /**
+     * Convenience method to check if a {@code Node} is visible by checking
+     * both {@link Node#visibleProperty()} and {@link Node#opacityProperty()}.
+     *
+     * @return true if the {@code Node} is visible and opacity is not 0.0
+     */
+    public static boolean isVisible(Node node) {
+        return node.isVisible() && node.getOpacity() != 0.0;
+    }
 
-	/**
-	 * Retrieves the node height if it isn't still laid out.
-	 *
-	 * @param node the Node of which to know the height
-	 * @return the calculated height
-	 */
-	public static double getNodeHeight(Node node) {
-		Group group = new Group(node);
-		Scene scene = new Scene(group);
-		group.applyCss();
-		group.layout();
+    /**
+     * Retrieves the node height if it isn't still laid out.
+     *
+     * @param node the Node of which to know the height
+     * @return the calculated height
+     */
+    public static double getNodeHeight(Node node) {
+        Group group = new Group(node);
+        Scene scene = new Scene(group);
+        group.applyCss();
+        group.layout();
 
-		double height = node.prefHeight(-1);
-		group.getChildren().clear();
-		return height;
-	}
+        double height = node.prefHeight(-1);
+        group.getChildren().clear();
+        return height;
+    }
 
-	/**
-	 * Retrieves the node width if it isn't still laid out.
-	 *
-	 * @param node the Node of which to know the width
-	 * @return the calculated width
-	 */
-	public static double getNodeWidth(Node node) {
-		Group group = new Group(node);
-		Scene scene = new Scene(group);
-		group.applyCss();
-		group.layout();
+    /**
+     * Retrieves the node width if it isn't still laid out.
+     *
+     * @param node the Node of which to know the width
+     * @return the calculated width
+     */
+    public static double getNodeWidth(Node node) {
+        Group group = new Group(node);
+        Scene scene = new Scene(group);
+        group.applyCss();
+        group.layout();
 
-		double width = node.prefWidth(-1);
-		group.getChildren().clear();
-		return width;
-	}
+        double width = node.prefWidth(-1);
+        group.getChildren().clear();
+        return width;
+    }
 
-	/**
-	 * Retrieves the node's width and height if it isn't still laid out
-	 *
-	 * @param node the Node of which to know the sizes
-	 * @return the computed width and height as a {@link Size}
-	 */
-	public static Size getNodeSizes(Node node) {
-		Group group = new Group(node);
-		Scene scene = new Scene(group);
-		group.applyCss();
-		group.layout();
+    /**
+     * Retrieves the node's width and height if it isn't still laid out
+     *
+     * @param node the Node of which to know the sizes
+     * @return the computed width and height as a {@link Size}
+     */
+    public static Size getNodeSizes(Node node) {
+        Group group = new Group(node);
+        Scene scene = new Scene(group);
+        group.applyCss();
+        group.layout();
 
-		Size sizes = Size.of(node.prefWidth(-1), node.prefHeight(-1));
-		group.getChildren().clear();
-		return sizes;
-	}
+        Size sizes = Size.of(node.prefWidth(-1), node.prefHeight(-1));
+        group.getChildren().clear();
+        return sizes;
+    }
 
-	/**
-	 * Convenience method for programmatically fire a dummy {@code MouseEvent} on the desired node.
-	 */
-	public static void fireDummyMouseEvent(Node node, EventType<MouseEvent> type) {
-		Event.fireEvent(node, new MouseEvent(type,
-				0, 0, 0, 0, MouseButton.PRIMARY, 1,
-				false, false, false, false, true, false, false, false, false, false, null));
-	}
+    /**
+     * Convenience method for programmatically fire a dummy {@code MouseEvent} on the desired node.
+     */
+    public static void fireDummyMouseEvent(Node node, EventType<MouseEvent> type) {
+        Event.fireEvent(node, new MouseEvent(type,
+            0, 0, 0, 0, MouseButton.PRIMARY, 1,
+            false, false, false, false, true, false, false, false, false, false, null));
+    }
 
-	/**
-	 * Recursively gets all nodes that are descendants of the given root.
-	 */
-	public static ArrayList<Node> getAllNodes(Parent root) {
-		ArrayList<Node> nodes = new ArrayList<>();
-		addAllDescendents(root, nodes);
-		return nodes;
-	}
+    /**
+     * Recursively gets all nodes that are descendants of the given root.
+     */
+    public static ArrayList<Node> getAllNodes(Parent root) {
+        ArrayList<Node> nodes = new ArrayList<>();
+        addAllDescendents(root, nodes);
+        return nodes;
+    }
 
-	private static void addAllDescendents(Parent parent, ArrayList<Node> nodes) {
-		for (Node node : parent.getChildrenUnmodifiable()) {
-			nodes.add(node);
-			if (node instanceof Parent)
-				addAllDescendents((Parent) node, nodes);
-		}
-	}
+    private static void addAllDescendents(Parent parent, ArrayList<Node> nodes) {
+        for (Node node : parent.getChildrenUnmodifiable()) {
+            nodes.add(node);
+            if (node instanceof Parent)
+                addAllDescendents((Parent) node, nodes);
+        }
+    }
 
-	/**
-	 * Convenience method to execute a given action after that the given control
-	 * has been laid out and its skin is not null anymore.
-	 * <p></p>
-	 * If the skin is not null when called, the action is executed immediately.
-	 * <p>
-	 * The listener is added only if the skin is null or the addListenerIfNotNull parameter is true.
-	 *
-	 * @param control              the control to check for skin initialization
-	 * @param action               the action to perform when the skin is not null
-	 * @param addListenerIfNotNull to specify if the listener should be added anyway even if the scene is not null
-	 * @param isOneShot            to specify if the listener added to the skin property
-	 *                             should be removed after it is not null anymore
-	 */
-	public static void waitForSkin(Control control, Runnable action, boolean addListenerIfNotNull, boolean isOneShot) {
-		if (control.getSkin() != null) {
-			action.run();
-		}
+    /**
+     * Convenience method to execute a given action after that the given control
+     * has been laid out and its skin is not null anymore.
+     * <p></p>
+     * If the skin is not null when called, the action is executed immediately.
+     * <p>
+     * The listener is added only if the skin is null or the addListenerIfNotNull parameter is true.
+     *
+     * @param control              the control to check for skin initialization
+     * @param action               the action to perform when the skin is not null
+     * @param addListenerIfNotNull to specify if the listener should be added anyway even if the scene is not null
+     * @param isOneShot            to specify if the listener added to the skin property
+     *                             should be removed after it is not null anymore
+     */
+    public static void waitForSkin(Control control, Runnable action, boolean addListenerIfNotNull, boolean isOneShot) {
+        if (control.getSkin() != null) {
+            action.run();
+        }
 
-		if (control.getSkin() == null || addListenerIfNotNull) {
-			When<Skin<?>> when = When.onInvalidated(control.skinProperty())
-				.condition(Objects::nonNull)
-				.then(s -> action.run());
-			if (isOneShot) when.oneShot();
-			when.listen();
-		}
-	}
+        if (control.getSkin() == null || addListenerIfNotNull) {
+            When<Skin<?>> when = When.onInvalidated(control.skinProperty())
+                .condition(Objects::nonNull)
+                .then(s -> action.run());
+            if (isOneShot) when.oneShot();
+            when.listen();
+        }
+    }
 
-	/**
-	 * Convenience method to execute a given action after that the given node
-	 * has been laid out and its scene is not null anymore.
-	 * <p></p>
-	 * If the scene is not null when called, the action is executed immediately.
-	 * <p>
-	 * The listener is added only if the scene is null or the addListenerIfNotNull parameter is true.
-	 *
-	 * @param node                 the node to check for scene initialization
-	 * @param action               the action to perform when the scene is not null
-	 * @param addListenerIfNotNull to specify if the listener should be added anyway even if the scene is not null
-	 * @param isOneShot            to specify if the listener added to the scene property
-	 *                             should be removed after it is not null anymore
-	 */
-	public static void waitForScene(Node node, Runnable action, boolean addListenerIfNotNull, boolean isOneShot) {
-		if (node.getScene() != null) {
-			action.run();
-		}
+    /**
+     * Convenience method to execute a given action after that the given node
+     * has been laid out and its scene is not null anymore.
+     * <p></p>
+     * If the scene is not null when called, the action is executed immediately.
+     * <p>
+     * The listener is added only if the scene is null or the addListenerIfNotNull parameter is true.
+     *
+     * @param node                 the node to check for scene initialization
+     * @param action               the action to perform when the scene is not null
+     * @param addListenerIfNotNull to specify if the listener should be added anyway even if the scene is not null
+     * @param isOneShot            to specify if the listener added to the scene property
+     *                             should be removed after it is not null anymore
+     */
+    public static void waitForScene(Node node, Runnable action, boolean addListenerIfNotNull, boolean isOneShot) {
+        if (node.getScene() != null) {
+            action.run();
+        }
 
-		if (node.getScene() == null || addListenerIfNotNull) {
-			When<Scene> when = When.onInvalidated(node.sceneProperty())
-				.condition(Objects::nonNull)
-				.then(s -> action.run());
-			if (isOneShot) when.oneShot();
-			when.listen();
-		}
-	}
+        if (node.getScene() == null || addListenerIfNotNull) {
+            When<Scene> when = When.onInvalidated(node.sceneProperty())
+                .condition(Objects::nonNull)
+                .then(s -> action.run());
+            if (isOneShot) when.oneShot();
+            when.listen();
+        }
+    }
 
-	/**
-	 * Checks if the given {@link PseudoClass} is currently active on the given {@link Control}.
-	 */
-	public static boolean isPseudoClassActive(Control control, PseudoClass pseudoClass) {
-		return control.getPseudoClassStates().contains(pseudoClass);
-	}
+    /**
+     * Checks if the given {@link PseudoClass} is currently active on the given {@link Control}.
+     */
+    public static boolean isPseudoClassActive(Control control, PseudoClass pseudoClass) {
+        return control.getPseudoClassStates().contains(pseudoClass);
+    }
 
-	/**
-	 * Attempts to get the {@link Screen} instance on which
-	 * the given {@link Node} is shown.
-	 * If the screen is not found for any reason, returns null.
-	 */
-	public static Screen getScreenFor(Node node) {
-		Bounds nodeBounds = node.localToScreen(node.getLayoutBounds());
-		Rectangle2D boundsToRect = new Rectangle2D(nodeBounds.getMinX(), nodeBounds.getMinY(), nodeBounds.getWidth(), nodeBounds.getHeight());
-		return Screen.getScreens().stream()
-			.filter(screen -> screen.getBounds().intersects(boundsToRect))
-				.findFirst()
-				.orElse(null);
-	}
+    /**
+     * Attempts to get the {@link Screen} instance on which
+     * the given {@link Node} is shown.
+     * If the screen is not found for any reason, returns null.
+     */
+    public static Screen getScreenFor(Node node) {
+        Bounds nodeBounds = node.localToScreen(node.getLayoutBounds());
+        Rectangle2D boundsToRect = new Rectangle2D(nodeBounds.getMinX(), nodeBounds.getMinY(), nodeBounds.getWidth(), nodeBounds.getHeight());
+        return Screen.getScreens().stream()
+            .filter(screen -> screen.getBounds().intersects(boundsToRect))
+            .findFirst()
+            .orElse(null);
+    }
 }

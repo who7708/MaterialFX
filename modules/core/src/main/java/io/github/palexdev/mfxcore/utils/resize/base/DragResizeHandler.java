@@ -22,5 +22,5 @@ import javafx.scene.Node;
 
 @FunctionalInterface
 public interface DragResizeHandler<T extends Node> {
-	void onResize(T node, double x, double y, double w, double h);
+    void onResize(T node, double x, double y, double w, double h);
 }

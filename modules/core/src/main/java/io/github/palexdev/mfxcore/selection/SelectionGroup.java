@@ -276,7 +276,6 @@ public class SelectionGroup {
      * group will try to select the first {@code Selectable} in the {@link #getSelectables()} Set, so that the rule is
      * respected. This behavior is undesired, the flag will stop the group from doing this, afterward the "switch" process
      * is completed.
-     *
      */
     public boolean isSwitching() {
         return isSwitching;

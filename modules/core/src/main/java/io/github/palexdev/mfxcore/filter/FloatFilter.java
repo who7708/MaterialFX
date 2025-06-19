@@ -43,36 +43,36 @@ import java.util.stream.Stream;
  */
 public class FloatFilter<T> extends NumberFilter<T, Float> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public FloatFilter(String name, Function<T, Float> extractor) {
-		this(name, extractor, new FloatStringConverter());
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public FloatFilter(String name, Function<T, Float> extractor) {
+        this(name, extractor, new FloatStringConverter());
+    }
 
-	public FloatFilter(String name, Function<T, Float> extractor, StringConverter<Float> converter) {
-		super(name, extractor, converter);
-	}
+    public FloatFilter(String name, Function<T, Float> extractor, StringConverter<Float> converter) {
+        super(name, extractor, converter);
+    }
 
-	//================================================================================
-	// Overridden Methods
-	//================================================================================
-	@Override
-	protected ObservableList<BiPredicateBean<Float, Float>> defaultPredicates() {
-		return Stream.<BiPredicateBean<Float, Float>>of(
-				new BiPredicateBean<>(I18N.getOrDefault("filter.is"), Float::equals),
-				new BiPredicateBean<>(I18N.getOrDefault("filter.isNot"), (aFloat, aFloat2) -> !aFloat.equals(aFloat2)),
-				new BiPredicateBean<>(I18N.getOrDefault("filter.greater"), (aFloat, aFloat2) -> aFloat > aFloat2),
-				new BiPredicateBean<>(I18N.getOrDefault("filter.greaterEqual"), (aFloat, aFloat2) -> aFloat >= aFloat2),
-				new BiPredicateBean<>(I18N.getOrDefault("filter.lesser"), (aFloat, aFloat2) -> aFloat < aFloat2),
-				new BiPredicateBean<>(I18N.getOrDefault("filter.lesserEqual"), (aFloat, aFloat2) -> aFloat <= aFloat2)
-		).collect(FXCollectors.toList());
-	}
+    //================================================================================
+    // Overridden Methods
+    //================================================================================
+    @Override
+    protected ObservableList<BiPredicateBean<Float, Float>> defaultPredicates() {
+        return Stream.<BiPredicateBean<Float, Float>>of(
+            new BiPredicateBean<>(I18N.getOrDefault("filter.is"), Float::equals),
+            new BiPredicateBean<>(I18N.getOrDefault("filter.isNot"), (aFloat, aFloat2) -> !aFloat.equals(aFloat2)),
+            new BiPredicateBean<>(I18N.getOrDefault("filter.greater"), (aFloat, aFloat2) -> aFloat > aFloat2),
+            new BiPredicateBean<>(I18N.getOrDefault("filter.greaterEqual"), (aFloat, aFloat2) -> aFloat >= aFloat2),
+            new BiPredicateBean<>(I18N.getOrDefault("filter.lesser"), (aFloat, aFloat2) -> aFloat < aFloat2),
+            new BiPredicateBean<>(I18N.getOrDefault("filter.lesserEqual"), (aFloat, aFloat2) -> aFloat <= aFloat2)
+        ).collect(FXCollectors.toList());
+    }
 
-	@SafeVarargs
-	@Override
-	protected final FloatFilter<T> extend(BiPredicateBean<Float, Float>... predicateBeans) {
-		Collections.addAll(super.predicates, predicateBeans);
-		return this;
-	}
+    @SafeVarargs
+    @Override
+    protected final FloatFilter<T> extend(BiPredicateBean<Float, Float>... predicateBeans) {
+        Collections.addAll(super.predicates, predicateBeans);
+        return this;
+    }
 }

@@ -23,8 +23,8 @@ package io.github.palexdev.mfxcore.behavior;
  */
 public interface DisposableAction {
 
-	/**
-	 * Disposes this action.
-	 */
-	void dispose();
+    /**
+     * Disposes this action.
+     */
+    void dispose();
 }

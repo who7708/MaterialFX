@@ -28,78 +28,78 @@ import java.util.Objects;
  * A {@link SimpleBooleanProperty} that implements {@link ResettableProperty}.
  */
 public class ResettableBooleanProperty extends ReadOnlyBooleanWrapper implements ResettableProperty<Boolean> {
-	//================================================================================
-	// Properties
-	//================================================================================
-	private boolean defaultValue;
-	private boolean fireChangeOnReset = true;
-	private boolean hasBeenReset = false;
+    //================================================================================
+    // Properties
+    //================================================================================
+    private boolean defaultValue;
+    private boolean fireChangeOnReset = true;
+    private boolean hasBeenReset = false;
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public ResettableBooleanProperty() {
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public ResettableBooleanProperty() {
+    }
 
-	public ResettableBooleanProperty(boolean initialValue) {
-		super(initialValue);
-	}
+    public ResettableBooleanProperty(boolean initialValue) {
+        super(initialValue);
+    }
 
-	public ResettableBooleanProperty(boolean initialValue, boolean defaultValue) {
-		super(initialValue);
-		this.defaultValue = defaultValue;
-	}
+    public ResettableBooleanProperty(boolean initialValue, boolean defaultValue) {
+        super(initialValue);
+        this.defaultValue = defaultValue;
+    }
 
-	public ResettableBooleanProperty(Object bean, String name) {
-		super(bean, name);
-	}
+    public ResettableBooleanProperty(Object bean, String name) {
+        super(bean, name);
+    }
 
-	public ResettableBooleanProperty(Object bean, String name, boolean initialValue) {
-		super(bean, name, initialValue);
-	}
+    public ResettableBooleanProperty(Object bean, String name, boolean initialValue) {
+        super(bean, name, initialValue);
+    }
 
-	public ResettableBooleanProperty(Object bean, String name, boolean initialValue, boolean defaultValue) {
-		super(bean, name, initialValue);
-		this.defaultValue = defaultValue;
-	}
+    public ResettableBooleanProperty(Object bean, String name, boolean initialValue, boolean defaultValue) {
+        super(bean, name, initialValue);
+        this.defaultValue = defaultValue;
+    }
 
-	//================================================================================
-	// Override Methods
-	//================================================================================
-	@Override
-	public boolean isFireChangeOnReset() {
-		return fireChangeOnReset;
-	}
+    //================================================================================
+    // Override Methods
+    //================================================================================
+    @Override
+    public boolean isFireChangeOnReset() {
+        return fireChangeOnReset;
+    }
 
-	@Override
-	public void setFireChangeOnReset(boolean fireChangeOnReset) {
-		this.fireChangeOnReset = fireChangeOnReset;
-	}
+    @Override
+    public void setFireChangeOnReset(boolean fireChangeOnReset) {
+        this.fireChangeOnReset = fireChangeOnReset;
+    }
 
-	@Override
-	public void set(boolean newValue) {
-		hasBeenReset = newValue == defaultValue;
-		super.set(newValue);
-	}
+    @Override
+    public void set(boolean newValue) {
+        hasBeenReset = newValue == defaultValue;
+        super.set(newValue);
+    }
 
-	@Override
-	protected void fireValueChangedEvent() {
-		if (Objects.equals(getValue(), defaultValue) && !fireChangeOnReset) return;
-		super.fireValueChangedEvent();
-	}
+    @Override
+    protected void fireValueChangedEvent() {
+        if (Objects.equals(getValue(), defaultValue) && !fireChangeOnReset) return;
+        super.fireValueChangedEvent();
+    }
 
-	@Override
-	public boolean hasBeenReset() {
-		return hasBeenReset;
-	}
+    @Override
+    public boolean hasBeenReset() {
+        return hasBeenReset;
+    }
 
-	@Override
-	public Boolean getDefaultValue() {
-		return defaultValue;
-	}
+    @Override
+    public Boolean getDefaultValue() {
+        return defaultValue;
+    }
 
-	@Override
-	public void setDefaultValue(Boolean defaultValue) {
-		this.defaultValue = defaultValue;
-	}
+    @Override
+    public void setDefaultValue(Boolean defaultValue) {
+        this.defaultValue = defaultValue;
+    }
 }

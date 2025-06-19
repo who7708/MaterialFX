@@ -96,8 +96,8 @@ public class OnInvalidated<T> extends When<T> {
     public When<T> listen() {
         // This may happen if executeNow() was executed and this was set to be oneShot
         // for the executeNow methods too
-		// If listener is not null, then this was already registered before and not disposed, exit!
-		if (isDisposed() || listener != null) return this;
+        // If listener is not null, then this was already registered before and not disposed, exit!
+        if (isDisposed() || listener != null) return this;
 
         if (oneShot) {
             listener = i -> {

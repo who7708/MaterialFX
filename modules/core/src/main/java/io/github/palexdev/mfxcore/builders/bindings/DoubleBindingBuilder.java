@@ -24,15 +24,15 @@ import javafx.beans.binding.DoubleBinding;
 
 public class DoubleBindingBuilder extends BindingBuilder<Double, DoubleBinding> {
 
-	public static DoubleBindingBuilder build() {
-		return new DoubleBindingBuilder();
-	}
+    public static DoubleBindingBuilder build() {
+        return new DoubleBindingBuilder();
+    }
 
-	@Override
-	protected DoubleBinding create() {
-		if (mapper == null) {
-			throw new IllegalStateException("Mapper has not been set!");
-		}
-		return Bindings.createDoubleBinding(mapper, getSourcesArray());
-	}
+    @Override
+    protected DoubleBinding create() {
+        if (mapper == null) {
+            throw new IllegalStateException("Mapper has not been set!");
+        }
+        return Bindings.createDoubleBinding(mapper, getSourcesArray());
+    }
 }

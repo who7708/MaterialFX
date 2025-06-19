@@ -27,43 +27,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BorderBuilder {
-	//================================================================================
-	// Properties
-	//================================================================================
-	private final List<BorderStroke> strokes = new ArrayList<>();
-	private final List<BorderImage> images = new ArrayList<>();
+    //================================================================================
+    // Properties
+    //================================================================================
+    private final List<BorderStroke> strokes = new ArrayList<>();
+    private final List<BorderImage> images = new ArrayList<>();
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public static BorderBuilder build() {
-		return new BorderBuilder();
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public static BorderBuilder build() {
+        return new BorderBuilder();
+    }
 
-	//================================================================================
-	// Methods
-	//================================================================================
-	public BorderBuilder addFill(BorderStroke stroke) {
-		strokes.add(stroke);
-		return this;
-	}
+    //================================================================================
+    // Methods
+    //================================================================================
+    public BorderBuilder addFill(BorderStroke stroke) {
+        strokes.add(stroke);
+        return this;
+    }
 
-	public BorderBuilder addFill(Paint stroke, BorderStrokeStyle style, CornerRadii cornerRadii, BorderWidths widths, Insets insets) {
-		strokes.add(new BorderStroke(stroke, style, cornerRadii, widths, insets));
-		return this;
-	}
+    public BorderBuilder addFill(Paint stroke, BorderStrokeStyle style, CornerRadii cornerRadii, BorderWidths widths, Insets insets) {
+        strokes.add(new BorderStroke(stroke, style, cornerRadii, widths, insets));
+        return this;
+    }
 
-	public BorderBuilder addImage(BorderImage image) {
-		images.add(image);
-		return this;
-	}
+    public BorderBuilder addImage(BorderImage image) {
+        images.add(image);
+        return this;
+    }
 
-	public BorderBuilder addImage(Image image, BorderWidths widths, Insets insets, BorderWidths slices, boolean filled, BorderRepeat repeatX, BorderRepeat repeatY) {
-		images.add(new BorderImage(image, widths, insets, slices, filled, repeatX, repeatY));
-		return this;
-	}
+    public BorderBuilder addImage(Image image, BorderWidths widths, Insets insets, BorderWidths slices, boolean filled, BorderRepeat repeatX, BorderRepeat repeatY) {
+        images.add(new BorderImage(image, widths, insets, slices, filled, repeatX, repeatY));
+        return this;
+    }
 
-	public Border get() {
-		return new Border(strokes, images);
-	}
+    public Border get() {
+        return new Border(strokes, images);
+    }
 }

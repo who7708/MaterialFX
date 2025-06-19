@@ -31,30 +31,30 @@ import javafx.beans.value.ObservableValue;
  */
 public interface ISource<S, T> {
 
-	/**
-	 * @return the source's {@link ObservableValue}
-	 */
-	ObservableValue<? extends S> getObservable();
+    /**
+     * @return the source's {@link ObservableValue}
+     */
+    ObservableValue<? extends S> getObservable();
 
-	/**
-	 * Uses the values of the source's observable to update the target.
-	 */
-	void updateTarget(S oldValue, S newValue);
+    /**
+     * Uses the values of the source's observable to update the target.
+     */
+    void updateTarget(S oldValue, S newValue);
 
-	/**
-	 * Uses the values of the target's observable to update the sources.
-	 */
-	void updateSource(T oldValue, T newValue);
+    /**
+     * Uses the values of the target's observable to update the sources.
+     */
+    void updateSource(T oldValue, T newValue);
 
-	/**
-	 * Disposes the source.
-	 */
-	void dispose();
+    /**
+     * Disposes the source.
+     */
+    void dispose();
 
-	/**
-	 * Shortcut for {@code getObservable().getValue()}.
-	 */
-	default S getValue() {
-		return getObservable().getValue();
-	}
+    /**
+     * Shortcut for {@code getObservable().getValue()}.
+     */
+    default S getValue() {
+        return getObservable().getValue();
+    }
 }

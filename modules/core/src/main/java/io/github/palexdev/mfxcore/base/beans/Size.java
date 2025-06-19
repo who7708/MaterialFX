@@ -27,86 +27,86 @@ import javafx.beans.property.SimpleDoubleProperty;
  * in terms of width and height.
  */
 public class Size {
-	//================================================================================
-	// Properties
-	//================================================================================
-	private final DoubleProperty width = new SimpleDoubleProperty(0.0);
-	private final DoubleProperty height = new SimpleDoubleProperty(0.0);
+    //================================================================================
+    // Properties
+    //================================================================================
+    private final DoubleProperty width = new SimpleDoubleProperty(0.0);
+    private final DoubleProperty height = new SimpleDoubleProperty(0.0);
 
-	//================================================================================
-	// Constructor
-	//================================================================================
-	public Size(double width, double height) {
-		setWidth(width);
-		setHeight(height);
-	}
+    //================================================================================
+    // Constructor
+    //================================================================================
+    public Size(double width, double height) {
+        setWidth(width);
+        setHeight(height);
+    }
 
-	//================================================================================
-	// Static Methods
-	//================================================================================
-	public static Size of(double width, double height) {
-		return new Size(width, height);
-	}
+    //================================================================================
+    // Static Methods
+    //================================================================================
+    public static Size of(double width, double height) {
+        return new Size(width, height);
+    }
 
-	/**
-	 * @return a new {@code Size} object with both width and height set to 0
-	 */
-	public static Size zero() {
-		return of(0, 0);
-	}
+    /**
+     * @return a new {@code Size} object with both width and height set to 0
+     */
+    public static Size zero() {
+        return of(0, 0);
+    }
 
-	/**
-	 * @return a new {@code Size} object with both width and height set to -1
-	 */
-	public static Size invalid() {
-		return of(-1, -1);
-	}
+    /**
+     * @return a new {@code Size} object with both width and height set to -1
+     */
+    public static Size invalid() {
+        return of(-1, -1);
+    }
 
-	//================================================================================
-	// Overridden Methods
-	//================================================================================
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Size size = (Size) o;
-		return getWidth() == (size.getWidth()) && getHeight() == (size.getHeight());
-	}
+    //================================================================================
+    // Overridden Methods
+    //================================================================================
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Size size = (Size) o;
+        return getWidth() == (size.getWidth()) && getHeight() == (size.getHeight());
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(getWidth(), getHeight());
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(getWidth(), getHeight());
+    }
 
-	@Override
-	public String toString() {
-		return "W x H (" + getWidth() + " x " + getHeight() + ")";
-	}
+    @Override
+    public String toString() {
+        return "W x H (" + getWidth() + " x " + getHeight() + ")";
+    }
 
-	//================================================================================
-	// Getters/Setters
-	//================================================================================
-	public double getWidth() {
-		return width.get();
-	}
+    //================================================================================
+    // Getters/Setters
+    //================================================================================
+    public double getWidth() {
+        return width.get();
+    }
 
-	public DoubleProperty widthProperty() {
-		return width;
-	}
+    public DoubleProperty widthProperty() {
+        return width;
+    }
 
-	public void setWidth(double width) {
-		this.width.set(width);
-	}
+    public void setWidth(double width) {
+        this.width.set(width);
+    }
 
-	public double getHeight() {
-		return height.get();
-	}
+    public double getHeight() {
+        return height.get();
+    }
 
-	public DoubleProperty heightProperty() {
-		return height;
-	}
+    public DoubleProperty heightProperty() {
+        return height;
+    }
 
-	public void setHeight(double height) {
-		this.height.set(height);
-	}
+    public void setHeight(double height) {
+        this.height.set(height);
+    }
 }

@@ -24,15 +24,15 @@ import javafx.beans.binding.FloatBinding;
 
 public class FloatBindingBuilder extends BindingBuilder<Float, FloatBinding> {
 
-	public static FloatBindingBuilder build() {
-		return new FloatBindingBuilder();
-	}
+    public static FloatBindingBuilder build() {
+        return new FloatBindingBuilder();
+    }
 
-	@Override
-	protected FloatBinding create() {
-		if (mapper == null) {
-			throw new IllegalStateException("Mapper has not been set!");
-		}
-		return Bindings.createFloatBinding(mapper, getSourcesArray());
-	}
+    @Override
+    protected FloatBinding create() {
+        if (mapper == null) {
+            throw new IllegalStateException("Mapper has not been set!");
+        }
+        return Bindings.createFloatBinding(mapper, getSourcesArray());
+    }
 }

@@ -27,59 +27,59 @@ import java.util.function.BiFunction;
  */
 public class GridUtils {
 
-	private GridUtils() {
-	}
+    private GridUtils() {
+    }
 
-	/**
-	 * Converts the given subscripts/coordinate to a linear index.
-	 * <p></p>
-	 * {@code index = row * nColumns + column}
-	 *
-	 * @param nColumns the number of columns of the grid
-	 */
-	public static int subToInd(int nColumns, int row, int column) {
-		return row * nColumns + column;
-	}
+    /**
+     * Converts the given subscripts/coordinate to a linear index.
+     * <p></p>
+     * {@code index = row * nColumns + column}
+     *
+     * @param nColumns the number of columns of the grid
+     */
+    public static int subToInd(int nColumns, int row, int column) {
+        return row * nColumns + column;
+    }
 
-	/**
-	 * Given the number of columns of the grid, converted the given index
-	 * to the row index.
-	 */
-	public static int indToRow(int nColumns, int index) {
-		return index / nColumns;
-	}
+    /**
+     * Given the number of columns of the grid, converted the given index
+     * to the row index.
+     */
+    public static int indToRow(int nColumns, int index) {
+        return index / nColumns;
+    }
 
-	/**
-	 * Given the number of columns of the grid, converted the given index
-	 * to the column index.
-	 */
-	public static int indToCol(int nColumns, int index) {
-		return index % nColumns;
-	}
+    /**
+     * Given the number of columns of the grid, converted the given index
+     * to the column index.
+     */
+    public static int indToCol(int nColumns, int index) {
+        return index % nColumns;
+    }
 
-	/**
-	 * Converts the given linear index to subscripts as a {@link Coordinates} object.
-	 * The key is the rows number and the value is the columns number.
-	 * <p></p>
-	 * {@code rowIndex = index / columnsNum}
-	 * {@code columnIndex = index % columnsNum}
-	 *
-	 * @param nColumns the number of columns of the grid
-	 */
-	public static Coordinates indToSub(int nColumns, int index) {
-		return Coordinates.of(indToRow(nColumns, index), indToCol(nColumns, index));
-	}
+    /**
+     * Converts the given linear index to subscripts as a {@link Coordinates} object.
+     * The key is the rows number and the value is the columns number.
+     * <p></p>
+     * {@code rowIndex = index / columnsNum}
+     * {@code columnIndex = index % columnsNum}
+     *
+     * @param nColumns the number of columns of the grid
+     */
+    public static Coordinates indToSub(int nColumns, int index) {
+        return Coordinates.of(indToRow(nColumns, index), indToCol(nColumns, index));
+    }
 
-	/**
-	 * Converts the given linear index to subscripts and uses them to return an object
-	 * built using the given {@link BiFunction}.
-	 * <p></p>
-	 * {@code rowIndex = index / columnsNum}
-	 * {@code columnIndex = index % columnsNum}
-	 *
-	 * @param nColumns the number of columns of the grid
-	 */
-	public static <T> T indToSub(int nColumns, int index, BiFunction<Integer, Integer, T> supplier) {
-		return supplier.apply(indToRow(nColumns, index), indToCol(nColumns, index));
-	}
+    /**
+     * Converts the given linear index to subscripts and uses them to return an object
+     * built using the given {@link BiFunction}.
+     * <p></p>
+     * {@code rowIndex = index / columnsNum}
+     * {@code columnIndex = index % columnsNum}
+     *
+     * @param nColumns the number of columns of the grid
+     */
+    public static <T> T indToSub(int nColumns, int index, BiFunction<Integer, Integer, T> supplier) {
+        return supplier.apply(indToRow(nColumns, index), indToCol(nColumns, index));
+    }
 }

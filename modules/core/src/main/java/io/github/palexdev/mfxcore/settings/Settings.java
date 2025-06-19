@@ -23,112 +23,112 @@ import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
 
 public abstract class Settings {
-	//================================================================================
-	// Properties
-	//================================================================================
-	protected final Preferences prefs;
-	protected static final Map<Class<? extends Settings>, Set<Setting<?>>> settingsDB = new HashMap<>();
+    //================================================================================
+    // Properties
+    //================================================================================
+    protected final Preferences prefs;
+    protected static final Map<Class<? extends Settings>, Set<Setting<?>>> settingsDB = new HashMap<>();
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	protected Settings() {
-		prefs = init();
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    protected Settings() {
+        prefs = init();
+    }
 
-	//================================================================================
-	// Abstract Methods
-	//================================================================================
-	protected abstract String node();
+    //================================================================================
+    // Abstract Methods
+    //================================================================================
+    protected abstract String node();
 
-	//================================================================================
-	// Methods
-	//================================================================================
-	protected Preferences init() {
-		if (prefs == null) return Preferences.userRoot().node(node());
-		return prefs;
-	}
+    //================================================================================
+    // Methods
+    //================================================================================
+    protected Preferences init() {
+        if (prefs == null) return Preferences.userRoot().node(node());
+        return prefs;
+    }
 
-	protected StringSetting registerString(String name, String description, String defaultValue) {
-		StringSetting setting = StringSetting.of(name, description, defaultValue, this);
-		Set<Setting<?>> set = settingsDB.computeIfAbsent(getClass(), c -> new LinkedHashSet<>());
-		set.add(setting);
-		return setting;
-	}
+    protected StringSetting registerString(String name, String description, String defaultValue) {
+        StringSetting setting = StringSetting.of(name, description, defaultValue, this);
+        Set<Setting<?>> set = settingsDB.computeIfAbsent(getClass(), c -> new LinkedHashSet<>());
+        set.add(setting);
+        return setting;
+    }
 
-	protected BooleanSetting registerBoolean(String name, String description, boolean defaultValue) {
-		BooleanSetting setting = BooleanSetting.of(name, description, defaultValue, this);
-		Set<Setting<?>> set = settingsDB.computeIfAbsent(getClass(), c -> new LinkedHashSet<>());
-		set.add(setting);
-		return setting;
-	}
+    protected BooleanSetting registerBoolean(String name, String description, boolean defaultValue) {
+        BooleanSetting setting = BooleanSetting.of(name, description, defaultValue, this);
+        Set<Setting<?>> set = settingsDB.computeIfAbsent(getClass(), c -> new LinkedHashSet<>());
+        set.add(setting);
+        return setting;
+    }
 
-	protected NumberSetting<Double> registerDouble(String name, String description, double defaultValue) {
-		NumberSetting<Double> setting = NumberSetting.forDouble(name, description, defaultValue, this);
-		Set<Setting<?>> set = settingsDB.computeIfAbsent(getClass(), c -> new LinkedHashSet<>());
-		set.add(setting);
-		return setting;
-	}
+    protected NumberSetting<Double> registerDouble(String name, String description, double defaultValue) {
+        NumberSetting<Double> setting = NumberSetting.forDouble(name, description, defaultValue, this);
+        Set<Setting<?>> set = settingsDB.computeIfAbsent(getClass(), c -> new LinkedHashSet<>());
+        set.add(setting);
+        return setting;
+    }
 
-	protected NumberSetting<Float> registerFloat(String name, String description, float defaultValue) {
-		NumberSetting<Float> setting = NumberSetting.forFloat(name, description, defaultValue, this);
-		Set<Setting<?>> set = settingsDB.computeIfAbsent(getClass(), c -> new LinkedHashSet<>());
-		set.add(setting);
-		return setting;
-	}
+    protected NumberSetting<Float> registerFloat(String name, String description, float defaultValue) {
+        NumberSetting<Float> setting = NumberSetting.forFloat(name, description, defaultValue, this);
+        Set<Setting<?>> set = settingsDB.computeIfAbsent(getClass(), c -> new LinkedHashSet<>());
+        set.add(setting);
+        return setting;
+    }
 
-	protected NumberSetting<Integer> registerInteger(String name, String description, int defaultValue) {
-		NumberSetting<Integer> setting = NumberSetting.forInteger(name, description, defaultValue, this);
-		Set<Setting<?>> set = settingsDB.computeIfAbsent(getClass(), c -> new LinkedHashSet<>());
-		set.add(setting);
-		return setting;
-	}
+    protected NumberSetting<Integer> registerInteger(String name, String description, int defaultValue) {
+        NumberSetting<Integer> setting = NumberSetting.forInteger(name, description, defaultValue, this);
+        Set<Setting<?>> set = settingsDB.computeIfAbsent(getClass(), c -> new LinkedHashSet<>());
+        set.add(setting);
+        return setting;
+    }
 
-	protected NumberSetting<Long> registerLong(String name, String description, long defaultValue) {
-		NumberSetting<Long> setting = NumberSetting.forLong(name, description, defaultValue, this);
-		Set<Setting<?>> set = settingsDB.computeIfAbsent(getClass(), c -> new LinkedHashSet<>());
-		set.add(setting);
-		return setting;
-	}
+    protected NumberSetting<Long> registerLong(String name, String description, long defaultValue) {
+        NumberSetting<Long> setting = NumberSetting.forLong(name, description, defaultValue, this);
+        Set<Setting<?>> set = settingsDB.computeIfAbsent(getClass(), c -> new LinkedHashSet<>());
+        set.add(setting);
+        return setting;
+    }
 
-	public void onChange(PreferenceChangeListener pcl) {
-		prefs.addPreferenceChangeListener(pcl);
-	}
+    public void onChange(PreferenceChangeListener pcl) {
+        prefs.addPreferenceChangeListener(pcl);
+    }
 
-	public void removeOnChange(PreferenceChangeListener pcl) {
-		prefs.removePreferenceChangeListener(pcl);
-	}
+    public void removeOnChange(PreferenceChangeListener pcl) {
+        prefs.removePreferenceChangeListener(pcl);
+    }
 
-	public void reset() {
-		Optional.ofNullable(settingsDB.get(getClass()))
-			.ifPresent(s -> s.forEach(Setting::reset));
-	}
+    public void reset() {
+        Optional.ofNullable(settingsDB.get(getClass()))
+            .ifPresent(s -> s.forEach(Setting::reset));
+    }
 
-	public static void reset(Class<? extends Settings> klass) {
-		Optional.ofNullable(settingsDB.get(klass))
-			.ifPresent(s -> s.forEach(Setting::reset));
-	}
+    public static void reset(Class<? extends Settings> klass) {
+        Optional.ofNullable(settingsDB.get(klass))
+            .ifPresent(s -> s.forEach(Setting::reset));
+    }
 
-	public static void resetAll() {
-		settingsDB.values().stream()
-			.flatMap(Collection::stream)
-			.forEach(Setting::reset);
-	}
+    public static void resetAll() {
+        settingsDB.values().stream()
+            .flatMap(Collection::stream)
+            .forEach(Setting::reset);
+    }
 
-	//================================================================================
-	// Getters/Setters
-	//================================================================================
-	protected Preferences prefs() {
-		return prefs;
-	}
+    //================================================================================
+    // Getters/Setters
+    //================================================================================
+    protected Preferences prefs() {
+        return prefs;
+    }
 
-	public static Set<Setting<?>> getSettings(Class<? extends Settings> c) {
-		return Optional.ofNullable(settingsDB.get(c))
-			.map(Collections::unmodifiableSet)
-			.orElse(Collections.emptySet());
-	}
+    public static Set<Setting<?>> getSettings(Class<? extends Settings> c) {
+        return Optional.ofNullable(settingsDB.get(c))
+            .map(Collections::unmodifiableSet)
+            .orElse(Collections.emptySet());
+    }
 
-	public static Map<Class<? extends Settings>, Set<Setting<?>>> getSettingsDB() {
-		return Collections.unmodifiableMap(settingsDB);
-	}
+    public static Map<Class<? extends Settings>, Set<Setting<?>>> getSettingsDB() {
+        return Collections.unmodifiableMap(settingsDB);
+    }
 }

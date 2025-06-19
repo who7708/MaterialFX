@@ -144,10 +144,10 @@ public class CircleRipple extends Circle implements Ripple<Circle> {
         KeyFrame xInKF = KeyFrames.of(RAD_IN, centerXProperty(), generator.getLayoutBounds().getCenterX(), CURVE);
         KeyFrame yInKF = KeyFrames.of(RAD_IN, centerYProperty(), generator.getLayoutBounds().getCenterY(), CURVE);
         radIn = TimelineBuilder.build()
-                .add(radInKF)
-                .add(xInKF)
-                .add(yInKF)
-                .getAnimation();
+            .add(radInKF)
+            .add(xInKF)
+            .add(yInKF)
+            .getAnimation();
 
         boolean animateBackground = generator.doAnimateBackground();
         Color bgColor = generator.getBackgroundColor();
@@ -155,31 +155,31 @@ public class CircleRipple extends Circle implements Ripple<Circle> {
         KeyFrame fadeOutKF = KeyFrames.of(FADE_OUT, opacityProperty(), 0.0);
         if (animateBackground) {
             fadeIn = ParallelBuilder.build()
-                    .add(fadeInKF)
-                    .add(() -> ConsumerTransition.of(dt -> {
-                        double alpha = dt * bgColor.getOpacity();
-                        Color color = ColorUtils.atAlpha(bgColor, alpha);
-                        generator.setBackground(Background.fill(color));
-                    }, BG).setInterpolatorFluent(CURVE))
-                    .getAnimation();
+                .add(fadeInKF)
+                .add(() -> ConsumerTransition.of(dt -> {
+                    double alpha = dt * bgColor.getOpacity();
+                    Color color = ColorUtils.atAlpha(bgColor, alpha);
+                    generator.setBackground(Background.fill(color));
+                }, BG).setInterpolatorFluent(CURVE))
+                .getAnimation();
 
             fadeOut = ParallelBuilder.build()
-                    .add(fadeOutKF)
-                    .add(() -> ConsumerTransition.of(dt -> {
-                        double bgAlpha = bgColor.getOpacity();
-                        double alpha = bgAlpha - (dt * bgAlpha);
-                        Color color = ColorUtils.atAlpha(bgColor, alpha);
-                        generator.setBackground(Background.fill(color));
-                    }, BG).setInterpolatorFluent(CURVE))
-                    .getAnimation();
+                .add(fadeOutKF)
+                .add(() -> ConsumerTransition.of(dt -> {
+                    double bgAlpha = bgColor.getOpacity();
+                    double alpha = bgAlpha - (dt * bgAlpha);
+                    Color color = ColorUtils.atAlpha(bgColor, alpha);
+                    generator.setBackground(Background.fill(color));
+                }, BG).setInterpolatorFluent(CURVE))
+                .getAnimation();
         } else {
             fadeIn = TimelineBuilder.build()
-                    .add(fadeInKF)
-                    .getAnimation();
+                .add(fadeInKF)
+                .getAnimation();
 
             fadeOut = TimelineBuilder.build()
-                    .add(fadeOutKF)
-                    .getAnimation();
+                .add(fadeOutKF)
+                .getAnimation();
         }
     }
 
@@ -257,12 +257,12 @@ public class CircleRipple extends Circle implements Ripple<Circle> {
         if (delay > 0) {
             if (pause != null) pause.stop();
             pause = PauseBuilder.build()
-                    .setDuration(delay)
-                    .setOnFinished(e -> {
-                        fadeIn.stop();
-                        fadeOut.playFromStart();
-                    })
-                    .getAnimation();
+                .setDuration(delay)
+                .setOnFinished(e -> {
+                    fadeIn.stop();
+                    fadeOut.playFromStart();
+                })
+                .getAnimation();
             pause.play();
             return;
         }

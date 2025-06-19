@@ -42,164 +42,164 @@ import java.util.function.Supplier;
  * You can also access the builder with the provided static method {@link #of(String, URL)}.
  */
 public class MFXLoaderBean {
-	//================================================================================
-	// Properties
-	//================================================================================
-	private final String viewName;
-	private final URL fxmlFile;
-	private Parent root;
-	private Callback<Class<?>, Object> controllerFactory;
-	private boolean defaultView = false;
-	private boolean loaded = false;
-	private Supplier<Node> beanToNodeMapper;
+    //================================================================================
+    // Properties
+    //================================================================================
+    private final String viewName;
+    private final URL fxmlFile;
+    private Parent root;
+    private Callback<Class<?>, Object> controllerFactory;
+    private boolean defaultView = false;
+    private boolean loaded = false;
+    private Supplier<Node> beanToNodeMapper;
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public MFXLoaderBean(String viewName, URL fxmlFile) {
-		this.viewName = viewName;
-		this.fxmlFile = fxmlFile;
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public MFXLoaderBean(String viewName, URL fxmlFile) {
+        this.viewName = viewName;
+        this.fxmlFile = fxmlFile;
+    }
 
-	public MFXLoaderBean(String viewName, URL fxmlFile, Callback<Class<?>, Object> controllerFactory, boolean defaultView, Supplier<Node> beanToNodeMapper) {
-		this.viewName = viewName;
-		this.fxmlFile = fxmlFile;
-		this.controllerFactory = controllerFactory;
-		this.defaultView = defaultView;
-		this.beanToNodeMapper = beanToNodeMapper;
-	}
+    public MFXLoaderBean(String viewName, URL fxmlFile, Callback<Class<?>, Object> controllerFactory, boolean defaultView, Supplier<Node> beanToNodeMapper) {
+        this.viewName = viewName;
+        this.fxmlFile = fxmlFile;
+        this.controllerFactory = controllerFactory;
+        this.defaultView = defaultView;
+        this.beanToNodeMapper = beanToNodeMapper;
+    }
 
-	//================================================================================
-	// Static Methods
-	//================================================================================
-	public static Builder of(String viewName, URL fxmlFile) {
-		return new Builder(viewName, fxmlFile);
-	}
+    //================================================================================
+    // Static Methods
+    //================================================================================
+    public static Builder of(String viewName, URL fxmlFile) {
+        return new Builder(viewName, fxmlFile);
+    }
 
-	//================================================================================
-	// Getters/Setters
-	//================================================================================
+    //================================================================================
+    // Getters/Setters
+    //================================================================================
 
-	/**
-	 * @return the view's identifier
-	 */
-	public String getViewName() {
-		return viewName;
-	}
+    /**
+     * @return the view's identifier
+     */
+    public String getViewName() {
+        return viewName;
+    }
 
-	/**
-	 * @return the view's FXML file
-	 */
-	public URL getFxmlFile() {
-		return fxmlFile;
-	}
+    /**
+     * @return the view's FXML file
+     */
+    public URL getFxmlFile() {
+        return fxmlFile;
+    }
 
-	/**
-	 * @return the FXML file's root node
-	 */
-	public Parent getRoot() {
-		return root;
-	}
+    /**
+     * @return the FXML file's root node
+     */
+    public Parent getRoot() {
+        return root;
+    }
 
-	/**
-	 * Sets the view's root node.
-	 * <p>
-	 * Package private, handled by the loader.
-	 */
-	MFXLoaderBean setRoot(Parent root) {
-		this.root = root;
-		return this;
-	}
+    /**
+     * Sets the view's root node.
+     * <p>
+     * Package private, handled by the loader.
+     */
+    MFXLoaderBean setRoot(Parent root) {
+        this.root = root;
+        return this;
+    }
 
-	/**
-	 * @return the callback used to produce the view's controller
-	 */
-	public Callback<Class<?>, Object> getControllerFactory() {
-		return controllerFactory;
-	}
+    /**
+     * @return the callback used to produce the view's controller
+     */
+    public Callback<Class<?>, Object> getControllerFactory() {
+        return controllerFactory;
+    }
 
-	/**
-	 * Sets the callback used to produce the view's controller.
-	 */
-	public MFXLoaderBean setControllerFactory(Callback<Class<?>, Object> controllerFactory) {
-		this.controllerFactory = controllerFactory;
-		return this;
-	}
+    /**
+     * Sets the callback used to produce the view's controller.
+     */
+    public MFXLoaderBean setControllerFactory(Callback<Class<?>, Object> controllerFactory) {
+        this.controllerFactory = controllerFactory;
+        return this;
+    }
 
-	/**
-	 * @return whether this view should be considered the default view
-	 */
-	public boolean isDefaultView() {
-		return defaultView;
-	}
+    /**
+     * @return whether this view should be considered the default view
+     */
+    public boolean isDefaultView() {
+        return defaultView;
+    }
 
-	/**
-	 * Sets whether this view should be considered the default view.
-	 */
-	public MFXLoaderBean setDefaultView(boolean defaultView) {
-		this.defaultView = defaultView;
-		return this;
-	}
+    /**
+     * Sets whether this view should be considered the default view.
+     */
+    public MFXLoaderBean setDefaultView(boolean defaultView) {
+        this.defaultView = defaultView;
+        return this;
+    }
 
-	/**
-	 * @return whether the view has been loaded by the loader
-	 */
-	public boolean isLoaded() {
-		return loaded;
-	}
+    /**
+     * @return whether the view has been loaded by the loader
+     */
+    public boolean isLoaded() {
+        return loaded;
+    }
 
-	/**
-	 * Sets whether the view has been loaded by the loader.
-	 * <p>
-	 * Package private, handled by the loader.
-	 */
-	MFXLoaderBean setLoaded(boolean loaded) {
-		this.loaded = loaded;
-		return this;
-	}
+    /**
+     * Sets whether the view has been loaded by the loader.
+     * <p>
+     * Package private, handled by the loader.
+     */
+    MFXLoaderBean setLoaded(boolean loaded) {
+        this.loaded = loaded;
+        return this;
+    }
 
-	/**
-	 * @return the supplier used to convert this view into a {@code Node}
-	 */
-	public Supplier<Node> getBeanToNodeMapper() {
-		return beanToNodeMapper;
-	}
+    /**
+     * @return the supplier used to convert this view into a {@code Node}
+     */
+    public Supplier<Node> getBeanToNodeMapper() {
+        return beanToNodeMapper;
+    }
 
-	/**
-	 * Sets the supplier used to convert this view into a {@code Node}.
-	 */
-	public MFXLoaderBean setBeanToNodeMapper(Supplier<Node> beanToNodeMapper) {
-		this.beanToNodeMapper = beanToNodeMapper;
-		return this;
-	}
+    /**
+     * Sets the supplier used to convert this view into a {@code Node}.
+     */
+    public MFXLoaderBean setBeanToNodeMapper(Supplier<Node> beanToNodeMapper) {
+        this.beanToNodeMapper = beanToNodeMapper;
+        return this;
+    }
 
-	//================================================================================
-	// Builder
-	//================================================================================
-	public static class Builder {
-		private final MFXLoaderBean bean;
+    //================================================================================
+    // Builder
+    //================================================================================
+    public static class Builder {
+        private final MFXLoaderBean bean;
 
-		public Builder(String viewName, URL fxmlFile) {
-			this.bean = new MFXLoaderBean(viewName, fxmlFile);
-		}
+        public Builder(String viewName, URL fxmlFile) {
+            this.bean = new MFXLoaderBean(viewName, fxmlFile);
+        }
 
-		public Builder setControllerFactory(Callback<Class<?>, Object> controllerFactory) {
-			bean.setControllerFactory(controllerFactory);
-			return this;
-		}
+        public Builder setControllerFactory(Callback<Class<?>, Object> controllerFactory) {
+            bean.setControllerFactory(controllerFactory);
+            return this;
+        }
 
-		public Builder setDefaultRoot(boolean defaultRoot) {
-			bean.setDefaultView(defaultRoot);
-			return this;
-		}
+        public Builder setDefaultRoot(boolean defaultRoot) {
+            bean.setDefaultView(defaultRoot);
+            return this;
+        }
 
-		public Builder setBeanToNodeMapper(Supplier<Node> beanToNodeMapper) {
-			bean.setBeanToNodeMapper(beanToNodeMapper);
-			return this;
-		}
+        public Builder setBeanToNodeMapper(Supplier<Node> beanToNodeMapper) {
+            bean.setBeanToNodeMapper(beanToNodeMapper);
+            return this;
+        }
 
-		public MFXLoaderBean get() {
-			return bean;
-		}
-	}
+        public MFXLoaderBean get() {
+            return bean;
+        }
+    }
 }

@@ -64,7 +64,7 @@ public class StyleableSizeProperty extends SimpleStyleableObjectProperty<Size> {
     }
 
     public static <S extends Styleable> CssMetaData<S, Size> metaDataFor(
-            String propId, Function<S, StyleableSizeProperty> property, Size initialValue
+        String propId, Function<S, StyleableSizeProperty> property, Size initialValue
     ) {
         return new CssMetaData<>(propId, SizeConverter.getInstance(), initialValue) {
             @Override
@@ -130,8 +130,8 @@ public class StyleableSizeProperty extends SimpleStyleableObjectProperty<Size> {
         public Size convert(ParsedValue<String, Size> value, Font font) {
             try {
                 double[] sizes = Arrays.stream(value.getValue().split(" "))
-                        .mapToDouble(Double::parseDouble)
-                        .toArray();
+                    .mapToDouble(Double::parseDouble)
+                    .toArray();
                 return Size.of(sizes[0], sizes[1]);
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());

@@ -7,19 +7,19 @@ import javafx.scene.Node;
  */
 public enum MouseMode {
 
-	/**
-	 * The generator will detect all mouse events.
-	 */
-	OFF,
+    /**
+     * The generator will detect all mouse events.
+     */
+    OFF,
 
-	/**
-	 * The generator will ignore mouse events on the "bounds area" and only consider the geometric shape of the node,
-	 * better explained here {@link Node#pickOnBoundsProperty()}.
-	 */
-	DONT_PICK_ON_BOUNDS,
+    /**
+     * The generator will ignore mouse events on the "bounds area" and only consider the geometric shape of the node,
+     * better explained here {@link Node#pickOnBoundsProperty()}.
+     */
+    DONT_PICK_ON_BOUNDS,
 
-	/**
-	 * The generator will ignore all mouse events.
-	 */
-	MOUSE_TRANSPARENT
+    /**
+     * The generator will ignore all mouse events.
+     */
+    MOUSE_TRANSPARENT
 }

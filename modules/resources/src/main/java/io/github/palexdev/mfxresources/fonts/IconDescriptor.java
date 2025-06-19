@@ -28,30 +28,30 @@ import java.util.Map;
  */
 public interface IconDescriptor {
 
-	/**
-	 * @return the name of an icon inside the font resource
-	 */
-	String getDescription();
+    /**
+     * @return the name of an icon inside the font resource
+     */
+    String getDescription();
 
-	/**
-	 * @return the code of the icon inside the font resource
-	 */
-	char getCode();
+    /**
+     * @return the code of the icon inside the font resource
+     */
+    char getCode();
 
-	/**
-	 * @return the descriptor associated with the given description or {@code null} if none is found
-	 */
-	default IconDescriptor findByDescription(String description) {
-		return null;
-	}
+    /**
+     * @return the descriptor associated with the given description or {@code null} if none is found
+     */
+    default IconDescriptor findByDescription(String description) {
+        return null;
+    }
 
-	/**
-	 * Optionally a class(especially enums) implementing {@code IconDescriptor} can choose to offer
-	 * a {@code Map} which holds its icons as [description -> code].
-	 * <p>
-	 * This makes the search of an icon by its description much faster.
-	 */
-	default Map<String, Character> getCache() {
-		return Map.of();
-	}
+    /**
+     * Optionally a class(especially enums) implementing {@code IconDescriptor} can choose to offer
+     * a {@code Map} which holds its icons as [description -> code].
+     * <p>
+     * This makes the search of an icon by its description much faster.
+     */
+    default Map<String, Character> getCache() {
+        return Map.of();
+    }
 }

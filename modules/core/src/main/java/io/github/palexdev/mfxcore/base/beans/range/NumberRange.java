@@ -26,74 +26,74 @@ import java.util.Objects;
  * @param <N> The type of Number to represent (must also be a {@link Comparable})
  */
 public abstract class NumberRange<N extends Number & Comparable<N>> {
-	//================================================================================
-	// Properties
-	//================================================================================
-	private final N min;
-	private final N max;
+    //================================================================================
+    // Properties
+    //================================================================================
+    private final N min;
+    private final N max;
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public NumberRange(N min, N max) {
-		if (min == null || max == null || min.compareTo(max) > 0) {
-			throw new IllegalArgumentException("Invalid range for values: Min[" + min + "], Max[" + max + "]");
-		}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public NumberRange(N min, N max) {
+        if (min == null || max == null || min.compareTo(max) > 0) {
+            throw new IllegalArgumentException("Invalid range for values: Min[" + min + "], Max[" + max + "]");
+        }
 
-		this.min = min;
-		this.max = max;
-	}
+        this.min = min;
+        this.max = max;
+    }
 
-	//================================================================================
-	// Abstract Methods
-	//================================================================================
+    //================================================================================
+    // Abstract Methods
+    //================================================================================
 
-	/**
-	 * @return the sum of {@link #getMin()} and {@link #getMax()}
-	 */
-	public abstract N sum();
+    /**
+     * @return the sum of {@link #getMin()} and {@link #getMax()}
+     */
+    public abstract N sum();
 
-	/**
-	 * @return the difference between {@link #getMax()} and {@link #getMin()}
-	 */
-	public abstract N diff();
+    /**
+     * @return the difference between {@link #getMax()} and {@link #getMin()}
+     */
+    public abstract N diff();
 
-	//================================================================================
-	// Getters
-	//================================================================================
+    //================================================================================
+    // Getters
+    //================================================================================
 
-	/**
-	 * @return the lower bound
-	 */
-	public N getMin() {
-		return min;
-	}
+    /**
+     * @return the lower bound
+     */
+    public N getMin() {
+        return min;
+    }
 
-	/**
-	 * @return the upper bound
-	 */
-	public N getMax() {
-		return max;
-	}
+    /**
+     * @return the upper bound
+     */
+    public N getMax() {
+        return max;
+    }
 
-	//================================================================================
-	// Overridden Methods
-	//================================================================================
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		NumberRange<?> that = (NumberRange<?>) o;
-		return getMin().equals(that.getMin()) && getMax().equals(that.getMax());
-	}
+    //================================================================================
+    // Overridden Methods
+    //================================================================================
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NumberRange<?> that = (NumberRange<?>) o;
+        return getMin().equals(that.getMin()) && getMax().equals(that.getMax());
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(getMin(), getMax());
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(getMin(), getMax());
+    }
 
-	@Override
-	public String toString() {
-		return "Min[" + getMin() + "], Max[" + getMax() + "]";
-	}
+    @Override
+    public String toString() {
+        return "Min[" + getMin() + "], Max[" + getMax() + "]";
+    }
 }

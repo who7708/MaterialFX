@@ -30,33 +30,33 @@ import java.util.function.BiPredicate;
  * @param <U> the type of the second predicate's argument
  */
 public class BiPredicateBean<T, U> {
-	//================================================================================
-	// Properties
-	//================================================================================
-	private final String name;
-	private final BiPredicate<T, U> predicate;
+    //================================================================================
+    // Properties
+    //================================================================================
+    private final String name;
+    private final BiPredicate<T, U> predicate;
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public BiPredicateBean(String name, BiPredicate<T, U> predicate) {
-		this.name = name;
-		this.predicate = predicate;
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public BiPredicateBean(String name, BiPredicate<T, U> predicate) {
+        this.name = name;
+        this.predicate = predicate;
+    }
 
-	//================================================================================
-	// Getters
-	//================================================================================
-	public String getName() {
-		return name;
-	}
+    //================================================================================
+    // Getters
+    //================================================================================
+    public String getName() {
+        return name;
+    }
 
-	public BiPredicate<T, U> getPredicate() {
-		return predicate;
-	}
+    public BiPredicate<T, U> getPredicate() {
+        return predicate;
+    }
 
-	@Override
-	public String toString() {
-		return name;
-	}
+    @Override
+    public String toString() {
+        return name;
+    }
 }

@@ -119,9 +119,9 @@ public class TestSelectionGroup {
         group.addAll(selectables);
 
         group.removeAll(
-                selectables.get(0),
-                selectables.get(2),
-                selectables.get(4)
+            selectables.get(0),
+            selectables.get(2),
+            selectables.get(4)
         );
         assertEquals(2, group.getSelectables().size());
         assertEquals(0, group.getSelection().size());
@@ -174,15 +174,15 @@ public class TestSelectionGroup {
         // Sanity check again
         assertEquals(3, group.getSelection().size());
         assertTrue(group.getSelection().containsAll(Set.of(
-                selectables.get(0),
-                selectables.get(3),
-                selectables.get(4)
+            selectables.get(0),
+            selectables.get(3),
+            selectables.get(4)
         )));
 
         group.removeAll(Set.of(
-                selectables.get(0),
-                selectables.get(3),
-                selectables.get(4)
+            selectables.get(0),
+            selectables.get(3),
+            selectables.get(4)
         ));
         assertEquals(1, group.getSelection().size());
         assertTrue(group.getSelection().contains(selectables.get(1)));
@@ -223,9 +223,9 @@ public class TestSelectionGroup {
         // Group sanity check
         assertEquals(3, group.getSelection().size());
         assertTrue(group.getSelection().containsAll(Set.of(
-                selectables.get(0),
-                selectables.get(2),
-                selectables.get(3)
+            selectables.get(0),
+            selectables.get(2),
+            selectables.get(3)
         )));
     }
 
@@ -250,9 +250,9 @@ public class TestSelectionGroup {
         // Group sanity check
         assertEquals(3, group.getSelection().size());
         assertTrue(group.getSelection().containsAll(Set.of(
-                selectables.get(1),
-                selectables.get(2),
-                selectables.get(3)
+            selectables.get(1),
+            selectables.get(2),
+            selectables.get(3)
         )));
     }
 
@@ -562,8 +562,8 @@ public class TestSelectionGroup {
 
     List<DummySelectable> buildSelectables(int cnt) {
         return IntStream.range(0, cnt)
-                .mapToObj(i -> new DummySelectable())
-                .collect(Collectors.toList());
+            .mapToObj(i -> new DummySelectable())
+            .collect(Collectors.toList());
     }
 
     HBox setupStage() {
@@ -574,7 +574,7 @@ public class TestSelectionGroup {
             .style("-fx-stroke: black")
             .select(".selectable:selected")
             .style("-fx-fill: green")
-                .applyOn(box);
+            .applyOn(box);
         try {
             Scene scene = new Scene(box, 400, 200);
             FxToolkit.setupStage(s -> s.setScene(scene));

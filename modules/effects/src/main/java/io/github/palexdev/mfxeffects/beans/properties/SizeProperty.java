@@ -66,17 +66,17 @@ public class SizeProperty extends ReadOnlyObjectWrapper<Size> {
      */
     public void setWidth(double w) {
         Optional.ofNullable(get())
-                .ifPresentOrElse(
-                        s -> {
-                            boolean changed = s.getWidth() != w;
-                            s.setWidth(w);
-                            if (changed) {
-                                invalidated();
-                                fireValueChangedEvent();
-                            }
-                        },
-                        () -> setSize(w, 0.0)
-                );
+            .ifPresentOrElse(
+                s -> {
+                    boolean changed = s.getWidth() != w;
+                    s.setWidth(w);
+                    if (changed) {
+                        invalidated();
+                        fireValueChangedEvent();
+                    }
+                },
+                () -> setSize(w, 0.0)
+            );
     }
 
     /**
@@ -87,17 +87,17 @@ public class SizeProperty extends ReadOnlyObjectWrapper<Size> {
      */
     public void setHeight(double h) {
         Optional.ofNullable(get())
-                .ifPresentOrElse(
-                        s -> {
-                            boolean changed = s.getHeight() != h;
-                            s.setHeight(h);
-                            if (changed) {
-                                invalidated();
-                                fireValueChangedEvent();
-                            }
-                        },
-                        () -> setSize(0.0, h)
-                );
+            .ifPresentOrElse(
+                s -> {
+                    boolean changed = s.getHeight() != h;
+                    s.setHeight(h);
+                    if (changed) {
+                        invalidated();
+                        fireValueChangedEvent();
+                    }
+                },
+                () -> setSize(0.0, h)
+            );
     }
 
     /**
@@ -105,8 +105,8 @@ public class SizeProperty extends ReadOnlyObjectWrapper<Size> {
      */
     public double getWidth() {
         return Optional.ofNullable(get())
-                .map(Size::getWidth)
-                .orElse(-1.0);
+            .map(Size::getWidth)
+            .orElse(-1.0);
     }
 
     /**
@@ -114,7 +114,7 @@ public class SizeProperty extends ReadOnlyObjectWrapper<Size> {
      */
     public double getHeight() {
         return Optional.ofNullable(get())
-                .map(Size::getHeight)
-                .orElse(-1.0);
+            .map(Size::getHeight)
+            .orElse(-1.0);
     }
 }

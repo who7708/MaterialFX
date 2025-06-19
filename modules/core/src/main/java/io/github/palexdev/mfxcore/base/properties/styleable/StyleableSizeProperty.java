@@ -31,108 +31,108 @@ import java.util.function.Function;
  */
 public class StyleableSizeProperty extends StyleableObjectProperty<Size> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public StyleableSizeProperty(CssMetaData<? extends Styleable, Size> cssMetaData) {
-		super(cssMetaData);
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public StyleableSizeProperty(CssMetaData<? extends Styleable, Size> cssMetaData) {
+        super(cssMetaData);
+    }
 
-	public StyleableSizeProperty(CssMetaData<? extends Styleable, Size> cssMetaData, Size initialValue) {
-		super(cssMetaData, initialValue);
-	}
+    public StyleableSizeProperty(CssMetaData<? extends Styleable, Size> cssMetaData, Size initialValue) {
+        super(cssMetaData, initialValue);
+    }
 
-	public StyleableSizeProperty(CssMetaData<? extends Styleable, Size> cssMetaData, Object bean, String name) {
-		super(cssMetaData, bean, name);
-	}
+    public StyleableSizeProperty(CssMetaData<? extends Styleable, Size> cssMetaData, Object bean, String name) {
+        super(cssMetaData, bean, name);
+    }
 
-	public StyleableSizeProperty(CssMetaData<? extends Styleable, Size> cssMetaData, Object bean, String name, Size initialValue) {
-		super(cssMetaData, bean, name, initialValue);
-	}
+    public StyleableSizeProperty(CssMetaData<? extends Styleable, Size> cssMetaData, Object bean, String name, Size initialValue) {
+        super(cssMetaData, bean, name, initialValue);
+    }
 
-	//================================================================================
-	// Methods
-	//================================================================================
-	public void setSize(double width, double height) {
-		set(Size.of(width, height));
-	}
+    //================================================================================
+    // Methods
+    //================================================================================
+    public void setSize(double width, double height) {
+        set(Size.of(width, height));
+    }
 
-	@Override
-	public void applyStyle(StyleOrigin origin, Size v) {
-		if (v == null) return;
-		super.applyStyle(origin, v);
-	}
+    @Override
+    public void applyStyle(StyleOrigin origin, Size v) {
+        if (v == null) return;
+        super.applyStyle(origin, v);
+    }
 
-	public static <S extends Styleable> CssMetaData<S, Size> metaDataFor(
-		String propId, Function<S, StyleableSizeProperty> property, Size initialValue
-	) {
-		return new CssMetaData<>(propId, SizeConverter.getInstance(), initialValue) {
-			@Override
-			public boolean isSettable(S styleable) {
-				return !property.apply(styleable).isBound();
-			}
+    public static <S extends Styleable> CssMetaData<S, Size> metaDataFor(
+        String propId, Function<S, StyleableSizeProperty> property, Size initialValue
+    ) {
+        return new CssMetaData<>(propId, SizeConverter.getInstance(), initialValue) {
+            @Override
+            public boolean isSettable(S styleable) {
+                return !property.apply(styleable).isBound();
+            }
 
-			@Override
-			public StyleableProperty<Size> getStyleableProperty(S styleable) {
-				return property.apply(styleable);
-			}
-		};
-	}
+            @Override
+            public StyleableProperty<Size> getStyleableProperty(S styleable) {
+                return property.apply(styleable);
+            }
+        };
+    }
 
-	//================================================================================
-	// Internal Classes
-	//================================================================================
+    //================================================================================
+    // Internal Classes
+    //================================================================================
 
-	/**
-	 * Style converter implementation to make {@link Size} settable via CSS.
-	 * The related property is {@link StyleableSizeProperty}.
-	 * <p>
-	 * For this to properly work, you must use a specific format. The converter expects a string value,
-	 * with two double numbers which will be in order the width and the height for the new {@code Size}, so:
-	 * <pre>
-	 * {@code
-	 * .node {
-	 *     -fx-property-name: "100 30";
-	 * }
-	 * }
-	 * </pre>
-	 */
-	public static class SizeConverter extends StyleConverter<String, Size> {
+    /**
+     * Style converter implementation to make {@link Size} settable via CSS.
+     * The related property is {@link StyleableSizeProperty}.
+     * <p>
+     * For this to properly work, you must use a specific format. The converter expects a string value,
+     * with two double numbers which will be in order the width and the height for the new {@code Size}, so:
+     * <pre>
+     * {@code
+     * .node {
+     *     -fx-property-name: "100 30";
+     * }
+     * }
+     * </pre>
+     */
+    public static class SizeConverter extends StyleConverter<String, Size> {
 
-		// lazy, thread-safe instantiation
-		private static class Holder {
-			static final SizeConverter INSTANCE = new SizeConverter();
-		}
+        // lazy, thread-safe instantiation
+        private static class Holder {
+            static final SizeConverter INSTANCE = new SizeConverter();
+        }
 
-		/**
-		 * Gets the {@code SizeConverter} instance.
-		 *
-		 * @return the {@code SizeConverter} instance
-		 */
-		public static StyleConverter<String, Size> getInstance() {
-			return Holder.INSTANCE;
-		}
+        /**
+         * Gets the {@code SizeConverter} instance.
+         *
+         * @return the {@code SizeConverter} instance
+         */
+        public static StyleConverter<String, Size> getInstance() {
+            return Holder.INSTANCE;
+        }
 
-		private SizeConverter() {
-			super();
-		}
+        private SizeConverter() {
+            super();
+        }
 
-		@Override
-		public Size convert(ParsedValue<String, Size> value, Font font) {
-			try {
-				double[] sizes = Arrays.stream(value.getValue().split(" "))
-					.mapToDouble(Double::parseDouble)
-					.toArray();
-				return Size.of(sizes[0], sizes[1]);
-			} catch (Exception ex) {
-				System.out.println(ex.getMessage());
-				return null;
-			}
-		}
+        @Override
+        public Size convert(ParsedValue<String, Size> value, Font font) {
+            try {
+                double[] sizes = Arrays.stream(value.getValue().split(" "))
+                    .mapToDouble(Double::parseDouble)
+                    .toArray();
+                return Size.of(sizes[0], sizes[1]);
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+                return null;
+            }
+        }
 
-		@Override
-		public String toString() {
-			return "SizeConverter";
-		}
-	}
+        @Override
+        public String toString() {
+            return "SizeConverter";
+        }
+    }
 }

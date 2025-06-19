@@ -28,88 +28,88 @@ import javafx.stage.Stage;
  * (given that the root of the content is a {@link Region}).
  */
 public class StageResizer extends RegionDragResizer {
-	//================================================================================
-	// Properties
-	//================================================================================
-	private Stage stage;
+    //================================================================================
+    // Properties
+    //================================================================================
+    private Stage stage;
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public StageResizer(Region node, Stage stage) {
-		super(node);
-		this.stage = stage;
-		setResizeHandler((n, x, y, w, h) -> resizeRelocateStage(stage, x, y, w, h));
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public StageResizer(Region node, Stage stage) {
+        super(node);
+        this.stage = stage;
+        setResizeHandler((n, x, y, w, h) -> resizeRelocateStage(stage, x, y, w, h));
+    }
 
-	//================================================================================
-	// Methods
-	//================================================================================
-	protected void resizeRelocateStage(Stage stage, double x, double y, double w, double h) {
-		if (!canResize()) return;
-		stage.setX(x);
-		stage.setY(y);
-		stage.setWidth(w);
-		stage.setHeight(h);
-	}
+    //================================================================================
+    // Methods
+    //================================================================================
+    protected void resizeRelocateStage(Stage stage, double x, double y, double w, double h) {
+        if (!canResize()) return;
+        stage.setX(x);
+        stage.setY(y);
+        stage.setWidth(w);
+        stage.setHeight(h);
+    }
 
-	protected boolean canResize() {
-		return stage.isResizable();
-	}
+    protected boolean canResize() {
+        return stage.isResizable();
+    }
 
-	//================================================================================
-	// Overridden Methods
-	//================================================================================
-	@Override
-	protected void handlePressed(MouseEvent event) {
-		node.requestFocus();
-		clickedX = eventX(event);
-		clickedY = eventY(event);
-		nodeX = nodeX();
-		nodeY = nodeY();
-		nodeW = nodeW();
-		nodeH = nodeH();
-		draggedZone = getZoneByEvent(event);
-	}
+    //================================================================================
+    // Overridden Methods
+    //================================================================================
+    @Override
+    protected void handlePressed(MouseEvent event) {
+        node.requestFocus();
+        clickedX = eventX(event);
+        clickedY = eventY(event);
+        nodeX = nodeX();
+        nodeY = nodeY();
+        nodeW = nodeW();
+        nodeH = nodeH();
+        draggedZone = getZoneByEvent(event);
+    }
 
-	@Override
-	protected void handleDragged(MouseEvent event) {
-		if (node.getCursor() == Cursor.MOVE) return;
-		super.handleDragged(event);
-	}
+    @Override
+    protected void handleDragged(MouseEvent event) {
+        if (node.getCursor() == Cursor.MOVE) return;
+        super.handleDragged(event);
+    }
 
-	@Override
-	protected void handleMoved(MouseEvent event) {
-		if (!canResize()) {
-			node.setCursor(Cursor.DEFAULT);
-			return;
-		}
-		super.handleMoved(event);
-	}
+    @Override
+    protected void handleMoved(MouseEvent event) {
+        if (!canResize()) {
+            node.setCursor(Cursor.DEFAULT);
+            return;
+        }
+        super.handleMoved(event);
+    }
 
-	@Override
-	protected double eventX(MouseEvent event) {
-		return event.getScreenX();
-	}
+    @Override
+    protected double eventX(MouseEvent event) {
+        return event.getScreenX();
+    }
 
-	@Override
-	protected double eventY(MouseEvent event) {
-		return event.getScreenY();
-	}
+    @Override
+    protected double eventY(MouseEvent event) {
+        return event.getScreenY();
+    }
 
-	@Override
-	protected double nodeX() {
-		return stage.getX();
-	}
+    @Override
+    protected double nodeX() {
+        return stage.getX();
+    }
 
-	@Override
-	protected double nodeY() {
-		return stage.getY();
-	}
+    @Override
+    protected double nodeY() {
+        return stage.getY();
+    }
 
-	@Override
-	public void dispose() {
-		stage = null;
-		super.dispose();
-	}
+    @Override
+    public void dispose() {
+        stage = null;
+        super.dispose();
+    }
 }

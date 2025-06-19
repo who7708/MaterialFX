@@ -47,12 +47,12 @@ import javafx.animation.Interpolator;
  * @see Threshold
  */
 public abstract class Curve extends Interpolator {
-	public abstract double curve(double t);
+    public abstract double curve(double t);
 
-	/**
-	 * Flips this curve's motion. This is done by creating a new {@link FlippedCurve}.
-	 */
-	public Curve flipped() {
-		return new FlippedCurve(this);
-	}
+    /**
+     * Flips this curve's motion. This is done by creating a new {@link FlippedCurve}.
+     */
+    public Curve flipped() {
+        return new FlippedCurve(this);
+    }
 }

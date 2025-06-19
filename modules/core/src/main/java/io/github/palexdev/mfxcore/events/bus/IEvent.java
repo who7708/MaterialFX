@@ -68,8 +68,8 @@ import io.github.palexdev.mfxcore.events.Event;
 @FunctionalInterface
 public interface IEvent {
 
-	/**
-	 * @return the data carried by the event
-	 */
-	Object data();
+    /**
+     * @return the data carried by the event
+     */
+    Object data();
 }

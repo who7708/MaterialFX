@@ -30,21 +30,21 @@ import java.util.function.Supplier;
  */
 public class SupplierProperty<T> extends ReadOnlyObjectWrapper<Supplier<T>> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public SupplierProperty() {
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public SupplierProperty() {
+    }
 
-	public SupplierProperty(Supplier<T> initialValue) {
-		super(initialValue);
-	}
+    public SupplierProperty(Supplier<T> initialValue) {
+        super(initialValue);
+    }
 
-	public SupplierProperty(Object bean, String name) {
-		super(bean, name);
-	}
+    public SupplierProperty(Object bean, String name) {
+        super(bean, name);
+    }
 
-	public SupplierProperty(Object bean, String name, Supplier<T> initialValue) {
-		super(bean, name, initialValue);
-	}
+    public SupplierProperty(Object bean, String name, Supplier<T> initialValue) {
+        super(bean, name, initialValue);
+    }
 }

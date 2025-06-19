@@ -24,15 +24,15 @@ import javafx.beans.binding.StringBinding;
 
 public class StringBindingBuilder extends BindingBuilder<String, StringBinding> {
 
-	public static StringBindingBuilder build() {
-		return new StringBindingBuilder();
-	}
+    public static StringBindingBuilder build() {
+        return new StringBindingBuilder();
+    }
 
-	@Override
-	protected StringBinding create() {
-		if (mapper == null) {
-			throw new IllegalStateException("Mapper has not been set!");
-		}
-		return Bindings.createStringBinding(mapper, getSourcesArray());
-	}
+    @Override
+    protected StringBinding create() {
+        if (mapper == null) {
+            throw new IllegalStateException("Mapper has not been set!");
+        }
+        return Bindings.createStringBinding(mapper, getSourcesArray());
+    }
 }

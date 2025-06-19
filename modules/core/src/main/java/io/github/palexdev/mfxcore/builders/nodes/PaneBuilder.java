@@ -23,41 +23,41 @@ import javafx.scene.layout.Pane;
 
 public class PaneBuilder<P extends Pane> extends RegionBuilder<P> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	@SuppressWarnings("unchecked")
-	public PaneBuilder() {
-		this((P) new Pane());
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    @SuppressWarnings("unchecked")
+    public PaneBuilder() {
+        this((P) new Pane());
+    }
 
-	public PaneBuilder(P pane) {
-		super(pane);
-	}
+    public PaneBuilder(P pane) {
+        super(pane);
+    }
 
-	public static <P extends Pane> PaneBuilder<P> pane() {
-		return new PaneBuilder<>();
-	}
+    public static <P extends Pane> PaneBuilder<P> pane() {
+        return new PaneBuilder<>();
+    }
 
-	public static <P extends Pane> PaneBuilder<P> pane(P pane) {
-		return new PaneBuilder<>(pane);
-	}
+    public static <P extends Pane> PaneBuilder<P> pane(P pane) {
+        return new PaneBuilder<>(pane);
+    }
 
-	//================================================================================
-	// Delegate Methods
-	//================================================================================
-	public PaneBuilder<P> addChildren(Node... children) {
-		node.getChildren().addAll(children);
-		return this;
-	}
+    //================================================================================
+    // Delegate Methods
+    //================================================================================
+    public PaneBuilder<P> addChildren(Node... children) {
+        node.getChildren().addAll(children);
+        return this;
+    }
 
-	public PaneBuilder<P> setChildren(Node... children) {
-		node.getChildren().setAll(children);
-		return this;
-	}
+    public PaneBuilder<P> setChildren(Node... children) {
+        node.getChildren().setAll(children);
+        return this;
+    }
 
-	public PaneBuilder<P> removeChildren(Node... children) {
-		node.getChildren().removeAll(children);
-		return this;
-	}
+    public PaneBuilder<P> removeChildren(Node... children) {
+        node.getChildren().removeAll(children);
+        return this;
+    }
 }

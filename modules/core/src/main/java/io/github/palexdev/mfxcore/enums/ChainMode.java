@@ -26,24 +26,24 @@ import io.github.palexdev.mfxlocalization.I18N;
  */
 @SuppressWarnings("NonFinalFieldInEnum")
 public enum ChainMode {
-	AND("&"),
-	OR(I18N.getOrDefault("chainMode.or"));
+    AND("&"),
+    OR(I18N.getOrDefault("chainMode.or"));
 
-	public static boolean useAlternativeAnd = false;
-	private final String text;
+    public static boolean useAlternativeAnd = false;
+    private final String text;
 
-	ChainMode(String text) {
-		this.text = text;
-	}
+    ChainMode(String text) {
+        this.text = text;
+    }
 
-	public String text() {
-		return this == AND && useAlternativeAnd ? I18N.getOrDefault("chainMode.alternativeAnd") : this.text;
-	}
+    public String text() {
+        return this == AND && useAlternativeAnd ? I18N.getOrDefault("chainMode.alternativeAnd") : this.text;
+    }
 
-	/**
-	 * Chains the given two boolean values according to the given {@link ChainMode}.
-	 */
-	public static boolean chain(ChainMode mode, boolean first, boolean second) {
-		return (mode == AND) ? first && second : first || second;
-	}
+    /**
+     * Chains the given two boolean values according to the given {@link ChainMode}.
+     */
+    public static boolean chain(ChainMode mode, boolean first, boolean second) {
+        return (mode == AND) ? first && second : first || second;
+    }
 }

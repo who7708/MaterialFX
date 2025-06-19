@@ -26,12 +26,12 @@ import io.github.palexdev.mfxeffects.animations.base.Curve;
  * <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_bounce_in_out.mp4>Bounce In Out</a>
  */
 public class BounceInOutCurve extends Curve {
-	@Override
-	public double curve(double t) {
-		if (t < 0.5) {
-			return (1.0 - Motion.bounce(1.0 - t * 2.0)) * 0.5;
-		} else {
-			return Motion.bounce(t * 2.0 - 1.0) * 0.5 + 0.5;
-		}
-	}
+    @Override
+    public double curve(double t) {
+        if (t < 0.5) {
+            return (1.0 - Motion.bounce(1.0 - t * 2.0)) * 0.5;
+        } else {
+            return Motion.bounce(t * 2.0 - 1.0) * 0.5 + 0.5;
+        }
+    }
 }

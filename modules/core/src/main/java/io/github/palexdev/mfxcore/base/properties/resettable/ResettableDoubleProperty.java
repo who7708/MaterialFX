@@ -28,78 +28,78 @@ import java.util.Objects;
  * A {@link SimpleDoubleProperty} that implements {@link ResettableProperty}.
  */
 public class ResettableDoubleProperty extends ReadOnlyDoubleWrapper implements ResettableProperty<Number> {
-	//================================================================================
-	// Properties
-	//================================================================================
-	private double defaultValue;
-	private boolean fireChangeOnReset = true;
-	private boolean hasBeenReset = false;
+    //================================================================================
+    // Properties
+    //================================================================================
+    private double defaultValue;
+    private boolean fireChangeOnReset = true;
+    private boolean hasBeenReset = false;
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public ResettableDoubleProperty() {
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public ResettableDoubleProperty() {
+    }
 
-	public ResettableDoubleProperty(double initialValue) {
-		super(initialValue);
-	}
+    public ResettableDoubleProperty(double initialValue) {
+        super(initialValue);
+    }
 
-	public ResettableDoubleProperty(double initialValue, double defaultValue) {
-		super(initialValue);
-		this.defaultValue = defaultValue;
-	}
+    public ResettableDoubleProperty(double initialValue, double defaultValue) {
+        super(initialValue);
+        this.defaultValue = defaultValue;
+    }
 
-	public ResettableDoubleProperty(Object bean, String name) {
-		super(bean, name);
-	}
+    public ResettableDoubleProperty(Object bean, String name) {
+        super(bean, name);
+    }
 
-	public ResettableDoubleProperty(Object bean, String name, double initialValue) {
-		super(bean, name, initialValue);
-	}
+    public ResettableDoubleProperty(Object bean, String name, double initialValue) {
+        super(bean, name, initialValue);
+    }
 
-	public ResettableDoubleProperty(Object bean, String name, double initialValue, Double defaultValue) {
-		super(bean, name, initialValue);
-		this.defaultValue = defaultValue;
-	}
+    public ResettableDoubleProperty(Object bean, String name, double initialValue, Double defaultValue) {
+        super(bean, name, initialValue);
+        this.defaultValue = defaultValue;
+    }
 
-	//================================================================================
-	// Override Methods
-	//================================================================================
-	@Override
-	public boolean isFireChangeOnReset() {
-		return fireChangeOnReset;
-	}
+    //================================================================================
+    // Override Methods
+    //================================================================================
+    @Override
+    public boolean isFireChangeOnReset() {
+        return fireChangeOnReset;
+    }
 
-	@Override
-	public void setFireChangeOnReset(boolean fireChangeOnReset) {
-		this.fireChangeOnReset = fireChangeOnReset;
-	}
+    @Override
+    public void setFireChangeOnReset(boolean fireChangeOnReset) {
+        this.fireChangeOnReset = fireChangeOnReset;
+    }
 
-	@Override
-	public void set(double newValue) {
-		hasBeenReset = newValue == defaultValue;
-		super.set(newValue);
-	}
+    @Override
+    public void set(double newValue) {
+        hasBeenReset = newValue == defaultValue;
+        super.set(newValue);
+    }
 
-	@Override
-	protected void fireValueChangedEvent() {
-		if (Objects.equals(getValue(), defaultValue) && !fireChangeOnReset) return;
-		super.fireValueChangedEvent();
-	}
+    @Override
+    protected void fireValueChangedEvent() {
+        if (Objects.equals(getValue(), defaultValue) && !fireChangeOnReset) return;
+        super.fireValueChangedEvent();
+    }
 
-	@Override
-	public boolean hasBeenReset() {
-		return hasBeenReset;
-	}
+    @Override
+    public boolean hasBeenReset() {
+        return hasBeenReset;
+    }
 
-	@Override
-	public Double getDefaultValue() {
-		return defaultValue;
-	}
+    @Override
+    public Double getDefaultValue() {
+        return defaultValue;
+    }
 
-	@Override
-	public void setDefaultValue(Number defaultValue) {
-		this.defaultValue = defaultValue.doubleValue();
-	}
+    @Override
+    public void setDefaultValue(Number defaultValue) {
+        this.defaultValue = defaultValue.doubleValue();
+    }
 }

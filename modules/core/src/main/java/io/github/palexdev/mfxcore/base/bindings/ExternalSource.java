@@ -36,116 +36,116 @@ import java.util.Objects;
  * @param <S> the type of the source's observable
  */
 public class ExternalSource<S> extends AbstractSource<S, S> {
-	//================================================================================
-	// Properties
-	//================================================================================
-	private Updater<S> action = (oldValue, newValue) -> {
-	};
+    //================================================================================
+    // Properties
+    //================================================================================
+    private Updater<S> action = (oldValue, newValue) -> {
+    };
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	protected ExternalSource() {
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    protected ExternalSource() {
+    }
 
-	public ExternalSource(ObservableValue<? extends S> observable) {
-		super(observable);
-	}
+    public ExternalSource(ObservableValue<? extends S> observable) {
+        super(observable);
+    }
 
-	public ExternalSource(ObservableValue<? extends S> observable, Updater<S> action) {
-		super(observable);
-		this.action = action;
-	}
+    public ExternalSource(ObservableValue<? extends S> observable, Updater<S> action) {
+        super(observable);
+        this.action = action;
+    }
 
-	public static <S> ExternalSource<S> of(ObservableValue<? extends S> observable) {
-		return new ExternalSource<>(observable);
-	}
+    public static <S> ExternalSource<S> of(ObservableValue<? extends S> observable) {
+        return new ExternalSource<>(observable);
+    }
 
-	public static <S> ExternalSource<S> of(ObservableValue<? extends S> observable, Updater<S> action) {
-		return new ExternalSource<>(observable, action);
-	}
+    public static <S> ExternalSource<S> of(ObservableValue<? extends S> observable, Updater<S> action) {
+        return new ExternalSource<>(observable, action);
+    }
 
-	//================================================================================
-	// Methods
-	//================================================================================
+    //================================================================================
+    // Methods
+    //================================================================================
 
-	/**
-	 * Activates this invalidating source by adding a listener to it that will trigger the specified {@link #getAction()}.
-	 */
-	@Override
-	protected void listen() {
-		if (obvListener == null) obvListener = (ov, o, n) -> action.update(o, n);
-		observable.addListener(obvListener);
-	}
+    /**
+     * Activates this invalidating source by adding a listener to it that will trigger the specified {@link #getAction()}.
+     */
+    @Override
+    protected void listen() {
+        if (obvListener == null) obvListener = (ov, o, n) -> action.update(o, n);
+        observable.addListener(obvListener);
+    }
 
-	/**
-	 * Unsupported.
-	 *
-	 * @throws UnsupportedOperationException {@code ExternalSources} do not operate on a target
-	 */
-	@Override
-	protected void listen(Target<S> target) {
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * Unsupported.
+     *
+     * @throws UnsupportedOperationException {@code ExternalSources} do not operate on a target
+     */
+    @Override
+    protected void listen(Target<S> target) {
+        throw new UnsupportedOperationException();
+    }
 
-	/**
-	 * Unsupported.
-	 *
-	 * @throws UnsupportedOperationException {@code ExternalSources} are not directly responsible for updating
-	 *                                       a target
-	 */
-	@Override
-	public void updateTarget(S oldValue, S newValue) {
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * Unsupported.
+     *
+     * @throws UnsupportedOperationException {@code ExternalSources} are not directly responsible for updating
+     *                                       a target
+     */
+    @Override
+    public void updateTarget(S oldValue, S newValue) {
+        throw new UnsupportedOperationException();
+    }
 
-	/**
-	 * Unsupported.
-	 *
-	 * @throws UnsupportedOperationException {@code ExternalSources} are not directly responsible for
-	 *                                       updating sources
-	 */
-	@Override
-	public void updateSource(S oldValue, S newValue) {
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * Unsupported.
+     *
+     * @throws UnsupportedOperationException {@code ExternalSources} are not directly responsible for
+     *                                       updating sources
+     */
+    @Override
+    public void updateSource(S oldValue, S newValue) {
+        throw new UnsupportedOperationException();
+    }
 
-	/**
-	 * Disposes the source by removing the listener, then sets both the observable
-	 * and listener to null.
-	 */
-	@Override
-	public void dispose() {
-		observable.removeListener(obvListener);
-		observable = null;
-		obvListener = null;
-	}
+    /**
+     * Disposes the source by removing the listener, then sets both the observable
+     * and listener to null.
+     */
+    @Override
+    public void dispose() {
+        observable.removeListener(obvListener);
+        observable = null;
+        obvListener = null;
+    }
 
-	/**
-	 * @return the action performed by this source when it changes
-	 */
-	public Updater<S> getAction() {
-		return action;
-	}
+    /**
+     * @return the action performed by this source when it changes
+     */
+    public Updater<S> getAction() {
+        return action;
+    }
 
-	/**
-	 * Sets the action performed by this source whe int changes.
-	 */
-	public ExternalSource<S> setAction(Updater<S> action) {
-		this.action = action;
-		return this;
-	}
+    /**
+     * Sets the action performed by this source whe int changes.
+     */
+    public ExternalSource<S> setAction(Updater<S> action) {
+        this.action = action;
+        return this;
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		ExternalSource<?> that = (ExternalSource<?>) o;
-		return observable.equals(that.observable);
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ExternalSource<?> that = (ExternalSource<?>) o;
+        return observable.equals(that.observable);
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(observable);
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(observable);
+    }
 }

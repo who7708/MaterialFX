@@ -27,22 +27,22 @@ import java.net.URL;
  */
 public class MFXResources {
 
-	private MFXResources() {
-	}
+    private MFXResources() {
+    }
 
-	public static URL loadURL(String path) {
-		return MFXResources.class.getResource(path);
-	}
+    public static URL loadURL(String path) {
+        return MFXResources.class.getResource(path);
+    }
 
-	public static String load(String path) {
-		return loadURL(path).toString();
-	}
+    public static String load(String path) {
+        return loadURL(path).toString();
+    }
 
-	public static InputStream loadStream(String name) {
-		return MFXResources.class.getResourceAsStream(name);
-	}
+    public static InputStream loadStream(String name) {
+        return MFXResources.class.getResourceAsStream(name);
+    }
 
-	public static InputStream loadFont(String path) {
-		return loadStream("fonts/" + path);
-	}
+    public static InputStream loadFont(String path) {
+        return loadStream("fonts/" + path);
+    }
 }

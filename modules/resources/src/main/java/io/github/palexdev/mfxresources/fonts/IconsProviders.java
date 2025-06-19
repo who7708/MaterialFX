@@ -33,104 +33,104 @@ import javafx.scene.text.Font;
  * This enum contains all the "officially" supported icon fonts.
  */
 public enum IconsProviders implements IconProvider {
-	FONTAWESOME_BRANDS("FontAwesome/brands/FontAwesomeBrands.ttf", FontAwesomeBrands::toCode),
-	FONTAWESOME_REGULAR("FontAwesome/regular/FontAwesomeRegular.ttf", FontAwesomeRegular::toCode),
-	FONTAWESOME_SOLID("FontAwesome/solid/FontAwesomeSolid.ttf", FontAwesomeSolid::toCode),
-	;
+    FONTAWESOME_BRANDS("FontAwesome/brands/FontAwesomeBrands.ttf", FontAwesomeBrands::toCode),
+    FONTAWESOME_REGULAR("FontAwesome/regular/FontAwesomeRegular.ttf", FontAwesomeRegular::toCode),
+    FONTAWESOME_SOLID("FontAwesome/solid/FontAwesomeSolid.ttf", FontAwesomeSolid::toCode),
+    ;
 
-	private static final NavigableMap<String, IconProvider> PROVIDERS = new TreeMap<>();
+    private static final NavigableMap<String, IconProvider> PROVIDERS = new TreeMap<>();
 
-	static {
-		registerProvider("fab-", FONTAWESOME_BRANDS);
-		registerProvider("far-", FONTAWESOME_REGULAR);
-		registerProvider("fas-", FONTAWESOME_SOLID);
-	}
+    static {
+        registerProvider("fab-", FONTAWESOME_BRANDS);
+        registerProvider("far-", FONTAWESOME_REGULAR);
+        registerProvider("fas-", FONTAWESOME_SOLID);
+    }
 
-	private final String font;
-	private final Function<String, Character> converter;
+    private final String font;
+    private final Function<String, Character> converter;
 
-	IconsProviders(String font, Function<String, Character> converter) {
-		this.font = font;
-		this.converter = converter;
-	}
+    IconsProviders(String font, Function<String, Character> converter) {
+        this.font = font;
+        this.converter = converter;
+    }
 
-	@Override
-	public String getFontPath() {
-		return font;
-	}
+    @Override
+    public String getFontPath() {
+        return font;
+    }
 
-	@Override
-	public Function<String, Character> getConverter() {
-		return converter;
-	}
+    @Override
+    public Function<String, Character> getConverter() {
+        return converter;
+    }
 
-	@Override
-	public InputStream load() {
-		return MFXResources.loadFont(font);
-	}
+    @Override
+    public InputStream load() {
+        return MFXResources.loadFont(font);
+    }
 
-	/**
-	 * Registers the given {@link IconProvider} to the given prefix.
-	 * <p>
-	 * When {@link MFXFontIcon} is going to receive a description with such prefix, it's automatically going to use this
-	 * provider.
-	 * <p></p>
-	 * If a provider for a prefix is already present, it will be replaced with this new one.
-	 */
-	public static void registerProvider(String prefix, IconProvider provider) {
-		PROVIDERS.put(prefix, provider);
-	}
+    /**
+     * Registers the given {@link IconProvider} to the given prefix.
+     * <p>
+     * When {@link MFXFontIcon} is going to receive a description with such prefix, it's automatically going to use this
+     * provider.
+     * <p></p>
+     * If a provider for a prefix is already present, it will be replaced with this new one.
+     */
+    public static void registerProvider(String prefix, IconProvider provider) {
+        PROVIDERS.put(prefix, provider);
+    }
 
-	/**
-	 * Creates an anonymous {@link IconProvider} implementation that returns the given converter and font.
-	 * <p>
-	 * Delegates to {@link #registerProvider(String, IconProvider)}.
-	 */
-	public static void registerProvider(String prefix, Font font, Function<String, Character> converter) {
-		registerProvider(prefix, new IconProvider() {
-			@Override
-			public String getFontPath() {
-				throw new UnsupportedOperationException();
-			}
+    /**
+     * Creates an anonymous {@link IconProvider} implementation that returns the given converter and font.
+     * <p>
+     * Delegates to {@link #registerProvider(String, IconProvider)}.
+     */
+    public static void registerProvider(String prefix, Font font, Function<String, Character> converter) {
+        registerProvider(prefix, new IconProvider() {
+            @Override
+            public String getFontPath() {
+                throw new UnsupportedOperationException();
+            }
 
-			@Override
-			public Function<String, Character> getConverter() {
-				return converter;
-			}
+            @Override
+            public Function<String, Character> getConverter() {
+                return converter;
+            }
 
-			@Override
-			public InputStream load() {
-				throw new UnsupportedOperationException();
-			}
+            @Override
+            public InputStream load() {
+                throw new UnsupportedOperationException();
+            }
 
-			@Override
-			public Font loadFont() {
-				return font;
-			}
+            @Override
+            public Font loadFont() {
+                return font;
+            }
 
-			@Override
-			public Font loadFont(double size) {
-				return font;
-			}
-		});
-	}
+            @Override
+            public Font loadFont(double size) {
+                return font;
+            }
+        });
+    }
 
-	/**
-	 * Given an icon descriptor as a String, attempts to return an {@link IconProvider} for its prefix.
-	 * <p>
-	 * If none is found returns {@code null}.
-	 */
-	public static IconProvider getProvider(String description) {
-		String prefix = PROVIDERS.floorKey(description);
-		if (prefix != null && description.startsWith(prefix))
-			return PROVIDERS.get(prefix);
-		return null;
-	}
+    /**
+     * Given an icon descriptor as a String, attempts to return an {@link IconProvider} for its prefix.
+     * <p>
+     * If none is found returns {@code null}.
+     */
+    public static IconProvider getProvider(String description) {
+        String prefix = PROVIDERS.floorKey(description);
+        if (prefix != null && description.startsWith(prefix))
+            return PROVIDERS.get(prefix);
+        return null;
+    }
 
-	/**
-	 * Delegates to {@link #getProvider(String)}.
-	 */
-	public static IconProvider getProvider(IconDescriptor descriptor) {
-		return getProvider(descriptor.getDescription());
-	}
+    /**
+     * Delegates to {@link #getProvider(String)}.
+     */
+    public static IconProvider getProvider(IconDescriptor descriptor) {
+        return getProvider(descriptor.getDescription());
+    }
 }

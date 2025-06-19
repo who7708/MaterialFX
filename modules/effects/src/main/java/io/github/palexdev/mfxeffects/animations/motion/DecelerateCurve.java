@@ -27,9 +27,9 @@ import io.github.palexdev.mfxeffects.animations.base.Curve;
  * <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_decelerate.mp4>Decelerate</a>
  */
 public class DecelerateCurve extends Curve {
-	@Override
-	public double curve(double t) {
-		t = 1.0 - t;
-		return 1.0 - t * t;
-	}
+    @Override
+    public double curve(double t) {
+        t = 1.0 - t;
+        return 1.0 - t * t;
+    }
 }

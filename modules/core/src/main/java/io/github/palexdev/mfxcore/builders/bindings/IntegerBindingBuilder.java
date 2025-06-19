@@ -24,15 +24,15 @@ import javafx.beans.binding.IntegerBinding;
 
 public class IntegerBindingBuilder extends BindingBuilder<Integer, IntegerBinding> {
 
-	public static IntegerBindingBuilder build() {
-		return new IntegerBindingBuilder();
-	}
+    public static IntegerBindingBuilder build() {
+        return new IntegerBindingBuilder();
+    }
 
-	@Override
-	protected IntegerBinding create() {
-		if (mapper == null) {
-			throw new IllegalStateException("Mapper has not been set!");
-		}
-		return Bindings.createIntegerBinding(mapper, getSourcesArray());
-	}
+    @Override
+    protected IntegerBinding create() {
+        if (mapper == null) {
+            throw new IllegalStateException("Mapper has not been set!");
+        }
+        return Bindings.createIntegerBinding(mapper, getSourcesArray());
+    }
 }

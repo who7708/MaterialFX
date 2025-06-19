@@ -66,17 +66,17 @@ public class PositionProperty extends ReadOnlyObjectWrapper<Position> {
      */
     public void setX(double x) {
         Optional.ofNullable(get())
-                .ifPresentOrElse(
-                        p -> {
-                            boolean changed = p.getX() != x;
-                            p.setX(x);
-                            if (changed) {
-                                invalidated();
-                                fireValueChangedEvent();
-                            }
-                        },
-                        () -> setPosition(x, 0)
-                );
+            .ifPresentOrElse(
+                p -> {
+                    boolean changed = p.getX() != x;
+                    p.setX(x);
+                    if (changed) {
+                        invalidated();
+                        fireValueChangedEvent();
+                    }
+                },
+                () -> setPosition(x, 0)
+            );
     }
 
     /**
@@ -87,17 +87,17 @@ public class PositionProperty extends ReadOnlyObjectWrapper<Position> {
      */
     public void setY(double y) {
         Optional.ofNullable(get())
-                .ifPresentOrElse(
-                        p -> {
-                            boolean changed = p.getY() != y;
-                            p.setY(y);
-                            if (changed) {
-                                invalidated();
-                                fireValueChangedEvent();
-                            }
-                        },
-                        () -> setPosition(0, y)
-                );
+            .ifPresentOrElse(
+                p -> {
+                    boolean changed = p.getY() != y;
+                    p.setY(y);
+                    if (changed) {
+                        invalidated();
+                        fireValueChangedEvent();
+                    }
+                },
+                () -> setPosition(0, y)
+            );
     }
 
     /**
@@ -105,8 +105,8 @@ public class PositionProperty extends ReadOnlyObjectWrapper<Position> {
      */
     public double getX() {
         return Optional.ofNullable(get())
-                .map(Position::getX)
-                .orElse(0.0);
+            .map(Position::getX)
+            .orElse(0.0);
     }
 
     /**
@@ -114,8 +114,8 @@ public class PositionProperty extends ReadOnlyObjectWrapper<Position> {
      */
     public double getX(double or) {
         return Optional.ofNullable(get())
-                .map(Position::getX)
-                .orElse(or);
+            .map(Position::getX)
+            .orElse(or);
     }
 
     /**
@@ -123,8 +123,8 @@ public class PositionProperty extends ReadOnlyObjectWrapper<Position> {
      */
     public double getY() {
         return Optional.ofNullable(get())
-                .map(Position::getY)
-                .orElse(0.0);
+            .map(Position::getY)
+            .orElse(0.0);
     }
 
     /**
@@ -132,7 +132,7 @@ public class PositionProperty extends ReadOnlyObjectWrapper<Position> {
      */
     public double getY(double or) {
         return Optional.ofNullable(get())
-                .map(Position::getY)
-                .orElse(or);
+            .map(Position::getY)
+            .orElse(or);
     }
 }

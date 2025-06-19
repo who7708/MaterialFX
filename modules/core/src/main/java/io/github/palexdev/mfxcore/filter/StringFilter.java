@@ -50,51 +50,51 @@ import java.util.stream.Stream;
  */
 public class StringFilter<T> extends AbstractFilter<T, String> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public StringFilter(String name, Function<T, String> extractor) {
-		this(name, extractor, new StringConverter<>() {
-			@Override
-			public String toString(String object) {
-				return object;
-			}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public StringFilter(String name, Function<T, String> extractor) {
+        this(name, extractor, new StringConverter<>() {
+            @Override
+            public String toString(String object) {
+                return object;
+            }
 
-			@Override
-			public String fromString(String string) {
-				return string;
-			}
-		});
-	}
+            @Override
+            public String fromString(String string) {
+                return string;
+            }
+        });
+    }
 
-	public StringFilter(String name, Function<T, String> extractor, StringConverter<String> converter) {
-		super(name, extractor, converter);
-	}
+    public StringFilter(String name, Function<T, String> extractor, StringConverter<String> converter) {
+        super(name, extractor, converter);
+    }
 
-	//================================================================================
-	// Overridden Methods
-	//================================================================================
-	@Override
-	protected ObservableList<BiPredicateBean<String, String>> defaultPredicates() {
-		return Stream.<BiPredicateBean<String, String>>of(
-				new BiPredicateBean<>(I18N.getOrDefault("filter.contains"), String::contains),
-				new BiPredicateBean<>(I18N.getOrDefault("filter.containsIgnCase"), StringUtils::containsIgnoreCase),
-				new BiPredicateBean<>(I18N.getOrDefault("filter.containsAny"), StringUtils::containsAny),
-				new BiPredicateBean<>(I18N.getOrDefault("filter.containsAll"), StringUtils::containsAll),
-				new BiPredicateBean<>(I18N.getOrDefault("filter.endsWith"), String::endsWith),
-				new BiPredicateBean<>(I18N.getOrDefault("filter.endsWithIgnCase"), StringUtils::endsWithIgnoreCase),
-				new BiPredicateBean<>(I18N.getOrDefault("filter.equals"), String::equals),
-				new BiPredicateBean<>(I18N.getOrDefault("filter.equalsIgnCase"), String::equalsIgnoreCase),
-				new BiPredicateBean<>(I18N.getOrDefault("filter.notEqual"), (aString, aString2) -> !aString.equals(aString2)),
-				new BiPredicateBean<>(I18N.getOrDefault("filter.startsWith"), String::startsWith),
-				new BiPredicateBean<>(I18N.getOrDefault("filter.startsWithIgnCase"), StringUtils::startsWithIgnoreCase)
-		).collect(FXCollectors.toList());
-	}
+    //================================================================================
+    // Overridden Methods
+    //================================================================================
+    @Override
+    protected ObservableList<BiPredicateBean<String, String>> defaultPredicates() {
+        return Stream.<BiPredicateBean<String, String>>of(
+            new BiPredicateBean<>(I18N.getOrDefault("filter.contains"), String::contains),
+            new BiPredicateBean<>(I18N.getOrDefault("filter.containsIgnCase"), StringUtils::containsIgnoreCase),
+            new BiPredicateBean<>(I18N.getOrDefault("filter.containsAny"), StringUtils::containsAny),
+            new BiPredicateBean<>(I18N.getOrDefault("filter.containsAll"), StringUtils::containsAll),
+            new BiPredicateBean<>(I18N.getOrDefault("filter.endsWith"), String::endsWith),
+            new BiPredicateBean<>(I18N.getOrDefault("filter.endsWithIgnCase"), StringUtils::endsWithIgnoreCase),
+            new BiPredicateBean<>(I18N.getOrDefault("filter.equals"), String::equals),
+            new BiPredicateBean<>(I18N.getOrDefault("filter.equalsIgnCase"), String::equalsIgnoreCase),
+            new BiPredicateBean<>(I18N.getOrDefault("filter.notEqual"), (aString, aString2) -> !aString.equals(aString2)),
+            new BiPredicateBean<>(I18N.getOrDefault("filter.startsWith"), String::startsWith),
+            new BiPredicateBean<>(I18N.getOrDefault("filter.startsWithIgnCase"), StringUtils::startsWithIgnoreCase)
+        ).collect(FXCollectors.toList());
+    }
 
-	@SafeVarargs
-	@Override
-	protected final StringFilter<T> extend(BiPredicateBean<String, String>... predicateBeans) {
-		Collections.addAll(super.predicates, predicateBeans);
-		return this;
-	}
+    @SafeVarargs
+    @Override
+    protected final StringFilter<T> extend(BiPredicateBean<String, String>... predicateBeans) {
+        Collections.addAll(super.predicates, predicateBeans);
+        return this;
+    }
 }

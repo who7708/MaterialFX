@@ -30,30 +30,30 @@ import java.util.function.Supplier;
  */
 public interface WithBehavior<B extends BehaviorBase<? extends Node>> {
 
-	/**
-	 * @return the instance of the current behavior object
-	 */
-	B getBehavior();
+    /**
+     * @return the instance of the current behavior object
+     */
+    B getBehavior();
 
-	/**
-	 * @return a {@link Supplier} that is the provider for the default behavior used by the component.
-	 */
-	Supplier<B> defaultBehaviorProvider();
+    /**
+     * @return a {@link Supplier} that is the provider for the default behavior used by the component.
+     */
+    Supplier<B> defaultBehaviorProvider();
 
-	Supplier<B> getBehaviorProvider();
+    Supplier<B> getBehaviorProvider();
 
-	/**
-	 * Specifies the {@link Supplier} used to produce a behavior object for the component.
-	 */
-	SupplierProperty<B> behaviorProviderProperty();
+    /**
+     * Specifies the {@link Supplier} used to produce a behavior object for the component.
+     */
+    SupplierProperty<B> behaviorProviderProperty();
 
-	void setBehaviorProvider(Supplier<B> factory);
+    void setBehaviorProvider(Supplier<B> factory);
 
-	/**
-	 * Restores the components behavior to the default one using {@link #defaultBehaviorProvider()}
-	 * and {@link #setBehaviorProvider(Supplier)}.
-	 */
-	default void setDefaultBehaviorProvider() {
-		setBehaviorProvider(defaultBehaviorProvider());
-	}
+    /**
+     * Restores the components behavior to the default one using {@link #defaultBehaviorProvider()}
+     * and {@link #setBehaviorProvider(Supplier)}.
+     */
+    default void setDefaultBehaviorProvider() {
+        setBehaviorProvider(defaultBehaviorProvider());
+    }
 }

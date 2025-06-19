@@ -66,86 +66,86 @@ import io.github.palexdev.mfxcore.observables.When;
  * <p> - Initialization and changes to the behavior provider are automatically handled, hassle-free
  */
 public abstract class SkinBase<C extends javafx.scene.control.Control & WithBehavior<B>, B extends BehaviorBase<C>> extends javafx.scene.control.SkinBase<C> {
-	//================================================================================
-	// Properties
-	//================================================================================
-	private List<DisposableAction> listeners = new ArrayList<>();
+    //================================================================================
+    // Properties
+    //================================================================================
+    private List<DisposableAction> listeners = new ArrayList<>();
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	protected SkinBase(C control) {super(control);}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    protected SkinBase(C control) {super(control);}
 
-	//================================================================================
-	// Methods
-	//================================================================================
+    //================================================================================
+    // Methods
+    //================================================================================
 
-	/**
-	 * This is responsible for initializing the behavior every time it changes.
-	 * The given parameter is the current uninitialized behavior.
-	 * <p>
-	 * To avoid boilerplate code this already calls {@link BehaviorBase#init()}.
-	 */
-	protected void initBehavior(B behavior) {
-		behavior.init();
-	}
+    /**
+     * This is responsible for initializing the behavior every time it changes.
+     * The given parameter is the current uninitialized behavior.
+     * <p>
+     * To avoid boilerplate code this already calls {@link BehaviorBase#init()}.
+     */
+    protected void initBehavior(B behavior) {
+        behavior.init();
+    }
 
 
-	//================================================================================
-	// Delegate Methods
-	//================================================================================
+    //================================================================================
+    // Delegate Methods
+    //================================================================================
 
-	/**
-	 * Delegate for {@link BehaviorBase#register(WhenEvent[])}.
-	 * <p>
-	 * Note this will do nothing if the return value of {@link #getBehavior()} is {@code null}.
-	 */
-	@SuppressWarnings({"rawtypes", "unchecked"})
-	public void events(WhenEvent... wes) {
-		Optional.ofNullable(getBehavior()).ifPresent(b -> b.register(wes));
-	}
+    /**
+     * Delegate for {@link BehaviorBase#register(WhenEvent[])}.
+     * <p>
+     * Note this will do nothing if the return value of {@link #getBehavior()} is {@code null}.
+     */
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public void events(WhenEvent... wes) {
+        Optional.ofNullable(getBehavior()).ifPresent(b -> b.register(wes));
+    }
 
-	/**
-	 * While making skins for MaterialFX I always make a great use of {@link When} constructs, simply because they are so
-	 * useful and easy to use there is no point in not doing it. This however comes with a little issue, the more
-	 * constructs a skin uses the longer is the disposal code. A simple solution is to pass the instances to this method
-	 * (just wrap all of them as args), which will store them in a {@code List} so that the disposal can be done
-	 * automatically without having every single construct instance in the class.
-	 * <p>
-	 * Not only that, I'm actually so happy with the work done on {@link When} that I decided to create an equivalent
-	 * for {@code Events} too, see {@link WhenEvent}, and a delegate method {@link #events(WhenEvent[])}
-	 * <p>
-	 * <b>Note: </b> one-shot constructs (see {@link  When#oneShot(boolean)} or {@link WhenEvent#oneShot()})
-	 * do not need to be registered as they will be automatically disposed on their first trigger.
-	 * Doing so brings no harm, it's just useless.
-	 */
-	public void listeners(When<?>... listeners) {
-		for (When<?> w : listeners) {
-			if (!w.isActive()) w.listen();
-			this.listeners.add(w);
-		}
-	}
+    /**
+     * While making skins for MaterialFX I always make a great use of {@link When} constructs, simply because they are so
+     * useful and easy to use there is no point in not doing it. This however comes with a little issue, the more
+     * constructs a skin uses the longer is the disposal code. A simple solution is to pass the instances to this method
+     * (just wrap all of them as args), which will store them in a {@code List} so that the disposal can be done
+     * automatically without having every single construct instance in the class.
+     * <p>
+     * Not only that, I'm actually so happy with the work done on {@link When} that I decided to create an equivalent
+     * for {@code Events} too, see {@link WhenEvent}, and a delegate method {@link #events(WhenEvent[])}
+     * <p>
+     * <b>Note: </b> one-shot constructs (see {@link  When#oneShot(boolean)} or {@link WhenEvent#oneShot()})
+     * do not need to be registered as they will be automatically disposed on their first trigger.
+     * Doing so brings no harm, it's just useless.
+     */
+    public void listeners(When<?>... listeners) {
+        for (When<?> w : listeners) {
+            if (!w.isActive()) w.listen();
+            this.listeners.add(w);
+        }
+    }
 
-	//================================================================================
-	// Overridden Methods
-	//================================================================================
-	@Override
-	public void dispose() {
-		listeners.forEach(DisposableAction::dispose);
-		listeners.clear();
-		listeners = null;
-		super.dispose();
-	}
+    //================================================================================
+    // Overridden Methods
+    //================================================================================
+    @Override
+    public void dispose() {
+        listeners.forEach(DisposableAction::dispose);
+        listeners.clear();
+        listeners = null;
+        super.dispose();
+    }
 
-	//================================================================================
-	// Getters
-	//================================================================================
+    //================================================================================
+    // Getters
+    //================================================================================
 
-	/**
-	 * Delegate for {@link WithBehavior#getBehavior()}.
-	 * <p>
-	 * Since this is called on the component, the return value could also be null if the behavior
-	 * provider was not set, or produces null references.
-	 */
-	protected B getBehavior() {return getSkinnable().getBehavior();}
+    /**
+     * Delegate for {@link WithBehavior#getBehavior()}.
+     * <p>
+     * Since this is called on the component, the return value could also be null if the behavior
+     * provider was not set, or produces null references.
+     */
+    protected B getBehavior() {return getSkinnable().getBehavior();}
 }

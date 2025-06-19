@@ -23,13 +23,13 @@ package io.github.palexdev.mfxcore.enums;
  */
 public enum BindingType {
 
-	/**
-	 * Identifies unidirectional bindings.
-	 */
-	UNIDIRECTIONAL,
+    /**
+     * Identifies unidirectional bindings.
+     */
+    UNIDIRECTIONAL,
 
-	/**
-	 * Identifies bidirectional bindings.
-	 */
-	BIDIRECTIONAL
+    /**
+     * Identifies bidirectional bindings.
+     */
+    BIDIRECTIONAL
 }

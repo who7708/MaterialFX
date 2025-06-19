@@ -27,34 +27,34 @@ import io.github.palexdev.mfxcore.base.properties.base.NumberRangeProperty;
  */
 public class IntegerRangeProperty extends NumberRangeProperty<Integer> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public IntegerRangeProperty() {
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public IntegerRangeProperty() {
+    }
 
-	public IntegerRangeProperty(NumberRange<Integer> initialValue) {
-		super(initialValue);
-	}
+    public IntegerRangeProperty(NumberRange<Integer> initialValue) {
+        super(initialValue);
+    }
 
-	public IntegerRangeProperty(Object bean, String name) {
-		super(bean, name);
-	}
+    public IntegerRangeProperty(Object bean, String name) {
+        super(bean, name);
+    }
 
-	public IntegerRangeProperty(Object bean, String name, NumberRange<Integer> initialValue) {
-		super(bean, name, initialValue);
-	}
+    public IntegerRangeProperty(Object bean, String name, NumberRange<Integer> initialValue) {
+        super(bean, name, initialValue);
+    }
 
-	//================================================================================
-	// Overridden Methods
-	//================================================================================
-	@Override
-	public void setRange(Integer value) {
-		set(IntegerRange.of(value));
-	}
+    //================================================================================
+    // Overridden Methods
+    //================================================================================
+    @Override
+    public void setRange(Integer value) {
+        set(IntegerRange.of(value));
+    }
 
-	@Override
-	public void setRange(Integer min, Integer max) {
-		set(IntegerRange.of(min, max));
-	}
+    @Override
+    public void setRange(Integer min, Integer max) {
+        set(IntegerRange.of(min, max));
+    }
 }

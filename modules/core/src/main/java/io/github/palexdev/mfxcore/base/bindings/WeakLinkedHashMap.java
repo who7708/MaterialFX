@@ -37,157 +37,157 @@ import java.util.stream.Stream;
  * Allows to retrieve the first and the last keys, and also a <b>copy</b> of the actual {@link LinkedList}.
  */
 public class WeakLinkedHashMap<K, V> extends WeakHashMap<K, V> {
-	//================================================================================
-	// Properties
-	//================================================================================
-	private LinkedList<WeakReference<K>> orderedKeys = new LinkedList<>();
+    //================================================================================
+    // Properties
+    //================================================================================
+    private LinkedList<WeakReference<K>> orderedKeys = new LinkedList<>();
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public WeakLinkedHashMap() {
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public WeakLinkedHashMap() {
+    }
 
-	public WeakLinkedHashMap(Map<? extends K, ? extends V> m) {
-		super(m);
-	}
+    public WeakLinkedHashMap(Map<? extends K, ? extends V> m) {
+        super(m);
+    }
 
-	public WeakLinkedHashMap(int initialCapacity) {
-		super(initialCapacity);
-	}
+    public WeakLinkedHashMap(int initialCapacity) {
+        super(initialCapacity);
+    }
 
-	public WeakLinkedHashMap(int initialCapacity, float loadFactor) {
-		super(initialCapacity, loadFactor);
-	}
+    public WeakLinkedHashMap(int initialCapacity, float loadFactor) {
+        super(initialCapacity, loadFactor);
+    }
 
-	//================================================================================
-	// Methods
-	//================================================================================
+    //================================================================================
+    // Methods
+    //================================================================================
 
-	/**
-	 * Scans the {@link LinkedList} contains the keys references and removes the null ones.
-	 * Also calls {@link #size()} to also trigger the {@link WeakHashMap} cleaning too.
-	 */
-	@SuppressWarnings("ResultOfMethodCallIgnored")
-	private void clearReferences() {
-		orderedKeys.removeIf(reference -> reference != null && reference.get() == null);
-		size();
-	}
+    /**
+     * Scans the {@link LinkedList} contains the keys references and removes the null ones.
+     * Also calls {@link #size()} to also trigger the {@link WeakHashMap} cleaning too.
+     */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private void clearReferences() {
+        orderedKeys.removeIf(reference -> reference != null && reference.get() == null);
+        size();
+    }
 
-	@SafeVarargs
-	private void updateKeysList(K... keys) {
-		LinkedHashSet<K> uniqueKeys = orderedKeys.stream().map(WeakReference::get).collect(Collectors.toCollection(LinkedHashSet::new));
-		uniqueKeys.addAll(Arrays.asList(keys));
-		orderedKeys = uniqueKeys.stream().map(WeakReference::new).collect(Collectors.toCollection(LinkedList::new));
-		clearReferences();
-	}
+    @SafeVarargs
+    private void updateKeysList(K... keys) {
+        LinkedHashSet<K> uniqueKeys = orderedKeys.stream().map(WeakReference::get).collect(Collectors.toCollection(LinkedHashSet::new));
+        uniqueKeys.addAll(Arrays.asList(keys));
+        orderedKeys = uniqueKeys.stream().map(WeakReference::new).collect(Collectors.toCollection(LinkedList::new));
+        clearReferences();
+    }
 
-	@SafeVarargs
-	private void updateKeysList(Map.Entry<K, V>... entries) {
-		LinkedHashSet<K> uniqueKeys = orderedKeys.stream().map(WeakReference::get).collect(Collectors.toCollection(LinkedHashSet::new));
-		List<K> keys = Stream.of(entries).map(Map.Entry::getKey).collect(Collectors.toList());
-		uniqueKeys.addAll(keys);
-		orderedKeys = uniqueKeys.stream().map(WeakReference::new).collect(Collectors.toCollection(LinkedList::new));
-		clearReferences();
-	}
+    @SafeVarargs
+    private void updateKeysList(Map.Entry<K, V>... entries) {
+        LinkedHashSet<K> uniqueKeys = orderedKeys.stream().map(WeakReference::get).collect(Collectors.toCollection(LinkedHashSet::new));
+        List<K> keys = Stream.of(entries).map(Map.Entry::getKey).collect(Collectors.toList());
+        uniqueKeys.addAll(keys);
+        orderedKeys = uniqueKeys.stream().map(WeakReference::new).collect(Collectors.toCollection(LinkedList::new));
+        clearReferences();
+    }
 
 
-	/**
-	 * Allows to combine the given {@code BindingsMap} to this one.
-	 * <p>
-	 * This method exists to ensure that insertion order is kept with the {@link LinkedList} but most
-	 * importantly ensures that there are no duplicates in the list by using a {@link LinkedHashSet}.
-	 */
-	public void combine(WeakLinkedHashMap<K, V> source) {
-		LinkedHashSet<K> uniqueKeys = Stream.concat(orderedKeys.stream(), source.orderedKeys.stream())
-				.map(WeakReference::get)
-				.collect(Collectors.toCollection(LinkedHashSet::new));
-		orderedKeys = uniqueKeys.stream().map(WeakReference::new).collect(LinkedList::new, LinkedList::add, LinkedList::addAll);
-		clearReferences();
-		for (Map.Entry<K, V> entry : source.entrySet()) {
-			super.put(entry.getKey(), entry.getValue());
-		}
-	}
+    /**
+     * Allows to combine the given {@code BindingsMap} to this one.
+     * <p>
+     * This method exists to ensure that insertion order is kept with the {@link LinkedList} but most
+     * importantly ensures that there are no duplicates in the list by using a {@link LinkedHashSet}.
+     */
+    public void combine(WeakLinkedHashMap<K, V> source) {
+        LinkedHashSet<K> uniqueKeys = Stream.concat(orderedKeys.stream(), source.orderedKeys.stream())
+            .map(WeakReference::get)
+            .collect(Collectors.toCollection(LinkedHashSet::new));
+        orderedKeys = uniqueKeys.stream().map(WeakReference::new).collect(LinkedList::new, LinkedList::add, LinkedList::addAll);
+        clearReferences();
+        for (Map.Entry<K, V> entry : source.entrySet()) {
+            super.put(entry.getKey(), entry.getValue());
+        }
+    }
 
-	/**
-	 * Adds the given key to the keys {@link LinkedList}, performs {@link #clearReferences()}
-	 * and then calls the super method.
-	 */
-	@Override
-	public V put(K key, V value) {
-		updateKeysList(key);
-		return super.put(key, value);
-	}
+    /**
+     * Adds the given key to the keys {@link LinkedList}, performs {@link #clearReferences()}
+     * and then calls the super method.
+     */
+    @Override
+    public V put(K key, V value) {
+        updateKeysList(key);
+        return super.put(key, value);
+    }
 
-	/**
-	 * Overridden to call {@link #putAll(Map.Entry[])}.
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public void putAll(Map<? extends K, ? extends V> m) {
-		putAll(m.entrySet().toArray(Map.Entry[]::new));
-	}
+    /**
+     * Overridden to call {@link #putAll(Map.Entry[])}.
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public void putAll(Map<? extends K, ? extends V> m) {
+        putAll(m.entrySet().toArray(Map.Entry[]::new));
+    }
 
-	/**
-	 * For each entry adds the key to the keys {@link LinkedList},
-	 * then calls the super method.
-	 * At the end performs {@link #clearReferences()}.
-	 */
-	@SafeVarargs
-	public final void putAll(Map.Entry<K, V>... entries) {
-		updateKeysList(entries);
-		for (Map.Entry<K, V> entry : entries) {
-			super.put(entry.getKey(), entry.getValue());
-		}
-	}
+    /**
+     * For each entry adds the key to the keys {@link LinkedList},
+     * then calls the super method.
+     * At the end performs {@link #clearReferences()}.
+     */
+    @SafeVarargs
+    public final void putAll(Map.Entry<K, V>... entries) {
+        updateKeysList(entries);
+        for (Map.Entry<K, V> entry : entries) {
+            super.put(entry.getKey(), entry.getValue());
+        }
+    }
 
-	/**
-	 * Removes the given key from the keys {@link LinkedList}
-	 * and then calls the super method.
-	 */
-	@Override
-	public V remove(Object key) {
-		orderedKeys.removeIf(reference -> reference != null && reference.get() == key);
-		return super.remove(key);
-	}
+    /**
+     * Removes the given key from the keys {@link LinkedList}
+     * and then calls the super method.
+     */
+    @Override
+    public V remove(Object key) {
+        orderedKeys.removeIf(reference -> reference != null && reference.get() == key);
+        return super.remove(key);
+    }
 
-	/**
-	 * Clears the keys {@link LinkedList} and then calls the super method.
-	 */
-	@Override
-	public void clear() {
-		orderedKeys.clear();
-		super.clear();
-	}
+    /**
+     * Clears the keys {@link LinkedList} and then calls the super method.
+     */
+    @Override
+    public void clear() {
+        orderedKeys.clear();
+        super.clear();
+    }
 
-	/**
-	 * UNSUPPORTED
-	 */
-	@Override
-	public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * UNSUPPORTED
+     */
+    @Override
+    public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
+        throw new UnsupportedOperationException();
+    }
 
-	/**
-	 * @return a copy of the {@link LinkedList} containing the Map's keys ordered by insertion
-	 */
-	public LinkedList<WeakReference<K>> unmodifiableKeysList() {
-		return new LinkedList<>(orderedKeys);
-	}
+    /**
+     * @return a copy of the {@link LinkedList} containing the Map's keys ordered by insertion
+     */
+    public LinkedList<WeakReference<K>> unmodifiableKeysList() {
+        return new LinkedList<>(orderedKeys);
+    }
 
-	/**
-	 * @return the first inserted key
-	 */
-	public K getFirstKey() {
-		if (isEmpty()) return null;
-		return orderedKeys.getFirst().get();
-	}
+    /**
+     * @return the first inserted key
+     */
+    public K getFirstKey() {
+        if (isEmpty()) return null;
+        return orderedKeys.getFirst().get();
+    }
 
-	/**
-	 * @return the last inserted key
-	 */
-	public K getLastKey() {
-		if (isEmpty()) return null;
-		return orderedKeys.getLast().get();
-	}
+    /**
+     * @return the last inserted key
+     */
+    public K getLastKey() {
+        if (isEmpty()) return null;
+        return orderedKeys.getLast().get();
+    }
 }

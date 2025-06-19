@@ -23,79 +23,79 @@ import java.util.function.Function;
 import java.util.prefs.Preferences;
 
 public class NumberSetting<N extends Number> extends Setting<N> {
-	//================================================================================
-	// Properties
-	//================================================================================
-	protected Function<Preferences, N> fetcher;
-	protected BiConsumer<Preferences, N> updater;
+    //================================================================================
+    // Properties
+    //================================================================================
+    protected Function<Preferences, N> fetcher;
+    protected BiConsumer<Preferences, N> updater;
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	protected NumberSetting(String name, String description, N defaultValue, Settings container) {
-		super(name, description, defaultValue, container);
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    protected NumberSetting(String name, String description, N defaultValue, Settings container) {
+        super(name, description, defaultValue, container);
+    }
 
-	//================================================================================
-	// Overridden Methods
-	//================================================================================
-	@Override
-	public N get() {
-		return fetcher.apply(container.prefs());
-	}
+    //================================================================================
+    // Overridden Methods
+    //================================================================================
+    @Override
+    public N get() {
+        return fetcher.apply(container.prefs());
+    }
 
-	@Override
-	public void set(N val) {
-		updater.accept(container.prefs(), val);
-	}
+    @Override
+    public void set(N val) {
+        updater.accept(container.prefs(), val);
+    }
 
-	//================================================================================
-	// Impl
-	//================================================================================
-	public static NumberSetting<Double> forDouble(String name, String description, double defaultVal, Settings container) {
-		NumberSetting<Double> setting = new NumberSetting<>(name, description, defaultVal, container);
-		setting.setFetcher(p -> p.getDouble(name, defaultVal));
-		setting.setUpdater((p, v) -> p.putDouble(name, v));
-		return setting;
-	}
+    //================================================================================
+    // Impl
+    //================================================================================
+    public static NumberSetting<Double> forDouble(String name, String description, double defaultVal, Settings container) {
+        NumberSetting<Double> setting = new NumberSetting<>(name, description, defaultVal, container);
+        setting.setFetcher(p -> p.getDouble(name, defaultVal));
+        setting.setUpdater((p, v) -> p.putDouble(name, v));
+        return setting;
+    }
 
-	public static NumberSetting<Float> forFloat(String name, String description, float defaultValue, Settings container) {
-		NumberSetting<Float> setting = new NumberSetting<>(name, description, defaultValue, container);
-		setting.setFetcher(p -> p.getFloat(name, defaultValue));
-		setting.setUpdater((p, v) -> p.putFloat(name, v));
-		return setting;
-	}
+    public static NumberSetting<Float> forFloat(String name, String description, float defaultValue, Settings container) {
+        NumberSetting<Float> setting = new NumberSetting<>(name, description, defaultValue, container);
+        setting.setFetcher(p -> p.getFloat(name, defaultValue));
+        setting.setUpdater((p, v) -> p.putFloat(name, v));
+        return setting;
+    }
 
-	public static NumberSetting<Integer> forInteger(String name, String description, int defaultValue, Settings container) {
-		NumberSetting<Integer> setting = new NumberSetting<>(name, description, defaultValue, container);
-		setting.setFetcher(p -> p.getInt(name, defaultValue));
-		setting.setUpdater((p, v) -> p.putInt(name, v));
-		return setting;
-	}
+    public static NumberSetting<Integer> forInteger(String name, String description, int defaultValue, Settings container) {
+        NumberSetting<Integer> setting = new NumberSetting<>(name, description, defaultValue, container);
+        setting.setFetcher(p -> p.getInt(name, defaultValue));
+        setting.setUpdater((p, v) -> p.putInt(name, v));
+        return setting;
+    }
 
-	public static NumberSetting<Long> forLong(String name, String description, long defaultValue, Settings container) {
-		NumberSetting<Long> setting = new NumberSetting<>(name, description, defaultValue, container);
-		setting.setFetcher(p -> p.getLong(name, defaultValue));
-		setting.setUpdater((p, v) -> p.putLong(name, v));
-		return setting;
-	}
+    public static NumberSetting<Long> forLong(String name, String description, long defaultValue, Settings container) {
+        NumberSetting<Long> setting = new NumberSetting<>(name, description, defaultValue, container);
+        setting.setFetcher(p -> p.getLong(name, defaultValue));
+        setting.setUpdater((p, v) -> p.putLong(name, v));
+        return setting;
+    }
 
-	//================================================================================
-	// Getters/Setters
-	//================================================================================
-	public Function<Preferences, N> getFetcher() {
-		return fetcher;
-	}
+    //================================================================================
+    // Getters/Setters
+    //================================================================================
+    public Function<Preferences, N> getFetcher() {
+        return fetcher;
+    }
 
-	public void setFetcher(Function<Preferences, N> fetcher) {
-		this.fetcher = fetcher;
-	}
+    public void setFetcher(Function<Preferences, N> fetcher) {
+        this.fetcher = fetcher;
+    }
 
-	public BiConsumer<Preferences, N> getUpdater() {
-		return updater;
-	}
+    public BiConsumer<Preferences, N> getUpdater() {
+        return updater;
+    }
 
-	public void setUpdater(BiConsumer<Preferences, N> updater) {
-		this.updater = updater;
-	}
+    public void setUpdater(BiConsumer<Preferences, N> updater) {
+        this.updater = updater;
+    }
 }

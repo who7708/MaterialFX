@@ -29,88 +29,88 @@ import javafx.scene.text.TextAlignment;
 
 public class LabeledBuilder<L extends Labeled> extends ControlBuilder<L> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public LabeledBuilder(L labeled) {
-		super(labeled);
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public LabeledBuilder(L labeled) {
+        super(labeled);
+    }
 
-	public static LabeledBuilder<Labeled> control(Labeled labeled) {
-		return new LabeledBuilder<>(labeled);
-	}
+    public static LabeledBuilder<Labeled> control(Labeled labeled) {
+        return new LabeledBuilder<>(labeled);
+    }
 
-	//================================================================================
-	// Delegate Methods
-	//================================================================================
+    //================================================================================
+    // Delegate Methods
+    //================================================================================
 
-	public LabeledBuilder<L> setText(String value) {
-		node.setText(value);
-		return this;
-	}
+    public LabeledBuilder<L> setText(String value) {
+        node.setText(value);
+        return this;
+    }
 
-	public LabeledBuilder<L> setAlignment(Pos value) {
-		node.setAlignment(value);
-		return this;
-	}
+    public LabeledBuilder<L> setAlignment(Pos value) {
+        node.setAlignment(value);
+        return this;
+    }
 
-	public LabeledBuilder<L> setTextAlignment(TextAlignment value) {
-		node.setTextAlignment(value);
-		return this;
-	}
+    public LabeledBuilder<L> setTextAlignment(TextAlignment value) {
+        node.setTextAlignment(value);
+        return this;
+    }
 
-	public LabeledBuilder<L> setTextOverrun(OverrunStyle value) {
-		node.setTextOverrun(value);
-		return this;
-	}
+    public LabeledBuilder<L> setTextOverrun(OverrunStyle value) {
+        node.setTextOverrun(value);
+        return this;
+    }
 
-	public LabeledBuilder<L> setEllipsisString(String value) {
-		node.setEllipsisString(value);
-		return this;
-	}
+    public LabeledBuilder<L> setEllipsisString(String value) {
+        node.setEllipsisString(value);
+        return this;
+    }
 
-	public LabeledBuilder<L> setWrapText(boolean value) {
-		node.setWrapText(value);
-		return this;
-	}
+    public LabeledBuilder<L> setWrapText(boolean value) {
+        node.setWrapText(value);
+        return this;
+    }
 
-	public LabeledBuilder<L> setFont(Font value) {
-		node.setFont(value);
-		return this;
-	}
+    public LabeledBuilder<L> setFont(Font value) {
+        node.setFont(value);
+        return this;
+    }
 
-	public LabeledBuilder<L> setGraphic(Node value) {
-		node.setGraphic(value);
-		return this;
-	}
+    public LabeledBuilder<L> setGraphic(Node value) {
+        node.setGraphic(value);
+        return this;
+    }
 
-	public LabeledBuilder<L> setUnderline(boolean value) {
-		node.setUnderline(value);
-		return this;
-	}
+    public LabeledBuilder<L> setUnderline(boolean value) {
+        node.setUnderline(value);
+        return this;
+    }
 
-	public LabeledBuilder<L> setLineSpacing(double value) {
-		node.setLineSpacing(value);
-		return this;
-	}
+    public LabeledBuilder<L> setLineSpacing(double value) {
+        node.setLineSpacing(value);
+        return this;
+    }
 
-	public LabeledBuilder<L> setContentDisplay(ContentDisplay value) {
-		node.setContentDisplay(value);
-		return this;
-	}
+    public LabeledBuilder<L> setContentDisplay(ContentDisplay value) {
+        node.setContentDisplay(value);
+        return this;
+    }
 
-	public LabeledBuilder<L> setGraphicTextGap(double value) {
-		node.setGraphicTextGap(value);
-		return this;
-	}
+    public LabeledBuilder<L> setGraphicTextGap(double value) {
+        node.setGraphicTextGap(value);
+        return this;
+    }
 
-	public LabeledBuilder<L> setTextFill(Paint value) {
-		node.setTextFill(value);
-		return this;
-	}
+    public LabeledBuilder<L> setTextFill(Paint value) {
+        node.setTextFill(value);
+        return this;
+    }
 
-	public LabeledBuilder<L> setMnemonicParsing(boolean value) {
-		node.setMnemonicParsing(value);
-		return this;
-	}
+    public LabeledBuilder<L> setMnemonicParsing(boolean value) {
+        node.setMnemonicParsing(value);
+        return this;
+    }
 }

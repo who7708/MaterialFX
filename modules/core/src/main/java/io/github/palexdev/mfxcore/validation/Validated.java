@@ -36,38 +36,38 @@ import java.util.List;
  * use {@link #updateInvalid(Node, boolean)} to do this.
  */
 public interface Validated {
-	PseudoClass INVALID_PSEUDO_CLASS = PseudoClass.getPseudoClass("invalid");
+    PseudoClass INVALID_PSEUDO_CLASS = PseudoClass.getPseudoClass("invalid");
 
-	/**
-	 * @return the {@link MFXValidator} instance of this control
-	 */
-	MFXValidator getValidator();
+    /**
+     * @return the {@link MFXValidator} instance of this control
+     */
+    MFXValidator getValidator();
 
-	/**
-	 * @return whether the validator instance of this control is not null and valid
-	 * @see MFXValidator#validProperty()
-	 */
-	default boolean isValid() {
-		return getValidator() != null && getValidator().isValid();
-	}
+    /**
+     * @return whether the validator instance of this control is not null and valid
+     * @see MFXValidator#validProperty()
+     */
+    default boolean isValid() {
+        return getValidator() != null && getValidator().isValid();
+    }
 
-	/**
-	 * @return the list of invalid constraints for the control's validator instance.
-	 * <p>
-	 * An empty list if null
-	 * @see MFXValidator#validate()
-	 */
-	default List<Constraint> validate() {
-		return getValidator() != null ? getValidator().validate() : List.of();
-	}
+    /**
+     * @return the list of invalid constraints for the control's validator instance.
+     * <p>
+     * An empty list if null
+     * @see MFXValidator#validate()
+     */
+    default List<Constraint> validate() {
+        return getValidator() != null ? getValidator().validate() : List.of();
+    }
 
-	/**
-	 * Convenience method to update the ":invalid" PseudoClass offered by this interface.
-	 *
-	 * @param node    the node on which apply/remove the ":invalid" PseudoClass
-	 * @param invalid the PseudoClass state
-	 */
-	default void updateInvalid(Node node, boolean invalid) {
-		node.pseudoClassStateChanged(PseudoClass.getPseudoClass("invalid"), invalid);
-	}
+    /**
+     * Convenience method to update the ":invalid" PseudoClass offered by this interface.
+     *
+     * @param node    the node on which apply/remove the ":invalid" PseudoClass
+     * @param invalid the PseudoClass state
+     */
+    default void updateInvalid(Node node, boolean invalid) {
+        node.pseudoClassStateChanged(PseudoClass.getPseudoClass("invalid"), invalid);
+    }
 }

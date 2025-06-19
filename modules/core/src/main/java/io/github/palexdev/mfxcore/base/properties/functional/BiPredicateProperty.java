@@ -31,21 +31,21 @@ import java.util.function.BiPredicate;
  */
 public class BiPredicateProperty<T, U> extends ReadOnlyObjectWrapper<BiPredicate<T, U>> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public BiPredicateProperty() {
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public BiPredicateProperty() {
+    }
 
-	public BiPredicateProperty(BiPredicate<T, U> initialValue) {
-		super(initialValue);
-	}
+    public BiPredicateProperty(BiPredicate<T, U> initialValue) {
+        super(initialValue);
+    }
 
-	public BiPredicateProperty(Object bean, String name) {
-		super(bean, name);
-	}
+    public BiPredicateProperty(Object bean, String name) {
+        super(bean, name);
+    }
 
-	public BiPredicateProperty(Object bean, String name, BiPredicate<T, U> initialValue) {
-		super(bean, name, initialValue);
-	}
+    public BiPredicateProperty(Object bean, String name, BiPredicate<T, U> initialValue) {
+        super(bean, name, initialValue);
+    }
 }

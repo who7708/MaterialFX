@@ -27,75 +27,75 @@ import io.github.palexdev.mfxcore.events.Event;
  * @see Subscriber
  */
 public class SimpleEventBus implements IEventBus {
-	//================================================================================
-	// Properties
-	//===============================================================================
-	private final Map<Class<? extends Event>, PriorityQueue<Subscriber<Event>>> subscribers = new HashMap<>();
+    //================================================================================
+    // Properties
+    //===============================================================================
+    private final Map<Class<? extends Event>, PriorityQueue<Subscriber<Event>>> subscribers = new HashMap<>();
 
-	//================================================================================
-	// Methods
-	//================================================================================
+    //================================================================================
+    // Methods
+    //================================================================================
 
-	/**
-	 * When an event is published by {@link #publish(Event)} this is called. After getting all the
-	 * {@code Subscribers} added by {@link #subscribe(Class, Subscriber)} for the given event's type, loops over
-	 * all of them passing the given event, so {@link Subscriber#handle(Event)} is triggered.
-	 */
-	protected <E extends Event> void notifySubscribers(E event) {
-		Queue<Subscriber<Event>> subscribers = this.subscribers.get(event.getClass());
-		if (subscribers == null || subscribers.isEmpty()) return;
-		for (Subscriber<Event> s : subscribers) {
-			s.handle(event);
-		}
-	}
+    /**
+     * When an event is published by {@link #publish(Event)} this is called. After getting all the
+     * {@code Subscribers} added by {@link #subscribe(Class, Subscriber)} for the given event's type, loops over
+     * all of them passing the given event, so {@link Subscriber#handle(Event)} is triggered.
+     */
+    protected <E extends Event> void notifySubscribers(E event) {
+        Queue<Subscriber<Event>> subscribers = this.subscribers.get(event.getClass());
+        if (subscribers == null || subscribers.isEmpty()) return;
+        for (Subscriber<Event> s : subscribers) {
+            s.handle(event);
+        }
+    }
 
-	//================================================================================
-	// Overridden Methods
-	//================================================================================
+    //================================================================================
+    // Overridden Methods
+    //================================================================================
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public <E extends Event> void subscribe(Class<E> evt, Subscriber<E> subscriber) {
-		Queue<Subscriber<Event>> queue = subscribers.computeIfAbsent(
-			evt,
-			c -> new PriorityQueue<>(Comparator.comparingInt(Subscriber::priority))
-		);
-		queue.add((Subscriber<Event>) subscriber);
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public <E extends Event> void subscribe(Class<E> evt, Subscriber<E> subscriber) {
+        Queue<Subscriber<Event>> queue = subscribers.computeIfAbsent(
+            evt,
+            c -> new PriorityQueue<>(Comparator.comparingInt(Subscriber::priority))
+        );
+        queue.add((Subscriber<Event>) subscriber);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 * <p></p>
-	 * Subscribers in this bus are stored in a {@link PriorityQueue}, which automatically sorts them by their
-	 * {@link Subscriber#priority()}. This handy mechanism allows user to priority certain actions over others.
-	 * The lesser the {@code priority} value, the more important the subscriber is.
-	 * <p>
-	 * For subscribers with the same priority, the order is undefined!
-	 */
-	@Override
-	public <E extends Event> void subscribe(Class<E> evt, Consumer<E> subscriber, int priority) {
-		subscribe(evt, new Subscriber<>() {
-			@Override
-			public void handle(E event) {
-				subscriber.accept(event);
-			}
+    /**
+     * {@inheritDoc}
+     * <p></p>
+     * Subscribers in this bus are stored in a {@link PriorityQueue}, which automatically sorts them by their
+     * {@link Subscriber#priority()}. This handy mechanism allows user to priority certain actions over others.
+     * The lesser the {@code priority} value, the more important the subscriber is.
+     * <p>
+     * For subscribers with the same priority, the order is undefined!
+     */
+    @Override
+    public <E extends Event> void subscribe(Class<E> evt, Consumer<E> subscriber, int priority) {
+        subscribe(evt, new Subscriber<>() {
+            @Override
+            public void handle(E event) {
+                subscriber.accept(event);
+            }
 
-			@Override
-			public int priority() {
-				return priority;
-			}
-		});
-	}
+            @Override
+            public int priority() {
+                return priority;
+            }
+        });
+    }
 
-	@Override
-	public <E extends Event> void unsubscribe(Class<E> evt, Subscriber<E> subscriber) {
-		Queue<Subscriber<Event>> queue = subscribers.get(evt);
-		if (queue == null || queue.isEmpty()) return;
-		queue.remove(subscriber);
-	}
+    @Override
+    public <E extends Event> void unsubscribe(Class<E> evt, Subscriber<E> subscriber) {
+        Queue<Subscriber<Event>> queue = subscribers.get(evt);
+        if (queue == null || queue.isEmpty()) return;
+        queue.remove(subscriber);
+    }
 
-	@Override
-	public <E extends Event> void publish(E event) {
-		notifySubscribers(event);
-	}
+    @Override
+    public <E extends Event> void publish(E event) {
+        notifySubscribers(event);
+    }
 }

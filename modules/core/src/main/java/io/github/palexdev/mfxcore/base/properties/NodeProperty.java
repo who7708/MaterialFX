@@ -26,22 +26,22 @@ import javafx.scene.Node;
  */
 public class NodeProperty extends ReadOnlyObjectWrapper<Node> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
+    //================================================================================
+    // Constructors
+    //================================================================================
 
-	public NodeProperty() {
-	}
+    public NodeProperty() {
+    }
 
-	public NodeProperty(Node initialValue) {
-		super(initialValue);
-	}
+    public NodeProperty(Node initialValue) {
+        super(initialValue);
+    }
 
-	public NodeProperty(Object bean, String name) {
-		super(bean, name);
-	}
+    public NodeProperty(Object bean, String name) {
+        super(bean, name);
+    }
 
-	public NodeProperty(Object bean, String name, Node initialValue) {
-		super(bean, name, initialValue);
-	}
+    public NodeProperty(Object bean, String name, Node initialValue) {
+        super(bean, name, initialValue);
+    }
 }

@@ -26,16 +26,16 @@ import io.github.palexdev.mfxeffects.animations.base.Curve;
  * <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_threshold.mp4>Threshold</a>
  */
 public class Threshold extends Curve {
-	private final double threshold;
+    private final double threshold;
 
-	public Threshold(double threshold) {
-		this.threshold = threshold;
-	}
+    public Threshold(double threshold) {
+        this.threshold = threshold;
+    }
 
-	@Override
-	public double curve(double t) {
-		assert (threshold >= 0.0);
-		assert (threshold <= 1.0);
-		return t < threshold ? 0.0 : 1.0;
-	}
+    @Override
+    public double curve(double t) {
+        assert (threshold >= 0.0);
+        assert (threshold <= 1.0);
+        return t < threshold ? 0.0 : 1.0;
+    }
 }

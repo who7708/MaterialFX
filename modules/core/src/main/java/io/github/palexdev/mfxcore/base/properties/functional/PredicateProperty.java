@@ -30,21 +30,21 @@ import java.util.function.Predicate;
  */
 public class PredicateProperty<T> extends ReadOnlyObjectWrapper<Predicate<T>> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public PredicateProperty() {
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public PredicateProperty() {
+    }
 
-	public PredicateProperty(Predicate<T> initialValue) {
-		super(initialValue);
-	}
+    public PredicateProperty(Predicate<T> initialValue) {
+        super(initialValue);
+    }
 
-	public PredicateProperty(Object bean, String name) {
-		super(bean, name);
-	}
+    public PredicateProperty(Object bean, String name) {
+        super(bean, name);
+    }
 
-	public PredicateProperty(Object bean, String name, Predicate<T> initialValue) {
-		super(bean, name, initialValue);
-	}
+    public PredicateProperty(Object bean, String name, Predicate<T> initialValue) {
+        super(bean, name, initialValue);
+    }
 }

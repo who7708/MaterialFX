@@ -30,21 +30,21 @@ import java.util.function.Consumer;
  */
 public class ConsumerProperty<T> extends ReadOnlyObjectWrapper<Consumer<T>> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public ConsumerProperty() {
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public ConsumerProperty() {
+    }
 
-	public ConsumerProperty(Consumer<T> initialValue) {
-		super(initialValue);
-	}
+    public ConsumerProperty(Consumer<T> initialValue) {
+        super(initialValue);
+    }
 
-	public ConsumerProperty(Object bean, String name) {
-		super(bean, name);
-	}
+    public ConsumerProperty(Object bean, String name) {
+        super(bean, name);
+    }
 
-	public ConsumerProperty(Object bean, String name, Consumer<T> initialValue) {
-		super(bean, name, initialValue);
-	}
+    public ConsumerProperty(Object bean, String name, Consumer<T> initialValue) {
+        super(bean, name, initialValue);
+    }
 }

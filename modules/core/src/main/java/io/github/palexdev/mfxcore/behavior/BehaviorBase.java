@@ -45,335 +45,335 @@ import java.util.function.Consumer;
  * {@link #dispose()}.
  */
 public abstract class BehaviorBase<N extends Node> {
-	//================================================================================
-	// Properties
-	//================================================================================
-	private N node;
-	private final List<DisposableAction> actions = new ArrayList<>();
+    //================================================================================
+    // Properties
+    //================================================================================
+    private N node;
+    private final List<DisposableAction> actions = new ArrayList<>();
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public BehaviorBase(N node) {
-		this.node = node;
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public BehaviorBase(N node) {
+        this.node = node;
+    }
 
-	//================================================================================
-	// Methods
-	//================================================================================
+    //================================================================================
+    // Methods
+    //================================================================================
 
-	/**
-	 * Behaviors can specify a set of actions to initialize themselves if needed.
-	 */
-	public void init() {}
+    /**
+     * Behaviors can specify a set of actions to initialize themselves if needed.
+     */
+    public void init() {}
 
-	/**
-	 * The behavior API registers input actions in the form of {@link WhenEvent} constructs. This method adds them
-	 * to a list (which will be used for disposal, avoiding memory leaks when calling {@link #dispose()}).
-	 * <p>
-	 * Also note that if the constructs was not activated before by invoking {@link WhenEvent#register()}, this method
-	 * will do it for you automatically.
-	 */
-	@SafeVarargs
-	public final <T extends Event> void register(WhenEvent<T>... wes) {
-		for (WhenEvent<T> w : wes) {
-			if (!w.isActive()) w.register();
-			actions.add(w);
-		}
-	}
+    /**
+     * The behavior API registers input actions in the form of {@link WhenEvent} constructs. This method adds them
+     * to a list (which will be used for disposal, avoiding memory leaks when calling {@link #dispose()}).
+     * <p>
+     * Also note that if the constructs was not activated before by invoking {@link WhenEvent#register()}, this method
+     * will do it for you automatically.
+     */
+    @SafeVarargs
+    public final <T extends Event> void register(WhenEvent<T>... wes) {
+        for (WhenEvent<T> w : wes) {
+            if (!w.isActive()) w.register();
+            actions.add(w);
+        }
+    }
 
-	/**
-	 * Calls {@link DisposableAction#dispose()} on all the registered actions, then clears
-	 * the list and sets the node field to null making this behavior not usable anymore.
-	 */
-	public void dispose() {
-		actions.forEach(DisposableAction::dispose);
-		actions.clear();
-		node = null;
-	}
+    /**
+     * Calls {@link DisposableAction#dispose()} on all the registered actions, then clears
+     * the list and sets the node field to null making this behavior not usable anymore.
+     */
+    public void dispose() {
+        actions.forEach(DisposableAction::dispose);
+        actions.clear();
+        node = null;
+    }
 
-	//================================================================================
-	// Events Specific Methods
-	//================================================================================
+    //================================================================================
+    // Events Specific Methods
+    //================================================================================
 
-	// Mouse
+    // Mouse
 
-	/**
-	 * Should be used by subclasses to handle {@link MouseEvent#MOUSE_PRESSED} events.
-	 * <p>
-	 * The callback can be used by the caller to register additional actions to perform after the behavior code.
-	 * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-	 */
-	public void mousePressed(MouseEvent e, Consumer<MouseEvent> callback) {
-		if (callback != null) callback.accept(e);
-	}
+    /**
+     * Should be used by subclasses to handle {@link MouseEvent#MOUSE_PRESSED} events.
+     * <p>
+     * The callback can be used by the caller to register additional actions to perform after the behavior code.
+     * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
+     */
+    public void mousePressed(MouseEvent e, Consumer<MouseEvent> callback) {
+        if (callback != null) callback.accept(e);
+    }
 
-	/**
-	 * Convenience delegate method for {@link #mousePressed(MouseEvent, Consumer)}, invoked with a {@code null} callback.
-	 */
-	public void mousePressed(MouseEvent e) {
-		mousePressed(e, null);
-	}
+    /**
+     * Convenience delegate method for {@link #mousePressed(MouseEvent, Consumer)}, invoked with a {@code null} callback.
+     */
+    public void mousePressed(MouseEvent e) {
+        mousePressed(e, null);
+    }
 
-	/**
-	 * Should be used by subclasses to handle {@link MouseEvent#MOUSE_RELEASED} events.
-	 * <p>
-	 * The callback can be used by the caller to register additional actions to perform after the behavior code.
-	 * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-	 */
-	public void mouseReleased(MouseEvent e, Consumer<MouseEvent> callback) {
-		if (callback != null) callback.accept(e);
-	}
+    /**
+     * Should be used by subclasses to handle {@link MouseEvent#MOUSE_RELEASED} events.
+     * <p>
+     * The callback can be used by the caller to register additional actions to perform after the behavior code.
+     * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
+     */
+    public void mouseReleased(MouseEvent e, Consumer<MouseEvent> callback) {
+        if (callback != null) callback.accept(e);
+    }
 
-	/**
-	 * Convenience delegate method for {@link #mouseReleased(MouseEvent, Consumer)}, invoked with a {@code null} callback.
-	 */
-	public void mouseReleased(MouseEvent e) {
-		mouseReleased(e, null);
-	}
+    /**
+     * Convenience delegate method for {@link #mouseReleased(MouseEvent, Consumer)}, invoked with a {@code null} callback.
+     */
+    public void mouseReleased(MouseEvent e) {
+        mouseReleased(e, null);
+    }
 
-	/**
-	 * Should be used by subclasses to handle {@link MouseEvent#MOUSE_CLICKED} events.
-	 * <p>
-	 * The callback can be used by the caller to register additional actions to perform after the behavior code.
-	 * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-	 */
-	public void mouseClicked(MouseEvent e, Consumer<MouseEvent> callback) {
-		if (callback != null) callback.accept(e);
-	}
+    /**
+     * Should be used by subclasses to handle {@link MouseEvent#MOUSE_CLICKED} events.
+     * <p>
+     * The callback can be used by the caller to register additional actions to perform after the behavior code.
+     * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
+     */
+    public void mouseClicked(MouseEvent e, Consumer<MouseEvent> callback) {
+        if (callback != null) callback.accept(e);
+    }
 
-	/**
-	 * Convenience delegate method for {@link #mouseClicked(MouseEvent, Consumer)}, invoked with a {@code null} callback.
-	 */
-	public void mouseClicked(MouseEvent e) {
-		mouseClicked(e, null);
-	}
+    /**
+     * Convenience delegate method for {@link #mouseClicked(MouseEvent, Consumer)}, invoked with a {@code null} callback.
+     */
+    public void mouseClicked(MouseEvent e) {
+        mouseClicked(e, null);
+    }
 
-	/**
-	 * Should be used by subclasses to handle {@link MouseEvent#MOUSE_MOVED} events.
-	 * <p>
-	 * The callback can be used by the caller to register additional actions to perform after the behavior code.
-	 * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-	 */
-	public void mouseMoved(MouseEvent e, Consumer<MouseEvent> callback) {
-		if (callback != null) callback.accept(e);
-	}
+    /**
+     * Should be used by subclasses to handle {@link MouseEvent#MOUSE_MOVED} events.
+     * <p>
+     * The callback can be used by the caller to register additional actions to perform after the behavior code.
+     * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
+     */
+    public void mouseMoved(MouseEvent e, Consumer<MouseEvent> callback) {
+        if (callback != null) callback.accept(e);
+    }
 
-	/**
-	 * Convenience delegate method for {@link #mouseMoved(MouseEvent, Consumer)}, invoked with a {@code null} callback.
-	 */
-	public void mouseMoved(MouseEvent e) {
-		mouseMoved(e, null);
-	}
+    /**
+     * Convenience delegate method for {@link #mouseMoved(MouseEvent, Consumer)}, invoked with a {@code null} callback.
+     */
+    public void mouseMoved(MouseEvent e) {
+        mouseMoved(e, null);
+    }
 
-	/**
-	 * Should be used by subclasses to handle {@link MouseEvent#MOUSE_DRAGGED} events.
-	 * <p>
-	 * The callback can be used by the caller to register additional actions to perform after the behavior code.
-	 * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-	 */
-	public void mouseDragged(MouseEvent e, Consumer<MouseEvent> callback) {
-		if (callback != null) callback.accept(e);
-	}
+    /**
+     * Should be used by subclasses to handle {@link MouseEvent#MOUSE_DRAGGED} events.
+     * <p>
+     * The callback can be used by the caller to register additional actions to perform after the behavior code.
+     * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
+     */
+    public void mouseDragged(MouseEvent e, Consumer<MouseEvent> callback) {
+        if (callback != null) callback.accept(e);
+    }
 
-	/**
-	 * Convenience delegate method for {@link #mouseDragged(MouseEvent, Consumer)}, invoked with a {@code null} callback.
-	 */
-	public void mouseDragged(MouseEvent e) {
-		mouseDragged(e, null);
-	}
+    /**
+     * Convenience delegate method for {@link #mouseDragged(MouseEvent, Consumer)}, invoked with a {@code null} callback.
+     */
+    public void mouseDragged(MouseEvent e) {
+        mouseDragged(e, null);
+    }
 
-	/**
-	 * Should be used by subclasses to handle {@link MouseEvent#MOUSE_ENTERED} events.
-	 * <p>
-	 * The callback can be used by the caller to register additional actions to perform after the behavior code.
-	 * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-	 */
-	public void mouseEntered(MouseEvent e, Consumer<MouseEvent> callback) {
-		if (callback != null) callback.accept(e);
-	}
+    /**
+     * Should be used by subclasses to handle {@link MouseEvent#MOUSE_ENTERED} events.
+     * <p>
+     * The callback can be used by the caller to register additional actions to perform after the behavior code.
+     * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
+     */
+    public void mouseEntered(MouseEvent e, Consumer<MouseEvent> callback) {
+        if (callback != null) callback.accept(e);
+    }
 
-	/**
-	 * Convenience delegate method for {@link #mouseEntered(MouseEvent, Consumer)}, invoked with a {@code null} callback.
-	 */
-	public void mouseEntered(MouseEvent e) {
-		mouseEntered(e, null);
-	}
+    /**
+     * Convenience delegate method for {@link #mouseEntered(MouseEvent, Consumer)}, invoked with a {@code null} callback.
+     */
+    public void mouseEntered(MouseEvent e) {
+        mouseEntered(e, null);
+    }
 
-	/**
-	 * Should be used by subclasses to handle {@link MouseEvent#MOUSE_EXITED} events.
-	 * <p>
-	 * The callback can be used by the caller to register additional actions to perform after the behavior code.
-	 * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-	 */
-	public void mouseExited(MouseEvent e, Consumer<MouseEvent> callback) {
-		if (callback != null) callback.accept(e);
-	}
+    /**
+     * Should be used by subclasses to handle {@link MouseEvent#MOUSE_EXITED} events.
+     * <p>
+     * The callback can be used by the caller to register additional actions to perform after the behavior code.
+     * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
+     */
+    public void mouseExited(MouseEvent e, Consumer<MouseEvent> callback) {
+        if (callback != null) callback.accept(e);
+    }
 
-	/**
-	 * Convenience delegate method for {@link #mouseExited(MouseEvent, Consumer)}, invoked with a {@code null} callback.
-	 */
-	public void mouseExited(MouseEvent e) {
-		mouseExited(e, null);
-	}
+    /**
+     * Convenience delegate method for {@link #mouseExited(MouseEvent, Consumer)}, invoked with a {@code null} callback.
+     */
+    public void mouseExited(MouseEvent e) {
+        mouseExited(e, null);
+    }
 
-	// Keys
+    // Keys
 
-	/**
-	 * Should be used by subclasses to handle {@link KeyEvent#KEY_PRESSED} events.
-	 * <p>
-	 * The callback can be used by the caller to register additional actions to perform after the behavior code.
-	 * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-	 */
-	public void keyPressed(KeyEvent e, Consumer<KeyEvent> callback) {
-		if (callback != null) callback.accept(e);
-	}
+    /**
+     * Should be used by subclasses to handle {@link KeyEvent#KEY_PRESSED} events.
+     * <p>
+     * The callback can be used by the caller to register additional actions to perform after the behavior code.
+     * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
+     */
+    public void keyPressed(KeyEvent e, Consumer<KeyEvent> callback) {
+        if (callback != null) callback.accept(e);
+    }
 
-	/**
-	 * Convenience delegate method for {@link #keyPressed(KeyEvent, Consumer)}, invoked with a {@code null} callback.
-	 */
-	public void keyPressed(KeyEvent e) {
-		keyPressed(e, null);
-	}
+    /**
+     * Convenience delegate method for {@link #keyPressed(KeyEvent, Consumer)}, invoked with a {@code null} callback.
+     */
+    public void keyPressed(KeyEvent e) {
+        keyPressed(e, null);
+    }
 
-	/**
-	 * Should be used by subclasses to handle {@link KeyEvent#KEY_RELEASED} events.
-	 * <p>
-	 * The callback can be used by the caller to register additional actions to perform after the behavior code.
-	 * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-	 */
-	public void keyReleased(KeyEvent e, Consumer<KeyEvent> callback) {
-		if (callback != null) callback.accept(e);
-	}
+    /**
+     * Should be used by subclasses to handle {@link KeyEvent#KEY_RELEASED} events.
+     * <p>
+     * The callback can be used by the caller to register additional actions to perform after the behavior code.
+     * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
+     */
+    public void keyReleased(KeyEvent e, Consumer<KeyEvent> callback) {
+        if (callback != null) callback.accept(e);
+    }
 
-	/**
-	 * Convenience delegate method for {@link #keyReleased(KeyEvent, Consumer)}, invoked with a {@code null} callback.
-	 */
-	public void keyReleased(KeyEvent e) {
-		keyReleased(e, null);
-	}
+    /**
+     * Convenience delegate method for {@link #keyReleased(KeyEvent, Consumer)}, invoked with a {@code null} callback.
+     */
+    public void keyReleased(KeyEvent e) {
+        keyReleased(e, null);
+    }
 
-	/**
-	 * Should be used by subclasses to handle {@link KeyEvent#KEY_TYPED} events.
-	 * <p>
-	 * The callback can be used by the caller to register additional actions to perform after the behavior code.
-	 * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-	 */
-	public void keyTyped(KeyEvent e, Consumer<KeyEvent> callback) {
-		if (callback != null) callback.accept(e);
-	}
+    /**
+     * Should be used by subclasses to handle {@link KeyEvent#KEY_TYPED} events.
+     * <p>
+     * The callback can be used by the caller to register additional actions to perform after the behavior code.
+     * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
+     */
+    public void keyTyped(KeyEvent e, Consumer<KeyEvent> callback) {
+        if (callback != null) callback.accept(e);
+    }
 
-	/**
-	 * Convenience delegate method for {@link #keyTyped(KeyEvent, Consumer)}, invoked with a {@code null} callback.
-	 */
-	public void keyTyped(KeyEvent e) {
-		keyTyped(e, null);
-	}
+    /**
+     * Convenience delegate method for {@link #keyTyped(KeyEvent, Consumer)}, invoked with a {@code null} callback.
+     */
+    public void keyTyped(KeyEvent e) {
+        keyTyped(e, null);
+    }
 
-	// Touch
+    // Touch
 
-	/**
-	 * Should be used by subclasses to handle {@link TouchEvent#TOUCH_PRESSED} events.
-	 * <p>
-	 * The callback can be used by the caller to register additional actions to perform after the behavior code.
-	 * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-	 */
-	public void touchPressed(TouchEvent e, Consumer<TouchEvent> callback) {
-		if (callback != null) callback.accept(e);
-	}
+    /**
+     * Should be used by subclasses to handle {@link TouchEvent#TOUCH_PRESSED} events.
+     * <p>
+     * The callback can be used by the caller to register additional actions to perform after the behavior code.
+     * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
+     */
+    public void touchPressed(TouchEvent e, Consumer<TouchEvent> callback) {
+        if (callback != null) callback.accept(e);
+    }
 
-	/**
-	 * Convenience delegate method for {@link #touchPressed(TouchEvent, Consumer)}, invoked with a {@code null} callback.
-	 */
-	public void touchPressed(TouchEvent e) {
-		touchPressed(e, null);
-	}
+    /**
+     * Convenience delegate method for {@link #touchPressed(TouchEvent, Consumer)}, invoked with a {@code null} callback.
+     */
+    public void touchPressed(TouchEvent e) {
+        touchPressed(e, null);
+    }
 
-	/**
-	 * Should be used by subclasses to handle {@link TouchEvent#TOUCH_RELEASED} events.
-	 * <p>
-	 * The callback can be used by the caller to register additional actions to perform after the behavior code.
-	 * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-	 */
-	public void touchReleased(TouchEvent e, Consumer<TouchEvent> callback) {
-		if (callback != null) callback.accept(e);
-	}
+    /**
+     * Should be used by subclasses to handle {@link TouchEvent#TOUCH_RELEASED} events.
+     * <p>
+     * The callback can be used by the caller to register additional actions to perform after the behavior code.
+     * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
+     */
+    public void touchReleased(TouchEvent e, Consumer<TouchEvent> callback) {
+        if (callback != null) callback.accept(e);
+    }
 
-	/**
-	 * Convenience delegate method for {@link #touchReleased(TouchEvent, Consumer)}, invoked with a {@code null} callback.
-	 */
-	public void touchReleased(TouchEvent e) {
-		touchReleased(e, null);
-	}
+    /**
+     * Convenience delegate method for {@link #touchReleased(TouchEvent, Consumer)}, invoked with a {@code null} callback.
+     */
+    public void touchReleased(TouchEvent e) {
+        touchReleased(e, null);
+    }
 
-	/**
-	 * Should be used by subclasses to handle {@link TouchEvent#TOUCH_MOVED} events.
-	 * <p>
-	 * The callback can be used by the caller to register additional actions to perform after the behavior code.
-	 * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-	 */
-	public void touchMoved(TouchEvent e, Consumer<TouchEvent> callback) {
-		if (callback != null) callback.accept(e);
-	}
+    /**
+     * Should be used by subclasses to handle {@link TouchEvent#TOUCH_MOVED} events.
+     * <p>
+     * The callback can be used by the caller to register additional actions to perform after the behavior code.
+     * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
+     */
+    public void touchMoved(TouchEvent e, Consumer<TouchEvent> callback) {
+        if (callback != null) callback.accept(e);
+    }
 
-	/**
-	 * Convenience delegate method for {@link #touchMoved(TouchEvent, Consumer)}, invoked with a {@code null} callback.
-	 */
-	public void touchMoved(TouchEvent e) {
-		touchMoved(e, null);
-	}
+    /**
+     * Convenience delegate method for {@link #touchMoved(TouchEvent, Consumer)}, invoked with a {@code null} callback.
+     */
+    public void touchMoved(TouchEvent e) {
+        touchMoved(e, null);
+    }
 
-	/**
-	 * Should be used by subclasses to handle {@link TouchEvent#TOUCH_STATIONARY} events.
-	 * <p>
-	 * The callback can be used by the caller to register additional actions to perform after the behavior code.
-	 * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-	 */
-	public void touchStationary(TouchEvent e, Consumer<TouchEvent> callback) {
-		if (callback != null) callback.accept(e);
-	}
+    /**
+     * Should be used by subclasses to handle {@link TouchEvent#TOUCH_STATIONARY} events.
+     * <p>
+     * The callback can be used by the caller to register additional actions to perform after the behavior code.
+     * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
+     */
+    public void touchStationary(TouchEvent e, Consumer<TouchEvent> callback) {
+        if (callback != null) callback.accept(e);
+    }
 
-	/**
-	 * Convenience delegate method for {@link #touchStationary(TouchEvent, Consumer)}, invoked with a {@code null} callback.
-	 */
-	public void touchStationary(TouchEvent e) {
-		touchStationary(e, null);
-	}
+    /**
+     * Convenience delegate method for {@link #touchStationary(TouchEvent, Consumer)}, invoked with a {@code null} callback.
+     */
+    public void touchStationary(TouchEvent e) {
+        touchStationary(e, null);
+    }
 
-	// Scroll
+    // Scroll
 
-	/**
-	 * Should be used by subclasses to handle {@link ScrollEvent#SCROLL} events.
-	 * <p>
-	 * The callback can be used by the caller to register additional actions to perform after the behavior code.
-	 * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-	 */
-	public void scroll(ScrollEvent e, Consumer<ScrollEvent> callback) {
-		if (callback != null) callback.accept(e);
-	}
+    /**
+     * Should be used by subclasses to handle {@link ScrollEvent#SCROLL} events.
+     * <p>
+     * The callback can be used by the caller to register additional actions to perform after the behavior code.
+     * Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
+     */
+    public void scroll(ScrollEvent e, Consumer<ScrollEvent> callback) {
+        if (callback != null) callback.accept(e);
+    }
 
-	/**
-	 * Convenience delegate method for {@link #scroll(ScrollEvent, Consumer)}, invoked with a {@code null} callback.
-	 */
-	public void scroll(ScrollEvent e) {
-		scroll(e, null);
-	}
+    /**
+     * Convenience delegate method for {@link #scroll(ScrollEvent, Consumer)}, invoked with a {@code null} callback.
+     */
+    public void scroll(ScrollEvent e) {
+        scroll(e, null);
+    }
 
-	//================================================================================
-	// Getters/Setters
-	//================================================================================
+    //================================================================================
+    // Getters/Setters
+    //================================================================================
 
-	/**
-	 * @return the node on which this behavior is applied
-	 */
-	public N getNode() {
-		return node;
-	}
+    /**
+     * @return the node on which this behavior is applied
+     */
+    public N getNode() {
+        return node;
+    }
 
-	/**
-	 * @return the list of registered actions as an unmodifiable list
-	 */
-	public List<DisposableAction> getActions() {
-		return Collections.unmodifiableList(actions);
-	}
+    /**
+     * @return the list of registered actions as an unmodifiable list
+     */
+    public List<DisposableAction> getActions() {
+        return Collections.unmodifiableList(actions);
+    }
 }

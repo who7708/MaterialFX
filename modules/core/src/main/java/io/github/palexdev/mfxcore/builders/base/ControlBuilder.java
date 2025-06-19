@@ -26,33 +26,33 @@ import javafx.scene.control.Tooltip;
 
 public class ControlBuilder<C extends Control> extends RegionBuilder<C> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public ControlBuilder(C control) {
-		super(control);
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public ControlBuilder(C control) {
+        super(control);
+    }
 
-	public static ControlBuilder<Control> control(Control control) {
-		return new ControlBuilder<>(control);
-	}
+    public static ControlBuilder<Control> control(Control control) {
+        return new ControlBuilder<>(control);
+    }
 
-	//================================================================================
-	// Delegate Methods
-	//================================================================================
+    //================================================================================
+    // Delegate Methods
+    //================================================================================
 
-	public ControlBuilder<C> setSkin(Skin<?> value) {
-		node.setSkin(value);
-		return this;
-	}
+    public ControlBuilder<C> setSkin(Skin<?> value) {
+        node.setSkin(value);
+        return this;
+    }
 
-	public ControlBuilder<C> setTooltip(Tooltip value) {
-		node.setTooltip(value);
-		return this;
-	}
+    public ControlBuilder<C> setTooltip(Tooltip value) {
+        node.setTooltip(value);
+        return this;
+    }
 
-	public ControlBuilder<C> setContextMenu(ContextMenu value) {
-		node.setContextMenu(value);
-		return this;
-	}
+    public ControlBuilder<C> setContextMenu(ContextMenu value) {
+        node.setContextMenu(value);
+        return this;
+    }
 }

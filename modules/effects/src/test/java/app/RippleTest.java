@@ -29,18 +29,18 @@ import org.scenicview.ScenicView;
 
 public class RippleTest extends Application {
 
-	@Override
-	public void start(Stage primaryStage) {
-		StackPane root = new StackPane();
+    @Override
+    public void start(Stage primaryStage) {
+        StackPane root = new StackPane();
 
-		Pane target = new Pane();
-		target.setPrefSize(600, 600);
-		target.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-		target.setStyle("-fx-border-color: red; -fx-border-radius: 24px");
+        Pane target = new Pane();
+        target.setPrefSize(600, 600);
+        target.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        target.setStyle("-fx-border-color: red; -fx-border-radius: 24px");
 
-		MFXRippleGenerator rg = new MFXRippleGenerator(target);
-		rg.enable();
-		target.getChildren().add(rg);
+        MFXRippleGenerator rg = new MFXRippleGenerator(target);
+        rg.enable();
+        target.getChildren().add(rg);
 
 /*		rg.setAnimateBackground(true);
 		rg.setRippleSupplier(() -> new CircleRipple() {
@@ -50,11 +50,11 @@ public class RippleTest extends Application {
 		});
 		rg.setBackgroundOpacity(0.7);*/
 
-		root.getChildren().add(target);
-		Scene scene = new Scene(root, 800, 800);
-		primaryStage.setScene(scene);
-		primaryStage.show();
+        root.getChildren().add(target);
+        Scene scene = new Scene(root, 800, 800);
+        primaryStage.setScene(scene);
+        primaryStage.show();
 
-		ScenicView.show(scene);
-	}
+        ScenicView.show(scene);
+    }
 }

@@ -22,32 +22,32 @@ import javafx.scene.control.ProgressIndicator;
 
 public class BaseProgressBuilder<P extends ProgressIndicator> extends ControlBuilder<P> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	@SuppressWarnings("unchecked")
-	public BaseProgressBuilder() {
-		this((P) new ProgressIndicator());
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    @SuppressWarnings("unchecked")
+    public BaseProgressBuilder() {
+        this((P) new ProgressIndicator());
+    }
 
-	public BaseProgressBuilder(P progressIndicator) {
-		super(progressIndicator);
-	}
+    public BaseProgressBuilder(P progressIndicator) {
+        super(progressIndicator);
+    }
 
-	public static BaseProgressBuilder<ProgressIndicator> progressIndicator() {
-		return new BaseProgressBuilder<>();
-	}
+    public static BaseProgressBuilder<ProgressIndicator> progressIndicator() {
+        return new BaseProgressBuilder<>();
+    }
 
-	public static BaseProgressBuilder<ProgressIndicator> progressIndicator(ProgressIndicator progressIndicator) {
-		return new BaseProgressBuilder<>(progressIndicator);
-	}
+    public static BaseProgressBuilder<ProgressIndicator> progressIndicator(ProgressIndicator progressIndicator) {
+        return new BaseProgressBuilder<>(progressIndicator);
+    }
 
-	//================================================================================
-	// Delegate Methods
-	//================================================================================
+    //================================================================================
+    // Delegate Methods
+    //================================================================================
 
-	public BaseProgressBuilder<P> setProgress(double value) {
-		node.setProgress(value);
-		return this;
-	}
+    public BaseProgressBuilder<P> setProgress(double value) {
+        node.setProgress(value);
+        return this;
+    }
 }

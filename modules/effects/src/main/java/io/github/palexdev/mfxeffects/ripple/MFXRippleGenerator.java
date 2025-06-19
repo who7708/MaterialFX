@@ -295,12 +295,12 @@ public class MFXRippleGenerator extends RippleGeneratorBase {
 
         clip = new Region();
         clip.backgroundProperty().bind(Bindings.createObjectBinding(
-                () -> {
-                    CornerRadii radius = StyleUtils.parseCornerRadius(owner);
-                    BackgroundFill fill = new BackgroundFill(Color.WHITE, radius, Insets.EMPTY);
-                    return new Background(fill);
-                },
-                owner.backgroundProperty(), owner.borderProperty()
+            () -> {
+                CornerRadii radius = StyleUtils.parseCornerRadius(owner);
+                BackgroundFill fill = new BackgroundFill(Color.WHITE, radius, Insets.EMPTY);
+                return new Background(fill);
+            },
+            owner.backgroundProperty(), owner.borderProperty()
         ));
         return clip;
     }
@@ -344,10 +344,10 @@ public class MFXRippleGenerator extends RippleGeneratorBase {
     // Styleable Properties
     //================================================================================
     private final StyleableBooleanProperty animateBackground = new SimpleStyleableBooleanProperty(
-            StyleableProperties.ANIMATE_BACKGROUND,
-            this,
-            "animateBackground",
-            false
+        StyleableProperties.ANIMATE_BACKGROUND,
+        this,
+        "animateBackground",
+        false
     ) {
         @Override
         protected void invalidated() {
@@ -362,10 +362,10 @@ public class MFXRippleGenerator extends RippleGeneratorBase {
     };
 
     private final StyleableObjectProperty<Color> backgroundColor = new SimpleStyleableObjectProperty<>(
-            StyleableProperties.BACKGROUND_COLOR,
-            this,
-            "backgroundColor",
-            DEFAULT_RIPPLE_COLOR
+        StyleableProperties.BACKGROUND_COLOR,
+        this,
+        "backgroundColor",
+        DEFAULT_RIPPLE_COLOR
     ) {
         @Override
         protected void invalidated() {
@@ -380,10 +380,10 @@ public class MFXRippleGenerator extends RippleGeneratorBase {
     };
 
     private final StyleableObjectProperty<Color> rippleColor = new SimpleStyleableObjectProperty<>(
-            StyleableProperties.RIPPLE_COLOR,
-            this,
-            "rippleColor",
-            DEFAULT_RIPPLE_COLOR
+        StyleableProperties.RIPPLE_COLOR,
+        this,
+        "rippleColor",
+        DEFAULT_RIPPLE_COLOR
     ) {
         @Override
         public StyleOrigin getStyleOrigin() {
@@ -392,10 +392,10 @@ public class MFXRippleGenerator extends RippleGeneratorBase {
     };
 
     private final StyleableBooleanProperty checkBounds = new SimpleStyleableBooleanProperty(
-            StyleableProperties.CHECK_BOUNDS,
-            this,
-            "checkBounds",
-            true
+        StyleableProperties.CHECK_BOUNDS,
+        this,
+        "checkBounds",
+        true
     ) {
         @Override
         public StyleOrigin getStyleOrigin() {
@@ -404,10 +404,10 @@ public class MFXRippleGenerator extends RippleGeneratorBase {
     };
 
     private final StyleableObjectProperty<MouseMode> mouseMode = new SimpleStyleableObjectProperty<>(
-            StyleableProperties.MOUSE_MODE,
-            this,
-            "mouseMode",
-            MouseMode.MOUSE_TRANSPARENT
+        StyleableProperties.MOUSE_MODE,
+        this,
+        "mouseMode",
+        MouseMode.MOUSE_TRANSPARENT
     ) {
         @Override
         protected void invalidated() {
@@ -523,40 +523,40 @@ public class MFXRippleGenerator extends RippleGeneratorBase {
         private static final List<CssMetaData<? extends Styleable, ?>> cssMetaDataList;
 
         private static final CssMetaData<MFXRippleGenerator, Boolean> ANIMATE_BACKGROUND =
-                FACTORY.createBooleanCssMetaData(
-                        "-mfx-animate-background",
-                        MFXRippleGenerator::animateBackgroundProperty,
-                        false
-                );
+            FACTORY.createBooleanCssMetaData(
+                "-mfx-animate-background",
+                MFXRippleGenerator::animateBackgroundProperty,
+                false
+            );
 
         private static final CssMetaData<MFXRippleGenerator, Color> BACKGROUND_COLOR =
-                FACTORY.createColorCssMetaData(
-                        "-mfx-background-color",
-                        MFXRippleGenerator::backgroundColorProperty,
-                        DEFAULT_RIPPLE_COLOR
-                );
+            FACTORY.createColorCssMetaData(
+                "-mfx-background-color",
+                MFXRippleGenerator::backgroundColorProperty,
+                DEFAULT_RIPPLE_COLOR
+            );
 
         private static final CssMetaData<MFXRippleGenerator, Color> RIPPLE_COLOR =
-                FACTORY.createColorCssMetaData(
-                        "-mfx-ripple-color",
-                        MFXRippleGenerator::rippleColorProperty,
-                        DEFAULT_RIPPLE_COLOR
-                );
+            FACTORY.createColorCssMetaData(
+                "-mfx-ripple-color",
+                MFXRippleGenerator::rippleColorProperty,
+                DEFAULT_RIPPLE_COLOR
+            );
 
         private static final CssMetaData<MFXRippleGenerator, Boolean> CHECK_BOUNDS =
-                FACTORY.createBooleanCssMetaData(
-                        "-mfx-check-bounds",
-                        MFXRippleGenerator::checkBoundsProperty,
-                        true
-                );
+            FACTORY.createBooleanCssMetaData(
+                "-mfx-check-bounds",
+                MFXRippleGenerator::checkBoundsProperty,
+                true
+            );
 
         private static final CssMetaData<MFXRippleGenerator, MouseMode> MOUSE_MODE =
-                FACTORY.createEnumCssMetaData(
-                        MouseMode.class,
-                        "-mfx-mouse-mode",
-                        MFXRippleGenerator::mouseModeProperty,
-                        MouseMode.MOUSE_TRANSPARENT
-                );
+            FACTORY.createEnumCssMetaData(
+                MouseMode.class,
+                "-mfx-mouse-mode",
+                MFXRippleGenerator::mouseModeProperty,
+                MouseMode.MOUSE_TRANSPARENT
+            );
 
         private static final CssMetaData<MFXRippleGenerator, Boolean> NO_CLIP =
             FACTORY.createBooleanCssMetaData(
@@ -567,8 +567,8 @@ public class MFXRippleGenerator extends RippleGeneratorBase {
 
         static {
             cssMetaDataList = StyleUtils.cssMetaDataList(
-                    Region.getClassCssMetaData(),
-                    ANIMATE_BACKGROUND, BACKGROUND_COLOR,
+                Region.getClassCssMetaData(),
+                ANIMATE_BACKGROUND, BACKGROUND_COLOR,
                 RIPPLE_COLOR,
                 CHECK_BOUNDS, MOUSE_MODE, NO_CLIP
             );
@@ -605,8 +605,8 @@ public class MFXRippleGenerator extends RippleGeneratorBase {
      */
     public RippleState getRippleState() {
         return Optional.ofNullable(state)
-                .map(GeneratorState::getRippleState)
-                .orElse(RippleState.INACTIVE);
+            .map(GeneratorState::getRippleState)
+            .orElse(RippleState.INACTIVE);
     }
 
     @Override

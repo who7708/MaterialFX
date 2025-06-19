@@ -32,51 +32,51 @@ import javafx.beans.value.ObservableValue;
  * @param <T> the type of the target's observable
  */
 public abstract class AbstractSource<S, T> implements ISource<S, T> {
-	//================================================================================
-	// Properties
-	//================================================================================
-	protected ObservableValue<? extends S> observable;
-	protected Target<T> target;
+    //================================================================================
+    // Properties
+    //================================================================================
+    protected ObservableValue<? extends S> observable;
+    protected Target<T> target;
 
-	protected ChangeListener<? super S> obvListener;
-	protected ChangeListener<? super T> tgtListener;
+    protected ChangeListener<? super S> obvListener;
+    protected ChangeListener<? super T> tgtListener;
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	protected AbstractSource() {
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    protected AbstractSource() {
+    }
 
-	public AbstractSource(ObservableValue<? extends S> observable) {
-		this.observable = observable;
-	}
+    public AbstractSource(ObservableValue<? extends S> observable) {
+        this.observable = observable;
+    }
 
-	//================================================================================
-	// Abstract Methods
-	//================================================================================
+    //================================================================================
+    // Abstract Methods
+    //================================================================================
 
-	/**
-	 * Activates the source by adding the needed listeners.
-	 */
-	protected abstract void listen();
+    /**
+     * Activates the source by adding the needed listeners.
+     */
+    protected abstract void listen();
 
-	/**
-	 * Activates the source by adding the needed listeners, unlike {@link #listen()} this
-	 * is used by bidirectional biding, in fact a listener is also added to the given target
-	 * to trigger the target update when this changes.
-	 */
-	protected abstract void listen(Target<T> target);
+    /**
+     * Activates the source by adding the needed listeners, unlike {@link #listen()} this
+     * is used by bidirectional biding, in fact a listener is also added to the given target
+     * to trigger the target update when this changes.
+     */
+    protected abstract void listen(Target<T> target);
 
-	//================================================================================
-	// Methods
-	//================================================================================
-	@Override
-	public ObservableValue<? extends S> getObservable() {
-		return observable;
-	}
+    //================================================================================
+    // Methods
+    //================================================================================
+    @Override
+    public ObservableValue<? extends S> getObservable() {
+        return observable;
+    }
 
-	@Override
-	public S getValue() {
-		return observable.getValue();
-	}
+    @Override
+    public S getValue() {
+        return observable.getValue();
+    }
 }

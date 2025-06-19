@@ -28,50 +28,50 @@ import java.util.List;
  * Internally uses a "cursor" to keep track of the current visiting column.
  */
 public class ColumnIterator<T> implements Iterator<List<T>> {
-	//================================================================================
-	// Properties
-	//================================================================================
-	private final Grid<T> grid;
-	private int cursor = 0;
+    //================================================================================
+    // Properties
+    //================================================================================
+    private final Grid<T> grid;
+    private int cursor = 0;
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public ColumnIterator(Grid<T> grid) {
-		this.grid = grid;
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public ColumnIterator(Grid<T> grid) {
+        this.grid = grid;
+    }
 
-	//================================================================================
-	// Overridden Methods
-	//================================================================================
+    //================================================================================
+    // Overridden Methods
+    //================================================================================
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @return whether the cursor is still lesser than {@link Grid#getColumnsNum()}
-	 */
-	@Override
-	public boolean hasNext() {
-		return cursor < grid.getColumnsNum();
-	}
+    /**
+     * {@inheritDoc}
+     *
+     * @return whether the cursor is still lesser than {@link Grid#getColumnsNum()}
+     */
+    @Override
+    public boolean hasNext() {
+        return cursor < grid.getColumnsNum();
+    }
 
-	/**
-	 * @return the column at the current cursor value by using {@link Grid#getColumn(int)}
-	 */
-	@Override
-	public List<T> next() {
-		List<T> column = grid.getColumn(cursor);
-		cursor++;
-		return column;
-	}
+    /**
+     * @return the column at the current cursor value by using {@link Grid#getColumn(int)}
+     */
+    @Override
+    public List<T> next() {
+        List<T> column = grid.getColumn(cursor);
+        cursor++;
+        return column;
+    }
 
-	/**
-	 * Removes the column at the current cursor value by using {@link Grid#removeColumn(int)}.
-	 * <p>
-	 * The removal is done only if {@link #hasNext()} is true.
-	 */
-	@Override
-	public void remove() {
-		if (hasNext()) grid.removeColumn(cursor);
-	}
+    /**
+     * Removes the column at the current cursor value by using {@link Grid#removeColumn(int)}.
+     * <p>
+     * The removal is done only if {@link #hasNext()} is true.
+     */
+    @Override
+    public void remove() {
+        if (hasNext()) grid.removeColumn(cursor);
+    }
 }

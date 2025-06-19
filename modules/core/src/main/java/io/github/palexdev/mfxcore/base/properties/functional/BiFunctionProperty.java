@@ -32,21 +32,21 @@ import java.util.function.BiFunction;
  */
 public class BiFunctionProperty<T, U, R> extends ReadOnlyObjectWrapper<BiFunction<T, U, R>> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public BiFunctionProperty() {
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public BiFunctionProperty() {
+    }
 
-	public BiFunctionProperty(BiFunction<T, U, R> initialValue) {
-		super(initialValue);
-	}
+    public BiFunctionProperty(BiFunction<T, U, R> initialValue) {
+        super(initialValue);
+    }
 
-	public BiFunctionProperty(Object bean, String name) {
-		super(bean, name);
-	}
+    public BiFunctionProperty(Object bean, String name) {
+        super(bean, name);
+    }
 
-	public BiFunctionProperty(Object bean, String name, BiFunction<T, U, R> initialValue) {
-		super(bean, name, initialValue);
-	}
+    public BiFunctionProperty(Object bean, String name, BiFunction<T, U, R> initialValue) {
+        super(bean, name, initialValue);
+    }
 }

@@ -39,45 +39,45 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(ApplicationExtension.class)
 public class TestLabel {
 
-	@Start
-	void start(Stage stage) {
-		stage.show();
-	}
+    @Start
+    void start(Stage stage) {
+        stage.show();
+    }
 
-	@Test
-	void testLabel(FxRobot robot) {
-		StackPane pane = setupStage();
-		pane.setAlignment(Pos.CENTER_LEFT);
-		Label label = new Label();
+    @Test
+    void testLabel(FxRobot robot) {
+        StackPane pane = setupStage();
+        pane.setAlignment(Pos.CENTER_LEFT);
+        Label label = new Label();
 
-		robot.interact(() -> {
-			label.setGraphic(new Button("BTN"));
-			label.setStyle("-fx-border-color: red"); // To better visualize the label's bounds
-			pane.getChildren().add(label);
-		});
+        robot.interact(() -> {
+            label.setGraphic(new Button("BTN"));
+            label.setStyle("-fx-border-color: red"); // To better visualize the label's bounds
+            pane.getChildren().add(label);
+        });
 
-		assertTrue(label.getTextNode().isEmpty());
-		assertFalse(label.isTruncated());
+        assertTrue(label.getTextNode().isEmpty());
+        assertFalse(label.isTruncated());
 
-		robot.interact(() -> label.setText("This text should be long enough to test the label properly"));
-		assertTrue(label.getTextNode().isPresent());
-		assertFalse(label.isTruncated());
+        robot.interact(() -> label.setText("This text should be long enough to test the label properly"));
+        assertTrue(label.getTextNode().isPresent());
+        assertFalse(label.isTruncated());
 
-		robot.interact(() -> label.setMaxWidth(100));
-		assertTrue(label.isTruncated());
+        robot.interact(() -> label.setMaxWidth(100));
+        assertTrue(label.isTruncated());
 
-		robot.interact(() -> label.setForceDisableTextEllipsis(true));
-		assertFalse(label.isTruncated());
-	}
+        robot.interact(() -> label.setForceDisableTextEllipsis(true));
+        assertFalse(label.isTruncated());
+    }
 
-	StackPane setupStage() {
-		StackPane pane = new StackPane();
-		try {
-			Scene scene = new Scene(pane, 400, 200);
-			FxToolkit.setupStage(s -> s.setScene(scene));
-		} catch (TimeoutException e) {
-			throw new RuntimeException(e);
-		}
-		return pane;
-	}
+    StackPane setupStage() {
+        StackPane pane = new StackPane();
+        try {
+            Scene scene = new Scene(pane, 400, 200);
+            FxToolkit.setupStage(s -> s.setScene(scene));
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
+        }
+        return pane;
+    }
 }

@@ -25,30 +25,30 @@ import javafx.geometry.Pos;
  */
 public class PositionUtils {
 
-	private PositionUtils() {
-	}
+    private PositionUtils() {
+    }
 
-	public static boolean isTop(Pos pos) {
-		return pos == Pos.TOP_LEFT || pos == Pos.TOP_CENTER || pos == Pos.TOP_RIGHT;
-	}
+    public static boolean isTop(Pos pos) {
+        return pos == Pos.TOP_LEFT || pos == Pos.TOP_CENTER || pos == Pos.TOP_RIGHT;
+    }
 
-	public static boolean isCenter(Pos pos) {
-		return pos == Pos.CENTER_LEFT || pos == Pos.CENTER || pos == Pos.CENTER_RIGHT || pos == Pos.TOP_CENTER || pos == Pos.BOTTOM_CENTER;
-	}
+    public static boolean isCenter(Pos pos) {
+        return pos == Pos.CENTER_LEFT || pos == Pos.CENTER || pos == Pos.CENTER_RIGHT || pos == Pos.TOP_CENTER || pos == Pos.BOTTOM_CENTER;
+    }
 
-	public static boolean isBottom(Pos pos) {
-		return pos == Pos.BOTTOM_LEFT || pos == Pos.BOTTOM_CENTER || pos == Pos.BOTTOM_RIGHT;
-	}
+    public static boolean isBottom(Pos pos) {
+        return pos == Pos.BOTTOM_LEFT || pos == Pos.BOTTOM_CENTER || pos == Pos.BOTTOM_RIGHT;
+    }
 
-	public static boolean isLeft(Pos pos) {
-		return pos == Pos.TOP_LEFT || pos == Pos.CENTER_LEFT || pos == Pos.BOTTOM_LEFT;
-	}
+    public static boolean isLeft(Pos pos) {
+        return pos == Pos.TOP_LEFT || pos == Pos.CENTER_LEFT || pos == Pos.BOTTOM_LEFT;
+    }
 
-	public static boolean isRight(Pos pos) {
-		return pos == Pos.TOP_RIGHT || pos == Pos.CENTER_RIGHT || pos == Pos.BOTTOM_RIGHT;
-	}
+    public static boolean isRight(Pos pos) {
+        return pos == Pos.TOP_RIGHT || pos == Pos.CENTER_RIGHT || pos == Pos.BOTTOM_RIGHT;
+    }
 
-	public static boolean isBaseline(Pos pos) {
-		return pos == Pos.BASELINE_LEFT || pos == Pos.BASELINE_CENTER || pos == Pos.BASELINE_RIGHT;
-	}
+    public static boolean isBaseline(Pos pos) {
+        return pos == Pos.BASELINE_LEFT || pos == Pos.BASELINE_CENTER || pos == Pos.BASELINE_RIGHT;
+    }
 }

@@ -41,53 +41,53 @@ import org.kordamp.ikonli.win10.Win10IkonHandler;
 
 public class IconsApp extends Application {
 
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		HBox box = new HBox(30);
-		box.setPadding(new Insets(10));
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        HBox box = new HBox(30);
+        box.setPadding(new Insets(10));
 
-		IconsProviders.registerProvider(
-			"win10-",
-			Font.loadFont(new Win10IkonHandler().getFontResourceAsStream(), 64.0),
-			s -> Optional.ofNullable(Win10.findByDescription(s)).map(w -> ((char) w.getCode())).orElse('\0')
-		);
-		IconsProviders.registerProvider(
-			"fltral-",
-			Font.loadFont(new FluentUiRegularALIkonHandler().getFontResourceAsStream(), 64.0),
-			s -> Optional.ofNullable(FluentUiRegularAL.findByDescription(s)).map(w -> ((char) w.getCode())).orElse('\0')
-		);
+        IconsProviders.registerProvider(
+            "win10-",
+            Font.loadFont(new Win10IkonHandler().getFontResourceAsStream(), 64.0),
+            s -> Optional.ofNullable(Win10.findByDescription(s)).map(w -> ((char) w.getCode())).orElse('\0')
+        );
+        IconsProviders.registerProvider(
+            "fltral-",
+            Font.loadFont(new FluentUiRegularALIkonHandler().getFontResourceAsStream(), 64.0),
+            s -> Optional.ofNullable(FluentUiRegularAL.findByDescription(s)).map(w -> ((char) w.getCode())).orElse('\0')
+        );
 
-		Color color = Color.web("#6750a4");
-		IconContainer i0 = new IconContainer(
-				"FontAwesomeSolid (new default for MaterialFX)",
-				new MFXFontIcon(EnumUtils.randomEnum(FontAwesomeSolid.class).getDescription(), 64.0, color)
-		);
-		IconContainer i1 = new IconContainer(
-				"Ikonli Windows 10 Pack (external dependency)",
-				new MFXFontIcon("", 64.0, color)
-						.setDescription(EnumUtils.randomEnum(Win10.class).getDescription())
-		);
-		IconContainer i2 = new IconContainer(
-				"Ikonli FluentUI Pack (external dependency)",
-				new MFXFontIcon("", 64.0, color)
-						.setDescription(EnumUtils.randomEnum(FluentUiRegularAL.class).getDescription())
-		);
+        Color color = Color.web("#6750a4");
+        IconContainer i0 = new IconContainer(
+            "FontAwesomeSolid (new default for MaterialFX)",
+            new MFXFontIcon(EnumUtils.randomEnum(FontAwesomeSolid.class).getDescription(), 64.0, color)
+        );
+        IconContainer i1 = new IconContainer(
+            "Ikonli Windows 10 Pack (external dependency)",
+            new MFXFontIcon("", 64.0, color)
+                .setDescription(EnumUtils.randomEnum(Win10.class).getDescription())
+        );
+        IconContainer i2 = new IconContainer(
+            "Ikonli FluentUI Pack (external dependency)",
+            new MFXFontIcon("", 64.0, color)
+                .setDescription(EnumUtils.randomEnum(FluentUiRegularAL.class).getDescription())
+        );
 
-		box.getChildren().addAll(i0, i1, i2);
-		Scene scene = new Scene(box, 1024, 600);
-		primaryStage.setScene(scene);
-		primaryStage.setTitle("Demo of new MFXFontIcon on steroids");
-		primaryStage.show();
-	}
+        box.getChildren().addAll(i0, i1, i2);
+        Scene scene = new Scene(box, 1024, 600);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Demo of new MFXFontIcon on steroids");
+        primaryStage.show();
+    }
 
-	private static class IconContainer extends VBox {
+    private static class IconContainer extends VBox {
 
-		public IconContainer(String title, MFXFontIcon icon) {
-			Label header = new Label(title);
-			getChildren().setAll(header, icon);
-			setAlignment(Pos.CENTER);
-			setSpacing(30);
-			setPadding(new Insets(10));
-		}
-	}
+        public IconContainer(String title, MFXFontIcon icon) {
+            Label header = new Label(title);
+            getChildren().setAll(header, icon);
+            setAlignment(Pos.CENTER);
+            setSpacing(30);
+            setPadding(new Insets(10));
+        }
+    }
 }

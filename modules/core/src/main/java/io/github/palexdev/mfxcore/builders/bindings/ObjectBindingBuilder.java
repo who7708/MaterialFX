@@ -24,15 +24,15 @@ import javafx.beans.binding.ObjectBinding;
 
 public class ObjectBindingBuilder<T> extends BindingBuilder<T, ObjectBinding<T>> {
 
-	public static <T> ObjectBindingBuilder<T> build() {
-		return new ObjectBindingBuilder<>();
-	}
+    public static <T> ObjectBindingBuilder<T> build() {
+        return new ObjectBindingBuilder<>();
+    }
 
-	@Override
-	protected ObjectBinding<T> create() {
-		if (mapper == null) {
-			throw new IllegalStateException("Mapper has not been set!");
-		}
-		return Bindings.createObjectBinding(mapper, getSourcesArray());
-	}
+    @Override
+    protected ObjectBinding<T> create() {
+        if (mapper == null) {
+            throw new IllegalStateException("Mapper has not been set!");
+        }
+        return Bindings.createObjectBinding(mapper, getSourcesArray());
+    }
 }

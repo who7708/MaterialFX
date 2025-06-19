@@ -27,34 +27,34 @@ import io.github.palexdev.mfxcore.base.properties.base.NumberRangeProperty;
  */
 public class DoubleRangeProperty extends NumberRangeProperty<Double> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public DoubleRangeProperty() {
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public DoubleRangeProperty() {
+    }
 
-	public DoubleRangeProperty(NumberRange<Double> initialValue) {
-		super(initialValue);
-	}
+    public DoubleRangeProperty(NumberRange<Double> initialValue) {
+        super(initialValue);
+    }
 
-	public DoubleRangeProperty(Object bean, String name) {
-		super(bean, name);
-	}
+    public DoubleRangeProperty(Object bean, String name) {
+        super(bean, name);
+    }
 
-	public DoubleRangeProperty(Object bean, String name, NumberRange<Double> initialValue) {
-		super(bean, name, initialValue);
-	}
+    public DoubleRangeProperty(Object bean, String name, NumberRange<Double> initialValue) {
+        super(bean, name, initialValue);
+    }
 
-	//================================================================================
-	// Overridden Methods
-	//================================================================================
-	@Override
-	public void setRange(Double value) {
-		set(DoubleRange.of(value));
-	}
+    //================================================================================
+    // Overridden Methods
+    //================================================================================
+    @Override
+    public void setRange(Double value) {
+        set(DoubleRange.of(value));
+    }
 
-	@Override
-	public void setRange(Double min, Double max) {
-		set(DoubleRange.of(min, max));
-	}
+    @Override
+    public void setRange(Double min, Double max) {
+        set(DoubleRange.of(min, max));
+    }
 }

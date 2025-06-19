@@ -32,21 +32,21 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
  */
 public class TriFunctionProperty<T, U, V, R> extends ReadOnlyObjectWrapper<TriFunction<T, U, V, R>> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public TriFunctionProperty() {
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public TriFunctionProperty() {
+    }
 
-	public TriFunctionProperty(TriFunction<T, U, V, R> initialValue) {
-		super(initialValue);
-	}
+    public TriFunctionProperty(TriFunction<T, U, V, R> initialValue) {
+        super(initialValue);
+    }
 
-	public TriFunctionProperty(Object bean, String name) {
-		super(bean, name);
-	}
+    public TriFunctionProperty(Object bean, String name) {
+        super(bean, name);
+    }
 
-	public TriFunctionProperty(Object bean, String name, TriFunction<T, U, V, R> initialValue) {
-		super(bean, name, initialValue);
-	}
+    public TriFunctionProperty(Object bean, String name, TriFunction<T, U, V, R> initialValue) {
+        super(bean, name, initialValue);
+    }
 }

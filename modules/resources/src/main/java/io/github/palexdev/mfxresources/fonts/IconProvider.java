@@ -31,34 +31,34 @@ import java.util.function.Function;
  * <p> - A way to load the icon font as an {@link InputStream}
  */
 public interface IconProvider {
-	/**
-	 * @return the path to the icon font resource
-	 */
-	String getFontPath();
+    /**
+     * @return the path to the icon font resource
+     */
+    String getFontPath();
 
-	/**
-	 * @return the function that will be used to convert the icon description/name to its corresponding unicode character
-	 */
-	Function<String, Character> getConverter();
+    /**
+     * @return the function that will be used to convert the icon description/name to its corresponding unicode character
+     */
+    Function<String, Character> getConverter();
 
-	/**
-	 * This should load the font resource as an {@link InputStream}.
-	 */
-	InputStream load();
+    /**
+     * This should load the font resource as an {@link InputStream}.
+     */
+    InputStream load();
 
-	/**
-	 * @return the result of {@link #load()} as a {@link Font} using {@link Font#loadFont(String, double)},
-	 * the default used size is 16.0
-	 */
-	default Font loadFont() {
-		return loadFont(16.0);
-	}
+    /**
+     * @return the result of {@link #load()} as a {@link Font} using {@link Font#loadFont(String, double)},
+     * the default used size is 16.0
+     */
+    default Font loadFont() {
+        return loadFont(16.0);
+    }
 
-	/**
-	 * @return the result of {@link #load()} as a {@link Font} using {@link Font#loadFont(String, double)}
-	 * with the given size
-	 */
-	default Font loadFont(double size) {
-		return Font.loadFont(load(), size);
-	}
+    /**
+     * @return the result of {@link #load()} as a {@link Font} using {@link Font#loadFont(String, double)}
+     * with the given size
+     */
+    default Font loadFont(double size) {
+        return Font.loadFont(load(), size);
+    }
 }

@@ -22,8 +22,8 @@ import javafx.application.Application;
 
 public class EffectsLauncher {
 
-	public static void main(String[] args) {
-		//System.setProperty("prism.vsync", "false");
-		Application.launch(ShadowsTest.class, args);
-	}
+    public static void main(String[] args) {
+        //System.setProperty("prism.vsync", "false");
+        Application.launch(ShadowsTest.class, args);
+    }
 }

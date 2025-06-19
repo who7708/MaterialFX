@@ -57,108 +57,108 @@ import static javafx.util.Duration.millis;
  * @see <a href=https://m3.material.io/styles/motion/overview>Material 3 Guidelines</a>
  */
 public class M3Motion {
-	//================================================================================
-	// Durations
-	//================================================================================
-	public static final Duration SHORT1 = millis(50);
-	public static final Duration SHORT2 = millis(100);
-	public static final Duration SHORT3 = millis(150);
-	public static final Duration SHORT4 = millis(200);
+    //================================================================================
+    // Durations
+    //================================================================================
+    public static final Duration SHORT1 = millis(50);
+    public static final Duration SHORT2 = millis(100);
+    public static final Duration SHORT3 = millis(150);
+    public static final Duration SHORT4 = millis(200);
 
-	public static final Duration MEDIUM1 = millis(250);
-	public static final Duration MEDIUM2 = millis(300);
-	public static final Duration MEDIUM3 = millis(350);
-	public static final Duration MEDIUM4 = millis(400);
+    public static final Duration MEDIUM1 = millis(250);
+    public static final Duration MEDIUM2 = millis(300);
+    public static final Duration MEDIUM3 = millis(350);
+    public static final Duration MEDIUM4 = millis(400);
 
-	public static final Duration LONG1 = millis(450);
-	public static final Duration LONG2 = millis(500);
-	public static final Duration LONG3 = millis(550);
-	public static final Duration LONG4 = millis(600);
+    public static final Duration LONG1 = millis(450);
+    public static final Duration LONG2 = millis(500);
+    public static final Duration LONG3 = millis(550);
+    public static final Duration LONG4 = millis(600);
 
-	public static final Duration EXTRA_LONG1 = millis(700);
-	public static final Duration EXTRA_LONG2 = millis(800);
-	public static final Duration EXTRA_LONG3 = millis(900);
-	public static final Duration EXTRA_LONG4 = millis(1000);
+    public static final Duration EXTRA_LONG1 = millis(700);
+    public static final Duration EXTRA_LONG2 = millis(800);
+    public static final Duration EXTRA_LONG3 = millis(900);
+    public static final Duration EXTRA_LONG4 = millis(1000);
 
-	//================================================================================
-	// Curves
-	//================================================================================
-	public static final Curve LINEAR = Motion.LINEAR;
-	public static final Curve STANDARD = new Cubic(0.2, 0.0, 0.0, 1.0);
-	public static final Curve STANDARD_ACCELERATE = new Cubic(0.3, 0, 1.0, 1.0);
-	public static final Curve STANDARD_DECELERATE = new Cubic(0, 0, 0, 1.0);
-	public static final Curve EMPHASIZED = Motion.EASE_IN_OUT_CUBIC_EMPHASIZED;
-	public static final Curve EMPHASIZED_ACCELERATE = new Cubic(0.3, 0.0, 0.8, 0.15);
-	public static final Curve EMPHASIZED_DECELERATE = new Cubic(0.05, 0.7, 0.1, 1.0);
-	public static final Curve LEGACY = new Cubic(0.4, 0, 0.2, 1.0);
-	public static final Curve LEGACY_ACCELERATE = new Cubic(0.4, 0, 1.0, 1.0);
-	public static final Curve LEGACY_DECELERATE = new Cubic(0, 0, 0.2, 1.0);
+    //================================================================================
+    // Curves
+    //================================================================================
+    public static final Curve LINEAR = Motion.LINEAR;
+    public static final Curve STANDARD = new Cubic(0.2, 0.0, 0.0, 1.0);
+    public static final Curve STANDARD_ACCELERATE = new Cubic(0.3, 0, 1.0, 1.0);
+    public static final Curve STANDARD_DECELERATE = new Cubic(0, 0, 0, 1.0);
+    public static final Curve EMPHASIZED = Motion.EASE_IN_OUT_CUBIC_EMPHASIZED;
+    public static final Curve EMPHASIZED_ACCELERATE = new Cubic(0.3, 0.0, 0.8, 0.15);
+    public static final Curve EMPHASIZED_DECELERATE = new Cubic(0.05, 0.7, 0.1, 1.0);
+    public static final Curve LEGACY = new Cubic(0.4, 0, 0.2, 1.0);
+    public static final Curve LEGACY_ACCELERATE = new Cubic(0.4, 0, 1.0, 1.0);
+    public static final Curve LEGACY_DECELERATE = new Cubic(0, 0, 0.2, 1.0);
 
-	public static final MotionPreset EXPRESSIVE_FAST_SPATIAL = MotionPreset.of(
-		new Cubic(0.42, 1.67, 0.21, 0.90),
-		MEDIUM3
-	);
-	public static final MotionPreset EXPRESSIVE_DEFAULT_SPATIAL = MotionPreset.of(
-		new Cubic(0.38, 1.21, 0.22, 1.0),
-		LONG2
-	);
-	public static final MotionPreset EXPRESSIVE_SLOW_SPATIAL = MotionPreset.of(
-		new Cubic(0.39, 1.29, 0.35, 0.98),
-		650
-	);
+    public static final MotionPreset EXPRESSIVE_FAST_SPATIAL = MotionPreset.of(
+        new Cubic(0.42, 1.67, 0.21, 0.90),
+        MEDIUM3
+    );
+    public static final MotionPreset EXPRESSIVE_DEFAULT_SPATIAL = MotionPreset.of(
+        new Cubic(0.38, 1.21, 0.22, 1.0),
+        LONG2
+    );
+    public static final MotionPreset EXPRESSIVE_SLOW_SPATIAL = MotionPreset.of(
+        new Cubic(0.39, 1.29, 0.35, 0.98),
+        650
+    );
 
-	public static final MotionPreset EXPRESSIVE_FAST_EFFECTS = MotionPreset.of(
-		new Cubic(0.31, 0.94, 0.34, 1.0),
-		SHORT3
-	);
-	public static final MotionPreset EXPRESSIVE_DEFAULT_EFFECTS = MotionPreset.of(
-		new Cubic(0.34, 0.80, 0.34, 1.0),
-		SHORT4
-	);
-	public static final MotionPreset EXPRESSIVE_SLOW_EFFECTS = MotionPreset.of(
-		new Cubic(0.34, 0.88, 0.34, 1.0),
-		MEDIUM2
-	);
+    public static final MotionPreset EXPRESSIVE_FAST_EFFECTS = MotionPreset.of(
+        new Cubic(0.31, 0.94, 0.34, 1.0),
+        SHORT3
+    );
+    public static final MotionPreset EXPRESSIVE_DEFAULT_EFFECTS = MotionPreset.of(
+        new Cubic(0.34, 0.80, 0.34, 1.0),
+        SHORT4
+    );
+    public static final MotionPreset EXPRESSIVE_SLOW_EFFECTS = MotionPreset.of(
+        new Cubic(0.34, 0.88, 0.34, 1.0),
+        MEDIUM2
+    );
 
-	public static final MotionPreset STANDARD_FAST_SPATIAL = MotionPreset.of(
-		new Cubic(0.27, 1.06, 0.18, 1.0),
-		MEDIUM3
-	);
-	public static final MotionPreset STANDARD_DEFAULT_SPATIAL = MotionPreset.of(
-		STANDARD_FAST_SPATIAL.curve,
-		LONG2
-	);
-	public static final MotionPreset STANDARD_SLOW_SPATIAL = MotionPreset.of(
-		STANDARD_FAST_SPATIAL.curve,
-		750
-	);
+    public static final MotionPreset STANDARD_FAST_SPATIAL = MotionPreset.of(
+        new Cubic(0.27, 1.06, 0.18, 1.0),
+        MEDIUM3
+    );
+    public static final MotionPreset STANDARD_DEFAULT_SPATIAL = MotionPreset.of(
+        STANDARD_FAST_SPATIAL.curve,
+        LONG2
+    );
+    public static final MotionPreset STANDARD_SLOW_SPATIAL = MotionPreset.of(
+        STANDARD_FAST_SPATIAL.curve,
+        750
+    );
 
-	public static final MotionPreset STANDARD_FAST_EFFECTS = EXPRESSIVE_FAST_EFFECTS;
-	public static final MotionPreset STANDARD_DEFAULT_EFFECTS = EXPRESSIVE_DEFAULT_EFFECTS;
-	public static final MotionPreset STANDARD_SLOW_EFFECTS = EXPRESSIVE_SLOW_EFFECTS;
+    public static final MotionPreset STANDARD_FAST_EFFECTS = EXPRESSIVE_FAST_EFFECTS;
+    public static final MotionPreset STANDARD_DEFAULT_EFFECTS = EXPRESSIVE_DEFAULT_EFFECTS;
+    public static final MotionPreset STANDARD_SLOW_EFFECTS = EXPRESSIVE_SLOW_EFFECTS;
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	private M3Motion() {}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    private M3Motion() {}
 
-	//================================================================================
-	// Inner Classes
-	//================================================================================
-	public record MotionPreset(
-		Curve curve,
-		Duration duration
-	) {
-		public static MotionPreset of(Curve curve, double millis) {
-			return of(curve, Duration.millis(millis));
-		}
+    //================================================================================
+    // Inner Classes
+    //================================================================================
+    public record MotionPreset(
+        Curve curve,
+        Duration duration
+    ) {
+        public static MotionPreset of(Curve curve, double millis) {
+            return of(curve, Duration.millis(millis));
+        }
 
-		public static MotionPreset of(Curve curve, Duration duration) {
-			return new MotionPreset(curve, duration);
-		}
+        public static MotionPreset of(Curve curve, Duration duration) {
+            return new MotionPreset(curve, duration);
+        }
 
-		public double millis() {
-			return duration.toMillis();
-		}
-	}
+        public double millis() {
+            return duration.toMillis();
+        }
+    }
 }

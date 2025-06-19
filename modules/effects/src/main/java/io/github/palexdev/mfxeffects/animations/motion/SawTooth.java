@@ -29,15 +29,15 @@ import io.github.palexdev.mfxeffects.animations.base.Curve;
  * <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_sawtooth.mp4>SawTooth</a>
  */
 public class SawTooth extends Curve {
-	private final int count;
+    private final int count;
 
-	public SawTooth(int count) {
-		this.count = count;
-	}
+    public SawTooth(int count) {
+        this.count = count;
+    }
 
-	@Override
-	public double curve(double t) {
-		t *= count;
-		return t - (int) t;
-	}
+    @Override
+    public double curve(double t) {
+        t *= count;
+        return t - (int) t;
+    }
 }

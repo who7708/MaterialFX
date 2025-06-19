@@ -28,25 +28,25 @@ import io.github.palexdev.mfxeffects.animations.base.Curve;
  * The above example is built with a {@code magnitude} of {@code 0.4}.
  */
 public class ElasticInOutCurve extends Curve {
-	private final double period;
+    private final double period;
 
-	public ElasticInOutCurve() {
-		this(0.4);
-	}
+    public ElasticInOutCurve() {
+        this(0.4);
+    }
 
-	public ElasticInOutCurve(double period) {
-		this.period = period;
-	}
+    public ElasticInOutCurve(double period) {
+        this.period = period;
+    }
 
-	@Override
-	public double curve(double t) {
-		final double s = period / 4.0;
-		t = 2.0 * t - 1.0;
-		double sin = Math.sin((t - s) * (Math.PI * 2.0) / period);
-		if (t < 0.0) {
-			return -0.5 * Math.pow(2.0, 10.0 * t) * sin;
-		} else {
-			return Math.pow(2.0, -10.0 * t) * sin * 0.5 + 1.0;
-		}
-	}
+    @Override
+    public double curve(double t) {
+        final double s = period / 4.0;
+        t = 2.0 * t - 1.0;
+        double sin = Math.sin((t - s) * (Math.PI * 2.0) / period);
+        if (t < 0.0) {
+            return -0.5 * Math.pow(2.0, 10.0 * t) * sin;
+        } else {
+            return Math.pow(2.0, -10.0 * t) * sin * 0.5 + 1.0;
+        }
+    }
 }

@@ -29,69 +29,69 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
  */
 public abstract class NumberRangeProperty<N extends Number & Comparable<N>> extends ReadOnlyObjectWrapper<NumberRange<N>> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public NumberRangeProperty() {
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public NumberRangeProperty() {
+    }
 
-	public NumberRangeProperty(NumberRange<N> initialValue) {
-		super(initialValue);
-	}
+    public NumberRangeProperty(NumberRange<N> initialValue) {
+        super(initialValue);
+    }
 
-	public NumberRangeProperty(Object bean, String name) {
-		super(bean, name);
-	}
+    public NumberRangeProperty(Object bean, String name) {
+        super(bean, name);
+    }
 
-	public NumberRangeProperty(Object bean, String name, NumberRange<N> initialValue) {
-		super(bean, name, initialValue);
-	}
+    public NumberRangeProperty(Object bean, String name, NumberRange<N> initialValue) {
+        super(bean, name, initialValue);
+    }
 
-	//================================================================================
-	// Abstract Methods
-	//================================================================================
+    //================================================================================
+    // Abstract Methods
+    //================================================================================
 
-	/**
-	 * Convenience method to set a range with both min and max equal.
-	 */
-	public abstract void setRange(N value);
+    /**
+     * Convenience method to set a range with both min and max equal.
+     */
+    public abstract void setRange(N value);
 
-	/**
-	 * Convenience method to set a range with the given min and max values.
-	 */
-	public abstract void setRange(N min, N max);
+    /**
+     * Convenience method to set a range with the given min and max values.
+     */
+    public abstract void setRange(N min, N max);
 
-	//================================================================================
-	// Methods
-	//================================================================================
+    //================================================================================
+    // Methods
+    //================================================================================
 
-	/**
-	 * Convenience method to get the range's lower bound.
-	 * Null if the range is null.
-	 */
-	public N getMin() {
-		return get() == null ? null : get().getMin();
-	}
+    /**
+     * Convenience method to get the range's lower bound.
+     * Null if the range is null.
+     */
+    public N getMin() {
+        return get() == null ? null : get().getMin();
+    }
 
-	/**
-	 * Convenience method to get the range's upper bound.
-	 * Null if the range is null.
-	 */
-	public N getMax() {
-		return get() == null ? null : get().getMin();
-	}
+    /**
+     * Convenience method to get the range's upper bound.
+     * Null if the range is null.
+     */
+    public N getMax() {
+        return get() == null ? null : get().getMin();
+    }
 
-	//================================================================================
-	// Overridden Methods
-	//================================================================================
+    //================================================================================
+    // Overridden Methods
+    //================================================================================
 
-	/**
-	 * Overridden to check equality between ranges and return in case ranges are the same.
-	 */
-	@Override
-	public void set(NumberRange<N> newValue) {
-		NumberRange<N> oldValue = get();
-		if (newValue.equals(oldValue)) return;
-		super.set(newValue);
-	}
+    /**
+     * Overridden to check equality between ranges and return in case ranges are the same.
+     */
+    @Override
+    public void set(NumberRange<N> newValue) {
+        NumberRange<N> oldValue = get();
+        if (newValue.equals(oldValue)) return;
+        super.set(newValue);
+    }
 }

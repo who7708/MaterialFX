@@ -27,166 +27,166 @@ import javafx.scene.layout.Region;
 
 public class LayoutUtils {
 
-	private LayoutUtils() {
-	}
+    private LayoutUtils() {
+    }
 
-	public static Position computePosition(Region parent, Node child, double areaX, double areaY, double areaWidth, double areaHeight,
-										   double areaBaselineOffset, Insets margin, HPos hAlignment, VPos vAlignment) {
-		return computePosition(parent, child, areaX, areaY, areaWidth, areaHeight, areaBaselineOffset, margin, hAlignment, vAlignment, true, true);
-	}
+    public static Position computePosition(Region parent, Node child, double areaX, double areaY, double areaWidth, double areaHeight,
+                                           double areaBaselineOffset, Insets margin, HPos hAlignment, VPos vAlignment) {
+        return computePosition(parent, child, areaX, areaY, areaWidth, areaHeight, areaBaselineOffset, margin, hAlignment, vAlignment, true, true);
+    }
 
-	public static Position computePosition(Region parent, Node child, double areaX, double areaY, double areaWidth, double areaHeight,
-										   double areaBaselineOffset, Insets margin, HPos hAlignment, VPos vAlignment, boolean snapToPixel, boolean computeSizes) {
+    public static Position computePosition(Region parent, Node child, double areaX, double areaY, double areaWidth, double areaHeight,
+                                           double areaBaselineOffset, Insets margin, HPos hAlignment, VPos vAlignment, boolean snapToPixel, boolean computeSizes) {
 
-		Insets snappedMargin = margin == null ? Insets.EMPTY : margin;
-		if (snapToPixel && snappedMargin != Insets.EMPTY) {
-			snappedMargin = InsetsBuilder.build()
-				.withTop(parent.snapSpaceY(snappedMargin.getTop()))
-				.withRight(parent.snapSpaceX(snappedMargin.getRight()))
-				.withBottom(parent.snapSpaceY(snappedMargin.getBottom()))
-				.withLeft(parent.snapSpaceX(snappedMargin.getLeft()))
-				.get();
-		}
+        Insets snappedMargin = margin == null ? Insets.EMPTY : margin;
+        if (snapToPixel && snappedMargin != Insets.EMPTY) {
+            snappedMargin = InsetsBuilder.build()
+                .withTop(parent.snapSpaceY(snappedMargin.getTop()))
+                .withRight(parent.snapSpaceX(snappedMargin.getRight()))
+                .withBottom(parent.snapSpaceY(snappedMargin.getBottom()))
+                .withLeft(parent.snapSpaceX(snappedMargin.getLeft()))
+                .get();
+        }
 
-		double xPosition = computeXPosition(parent, child, areaX, areaWidth, snappedMargin, false, hAlignment, snapToPixel, computeSizes);
-		double yPosition = computeYPosition(parent, child, areaY, areaHeight, areaBaselineOffset, snappedMargin, false, vAlignment, snapToPixel, computeSizes);
-		return Position.of(xPosition, yPosition);
-	}
+        double xPosition = computeXPosition(parent, child, areaX, areaWidth, snappedMargin, false, hAlignment, snapToPixel, computeSizes);
+        double yPosition = computeYPosition(parent, child, areaY, areaHeight, areaBaselineOffset, snappedMargin, false, vAlignment, snapToPixel, computeSizes);
+        return Position.of(xPosition, yPosition);
+    }
 
-	public static double computeXPosition(Region parent, Node child, double areaX, double areaWidth, Insets margin, boolean snapMargin, HPos hAlignment, boolean snapToPixel, boolean computeSizes) {
-		Insets snappedMargin = margin == null ? Insets.EMPTY : margin;
-		if (snapMargin && snappedMargin != Insets.EMPTY) {
-			snappedMargin = InsetsBuilder.build()
-				.withTop(parent.snapSpaceY(snappedMargin.getTop()))
-				.withRight(parent.snapSpaceX(snappedMargin.getRight()))
-				.withBottom(parent.snapSpaceY(snappedMargin.getBottom()))
-				.withLeft(parent.snapSpaceX(snappedMargin.getLeft()))
-				.get();
-		}
+    public static double computeXPosition(Region parent, Node child, double areaX, double areaWidth, Insets margin, boolean snapMargin, HPos hAlignment, boolean snapToPixel, boolean computeSizes) {
+        Insets snappedMargin = margin == null ? Insets.EMPTY : margin;
+        if (snapMargin && snappedMargin != Insets.EMPTY) {
+            snappedMargin = InsetsBuilder.build()
+                .withTop(parent.snapSpaceY(snappedMargin.getTop()))
+                .withRight(parent.snapSpaceX(snappedMargin.getRight()))
+                .withBottom(parent.snapSpaceY(snappedMargin.getBottom()))
+                .withLeft(parent.snapSpaceX(snappedMargin.getLeft()))
+                .get();
+        }
 
-		final double leftMargin = snappedMargin.getLeft();
-		final double rightMargin = snappedMargin.getRight();
-		final double xOffset = leftMargin + computeXOffset(areaWidth - leftMargin - rightMargin, computeSizes ? parent.snapSizeX(boundWidth(child)) : child.getLayoutBounds().getWidth(), hAlignment);
-		final double xPosition = areaX + xOffset;
-		return snapToPixel ? parent.snapPositionX(xPosition) : xPosition;
-	}
+        final double leftMargin = snappedMargin.getLeft();
+        final double rightMargin = snappedMargin.getRight();
+        final double xOffset = leftMargin + computeXOffset(areaWidth - leftMargin - rightMargin, computeSizes ? parent.snapSizeX(boundWidth(child)) : child.getLayoutBounds().getWidth(), hAlignment);
+        final double xPosition = areaX + xOffset;
+        return snapToPixel ? parent.snapPositionX(xPosition) : xPosition;
+    }
 
-	public static double computeYPosition(Region parent, Node child, double areaY, double areaHeight, double areaBaselineOffset, Insets margin, boolean snapMargin, VPos vAlignment, boolean snapToPixel, boolean computeSizes) {
-		Insets snappedMargin = margin == null ? Insets.EMPTY : margin;
-		if (snapMargin) {
-			snappedMargin = InsetsBuilder.build()
-				.withTop(parent.snapSpaceY(snappedMargin.getTop()))
-				.withRight(parent.snapSpaceX(snappedMargin.getRight()))
-				.withBottom(parent.snapSpaceY(snappedMargin.getBottom()))
-				.withLeft(parent.snapSpaceX(snappedMargin.getLeft()))
-				.get();
-		}
+    public static double computeYPosition(Region parent, Node child, double areaY, double areaHeight, double areaBaselineOffset, Insets margin, boolean snapMargin, VPos vAlignment, boolean snapToPixel, boolean computeSizes) {
+        Insets snappedMargin = margin == null ? Insets.EMPTY : margin;
+        if (snapMargin) {
+            snappedMargin = InsetsBuilder.build()
+                .withTop(parent.snapSpaceY(snappedMargin.getTop()))
+                .withRight(parent.snapSpaceX(snappedMargin.getRight()))
+                .withBottom(parent.snapSpaceY(snappedMargin.getBottom()))
+                .withLeft(parent.snapSpaceX(snappedMargin.getLeft()))
+                .get();
+        }
 
-		final double topMargin = snappedMargin.getTop();
-		final double bottomMargin = snappedMargin.getBottom();
-		final double yOffset;
-		if (vAlignment == VPos.BASELINE) {
-			double bo = child.getBaselineOffset();
-			if (bo == Node.BASELINE_OFFSET_SAME_AS_HEIGHT) {
-				yOffset = areaBaselineOffset - (computeSizes ? parent.snapSizeY(boundHeight(child)) : child.getLayoutBounds().getHeight());
-			} else {
-				yOffset = areaBaselineOffset - bo;
-			}
-		} else {
-			yOffset = topMargin + computeYOffset(areaHeight - topMargin - bottomMargin, computeSizes ? parent.snapSizeY(boundHeight(child)) : child.getLayoutBounds().getHeight(), vAlignment);
-		}
-		final double yPosition = areaY + yOffset;
-		return snapToPixel ? parent.snapPositionY(yPosition) : yPosition;
-	}
+        final double topMargin = snappedMargin.getTop();
+        final double bottomMargin = snappedMargin.getBottom();
+        final double yOffset;
+        if (vAlignment == VPos.BASELINE) {
+            double bo = child.getBaselineOffset();
+            if (bo == Node.BASELINE_OFFSET_SAME_AS_HEIGHT) {
+                yOffset = areaBaselineOffset - (computeSizes ? parent.snapSizeY(boundHeight(child)) : child.getLayoutBounds().getHeight());
+            } else {
+                yOffset = areaBaselineOffset - bo;
+            }
+        } else {
+            yOffset = topMargin + computeYOffset(areaHeight - topMargin - bottomMargin, computeSizes ? parent.snapSizeY(boundHeight(child)) : child.getLayoutBounds().getHeight(), vAlignment);
+        }
+        final double yPosition = areaY + yOffset;
+        return snapToPixel ? parent.snapPositionY(yPosition) : yPosition;
+    }
 
-	private static double computeXOffset(double areaWidth, double contentWidth, HPos hAlignment) {
-		switch (hAlignment) {
-			case LEFT:
-				return 0;
-			case CENTER:
-				return (areaWidth - contentWidth) / 2;
-			case RIGHT:
-				return areaWidth - contentWidth;
-			default:
-				throw new AssertionError("Unhandled hPos");
-		}
-	}
+    private static double computeXOffset(double areaWidth, double contentWidth, HPos hAlignment) {
+        switch (hAlignment) {
+            case LEFT:
+                return 0;
+            case CENTER:
+                return (areaWidth - contentWidth) / 2;
+            case RIGHT:
+                return areaWidth - contentWidth;
+            default:
+                throw new AssertionError("Unhandled hPos");
+        }
+    }
 
-	private static double computeYOffset(double areaHeight, double contentHeight, VPos vAlignment) {
-		switch (vAlignment) {
-			case BASELINE:
-			case TOP:
-				return 0;
-			case CENTER:
-				return (areaHeight - contentHeight) / 2;
-			case BOTTOM:
-				return areaHeight - contentHeight;
-			default:
-				throw new AssertionError("Unhandled vPos");
-		}
-	}
+    private static double computeYOffset(double areaHeight, double contentHeight, VPos vAlignment) {
+        switch (vAlignment) {
+            case BASELINE:
+            case TOP:
+                return 0;
+            case CENTER:
+                return (areaHeight - contentHeight) / 2;
+            case BOTTOM:
+                return areaHeight - contentHeight;
+            default:
+                throw new AssertionError("Unhandled vPos");
+        }
+    }
 
-	public static void resize(Region parent, Node node, double w, double h) {
-		node.resize(parent.snapSizeX(w), parent.snapSizeY(h));
-	}
+    public static void resize(Region parent, Node node, double w, double h) {
+        node.resize(parent.snapSizeX(w), parent.snapSizeY(h));
+    }
 
-	public static void relocate(Region parent, Node node, double x, double y) {
-		node.relocate(parent.snapPositionX(x), parent.snapPositionY(y));
-	}
+    public static void relocate(Region parent, Node node, double x, double y) {
+        node.relocate(parent.snapPositionX(x), parent.snapPositionY(y));
+    }
 
-	public static void resizeRelocate(Region parent, Node node, double x, double y, double w, double h) {
-		node.resizeRelocate(parent.snapPositionX(x), parent.snapPositionY(y), parent.snapSizeX(w), parent.snapSizeY(h));
-	}
+    public static void resizeRelocate(Region parent, Node node, double x, double y, double w, double h) {
+        node.resizeRelocate(parent.snapPositionX(x), parent.snapPositionY(y), parent.snapSizeX(w), parent.snapSizeY(h));
+    }
 
-	public static double boundedSize(double min, double pref, double max) {
-		double a = Math.max(pref, min);
-		double b = Math.max(min, max);
-		return Math.min(a, b);
-	}
+    public static double boundedSize(double min, double pref, double max) {
+        double a = Math.max(pref, min);
+        double b = Math.max(min, max);
+        return Math.min(a, b);
+    }
 
-	public static double boundWidth(Node node) {
-		return boundedSize(node.minWidth(-1), node.prefWidth(-1), node.maxWidth(-1));
-	}
+    public static double boundWidth(Node node) {
+        return boundedSize(node.minWidth(-1), node.prefWidth(-1), node.maxWidth(-1));
+    }
 
-	public static double boundHeight(Node node) {
-		return boundedSize(node.minHeight(-1), node.prefHeight(-1), node.maxHeight(-1));
-	}
+    public static double boundHeight(Node node) {
+        return boundedSize(node.minHeight(-1), node.prefHeight(-1), node.maxHeight(-1));
+    }
 
-	public static double snappedBoundWidth(Node node) {
-		Parent p = node.getParent();
-		if (p instanceof Region) {
-			return ((Region) p).snapSizeX(boundWidth(node));
-		}
-		return boundWidth(node);
-	}
+    public static double snappedBoundWidth(Node node) {
+        Parent p = node.getParent();
+        if (p instanceof Region) {
+            return ((Region) p).snapSizeX(boundWidth(node));
+        }
+        return boundWidth(node);
+    }
 
-	public static double snappedBoundHeight(Node node) {
-		Parent p = node.getParent();
-		if (p instanceof Region) {
-			return ((Region) p).snapSizeY(boundHeight(node));
-		}
-		return boundHeight(node);
-	}
+    public static double snappedBoundHeight(Node node) {
+        Parent p = node.getParent();
+        if (p instanceof Region) {
+            return ((Region) p).snapSizeY(boundHeight(node));
+        }
+        return boundHeight(node);
+    }
 
-	/**
-	 * Convenience method for {@code node.getLayoutBounds().getWidth()}.
-	 */
-	public static double getWidth(Node node) {
-		return node.getLayoutBounds().getWidth();
-	}
+    /**
+     * Convenience method for {@code node.getLayoutBounds().getWidth()}.
+     */
+    public static double getWidth(Node node) {
+        return node.getLayoutBounds().getWidth();
+    }
 
-	/**
-	 * Convenience method for {@code node.getLayoutBounds().getHeight()}.
-	 */
-	public static double getHeight(Node node) {
-		return node.getLayoutBounds().getHeight();
-	}
+    /**
+     * Convenience method for {@code node.getLayoutBounds().getHeight()}.
+     */
+    public static double getHeight(Node node) {
+        return node.getLayoutBounds().getHeight();
+    }
 
-	/**
-	 * @return a new {@link BoundingBox} object with 0 as all
-	 * parameters (x, y, width and height).
-	 */
-	public static Bounds emptyBounds() {
-		return new BoundingBox(0, 0, 0, 0);
-	}
+    /**
+     * @return a new {@link BoundingBox} object with 0 as all
+     * parameters (x, y, width and height).
+     */
+    public static Bounds emptyBounds() {
+        return new BoundingBox(0, 0, 0, 0);
+    }
 }

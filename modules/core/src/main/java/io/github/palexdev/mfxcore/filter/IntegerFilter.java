@@ -43,36 +43,36 @@ import java.util.stream.Stream;
  */
 public class IntegerFilter<T> extends NumberFilter<T, Integer> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public IntegerFilter(String name, Function<T, Integer> extractor) {
-		this(name, extractor, new IntegerStringConverter());
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public IntegerFilter(String name, Function<T, Integer> extractor) {
+        this(name, extractor, new IntegerStringConverter());
+    }
 
-	public IntegerFilter(String name, Function<T, Integer> extractor, StringConverter<Integer> converter) {
-		super(name, extractor, converter);
-	}
+    public IntegerFilter(String name, Function<T, Integer> extractor, StringConverter<Integer> converter) {
+        super(name, extractor, converter);
+    }
 
-	//================================================================================
-	// Overridden Methods
-	//================================================================================
-	@Override
-	protected ObservableList<BiPredicateBean<Integer, Integer>> defaultPredicates() {
-		return Stream.<BiPredicateBean<Integer, Integer>>of(
-				new BiPredicateBean<>(I18N.getOrDefault("filter.is"), Integer::equals),
-				new BiPredicateBean<>(I18N.getOrDefault("filter.isNot"), (anInteger, anInteger2) -> !anInteger.equals(anInteger2)),
-				new BiPredicateBean<>(I18N.getOrDefault("filter.greater"), (anInteger, anInteger2) -> anInteger > anInteger2),
-				new BiPredicateBean<>(I18N.getOrDefault("filter.greaterEqual"), (anInteger, anInteger2) -> anInteger >= anInteger2),
-				new BiPredicateBean<>(I18N.getOrDefault("filter.lesser"), (anInteger, anInteger2) -> anInteger < anInteger2),
-				new BiPredicateBean<>(I18N.getOrDefault("filter.lesserEqual"), (anInteger, anInteger2) -> anInteger <= anInteger2)
-		).collect(FXCollectors.toList());
-	}
+    //================================================================================
+    // Overridden Methods
+    //================================================================================
+    @Override
+    protected ObservableList<BiPredicateBean<Integer, Integer>> defaultPredicates() {
+        return Stream.<BiPredicateBean<Integer, Integer>>of(
+            new BiPredicateBean<>(I18N.getOrDefault("filter.is"), Integer::equals),
+            new BiPredicateBean<>(I18N.getOrDefault("filter.isNot"), (anInteger, anInteger2) -> !anInteger.equals(anInteger2)),
+            new BiPredicateBean<>(I18N.getOrDefault("filter.greater"), (anInteger, anInteger2) -> anInteger > anInteger2),
+            new BiPredicateBean<>(I18N.getOrDefault("filter.greaterEqual"), (anInteger, anInteger2) -> anInteger >= anInteger2),
+            new BiPredicateBean<>(I18N.getOrDefault("filter.lesser"), (anInteger, anInteger2) -> anInteger < anInteger2),
+            new BiPredicateBean<>(I18N.getOrDefault("filter.lesserEqual"), (anInteger, anInteger2) -> anInteger <= anInteger2)
+        ).collect(FXCollectors.toList());
+    }
 
-	@SafeVarargs
-	@Override
-	protected final IntegerFilter<T> extend(BiPredicateBean<Integer, Integer>... predicateBeans) {
-		Collections.addAll(super.predicates, predicateBeans);
-		return this;
-	}
+    @SafeVarargs
+    @Override
+    protected final IntegerFilter<T> extend(BiPredicateBean<Integer, Integer>... predicateBeans) {
+        Collections.addAll(super.predicates, predicateBeans);
+        return this;
+    }
 }

@@ -28,27 +28,27 @@ import javafx.stage.Stage;
 
 public class ShadowsTest extends Application {
 
-	@Override
-	public void start(Stage primaryStage) {
-		HBox box = new HBox(30);
-		box.setAlignment(Pos.CENTER);
+    @Override
+    public void start(Stage primaryStage) {
+        HBox box = new HBox(30);
+        box.setAlignment(Pos.CENTER);
 
-		for (ElevationLevel level : ElevationLevel.values()) {
-			box.getChildren().add(createRegion(level));
-		}
+        for (ElevationLevel level : ElevationLevel.values()) {
+            box.getChildren().add(createRegion(level));
+        }
 
-		Scene scene = new Scene(box, 800, 800);
-		primaryStage.setScene(scene);
-		primaryStage.show();
-	}
+        Scene scene = new Scene(box, 800, 800);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
 
-	private Region createRegion(ElevationLevel elevation) {
-		Region r = new Region();
-		r.setPrefSize(100, 50);
-		r.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-		r.setPickOnBounds(false);
-		r.setEffect(elevation.toShadow());
-		r.setStyle("-fx-background-color: red");
-		return r;
-	}
+    private Region createRegion(ElevationLevel elevation) {
+        Region r = new Region();
+        r.setPrefSize(100, 50);
+        r.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        r.setPickOnBounds(false);
+        r.setEffect(elevation.toShadow());
+        r.setStyle("-fx-background-color: red");
+        return r;
+    }
 }

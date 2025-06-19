@@ -28,74 +28,74 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
  */
 public class IconProperty extends ReadOnlyObjectWrapper<MFXFontIcon> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public IconProperty() {
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public IconProperty() {
+    }
 
-	public IconProperty(MFXFontIcon initialValue) {
-		super(initialValue);
-	}
+    public IconProperty(MFXFontIcon initialValue) {
+        super(initialValue);
+    }
 
-	public IconProperty(Object bean, String name) {
-		super(bean, name);
-	}
+    public IconProperty(Object bean, String name) {
+        super(bean, name);
+    }
 
-	public IconProperty(Object bean, String name, MFXFontIcon initialValue) {
-		super(bean, name, initialValue);
-	}
+    public IconProperty(Object bean, String name, MFXFontIcon initialValue) {
+        super(bean, name, initialValue);
+    }
 
-	//================================================================================
-	// Setters
-	//================================================================================
+    //================================================================================
+    // Setters
+    //================================================================================
 
-	/**
-	 * Changes the {@link MFXFontIcon#descriptionProperty()} of the current value.
-	 * <p>
-	 * This is null-safe, meaning that if the current value of the property is null a new {@link MFXFontIcon} will
-	 * be created and no exception will be raised.
-	 */
-	public IconProperty setDescription(String description) {
-		MFXFontIcon val = get();
-		if (val == null) {
-			set(new MFXFontIcon(description));
-		} else {
-			val.setDescription(description);
-		}
-		return this;
-	}
+    /**
+     * Changes the {@link MFXFontIcon#descriptionProperty()} of the current value.
+     * <p>
+     * This is null-safe, meaning that if the current value of the property is null a new {@link MFXFontIcon} will
+     * be created and no exception will be raised.
+     */
+    public IconProperty setDescription(String description) {
+        MFXFontIcon val = get();
+        if (val == null) {
+            set(new MFXFontIcon(description));
+        } else {
+            val.setDescription(description);
+        }
+        return this;
+    }
 
-	/**
-	 * Delegate for {@link MFXFontIcon#setIconsProvider(IconProvider)}.
-	 * <p>
-	 * This is null-safe, meaning that if the current value of the property is null a new {@link MFXFontIcon} will
-	 * be created and no exception will be raised.
-	 */
-	public IconProperty setProvider(IconProvider provider) {
-		MFXFontIcon val = get();
-		if (val == null) {
-			set(new MFXFontIcon().setIconsProvider(provider));
-		} else {
-			val.setIconsProvider(provider);
-		}
-		return this;
-	}
+    /**
+     * Delegate for {@link MFXFontIcon#setIconsProvider(IconProvider)}.
+     * <p>
+     * This is null-safe, meaning that if the current value of the property is null a new {@link MFXFontIcon} will
+     * be created and no exception will be raised.
+     */
+    public IconProperty setProvider(IconProvider provider) {
+        MFXFontIcon val = get();
+        if (val == null) {
+            set(new MFXFontIcon().setIconsProvider(provider));
+        } else {
+            val.setIconsProvider(provider);
+        }
+        return this;
+    }
 
-	/**
-	 * Delegate for {@link MFXFontIcon#setIconsProvider(IconProvider)}, additionally
-	 * also changes the {@link MFXFontIcon#descriptionProperty()} to the given one.
-	 * <p>
-	 * This is null-safe, meaning that if the current value of the property is null a new {@link MFXFontIcon} will
-	 * be created and no exception will be raised.
-	 */
-	public IconProperty setProvider(IconProvider provider, String description) {
-		MFXFontIcon val = get();
-		if (val == null) {
-			set(new MFXFontIcon().setIconsProvider(provider).setDescription(description));
-		} else {
-			val.setIconsProvider(provider).setDescription(description);
-		}
-		return this;
-	}
+    /**
+     * Delegate for {@link MFXFontIcon#setIconsProvider(IconProvider)}, additionally
+     * also changes the {@link MFXFontIcon#descriptionProperty()} to the given one.
+     * <p>
+     * This is null-safe, meaning that if the current value of the property is null a new {@link MFXFontIcon} will
+     * be created and no exception will be raised.
+     */
+    public IconProperty setProvider(IconProvider provider, String description) {
+        MFXFontIcon val = get();
+        if (val == null) {
+            set(new MFXFontIcon().setIconsProvider(provider).setDescription(description));
+        } else {
+            val.setIconsProvider(provider).setDescription(description);
+        }
+        return this;
+    }
 }

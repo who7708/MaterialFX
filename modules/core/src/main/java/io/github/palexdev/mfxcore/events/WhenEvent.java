@@ -88,265 +88,265 @@ import javafx.event.EventType;
  * @see EventTarget
  */
 public class WhenEvent<T extends Event> implements DisposableAction {
-	//================================================================================
-	// Properties
-	//================================================================================
-	protected static final WhenEventsMap whens = new WhenEventsMap();
-	private EventTarget target;
-	private EventType<T> eventType;
-	private EventHandler<T> handler;
-	private Consumer<T> action;
-	private Function<T, Boolean> condition = e -> true;
-	private BiConsumer<WeakReference<WhenEvent<T>>, T> otherwise = (w, e) -> {};
-	private boolean oneShot = false;
-	private boolean asFilter = false;
-	private RegUnRegWrapper rurWrapper;
-	private boolean active = false;
+    //================================================================================
+    // Properties
+    //================================================================================
+    protected static final WhenEventsMap whens = new WhenEventsMap();
+    private EventTarget target;
+    private EventType<T> eventType;
+    private EventHandler<T> handler;
+    private Consumer<T> action;
+    private Function<T, Boolean> condition = e -> true;
+    private BiConsumer<WeakReference<WhenEvent<T>>, T> otherwise = (w, e) -> {};
+    private boolean oneShot = false;
+    private boolean asFilter = false;
+    private RegUnRegWrapper rurWrapper;
+    private boolean active = false;
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public WhenEvent(EventTarget target, EventType<T> eventType) {
-		this.target = target;
-		this.eventType = eventType;
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public WhenEvent(EventTarget target, EventType<T> eventType) {
+        this.target = target;
+        this.eventType = eventType;
+    }
 
-	public static <T extends Event> WhenEvent<T> intercept(EventTarget target, EventType<T> eventType) {
-		return new WhenEvent<>(target, eventType);
-	}
+    public static <T extends Event> WhenEvent<T> intercept(EventTarget target, EventType<T> eventType) {
+        return new WhenEvent<>(target, eventType);
+    }
 
-	//================================================================================
-	// Methods
-	//================================================================================
+    //================================================================================
+    // Methods
+    //================================================================================
 
-	/**
-	 * Sets the {@link Consumer} used to "process" any given event.
-	 */
-	public WhenEvent<T> process(Consumer<T> action) {
-		this.action = action;
-		return this;
-	}
+    /**
+     * Sets the {@link Consumer} used to "process" any given event.
+     */
+    public WhenEvent<T> process(Consumer<T> action) {
+        this.action = action;
+        return this;
+    }
 
-	/**
-	 * Sets the condition under which an event will be passed to the action specified by {@link #process(Consumer)}.
-	 *
-	 * @see #otherwise(BiConsumer)
-	 */
-	public WhenEvent<T> condition(Function<T, Boolean> condition) {
-		this.condition = condition;
-		return this;
-	}
+    /**
+     * Sets the condition under which an event will be passed to the action specified by {@link #process(Consumer)}.
+     *
+     * @see #otherwise(BiConsumer)
+     */
+    public WhenEvent<T> condition(Function<T, Boolean> condition) {
+        this.condition = condition;
+        return this;
+    }
 
-	/**
-	 * Allows you to specify an action to run for events that fails the check set by {@link #condition(Function)}.
-	 */
-	public WhenEvent<T> otherwise(BiConsumer<WeakReference<WhenEvent<T>>, T> otherwise) {
-		this.otherwise = otherwise;
-		return this;
-	}
+    /**
+     * Allows you to specify an action to run for events that fails the check set by {@link #condition(Function)}.
+     */
+    public WhenEvent<T> otherwise(BiConsumer<WeakReference<WhenEvent<T>>, T> otherwise) {
+        this.otherwise = otherwise;
+        return this;
+    }
 
-	/**
-	 * Responsible for building the {@link EventHandler} with all the given parameters and then add it on the specified
-	 * event target. This method won't run if the construct was disposed before, or if the handler is not null
-	 * (meaning that it was already registered before).
-	 */
-	public WhenEvent<T> register() {
-		if (isDisposed() || handler != null) return this;
-		rurWrapper = new RegUnRegWrapper();
+    /**
+     * Responsible for building the {@link EventHandler} with all the given parameters and then add it on the specified
+     * event target. This method won't run if the construct was disposed before, or if the handler is not null
+     * (meaning that it was already registered before).
+     */
+    public WhenEvent<T> register() {
+        if (isDisposed() || handler != null) return this;
+        rurWrapper = new RegUnRegWrapper();
 
-		if (oneShot) {
-			handler = e -> {
-				if (condition.apply(e)) {
-					action.accept(e);
-					dispose();
-				} else {
-					otherwise.accept(asWeak(), e);
-				}
-			};
-		} else {
-			handler = e -> {
-				if (condition.apply(e)) {
-					action.accept(e);
-				} else {
-					otherwise.accept(asWeak(), e);
-				}
-			};
-		}
-		doRegister();
-		return this;
-	}
+        if (oneShot) {
+            handler = e -> {
+                if (condition.apply(e)) {
+                    action.accept(e);
+                    dispose();
+                } else {
+                    otherwise.accept(asWeak(), e);
+                }
+            };
+        } else {
+            handler = e -> {
+                if (condition.apply(e)) {
+                    action.accept(e);
+                } else {
+                    otherwise.accept(asWeak(), e);
+                }
+            };
+        }
+        doRegister();
+        return this;
+    }
 
-	/**
-	 * Invoked by {@link #register()} if everything went well. Here, the construct is added to a static Map that retains
-	 * all the built constructs, the mapping is as follows: {@code EventTarget -> Set<WhenEvent<?>>}.
-	 * <p>
-	 * Finally, the built {@link EventHandler} is added on the specified {@link EventTarget}.
-	 */
-	protected void doRegister() {
-		WeakHashSet<WhenEvent<?>> set = whens.computeIfAbsent(target, n -> new WeakHashSet<>());
-		set.add(this);
-		rurWrapper.reg();
-		active = true;
-	}
+    /**
+     * Invoked by {@link #register()} if everything went well. Here, the construct is added to a static Map that retains
+     * all the built constructs, the mapping is as follows: {@code EventTarget -> Set<WhenEvent<?>>}.
+     * <p>
+     * Finally, the built {@link EventHandler} is added on the specified {@link EventTarget}.
+     */
+    protected void doRegister() {
+        WeakHashSet<WhenEvent<?>> set = whens.computeIfAbsent(target, n -> new WeakHashSet<>());
+        set.add(this);
+        rurWrapper.reg();
+        active = true;
+    }
 
-	/**
-	 * @return whether the construct is "one-shot"
-	 * @see #oneShot()
-	 */
-	public boolean isOneShot() {
-		return oneShot;
-	}
+    /**
+     * @return whether the construct is "one-shot"
+     * @see #oneShot()
+     */
+    public boolean isOneShot() {
+        return oneShot;
+    }
 
-	/**
-	 * Sets the construct as 'one-shot', meaning that once an event occurs the first time and the action is executed,
-	 * the construct will automatically dispose itself.
-	 */
-	public WhenEvent<T> oneShot() {
-		this.oneShot = true;
-		return this;
-	}
+    /**
+     * Sets the construct as 'one-shot', meaning that once an event occurs the first time and the action is executed,
+     * the construct will automatically dispose itself.
+     */
+    public WhenEvent<T> oneShot() {
+        this.oneShot = true;
+        return this;
+    }
 
-	/**
-	 * @return whether the built {@link EventHandler} will be registered as a simple handler or filter
-	 * @see #asFilter()
-	 */
-	public boolean isFilter() {
-		return asFilter;
-	}
+    /**
+     * @return whether the built {@link EventHandler} will be registered as a simple handler or filter
+     * @see #asFilter()
+     */
+    public boolean isFilter() {
+        return asFilter;
+    }
 
-	/**
-	 * Sets a flag that will make the built {@link EventHandler} be registered as a filter.
-	 */
-	public WhenEvent<T> asFilter() {
-		this.asFilter = true;
-		return this;
-	}
+    /**
+     * Sets a flag that will make the built {@link EventHandler} be registered as a filter.
+     */
+    public WhenEvent<T> asFilter() {
+        this.asFilter = true;
+        return this;
+    }
 
-	/**
-	 * Unregisters the {@link EventHandler} from the event target, sets everything to null, and removes the construct from
-	 * the "global" map.
-	 */
-	@Override
-	public void dispose() {
-		if (target != null) {
-			if (handler != null) {
-				rurWrapper.unReg();
-				handler = null;
-				rurWrapper = null;
-			}
-			handleMapDisposal();
-			eventType = null;
-			target = null;
-			active = false;
-		}
-	}
+    /**
+     * Unregisters the {@link EventHandler} from the event target, sets everything to null, and removes the construct from
+     * the "global" map.
+     */
+    @Override
+    public void dispose() {
+        if (target != null) {
+            if (handler != null) {
+                rurWrapper.unReg();
+                handler = null;
+                rurWrapper = null;
+            }
+            handleMapDisposal();
+            eventType = null;
+            target = null;
+            active = false;
+        }
+    }
 
-	/**
-	 * Calls {@link #dispose()} on the given {@code WhenEvent} construct.
-	 */
-	public static void dispose(WhenEvent<?> w) {
-		if (w != null) w.dispose();
-	}
+    /**
+     * Calls {@link #dispose()} on the given {@code WhenEvent} construct.
+     */
+    public static void dispose(WhenEvent<?> w) {
+        if (w != null) w.dispose();
+    }
 
-	/**
-	 * Calls {@link #dispose(WhenEvent)} on each of the given {@code WhenEvent} constructs.
-	 */
-	public static void dispose(WhenEvent<?>... whens) {
-		for (WhenEvent<?> w : whens) w.dispose();
-	}
+    /**
+     * Calls {@link #dispose(WhenEvent)} on each of the given {@code WhenEvent} constructs.
+     */
+    public static void dispose(WhenEvent<?>... whens) {
+        for (WhenEvent<?> w : whens) w.dispose();
+    }
 
-	/**
-	 * @return whether the construct is active and not disposed, the flag is set if {@link #doRegister()} run successfully
-	 */
-	public boolean isActive() {
-		return active;
-	}
+    /**
+     * @return whether the construct is active and not disposed, the flag is set if {@link #doRegister()} run successfully
+     */
+    public boolean isActive() {
+        return active;
+    }
 
-	/**
-	 * @return whether this construct has been disposed before. By default, checks if the given {@link EventType} and
-	 * event target are null
-	 */
-	public boolean isDisposed() {
-		return target == null &&
-			eventType == null;
-	}
+    /**
+     * @return whether this construct has been disposed before. By default, checks if the given {@link EventType} and
+     * event target are null
+     */
+    public boolean isDisposed() {
+        return target == null &&
+               eventType == null;
+    }
 
-	/**
-	 * @return the total number of existing {@code WhenEvent} constructs for a given target
-	 */
-	public static int size(EventTarget target) {
-		return Optional.ofNullable(whens.get(target))
-			.map(WeakHashSet::size)
-			.orElse(0);
-	}
+    /**
+     * @return the total number of existing {@code WhenEvent} constructs for a given target
+     */
+    public static int size(EventTarget target) {
+        return Optional.ofNullable(whens.get(target))
+            .map(WeakHashSet::size)
+            .orElse(0);
+    }
 
-	/**
-	 * @return the total number of existing {@code WhenEvent} constructs for any registered {@link ObservableValue}
-	 */
-	public static int totalSize() {
-		return whens.keySet().stream()
-			.mapToInt(WhenEvent::size)
-			.sum();
-	}
+    /**
+     * @return the total number of existing {@code WhenEvent} constructs for any registered {@link ObservableValue}
+     */
+    public static int totalSize() {
+        return whens.keySet().stream()
+            .mapToInt(WhenEvent::size)
+            .sum();
+    }
 
-	/**
-	 * @return this construct wrapped in a {@link WeakReference}
-	 */
-	protected final WeakReference<WhenEvent<T>> asWeak() {
-		return new WeakReference<>(this);
-	}
+    /**
+     * @return this construct wrapped in a {@link WeakReference}
+     */
+    protected final WeakReference<WhenEvent<T>> asWeak() {
+        return new WeakReference<>(this);
+    }
 
-	/**
-	 * This is called when handling the construct's disposal.
-	 * The aforementioned Map used to store the built {@code WhenEvent} constructs, uses this mapping:
-	 * <pre>
-	 * {@code
-	 * [key -> value] = [EventTarget -> WeakHashSet<WhenEvent<?>>]
-	 * }
-	 * </pre>
-	 * This is because {@code WhenEvent} allows to register multiple constructs on a single event target,
-	 * for this reason, there are several things to consider on disposal:
-	 * <p> 1) There is a non-null Set mapped to the current event target
-	 * <p> 2) The construct can be removed from the Set without any null check, but after the removal
-	 * it's good to check whether the Set is now empty
-	 * <p> 3) In such case, we can also remove the mapping from the Map.
-	 */
-	protected final void handleMapDisposal() {
-		WeakHashSet<WhenEvent<?>> set = whens.get(target);
-		if (set == null) return;
-		set.remove(this);
-		if (set.isEmpty()) whens.remove(target);
-	}
+    /**
+     * This is called when handling the construct's disposal.
+     * The aforementioned Map used to store the built {@code WhenEvent} constructs, uses this mapping:
+     * <pre>
+     * {@code
+     * [key -> value] = [EventTarget -> WeakHashSet<WhenEvent<?>>]
+     * }
+     * </pre>
+     * This is because {@code WhenEvent} allows to register multiple constructs on a single event target,
+     * for this reason, there are several things to consider on disposal:
+     * <p> 1) There is a non-null Set mapped to the current event target
+     * <p> 2) The construct can be removed from the Set without any null check, but after the removal
+     * it's good to check whether the Set is now empty
+     * <p> 3) In such case, we can also remove the mapping from the Map.
+     */
+    protected final void handleMapDisposal() {
+        WeakHashSet<WhenEvent<?>> set = whens.get(target);
+        if (set == null) return;
+        set.remove(this);
+        if (set.isEmpty()) whens.remove(target);
+    }
 
-	//================================================================================
-	// Internal Classes
-	//================================================================================
-	public static class WhenEventsMap extends WeakHashMap<EventTarget, WeakHashSet<WhenEvent<?>>> {}
+    //================================================================================
+    // Internal Classes
+    //================================================================================
+    public static class WhenEventsMap extends WeakHashMap<EventTarget, WeakHashSet<WhenEvent<?>>> {}
 
-	/**
-	 * Utility internal class that allows to remove some ifs when registering/unregistering the {@link EventHandler}
-	 * on the event target.
-	 */
-	protected class RegUnRegWrapper {
-		private final TriConsumer<EventTarget, EventType<T>, EventHandler<T>> reg;
-		private final TriConsumer<EventTarget, EventType<T>, EventHandler<T>> unReg;
+    /**
+     * Utility internal class that allows to remove some ifs when registering/unregistering the {@link EventHandler}
+     * on the event target.
+     */
+    protected class RegUnRegWrapper {
+        private final TriConsumer<EventTarget, EventType<T>, EventHandler<T>> reg;
+        private final TriConsumer<EventTarget, EventType<T>, EventHandler<T>> unReg;
 
-		protected RegUnRegWrapper() {
-			if (asFilter) {
-				reg = EventTarget::addEventFilter;
-				unReg = EventTarget::removeEventFilter;
-			} else {
-				reg = EventTarget::addEventHandler;
-				unReg = EventTarget::removeEventHandler;
-			}
-		}
+        protected RegUnRegWrapper() {
+            if (asFilter) {
+                reg = EventTarget::addEventFilter;
+                unReg = EventTarget::removeEventFilter;
+            } else {
+                reg = EventTarget::addEventHandler;
+                unReg = EventTarget::removeEventHandler;
+            }
+        }
 
-		public void reg() {
-			reg.accept(target, eventType, handler);
-		}
+        public void reg() {
+            reg.accept(target, eventType, handler);
+        }
 
-		public void unReg() {
-			unReg.accept(target, eventType, handler);
-		}
-	}
+        public void unReg() {
+            unReg.accept(target, eventType, handler);
+        }
+    }
 }

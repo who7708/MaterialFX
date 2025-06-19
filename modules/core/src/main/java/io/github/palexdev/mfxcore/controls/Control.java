@@ -57,96 +57,96 @@ import javafx.scene.control.Skin;
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
 public abstract class Control<B extends BehaviorBase<? extends Node>> extends javafx.scene.control.Control implements WithBehavior<B> {
-	//================================================================================
-	// Properties
-	//================================================================================
-	private B behavior;
-	private final SupplierProperty<B> behaviorProvider = new SupplierProperty<>() {
-		@Override
-		protected void invalidated() {
-			if (behavior != null) behavior.dispose();
-			behavior = Optional.ofNullable(get()).map(Supplier::get).orElse(null);
-			SkinBase skin = ((SkinBase) getSkin());
-			if (skin != null && behavior != null) skin.initBehavior(behavior);
-		}
-	};
+    //================================================================================
+    // Properties
+    //================================================================================
+    private B behavior;
+    private final SupplierProperty<B> behaviorProvider = new SupplierProperty<>() {
+        @Override
+        protected void invalidated() {
+            if (behavior != null) behavior.dispose();
+            behavior = Optional.ofNullable(get()).map(Supplier::get).orElse(null);
+            SkinBase skin = ((SkinBase) getSkin());
+            if (skin != null && behavior != null) skin.initBehavior(behavior);
+        }
+    };
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public Control() {}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public Control() {}
 
-	{
-		setDefaultBehaviorProvider();
-	}
+    {
+        setDefaultBehaviorProvider();
+    }
 
-	//================================================================================
-	// Abstract Methods
-	//================================================================================
+    //================================================================================
+    // Abstract Methods
+    //================================================================================
 
-	/**
-	 * Create a new instance of the default skin for this component.
-	 */
-	protected abstract SkinBase<?, ?> buildSkin();
+    /**
+     * Create a new instance of the default skin for this component.
+     */
+    protected abstract SkinBase<?, ?> buildSkin();
 
-	//================================================================================
-	// Methods
-	//================================================================================
+    //================================================================================
+    // Methods
+    //================================================================================
 
-	/**
-	 * Since this is deeply integrated with the new behavior API, and since the {@link #setSkin(Skin)} method cannot
-	 * be overridden, and finally to avoid adding listeners, this is the method to use when you want to change the skin.
-	 * <p></p>
-	 * Unfortunately, I cannot prevent users from still using the aforementioned method, but I can guarantee you using that
-	 * will cause issues and undesired behaviors. You have been warned.
-	 */
-	public void changeSkin(SkinBase<?, ?> skin) {
-		if (skin == null)
-			throw new IllegalArgumentException("The new skin cannot be null!");
-		if (behavior != null) behavior.dispose();
-		behavior = getBehaviorProvider().get();
-		((SkinBase) skin).initBehavior(behavior);
-		setSkin(skin);
-	}
+    /**
+     * Since this is deeply integrated with the new behavior API, and since the {@link #setSkin(Skin)} method cannot
+     * be overridden, and finally to avoid adding listeners, this is the method to use when you want to change the skin.
+     * <p></p>
+     * Unfortunately, I cannot prevent users from still using the aforementioned method, but I can guarantee you using that
+     * will cause issues and undesired behaviors. You have been warned.
+     */
+    public void changeSkin(SkinBase<?, ?> skin) {
+        if (skin == null)
+            throw new IllegalArgumentException("The new skin cannot be null!");
+        if (behavior != null) behavior.dispose();
+        behavior = getBehaviorProvider().get();
+        ((SkinBase) skin).initBehavior(behavior);
+        setSkin(skin);
+    }
 
-	/**
-	 * Subclasses can change the actions to perform if the component is being used in SceneBuilder
-	 * by overriding this method. Typically called automatically on components' initialization.
-	 */
-	protected void sceneBuilderIntegration() {}
+    /**
+     * Subclasses can change the actions to perform if the component is being used in SceneBuilder
+     * by overriding this method. Typically called automatically on components' initialization.
+     */
+    protected void sceneBuilderIntegration() {}
 
 
-	//================================================================================
-	// Overridden Methods
-	//================================================================================
+    //================================================================================
+    // Overridden Methods
+    //================================================================================
 
-	@Override
-	protected final SkinBase<?, ?> createDefaultSkin() {
-		SkinBase skin = buildSkin();
-		if (behavior != null) skin.initBehavior(behavior);
-		return skin;
-	}
+    @Override
+    protected final SkinBase<?, ?> createDefaultSkin() {
+        SkinBase skin = buildSkin();
+        if (behavior != null) skin.initBehavior(behavior);
+        return skin;
+    }
 
-	//================================================================================
-	// Getters/Setters
-	//================================================================================
-	@Override
-	public B getBehavior() {
-		return behavior;
-	}
+    //================================================================================
+    // Getters/Setters
+    //================================================================================
+    @Override
+    public B getBehavior() {
+        return behavior;
+    }
 
-	@Override
-	public Supplier<B> getBehaviorProvider() {
-		return behaviorProvider.get();
-	}
+    @Override
+    public Supplier<B> getBehaviorProvider() {
+        return behaviorProvider.get();
+    }
 
-	@Override
-	public SupplierProperty<B> behaviorProviderProperty() {
-		return behaviorProvider;
-	}
+    @Override
+    public SupplierProperty<B> behaviorProviderProperty() {
+        return behaviorProvider;
+    }
 
-	@Override
-	public void setBehaviorProvider(Supplier<B> behaviorProvider) {
-		this.behaviorProvider.set(behaviorProvider);
-	}
+    @Override
+    public void setBehaviorProvider(Supplier<B> behaviorProvider) {
+        this.behaviorProvider.set(behaviorProvider);
+    }
 }

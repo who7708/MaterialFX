@@ -27,88 +27,88 @@ import javafx.geometry.Bounds;
  * cases because maybe you need some kind of special bounds, this bean is specifically for such edge cases.
  */
 public class CustomBounds {
-	//================================================================================
-	// Properties
-	//================================================================================
-	private final double minX;
-	private final double minY;
-	private final double minZ;
-	private final double maxX;
-	private final double maxY;
-	private final double maxZ;
-	private final double width;
-	private final double height;
+    //================================================================================
+    // Properties
+    //================================================================================
+    private final double minX;
+    private final double minY;
+    private final double minZ;
+    private final double maxX;
+    private final double maxY;
+    private final double maxZ;
+    private final double width;
+    private final double height;
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public CustomBounds(double minX, double minY, double maxX, double maxY, double width, double height) {
-		this(minX, minY, 0, maxX, maxY, 0, width, height);
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public CustomBounds(double minX, double minY, double maxX, double maxY, double width, double height) {
+        this(minX, minY, 0, maxX, maxY, 0, width, height);
+    }
 
-	public CustomBounds(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, double width, double height) {
-		this.minX = minX;
-		this.minY = minY;
-		this.minZ = minZ;
-		this.maxX = maxX;
-		this.maxY = maxY;
-		this.maxZ = maxZ;
-		this.width = width;
-		this.height = height;
-	}
+    public CustomBounds(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, double width, double height) {
+        this.minX = minX;
+        this.minY = minY;
+        this.minZ = minZ;
+        this.maxX = maxX;
+        this.maxY = maxY;
+        this.maxZ = maxZ;
+        this.width = width;
+        this.height = height;
+    }
 
-	//================================================================================
-	// Static Methods
-	//================================================================================
+    //================================================================================
+    // Static Methods
+    //================================================================================
 
-	/**
-	 * @return a copy of the given {@link Bounds} object as a {@code CustomBounds} object.
-	 */
-	public static CustomBounds from(Bounds bounds) {
-		return new CustomBounds(
-				bounds.getMinX(),
-				bounds.getMinY(),
-				bounds.getMinZ(),
-				bounds.getMaxX(),
-				bounds.getMaxY(),
-				bounds.getMaxY(),
-				bounds.getWidth(),
-				bounds.getHeight()
-		);
-	}
+    /**
+     * @return a copy of the given {@link Bounds} object as a {@code CustomBounds} object.
+     */
+    public static CustomBounds from(Bounds bounds) {
+        return new CustomBounds(
+            bounds.getMinX(),
+            bounds.getMinY(),
+            bounds.getMinZ(),
+            bounds.getMaxX(),
+            bounds.getMaxY(),
+            bounds.getMaxY(),
+            bounds.getWidth(),
+            bounds.getHeight()
+        );
+    }
 
-	//================================================================================
-	// Getters/Setters
-	//================================================================================
-	public double getMinX() {
-		return minX;
-	}
+    //================================================================================
+    // Getters/Setters
+    //================================================================================
+    public double getMinX() {
+        return minX;
+    }
 
-	public double getMinY() {
-		return minY;
-	}
+    public double getMinY() {
+        return minY;
+    }
 
-	public double getMinZ() {
-		return minZ;
-	}
+    public double getMinZ() {
+        return minZ;
+    }
 
-	public double getMaxX() {
-		return maxX;
-	}
+    public double getMaxX() {
+        return maxX;
+    }
 
-	public double getMaxY() {
-		return maxY;
-	}
+    public double getMaxY() {
+        return maxY;
+    }
 
-	public double getMaxZ() {
-		return maxZ;
-	}
+    public double getMaxZ() {
+        return maxZ;
+    }
 
-	public double getWidth() {
-		return width;
-	}
+    public double getWidth() {
+        return width;
+    }
 
-	public double getHeight() {
-		return height;
-	}
+    public double getHeight() {
+        return height;
+    }
 }

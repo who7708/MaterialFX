@@ -37,41 +37,41 @@ import javafx.stage.Stage;
 
 public class IconWrapperTest extends Application {
 
-	@Override
-	public void start(Stage primaryStage) {
-		StackPane pane = new StackPane();
+    @Override
+    public void start(Stage primaryStage) {
+        StackPane pane = new StackPane();
 
-		// Set up like this, the ripple is in front of icon
-		// But the set view order should fix it
-		// Expect the effect behind the icon
-		MFXIconWrapper icon = new MFXIconWrapper(FontAwesomeSolid.random(64.0), 128)
-			.setAnimated(true)
-			.setAnimationProvider(MFXIconWrapper.AnimationPresets.FADE)
-			.enableRippleGenerator(true)
-			.makeRound(true);
-		icon.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-			IconsProviders provider = EnumUtils.randomEnum(IconsProviders.class);
-			Object desc = switch (provider) {
-				case FONTAWESOME_BRANDS -> FontAwesomeBrands.class;
-				case FONTAWESOME_SOLID -> FontAwesomeSolid.class;
-				case FONTAWESOME_REGULAR -> FontAwesomeRegular.class;
-			};
-			Enum val = EnumUtils.randomEnum(((Class<Enum>) desc));
-			IconDescriptor toDesc = (IconDescriptor) val;
-			// This is to also test icon switch with CSS
-			icon.setStyle("-mfx-icon: " + toDesc.getDescription());
-		});
-		icon.iconProperty().addListener(i -> icon.getIcon().setSize(64.0));
+        // Set up like this, the ripple is in front of icon
+        // But the set view order should fix it
+        // Expect the effect behind the icon
+        MFXIconWrapper icon = new MFXIconWrapper(FontAwesomeSolid.random(64.0), 128)
+            .setAnimated(true)
+            .setAnimationProvider(MFXIconWrapper.AnimationPresets.FADE)
+            .enableRippleGenerator(true)
+            .makeRound(true);
+        icon.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+            IconsProviders provider = EnumUtils.randomEnum(IconsProviders.class);
+            Object desc = switch (provider) {
+                case FONTAWESOME_BRANDS -> FontAwesomeBrands.class;
+                case FONTAWESOME_SOLID -> FontAwesomeSolid.class;
+                case FONTAWESOME_REGULAR -> FontAwesomeRegular.class;
+            };
+            Enum val = EnumUtils.randomEnum(((Class<Enum>) desc));
+            IconDescriptor toDesc = (IconDescriptor) val;
+            // This is to also test icon switch with CSS
+            icon.setStyle("-mfx-icon: " + toDesc.getDescription());
+        });
+        icon.iconProperty().addListener(i -> icon.getIcon().setSize(64.0));
 
-		// Check
-		ObservableList<Node> children = icon.getChildren();
-		assert children.get(0) instanceof MFXFontIcon;
-		assert children.get(1) instanceof MFXRippleGenerator;
+        // Check
+        ObservableList<Node> children = icon.getChildren();
+        assert children.get(0) instanceof MFXFontIcon;
+        assert children.get(1) instanceof MFXRippleGenerator;
 
-		pane.getChildren().add(icon);
-		Scene scene = new Scene(pane, 400, 400);
-		primaryStage.setScene(scene);
-		primaryStage.show();
-		//ScenicView.show(scene);
-	}
+        pane.getChildren().add(icon);
+        Scene scene = new Scene(pane, 400, 400);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+        //ScenicView.show(scene);
+    }
 }

@@ -31,21 +31,21 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
  */
 public class TriConsumerProperty<T, U, R> extends ReadOnlyObjectWrapper<TriConsumer<T, U, R>> {
 
-	//================================================================================
-	// Constructors
-	//================================================================================
-	public TriConsumerProperty() {
-	}
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public TriConsumerProperty() {
+    }
 
-	public TriConsumerProperty(TriConsumer<T, U, R> initialValue) {
-		super(initialValue);
-	}
+    public TriConsumerProperty(TriConsumer<T, U, R> initialValue) {
+        super(initialValue);
+    }
 
-	public TriConsumerProperty(Object bean, String name) {
-		super(bean, name);
-	}
+    public TriConsumerProperty(Object bean, String name) {
+        super(bean, name);
+    }
 
-	public TriConsumerProperty(Object bean, String name, TriConsumer<T, U, R> initialValue) {
-		super(bean, name, initialValue);
-	}
+    public TriConsumerProperty(Object bean, String name, TriConsumer<T, U, R> initialValue) {
+        super(bean, name, initialValue);
+    }
 }
