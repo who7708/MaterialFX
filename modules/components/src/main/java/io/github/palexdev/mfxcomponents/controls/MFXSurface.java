@@ -26,7 +26,7 @@ import io.github.palexdev.mfxcomponents.theming.PseudoClasses;
 import io.github.palexdev.mfxcore.base.properties.styleable.StyleableBooleanProperty;
 import io.github.palexdev.mfxcore.base.properties.styleable.StyleableDoubleProperty;
 import io.github.palexdev.mfxcore.base.properties.styleable.StyleableObjectProperty;
-import io.github.palexdev.mfxcore.controls.Styleable;
+import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.utils.fx.StyleUtils;
 import io.github.palexdev.mfxeffects.animations.Animations;
 import io.github.palexdev.mfxeffects.animations.Animations.KeyFrames;
@@ -37,6 +37,7 @@ import javafx.animation.Animation;
 import javafx.beans.InvalidationListener;
 import javafx.css.CssMetaData;
 import javafx.css.PseudoClass;
+import javafx.css.Styleable;
 import javafx.css.StyleablePropertyFactory;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -79,7 +80,7 @@ import javafx.scene.layout.Region;
 /// #### Note
 /// When a `MFXSurface` is not needed anymore, it should be disposed by calling [#dispose()].
 // TODO implement 'dragged' state
-public class MFXSurface extends Region implements Styleable {
+public class MFXSurface extends Region implements MFXStyleable {
     //================================================================================
     // Static Properties
     //================================================================================
@@ -174,7 +175,7 @@ public class MFXSurface extends Region implements Styleable {
     //================================================================================
     @Override
     public List<String> defaultStyleClasses() {
-        return Styleable.styleClasses("surface");
+        return MFXStyleable.styleClasses("surface");
     }
 
     //================================================================================
@@ -367,7 +368,7 @@ public class MFXSurface extends Region implements Styleable {
     //================================================================================
     private static class StyleableProperties {
         private static final StyleablePropertyFactory<MFXSurface> FACTORY = new StyleablePropertyFactory<>(Region.getClassCssMetaData());
-        private static final List<CssMetaData<? extends javafx.css.Styleable, ?>> cssMetaDataList;
+        private static final List<CssMetaData<? extends Styleable, ?>> cssMetaDataList;
 
         private static final CssMetaData<MFXSurface, Boolean> ANIMATED =
             FACTORY.createBooleanCssMetaData(
@@ -422,12 +423,12 @@ public class MFXSurface extends Region implements Styleable {
         }
     }
 
-    public static List<CssMetaData<? extends javafx.css.Styleable, ?>> getClassCssMetaData() {
+    public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
         return StyleableProperties.cssMetaDataList;
     }
 
     @Override
-    public List<CssMetaData<? extends javafx.css.Styleable, ?>> getCssMetaData() {
+    public List<CssMetaData<? extends Styleable, ?>> getCssMetaData() {
         return getClassCssMetaData();
     }
 

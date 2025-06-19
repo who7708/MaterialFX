@@ -33,11 +33,12 @@ import io.github.palexdev.mfxcomponents.variants.button.ShapeVariant;
 import io.github.palexdev.mfxcomponents.variants.button.SizeVariant;
 import io.github.palexdev.mfxcomponents.variants.button.StyleVariant;
 import io.github.palexdev.mfxcore.base.properties.styleable.StyleableBooleanProperty;
+import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.controls.SkinBase;
-import io.github.palexdev.mfxcore.controls.Styleable;
 import io.github.palexdev.mfxcore.selection.SelectionGroup;
 import io.github.palexdev.mfxcore.utils.fx.StyleUtils;
 import javafx.css.CssMetaData;
+import javafx.css.Styleable;
 import javafx.css.StyleablePropertyFactory;
 import javafx.scene.Node;
 
@@ -148,7 +149,7 @@ public class MFXButton extends MFXSelectable<MFXButtonBehavior> implements WithV
 
     @Override
     public List<String> defaultStyleClasses() {
-        return Styleable.styleClasses("mfx-button");
+        return MFXStyleable.styleClasses("mfx-button");
     }
 
     @Override
@@ -201,7 +202,7 @@ public class MFXButton extends MFXSelectable<MFXButtonBehavior> implements WithV
     //================================================================================
     private static class StyleableProperties {
         private static final StyleablePropertyFactory<MFXButton> FACTORY = new StyleablePropertyFactory<>(MFXSelectable.getClassCssMetaData());
-        private static final List<CssMetaData<? extends javafx.css.Styleable, ?>> cssMetaDataList;
+        private static final List<CssMetaData<? extends Styleable, ?>> cssMetaDataList;
 
         private static final CssMetaData<MFXButton, Boolean> TOGGLEABLE =
             FACTORY.createBooleanCssMetaData(
@@ -218,12 +219,12 @@ public class MFXButton extends MFXSelectable<MFXButtonBehavior> implements WithV
         }
     }
 
-    public static List<CssMetaData<? extends javafx.css.Styleable, ?>> getClassCssMetaData() {
+    public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
         return StyleableProperties.cssMetaDataList;
     }
 
     @Override
-    public List<CssMetaData<? extends javafx.css.Styleable, ?>> getControlCssMetaData() {
+    public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
         return getClassCssMetaData();
     }
 }

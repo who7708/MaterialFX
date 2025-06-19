@@ -22,11 +22,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public interface Styleable {
+import javafx.css.Styleable;
+
+public interface MFXStyleable {
 
     List<String> defaultStyleClasses();
 
-    default void defaultStyleClasses(javafx.css.Styleable styleable) {
+    default void defaultStyleClasses(Styleable styleable) {
         styleable.getStyleClass().setAll(defaultStyleClasses());
     }
 
