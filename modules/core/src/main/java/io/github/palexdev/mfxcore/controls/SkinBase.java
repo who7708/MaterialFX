@@ -90,6 +90,12 @@ public abstract class SkinBase<C extends javafx.scene.control.Control & WithBeha
         behavior.init();
     }
 
+    /**
+     * Since {@link #getSkinnable()} is final, this is a convenience method to get and cast a control to the given subclass.
+     */
+    protected <C1 extends C> C1 getControl(Class<C1> klass) {
+        return klass.cast(getSkinnable());
+    }
 
     //================================================================================
     // Delegate Methods
