@@ -61,6 +61,7 @@ import javafx.scene.Node;
 /// or just trigger an action. (see [MFXButtonBehavior#handleSelection()])
 ///
 /// If the button is selected and is not in toggle mode, it will be turned on by [#onSelectionChanged(boolean)].
+// TODO add support for emphasized text through Variants
 public class MFXButton extends MFXSelectable<MFXButtonBehavior> implements WithVariants {
     //================================================================================
     // Properties
