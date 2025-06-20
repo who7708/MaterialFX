@@ -1,7 +1,8 @@
 package io.github.palexdev.mfxeffects.ripple.base;
 
-import io.github.palexdev.mfxeffects.beans.Position;
 import java.util.function.Supplier;
+
+import io.github.palexdev.mfxeffects.beans.Position;
 import javafx.css.StyleableBooleanProperty;
 import javafx.css.StyleableObjectProperty;
 import javafx.scene.layout.Region;
@@ -49,10 +50,11 @@ public interface RippleGenerator {
     void release();
 
     /**
-     * Shortcut for {@code generate(pos.getX(), pos.getY())}.
+     * Shortcut for {@code generate(pos.getX(), pos.getY())}, although if the given position is {@code null} does not generate.
      */
     default void generate(Position pos) {
-        generate(pos.getX(), pos.getY());
+        if (pos != null)
+            generate(pos.getX(), pos.getY());
     }
 
     /**
