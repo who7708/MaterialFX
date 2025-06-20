@@ -21,6 +21,7 @@ package io.github.palexdev.mfxeffects.animations;
 import io.github.palexdev.mfxeffects.animations.Animations.KeyFrames;
 import io.github.palexdev.mfxeffects.animations.Animations.TimelineBuilder;
 import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -35,100 +36,100 @@ import javafx.util.Duration;
 public enum AnimationFactory {
     FADE_IN {
         @Override
-        public Timeline build(Node node, double millis, Interpolator i) {
-            return TimelineBuilder.build()
-                .add(KeyFrames.of(0, node.opacityProperty(), 0.0))
-                .add(KeyFrames.of(millis, node.opacityProperty(), 1.0, i))
-                .getAnimation();
+        public KeyFrame[] keyFrames(Node node, double millis, Interpolator i) {
+            return new KeyFrame[]{
+                KeyFrames.of(0, node.opacityProperty(), 0.0),
+                KeyFrames.of(millis, node.opacityProperty(), 1.0, i)
+            };
         }
     },
     FADE_OUT {
         @Override
-        public Timeline build(Node node, double millis, Interpolator i) {
-            return TimelineBuilder.build()
-                .add(KeyFrames.of(0, node.opacityProperty(), 1.0))
-                .add(KeyFrames.of(millis, node.opacityProperty(), 0.0, i))
-                .getAnimation();
+        public KeyFrame[] keyFrames(Node node, double millis, Interpolator i) {
+            return new KeyFrame[]{
+                KeyFrames.of(0, node.opacityProperty(), 1.0),
+                KeyFrames.of(millis, node.opacityProperty(), 0.0, i)
+            };
         }
     },
     SLIDE_IN_BOTTOM {
         @Override
-        public Timeline build(Node node, double millis, Interpolator i) {
+        public KeyFrame[] keyFrames(Node node, double millis, Interpolator i) {
             double distance = computeDistanceBottom(node);
-            return TimelineBuilder.build()
-                .add(KeyFrames.of(0, node.translateYProperty(), distance))
-                .add(KeyFrames.of(millis, node.translateYProperty(), 0, i))
-                .getAnimation();
+            return new KeyFrame[]{
+                KeyFrames.of(0, node.translateYProperty(), distance),
+                KeyFrames.of(millis, node.translateYProperty(), 0, i)
+            };
         }
     },
     SLIDE_OUT_BOTTOM {
         @Override
-        public Timeline build(Node node, double millis, Interpolator i) {
+        public KeyFrame[] keyFrames(Node node, double millis, Interpolator i) {
             double distance = computeDistanceBottom(node);
-            return TimelineBuilder.build()
-                .add(KeyFrames.of(0, node.translateYProperty(), 0))
-                .add(KeyFrames.of(millis, node.translateYProperty(), distance, i))
-                .getAnimation();
+            return new KeyFrame[]{
+                KeyFrames.of(0, node.translateYProperty(), 0),
+                KeyFrames.of(millis, node.translateYProperty(), distance, i)
+            };
         }
     },
     SLIDE_IN_LEFT {
         @Override
-        public Timeline build(Node node, double millis, Interpolator i) {
+        public KeyFrame[] keyFrames(Node node, double millis, Interpolator i) {
             double distance = computeDistanceLeft(node);
-            return TimelineBuilder.build()
-                .add(KeyFrames.of(0, node.translateXProperty(), -distance))
-                .add(KeyFrames.of(millis, node.translateXProperty(), 0, i))
-                .getAnimation();
+            return new KeyFrame[]{
+                KeyFrames.of(0, node.translateXProperty(), -distance),
+                KeyFrames.of(millis, node.translateXProperty(), 0, i)
+            };
         }
     },
     SLIDE_OUT_LEFT {
         @Override
-        public Timeline build(Node node, double millis, Interpolator i) {
+        public KeyFrame[] keyFrames(Node node, double millis, Interpolator i) {
             double distance = computeDistanceLeft(node);
-            return TimelineBuilder.build()
-                .add(KeyFrames.of(0, node.translateXProperty(), 0))
-                .add(KeyFrames.of(millis, node.translateXProperty(), -distance, i))
-                .getAnimation();
+            return new KeyFrame[]{
+                KeyFrames.of(0, node.translateXProperty(), 0),
+                KeyFrames.of(millis, node.translateXProperty(), -distance, i)
+            };
         }
     },
     SLIDE_IN_RIGHT {
         @Override
-        public Timeline build(Node node, double millis, Interpolator i) {
+        public KeyFrame[] keyFrames(Node node, double millis, Interpolator i) {
             double distance = computeDistanceRight(node);
-            return TimelineBuilder.build()
-                .add(KeyFrames.of(0, node.translateXProperty(), distance))
-                .add(KeyFrames.of(millis, node.translateXProperty(), 0, i))
-                .getAnimation();
+            return new KeyFrame[]{
+                KeyFrames.of(0, node.translateXProperty(), distance),
+                KeyFrames.of(millis, node.translateXProperty(), 0, i)
+            };
         }
     },
     SLIDE_OUT_RIGHT {
         @Override
-        public Timeline build(Node node, double millis, Interpolator i) {
+        public KeyFrame[] keyFrames(Node node, double millis, Interpolator i) {
             double distance = computeDistanceRight(node);
-            return TimelineBuilder.build()
-                .add(KeyFrames.of(0, node.translateXProperty(), 0))
-                .add(KeyFrames.of(millis, node.translateXProperty(), distance, i))
-                .getAnimation();
+            return new KeyFrame[]{
+                KeyFrames.of(0, node.translateXProperty(), 0),
+                KeyFrames.of(millis, node.translateXProperty(), distance, i)
+            };
         }
     },
     SLIDE_IN_TOP {
         @Override
-        public Timeline build(Node node, double millis, Interpolator i) {
+        public KeyFrame[] keyFrames(Node node, double millis, Interpolator i) {
             double distance = computeDistanceTop(node);
-            return TimelineBuilder.build()
-                .add(KeyFrames.of(0, node.translateYProperty(), distance))
-                .add(KeyFrames.of(millis, node.translateYProperty(), 0, i))
-                .getAnimation();
+            return new KeyFrame[]{
+                KeyFrames.of(0, node.translateYProperty(), distance),
+                KeyFrames.of(millis, node.translateYProperty(), 0, i)
+            };
         }
     },
     SLIDE_OUT_TOP {
         @Override
-        public Timeline build(Node node, double millis, Interpolator i) {
+        public KeyFrame[] keyFrames(Node node, double millis, Interpolator i) {
             double distance = computeDistanceTop(node);
-            return TimelineBuilder.build()
-                .add(KeyFrames.of(0, node.translateYProperty(), 0))
-                .add(KeyFrames.of(millis, node.translateYProperty(), distance, i))
-                .getAnimation();
+            return new KeyFrame[]{
+                KeyFrames.of(0, node.translateYProperty(), 0),
+                KeyFrames.of(millis, node.translateYProperty(), -distance, i)
+            };
         }
     };
 
@@ -231,5 +232,12 @@ public enum AnimationFactory {
      * @param millis the duration of the animation in milliseconds
      * @param i      the {@link Interpolator} used by the animations
      */
-    public abstract Timeline build(Node node, double millis, Interpolator i);
+    public Timeline build(Node node, double millis, Interpolator i) {
+        return TimelineBuilder.build().add(keyFrames(node, millis, i)).getAnimation();
+    }
+
+    /**
+     * Each enum constant should produce the {@link KeyFrame}s for the animation from the given parameters.
+     */
+    public abstract KeyFrame[] keyFrames(Node node, double millis, Interpolator i);
 }
