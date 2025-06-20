@@ -18,7 +18,7 @@
 
 package io.github.palexdev.mfxresources.base.properties;
 
-import io.github.palexdev.mfxresources.fonts.IconProvider;
+import io.github.palexdev.mfxresources.fonts.IconDescriptor;
 import io.github.palexdev.mfxresources.fonts.MFXFontIcon;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 
@@ -51,51 +51,18 @@ public class IconProperty extends ReadOnlyObjectWrapper<MFXFontIcon> {
     //================================================================================
 
     /**
-     * Changes the {@link MFXFontIcon#descriptionProperty()} of the current value.
-     * <p>
-     * This is null-safe, meaning that if the current value of the property is null a new {@link MFXFontIcon} will
-     * be created and no exception will be raised.
+     * Creates and sets a new {@link MFXFontIcon} with the given icon description.
      */
     public IconProperty setDescription(String description) {
-        MFXFontIcon val = get();
-        if (val == null) {
-            set(new MFXFontIcon(description));
-        } else {
-            val.setDescription(description);
-        }
+        set(new MFXFontIcon(description));
         return this;
     }
 
     /**
-     * Delegate for {@link MFXFontIcon#setIconsProvider(IconProvider)}.
-     * <p>
-     * This is null-safe, meaning that if the current value of the property is null a new {@link MFXFontIcon} will
-     * be created and no exception will be raised.
+     * Creates and sets a new {@link MFXFontIcon} with the given icon description.
      */
-    public IconProperty setProvider(IconProvider provider) {
-        MFXFontIcon val = get();
-        if (val == null) {
-            set(new MFXFontIcon().setIconsProvider(provider));
-        } else {
-            val.setIconsProvider(provider);
-        }
-        return this;
-    }
-
-    /**
-     * Delegate for {@link MFXFontIcon#setIconsProvider(IconProvider)}, additionally
-     * also changes the {@link MFXFontIcon#descriptionProperty()} to the given one.
-     * <p>
-     * This is null-safe, meaning that if the current value of the property is null a new {@link MFXFontIcon} will
-     * be created and no exception will be raised.
-     */
-    public IconProperty setProvider(IconProvider provider, String description) {
-        MFXFontIcon val = get();
-        if (val == null) {
-            set(new MFXFontIcon().setIconsProvider(provider).setDescription(description));
-        } else {
-            val.setIconsProvider(provider).setDescription(description);
-        }
+    public IconProperty setDescription(IconDescriptor description) {
+        set(new MFXFontIcon(description));
         return this;
     }
 }
