@@ -19,10 +19,7 @@
 package app;
 
 import io.github.palexdev.mfxeffects.ripple.MFXRippleGenerator;
-import io.github.palexdev.mfxresources.fonts.IconDescriptor;
-import io.github.palexdev.mfxresources.fonts.IconsProviders;
-import io.github.palexdev.mfxresources.fonts.MFXFontIcon;
-import io.github.palexdev.mfxresources.fonts.MFXIconWrapper;
+import io.github.palexdev.mfxresources.fonts.*;
 import io.github.palexdev.mfxresources.fonts.fontawesome.FontAwesomeBrands;
 import io.github.palexdev.mfxresources.fonts.fontawesome.FontAwesomeRegular;
 import io.github.palexdev.mfxresources.fonts.fontawesome.FontAwesomeSolid;
@@ -46,9 +43,9 @@ public class IconWrapperTest extends Application {
         // Expect the effect behind the icon
         MFXIconWrapper icon = new MFXIconWrapper(FontAwesomeSolid.random(64.0), 128)
             .setAnimated(true)
-            .setAnimationProvider(MFXIconWrapper.AnimationPresets.FADE)
-            .enableRippleGenerator(true)
-            .makeRound(true);
+            .setAnimationProvider(AnimationPresets.FADE)
+            .enableRipple(true)
+            .setIconClip(IconClip.of(IconClip.ClipShape.ROUNDED, -1.0));
         icon.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
             IconsProviders provider = EnumUtils.randomEnum(IconsProviders.class);
             Object desc = switch (provider) {
@@ -64,7 +61,7 @@ public class IconWrapperTest extends Application {
         icon.iconProperty().addListener(i -> icon.getIcon().setSize(64.0));
 
         // Check
-        ObservableList<Node> children = icon.getChildren();
+        ObservableList<Node> children = icon.getChildrenUnmodifiable();
         assert children.get(0) instanceof MFXFontIcon;
         assert children.get(1) instanceof MFXRippleGenerator;
 

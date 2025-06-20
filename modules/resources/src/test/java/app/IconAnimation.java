@@ -20,6 +20,7 @@ package app;
 
 import java.util.Base64;
 
+import io.github.palexdev.mfxresources.fonts.AnimationPresets;
 import io.github.palexdev.mfxresources.fonts.MFXFontIcon;
 import io.github.palexdev.mfxresources.fonts.MFXIconWrapper;
 import io.github.palexdev.mfxresources.fonts.fontawesome.FontAwesomeSolid;
@@ -48,8 +49,8 @@ public class IconAnimation extends Application {
         MFXFontIcon startIcon = new MFXFontIcon(FontAwesomeSolid.CHECK);
         MFXIconWrapper wrapper = new MFXIconWrapper(startIcon, 64)
             .setAnimated(true)
-            .setAnimationProvider(MFXIconWrapper.AnimationPresets.CLIP)
-            .enableRippleGenerator(true);
+            .setAnimationProvider(AnimationPresets.SCALE)
+            .enableRipple(true);
         wrapper.setBorder(Border.stroke(Color.RED));
         //wrapper.setBackground(Background.fill(Color.PURPLE));
 

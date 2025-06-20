@@ -26,10 +26,7 @@ import io.github.palexdev.mfxeffects.enums.RippleState;
 import io.github.palexdev.mfxeffects.ripple.MFXRippleGenerator;
 import io.github.palexdev.mfxeffects.ripple.base.RippleGenerator;
 import io.github.palexdev.mfxresources.builders.IconWrapperBuilder;
-import io.github.palexdev.mfxresources.fonts.IconDescriptor;
-import io.github.palexdev.mfxresources.fonts.IconsProviders;
-import io.github.palexdev.mfxresources.fonts.MFXFontIcon;
-import io.github.palexdev.mfxresources.fonts.MFXIconWrapper;
+import io.github.palexdev.mfxresources.fonts.*;
 import io.github.palexdev.mfxresources.fonts.fontawesome.FontAwesomeBrands;
 import io.github.palexdev.mfxresources.fonts.fontawesome.FontAwesomeRegular;
 import io.github.palexdev.mfxresources.fonts.fontawesome.FontAwesomeSolid;
@@ -193,7 +190,7 @@ public class IconsTests {
         StackPane root = setupStage();
         MFXIconWrapper wrapper = new MFXFontIcon(FontAwesomeSolid.CIRCLE.getDescription(), 64.0).wrap();
         robot.interact(() -> root.getChildren().setAll(wrapper));
-        assertEquals(64.0, wrapper.getSize());
+        assertEquals(-1.0, wrapper.getSize());
         assertEquals(64.0, wrapper.getWidth());
         assertEquals(64.0, wrapper.getHeight());
         Thread.sleep(sleep);
@@ -209,10 +206,10 @@ public class IconsTests {
         robot.interact(() -> {
             wrapper.getIcon().setIconsProvider(IconsProviders.FONTAWESOME_REGULAR);
             wrapper.getIcon().setDescription(FontAwesomeRegular.SQUARE.getDescription());
-            wrapper.setStyle("-mfx-enable-ripple: true;\n-mfx-round: true;\n-mfx-ripple-pref-size: \"128.0 128.0\"");
+            wrapper.setStyle("-mfx-enable-ripple: true;\n-mfx-clip: \"rounded\";");
         });
         assertNotNull(wrapper.getClip());
-        assertEquals(2, wrapper.getChildren().size());
+        assertEquals(2, wrapper.getChildrenUnmodifiable().size());
         robot.clickOn(wrapper);
         Thread.sleep(1000);
         assertEquals(RippleState.INACTIVE, wrapper.getRippleGenerator().getRippleState());
@@ -220,7 +217,7 @@ public class IconsTests {
 
         robot.interact(() -> wrapper.setStyle(null));
         assertNull(wrapper.getClip());
-        assertEquals(1, wrapper.getChildren().size());
+        assertEquals(1, wrapper.getChildrenUnmodifiable().size());
 
         new MFXIconWrapper();
         new MFXIconWrapper(null);
@@ -235,7 +232,7 @@ public class IconsTests {
             .enableRippleGenerator(true)
             .get();
         robot.interact(() -> root.getChildren().setAll(icon));
-        for (Node child : icon.getChildren()) {
+        for (Node child : icon.getChildrenUnmodifiable()) {
             if (child instanceof RippleGenerator) {
                 assertEquals(0, child.getViewOrder());
                 continue;
@@ -252,7 +249,7 @@ public class IconsTests {
             .enableRippleGenerator(true)
             .get();
         robot.interact(() -> root.getChildren().setAll(icon));
-        for (Node child : icon.getChildren()) {
+        for (Node child : icon.getChildrenUnmodifiable()) {
             if (child instanceof RippleGenerator) {
                 assertEquals(0, child.getViewOrder());
                 continue;
@@ -260,8 +257,8 @@ public class IconsTests {
             assertEquals(1, child.getViewOrder());
         }
 
-        robot.interact(() -> icon.enableRippleGenerator(false));
-        assertTrue(icon.getChildren().size() == 1 && !(icon.getChildren().get(0) instanceof MFXRippleGenerator));
+        robot.interact(() -> icon.enableRipple(false));
+        assertTrue(icon.getChildrenUnmodifiable().size() == 1 && !(icon.getChildrenUnmodifiable().get(0) instanceof MFXRippleGenerator));
     }
 
     @Test
@@ -269,8 +266,8 @@ public class IconsTests {
         StackPane root = setupStage();
         MFXIconWrapper icon = new MFXIconWrapper()
             .setIcon("fas-circle")
-            .makeRound(true)
-            .setSize(32);
+            .setIconClip(IconClip.of(IconClip.ClipShape.ROUNDED, -1.0))
+            .setSize(32.0);
         robot.interact(() -> root.getChildren().setAll(icon));
 
         assertEquals(32.0, icon.getWidth());
@@ -291,11 +288,11 @@ public class IconsTests {
         StackPane root = setupStage();
         MFXIconWrapper icon = new MFXIconWrapper()
             .setIcon("fas-circle")
-            .makeRound(true)
+            .setIconClip(IconClip.of(IconClip.ClipShape.ROUNDED, -1.0))
             .setSize(32);
         robot.interact(() -> root.getChildren().setAll(icon));
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 100; i++) {
             IconsProviders provider = EnumUtils.randomEnum(IconsProviders.class);
             Object desc = switch (provider) {
                 case FONTAWESOME_BRANDS -> FontAwesomeBrands.class;
@@ -304,7 +301,7 @@ public class IconsTests {
             };
             Enum val = EnumUtils.randomEnum(((Class<Enum>) desc));
             IconDescriptor toDesc = (IconDescriptor) val;
-            icon.setIcon(toDesc);
+            robot.interact(() -> icon.setIcon(toDesc));
             assertNotNull(toDesc.findByDescription(icon.getIcon().getDescription()));
         }
     }

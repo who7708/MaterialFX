@@ -21,11 +21,7 @@ package io.github.palexdev.mfxresources.builders;
 import java.util.function.Function;
 
 import io.github.palexdev.mfxeffects.beans.Position;
-import io.github.palexdev.mfxresources.fonts.IconDescriptor;
-import io.github.palexdev.mfxresources.fonts.IconProvider;
-import io.github.palexdev.mfxresources.fonts.MFXFontIcon;
-import io.github.palexdev.mfxresources.fonts.MFXIconWrapper;
-import io.github.palexdev.mfxresources.fonts.MFXIconWrapper.AnimationPresets;
+import io.github.palexdev.mfxresources.fonts.*;
 import javafx.css.PseudoClass;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -72,22 +68,17 @@ public class IconWrapperBuilder {
     // Delegate Methods
     //================================================================================
     public IconWrapperBuilder enableRippleGenerator(boolean enable) {
-        wrapper.enableRippleGenerator(enable);
+        wrapper.enableRipple(enable);
         return this;
     }
 
     public IconWrapperBuilder enableRippleGenerator(boolean enable, Function<MouseEvent, Position> positionFunction) {
-        wrapper.enableRippleGenerator(enable, positionFunction);
+        wrapper.enableRipple(enable, positionFunction);
         return this;
     }
 
-    public IconWrapperBuilder makeRound(boolean state) {
-        wrapper.makeRound(state);
-        return this;
-    }
-
-    public IconWrapperBuilder makeRound(boolean state, double radius) {
-        wrapper.makeRound(state, radius);
+    public IconWrapperBuilder setIconClip(IconClip clip) {
+        wrapper.setIconClip(clip);
         return this;
     }
 
@@ -103,11 +94,6 @@ public class IconWrapperBuilder {
 
     public IconWrapperBuilder setIcon(String desc) {
         wrapper.setIcon(desc);
-        return this;
-    }
-
-    public IconWrapperBuilder setIcon(IconProvider provider, String desc) {
-        wrapper.setIcon(provider, desc);
         return this;
     }
 
