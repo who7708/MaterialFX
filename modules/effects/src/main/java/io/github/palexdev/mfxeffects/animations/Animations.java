@@ -18,6 +18,10 @@
 
 package io.github.palexdev.mfxeffects.animations;
 
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
+
 import io.github.palexdev.mfxeffects.beans.AnimationsData;
 import io.github.palexdev.mfxeffects.enums.Interpolators;
 import javafx.animation.*;
@@ -32,10 +36,6 @@ import javafx.scene.control.Labeled;
 import javafx.scene.text.Text;
 import javafx.stage.Window;
 import javafx.util.Duration;
-
-import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 
 /**
  * Utility class to easily build animations of any sort. Designed with fluent api.
@@ -287,6 +287,14 @@ public class Animations {
         }
 
         /**
+         * If the given condition is true, adds the given animation the 'main' animation by calling {@link #addAnimation(Animation)}.
+         */
+        public AbstractBuilder addIf(boolean condition, Animation animation) {
+            if (condition) addAnimation(animation);
+            return this;
+        }
+
+        /**
          * If the given condition is true, then a new {@link Timeline} is built with the given keyframe and added to
          * the 'main' animation by calling {@link #addAnimation(Animation)}.
          */
@@ -301,6 +309,14 @@ public class Animations {
          */
         public AbstractBuilder addIf(boolean condition, Supplier<KeyFrame> keyFrame) {
             if (condition) addAnimation(new Timeline(keyFrame.get()));
+            return this;
+        }
+
+        /**
+         * If the given condition returns true, then adds the given animation to the 'main' animation by calling {@link #addAnimation(Animation)}.
+         */
+        public AbstractBuilder addIf(Supplier<Boolean> condition, Animation animation) {
+            if (condition.get()) addAnimation(animation);
             return this;
         }
 
