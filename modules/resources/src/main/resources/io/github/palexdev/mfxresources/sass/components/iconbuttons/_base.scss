@@ -17,7 +17,7 @@
  */
 
 @use '../../base/vars' as *;
-@use '../surface' as *;
+@use '../layers' as *;
 
 @mixin MaterialIconButtonsBase() {
   .mfx-icon-button {

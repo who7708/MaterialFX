@@ -28,13 +28,12 @@
   }
 }
 
-@mixin Ripples() {
+@mixin SurfaceRipples() {
   .surface-ripple {
     -fx-opacity : opacity('ripple');
   }
 }
 
-// TODO this should be moved elsewhere as it's not part of the surface anymore
 @mixin FocusRing($color: -md-sys-color-secondary, $insets: -4px, $thickness: 3px) {
   @at-root #{&}:focus-visible {
     -fx-border-color  : $color;

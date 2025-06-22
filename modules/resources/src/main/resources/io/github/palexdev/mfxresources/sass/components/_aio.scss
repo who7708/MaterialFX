@@ -18,10 +18,10 @@
 
 @use 'buttons' as *;
 @use 'iconbuttons' as *;
-@use 'surface' as *;
+@use 'layers' as *;
 
 @mixin MaterialComponents() {
-  @include Ripples();
+  @include SurfaceRipples();
   @include MaterialButtons();
   @include MaterialIconButtons();
 }
