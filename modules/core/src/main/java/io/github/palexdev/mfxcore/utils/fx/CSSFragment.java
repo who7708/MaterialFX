@@ -222,7 +222,8 @@ public class CSSFragment {
         }
 
         /**
-         * Opens a selector with the style classes of the given {@link Styleable} object.
+         * Opens a selector with the style classes of the given {@link Styleable} object. If the list is empty, then uses
+         * the simple class name.
          * <p>
          * Delegates to {@link #select(String)} and <b>beware</b> that the resulting selector is the result of chaining
          * all the style classes.
@@ -230,7 +231,7 @@ public class CSSFragment {
          */
         public Builder select(Styleable styleable) {
             ObservableList<String> classes = styleable.getStyleClass();
-            if (classes.isEmpty()) return this;
+            if (classes.isEmpty()) return select(styleable.getClass().getSimpleName());
             StringBuilder chain = new StringBuilder();
             classes.forEach(c -> chain.append(".").append(c));
             return select(chain.toString());
