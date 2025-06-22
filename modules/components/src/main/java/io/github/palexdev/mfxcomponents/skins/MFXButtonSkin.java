@@ -75,12 +75,12 @@ public class MFXButtonSkin<C extends MFXButtonBase<B>, B extends MFXButtonBehavi
             intercept(button, MouseEvent.MOUSE_PRESSED).process(behavior::mousePressed),
             intercept(button, MouseEvent.MOUSE_CLICKED).process(behavior::mouseClicked),
             intercept(button, KeyEvent.KEY_PRESSED).process(e -> behavior.keyPressed(e, _ -> {
-                    if (e.getCode() == KeyCode.ENTER || e.getCode() == KeyCode.SPACE) {
-                        Bounds b = button.getLayoutBounds();
-                        rg.generate(b.getCenterX(), b.getCenterY());
-                        rg.release();
-                    }
-                }))
+                if (e.getCode() == KeyCode.ENTER || e.getCode() == KeyCode.SPACE) {
+                    Bounds b = button.getLayoutBounds();
+                    rg.generate(b.getCenterX(), b.getCenterY());
+                    rg.release();
+                }
+            }))
         );
     }
 
