@@ -16,104 +16,163 @@
  * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use '../surface' as *;
-@use '../../base/typography' as *;
 @use '../../base/vars' as *;
+@use '../surface' as *;
 
-@mixin MaterialButtonsBase() {
-  .mfx-button {
-    -fx-alignment : CENTER;
+@mixin MaterialIconButtonsBase() {
+  .mfx-icon-button {
+    -fx-background-color : transparent;
 
-    > .surface {
-      -mfx-elevation : LEVEL0;
+    > .mfx-icon-wrapper {
+      > .mfx-font-icon {
+        -mfx-color : -md-sys-color-on-surface-variant
+      }
+
+      > .mfx-ripple-generator {
+        -mfx-ripple-color : -md-sys-color-primary;
+      }
+    }
+
+    &:selected > .mfx-icon-wrapper > .mfx-font-icon {
+      -mfx-color : -md-sys-color-primary
+    }
+
+    & > .surface {
+      -fx-background-color : -md-sys-color-primary;
     }
 
     // XS
     &.xs {
-      @include LabelLarge();
       -fx-background-radius : 16px;
-      -fx-border-radius     : 32px;
+      -fx-border-radius     : 16px;
+      -fx-min-width         : 32px;
       -fx-min-height        : 32px;
-      -fx-padding           : 0px 12px 0px 12px;
-      -fx-graphic-text-gap  : 4px;
+      -fx-padding           : 0px 6px 0px 6px;
 
-      > .label > .mfx-font-icon {
-        -mfx-size : 20px;
+      > .mfx-icon-wrapper > .mfx-font-icon {
+        -mfx-size : 16px
       }
 
       > .surface {
         -fx-background-radius : 16px;
       }
+
+      &.narrow {
+        -fx-min-width : 28px;
+        -fx-padding   : 0px 4px 0px 4px;
+      }
+
+      &.wide {
+        -fx-min-width : 40px;
+        -fx-padding   : 0px 10px 0px 10px;
+      }
     }
 
     // S
     &.s {
-      @include LabelLarge();
       -fx-background-radius : 20px;
-      -fx-border-radius     : 40px;
+      -fx-border-radius     : 20px;
+      -fx-min-width         : 40px;
       -fx-min-height        : 40px;
-      -fx-padding           : 0px 16px 0px 16px;
-      -fx-graphic-text-gap  : 8px;
+      -fx-padding           : 0px 8px 0px 8px;
 
-      > .label > .mfx-font-icon {
-        -mfx-size : 20px;
+      > .mfx-icon-wrapper > .mfx-font-icon {
+        -mfx-size : 20px
       }
 
       > .surface {
         -fx-background-radius : 20px;
       }
+
+      &.narrow {
+        -fx-min-width : 32px;
+        -fx-padding   : 0px 4px 0px 4px;
+      }
+
+      &.wide {
+        -fx-min-width : 52px;
+        -fx-padding   : 0px 14px 0px 14px;
+      }
     }
 
     // M
     &.m {
-      @include TitleMedium();
       -fx-background-radius : 28px;
-      -fx-border-radius     : 56px;
+      -fx-border-radius     : 28px;
+      -fx-min-width         : 56px;
       -fx-min-height        : 56px;
-      -fx-padding           : 0px 24px 0px 24px;
-      -fx-graphic-text-gap  : 8px;
+      -fx-padding           : 0px 16px 0px 16px;
 
-      > .label > .mfx-font-icon {
-        -mfx-size : 24px;
+      > .mfx-icon-wrapper > .mfx-font-icon {
+        -mfx-size : 24px
       }
 
       > .surface {
         -fx-background-radius : 28px;
       }
+
+      &.narrow {
+        -fx-min-width : 48px;
+        -fx-padding   : 0px 12px 0px 12px;
+      }
+
+      &.wide {
+        -fx-min-width : 72px;
+        -fx-padding   : 0px 24px 0px 24px;
+      }
     }
 
     // L
     &.l {
-      @include HeadlineSmall();
       -fx-background-radius : 48px;
-      -fx-border-radius     : 96px;
+      -fx-border-radius     : 48px;
+      -fx-min-width         : 96px;
       -fx-min-height        : 96px;
-      -fx-padding           : 0px 48px 0px 48px;
-      -fx-graphic-text-gap  : 12px;
+      -fx-padding           : 0px 32px 0px 32px;
 
-      > .label > .mfx-font-icon {
-        -mfx-size : 32px;
+      > .mfx-icon-wrapper > .mfx-font-icon {
+        -mfx-size : 32px
       }
 
       > .surface {
         -fx-background-radius : 48px;
       }
+
+      &.narrow {
+        -fx-min-width : 64px;
+        -fx-padding   : 0px 16px 0px 16px;
+      }
+
+      &.wide {
+        -fx-min-width : 128px;
+        -fx-padding   : 0px 48px 0px 48px;
+      }
     }
 
+    // XL
     &.xl {
-      @include HeadlineLarge();
       -fx-background-radius : 68px;
-      -fx-border-radius     : 136px;
+      -fx-border-radius     : 68px;
+      -fx-min-width         : 136px;
       -fx-min-height        : 136px;
-      -fx-padding           : 0px 64px 0px 64px;
-      -fx-graphic-text-gap  : 16px;
+      -fx-padding           : 0px 48px 0px 48px;
 
-      > .label > .mfx-font-icon {
-        -mfx-size : 40px;
+      > .mfx-icon-wrapper > .mfx-font-icon {
+        -mfx-size : 40px
       }
 
       > .surface {
         -fx-background-radius : 68px;
+      }
+
+      &.narrow {
+        -fx-min-width : 104px;
+        -fx-padding   : 0px 32px 0px 32px;
+      }
+
+      &.wide {
+        -fx-min-width : 184px;
+        -fx-padding   : 0px 72px 0px 72px;
       }
     }
 
@@ -135,7 +194,7 @@
       -fx-border-radius     : 16px;
 
       > .surface {
-        -fx-border-radius : 16px;
+        -fx-background-radius : 16px;
       }
     }
 
@@ -202,10 +261,8 @@
     // Disabled
     &:disabled {
       -fx-background-color : transparent !important;
-      -fx-text-fill        : -md-sys-color-on-surface !important;
-      -mfx-text-opacity    : opacity('disabled-text') !important;
 
-      > .label > .mfx-font-icon {
+      > .mfx-icon-wrapper > .mfx-font-icon {
         -fx-opacity : opacity('disabled-text') !important;
         -mfx-color  : -md-sys-color-on-surface !important;
       }

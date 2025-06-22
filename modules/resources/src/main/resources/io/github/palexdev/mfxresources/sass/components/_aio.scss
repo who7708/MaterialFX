@@ -17,9 +17,11 @@
  */
 
 @use 'buttons' as *;
+@use 'iconbuttons' as *;
 @use 'surface' as *;
 
 @mixin MaterialComponents() {
   @include Ripples();
   @include MaterialButtons();
+  @include MaterialIconButtons();
 }

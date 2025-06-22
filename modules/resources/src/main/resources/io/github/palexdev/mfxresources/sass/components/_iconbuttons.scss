@@ -16,29 +16,14 @@
  * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use '../base/vars' as *;
+@use 'iconbuttons/base' as *;
+@use 'iconbuttons/filled' as *;
+@use 'iconbuttons/outlined' as *;
+@use 'iconbuttons/tonal' as *;
 
-@mixin Surfaces() {
-  .surface {
-    -mfx-disabled-opacity : opacity('disabled');
-    -mfx-focus-opacity    : opacity('focused');
-    -mfx-hover-opacity    : opacity('hover');
-    -mfx-press-opacity    : opacity('pressed');
-    -mfx-drag-opacity     : opacity('dragged');
-  }
-}
-
-@mixin Ripples() {
-  .surface-ripple {
-    -fx-opacity : opacity('ripple');
-  }
-}
-
-// TODO this should be moved elsewhere as it's not part of the surface anymore
-@mixin FocusRing($color: -md-sys-color-secondary, $insets: -4px, $thickness: 3px) {
-  @at-root #{&}:focus-visible {
-    -fx-border-color  : $color;
-    -fx-border-insets : $insets;
-    -fx-border-width  : $thickness;
-  }
+@mixin MaterialIconButtons {
+  @include MaterialIconButtonsBase();
+  @include MaterialIconButtonsFilled();
+  @include MaterialIconButtonsOutlined();
+  @include MaterialIconButtonsTonal();
 }

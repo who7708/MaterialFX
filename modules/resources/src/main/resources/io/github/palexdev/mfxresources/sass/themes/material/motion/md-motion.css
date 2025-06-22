@@ -22,30 +22,42 @@
   transition-duration: 350ms
 }
 
-.mfx-button.l.rounded:pressed:hover,
-.mfx-button.l.squared:pressed:hover,
-.mfx-button.m.rounded:pressed:hover,
-.mfx-button.m.squared:pressed:hover,
 .mfx-button.s.rounded:pressed:hover,
 .mfx-button.s.squared:pressed:hover,
-.mfx-button.xl.rounded:pressed:hover,
-.mfx-button.xl.squared:pressed:hover,
 .mfx-button.xs.rounded:pressed:hover,
 .mfx-button.xs.squared:pressed:hover {
   -fx-background-radius: 8px
 }
 
-.mfx-button.l.rounded:pressed:hover > .surface,
-.mfx-button.l.squared:pressed:hover > .surface,
-.mfx-button.m.rounded:pressed:hover > .surface,
-.mfx-button.m.squared:pressed:hover > .surface,
 .mfx-button.s.rounded:pressed:hover > .surface,
 .mfx-button.s.squared:pressed:hover > .surface,
-.mfx-button.xl.rounded:pressed:hover > .surface,
-.mfx-button.xl.squared:pressed:hover > .surface,
 .mfx-button.xs.rounded:pressed:hover > .surface,
 .mfx-button.xs.squared:pressed:hover > .surface {
   -fx-background-radius: 8px
+}
+
+.mfx-button.m.rounded:pressed:hover,
+.mfx-button.m.squared:pressed:hover {
+  -fx-background-radius: 12px
+}
+
+.mfx-button.m.rounded:pressed:hover > .surface,
+.mfx-button.m.squared:pressed:hover > .surface {
+  -fx-background-radius: 12px
+}
+
+.mfx-button.l.rounded:pressed:hover,
+.mfx-button.l.squared:pressed:hover,
+.mfx-button.xl.rounded:pressed:hover,
+.mfx-button.xl.squared:pressed:hover {
+  -fx-background-radius: 16px
+}
+
+.mfx-button.l.rounded:pressed:hover > .surface,
+.mfx-button.l.squared:pressed:hover > .surface,
+.mfx-button.xl.rounded:pressed:hover > .surface,
+.mfx-button.xl.squared:pressed:hover > .surface {
+  -fx-background-radius: 16px
 }
 
 .mfx-button.outlined.l,
@@ -58,10 +70,85 @@
   transition-duration: 350ms
 }
 
-.mfx-button.outlined.l:hover:pressed,
-.mfx-button.outlined.m:hover:pressed,
-.mfx-button.outlined.s:hover:pressed,
-.mfx-button.outlined.xl:hover:pressed,
-.mfx-button.outlined.xs:hover:pressed {
+.mfx-button.outlined.s:pressed:hover:hover:pressed,
+.mfx-button.outlined.xs:pressed:hover:hover:pressed {
   -fx-border-radius: 8px
+}
+
+.mfx-button.outlined.m:pressed:hover:hover:pressed {
+  -fx-border-radius: 12px
+}
+
+.mfx-button.outlined.l:pressed:hover:hover:pressed,
+.mfx-button.outlined.xl:pressed:hover:hover:pressed {
+  -fx-border-radius: 16px
+}
+
+.mfx-icon-button,
+.mfx-icon-button > .surface {
+  transition-property: -fx-background-radius;
+  transition-timing-function: cubic-bezier(0.27, 1, 0.18, 1);
+  transition-duration: 350ms
+}
+
+.mfx-icon-button.s.rounded:pressed:hover,
+.mfx-icon-button.s.squared:pressed:hover,
+.mfx-icon-button.xs.rounded:pressed:hover,
+.mfx-icon-button.xs.squared:pressed:hover {
+  -fx-background-radius: 8px
+}
+
+.mfx-icon-button.s.rounded:pressed:hover > .surface,
+.mfx-icon-button.s.squared:pressed:hover > .surface,
+.mfx-icon-button.xs.rounded:pressed:hover > .surface,
+.mfx-icon-button.xs.squared:pressed:hover > .surface {
+  -fx-background-radius: 8px
+}
+
+.mfx-icon-button.m.rounded:pressed:hover,
+.mfx-icon-button.m.squared:pressed:hover {
+  -fx-background-radius: 12px
+}
+
+.mfx-icon-button.m.rounded:pressed:hover > .surface,
+.mfx-icon-button.m.squared:pressed:hover > .surface {
+  -fx-background-radius: 12px
+}
+
+.mfx-icon-button.l.rounded:pressed:hover,
+.mfx-icon-button.l.squared:pressed:hover,
+.mfx-icon-button.xl.rounded:pressed:hover,
+.mfx-icon-button.xl.squared:pressed:hover {
+  -fx-background-radius: 16px
+}
+
+.mfx-icon-button.l.rounded:pressed:hover > .surface,
+.mfx-icon-button.l.squared:pressed:hover > .surface,
+.mfx-icon-button.xl.rounded:pressed:hover > .surface,
+.mfx-icon-button.xl.squared:pressed:hover > .surface {
+  -fx-background-radius: 16px
+}
+
+.mfx-icon-button.outlined.l,
+.mfx-icon-button.outlined.m,
+.mfx-icon-button.outlined.s,
+.mfx-icon-button.outlined.xl,
+.mfx-icon-button.outlined.xs {
+  transition-property: -fx-background-radius, -fx-border-radius;
+  transition-timing-function: cubic-bezier(0.27, 1, 0.18, 1);
+  transition-duration: 350ms
+}
+
+.mfx-icon-button.outlined.s:pressed:hover:hover:pressed,
+.mfx-icon-button.outlined.xs:pressed:hover:hover:pressed {
+  -fx-border-radius: 8px
+}
+
+.mfx-icon-button.outlined.m:pressed:hover:hover:pressed {
+  -fx-border-radius: 12px
+}
+
+.mfx-icon-button.outlined.l:pressed:hover:hover:pressed,
+.mfx-icon-button.outlined.xl:pressed:hover:hover:pressed {
+  -fx-border-radius: 16px
 }

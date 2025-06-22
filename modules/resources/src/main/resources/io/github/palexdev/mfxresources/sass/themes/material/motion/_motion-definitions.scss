@@ -33,18 +33,32 @@
 
     &.xs.rounded:pressed:hover,
     &.s.rounded:pressed:hover,
-    &.m.rounded:pressed:hover,
-    &.l.rounded:pressed:hover,
-    &.xl.rounded:pressed:hover,
     &.xs.squared:pressed:hover,
-    &.s.squared:pressed:hover,
-    &.m.squared:pressed:hover,
-    &.l.squared:pressed:hover,
-    &.xl.squared:pressed:hover {
+    &.s.squared:pressed:hover {
       -fx-background-radius : shape('small');
 
       > .surface {
         -fx-background-radius : shape('small');
+      }
+    }
+
+    &.m.rounded:pressed:hover,
+    &.m.squared:pressed:hover {
+      -fx-background-radius : shape('medium');
+
+      > .surface {
+        -fx-background-radius : shape('medium');
+      }
+    }
+
+    &.l.rounded:pressed:hover,
+    &.xl.rounded:pressed:hover,
+    &.l.squared:pressed:hover,
+    &.xl.squared:pressed:hover {
+      -fx-background-radius : shape('large');
+
+      > .surface {
+        -fx-background-radius : shape('large');
       }
     }
   }
@@ -59,9 +73,103 @@
       transition-property        : -fx-background-radius, -fx-border-radius;
       transition-timing-function : cubic-bezier(0.27, 1, 0.18, 1.0);
       transition-duration        : md-duration('standard-fast-spatial');
+    }
 
+    &.xs:pressed:hover,
+    &.s:pressed:hover {
       &:hover:pressed {
         -fx-border-radius : shape('small');
+      }
+    }
+
+    &.m:pressed:hover {
+      &:hover:pressed {
+        -fx-border-radius : shape('medium');
+      }
+    }
+
+    &.l:pressed:hover,
+    &.xl:pressed:hover {
+      &:hover:pressed {
+        -fx-border-radius : shape('large');
+      }
+    }
+  }
+}
+
+@mixin MaterialIconButtonsMotion() {
+  .mfx-icon-button {
+    transition-property        : -fx-background-radius;
+    transition-timing-function : cubic-bezier(0.27, 1, 0.18, 1.0);
+    transition-duration        : md-duration('standard-fast-spatial');
+
+    > .surface {
+      transition-property        : -fx-background-radius;
+      transition-timing-function : cubic-bezier(0.27, 1, 0.18, 1.0);
+      transition-duration        : md-duration('standard-fast-spatial');
+    }
+
+    &.xs.rounded:pressed:hover,
+    &.s.rounded:pressed:hover,
+    &.xs.squared:pressed:hover,
+    &.s.squared:pressed:hover {
+      -fx-background-radius : shape('small');
+
+      > .surface {
+        -fx-background-radius : shape('small');
+      }
+    }
+
+    &.m.rounded:pressed:hover,
+    &.m.squared:pressed:hover {
+      -fx-background-radius : shape('medium');
+
+      > .surface {
+        -fx-background-radius : shape('medium');
+      }
+    }
+
+    &.l.rounded:pressed:hover,
+    &.xl.rounded:pressed:hover,
+    &.l.squared:pressed:hover,
+    &.xl.squared:pressed:hover {
+      -fx-background-radius : shape('large');
+
+      > .surface {
+        -fx-background-radius : shape('large');
+      }
+    }
+  }
+
+  /* I hate this framework sometimes... */
+  .mfx-icon-button.outlined {
+    &.xs,
+    &.s,
+    &.m,
+    &.l,
+    &.xl {
+      transition-property        : -fx-background-radius, -fx-border-radius;
+      transition-timing-function : cubic-bezier(0.27, 1, 0.18, 1.0);
+      transition-duration        : md-duration('standard-fast-spatial');
+    }
+
+    &.xs:pressed:hover,
+    &.s:pressed:hover {
+      &:hover:pressed {
+        -fx-border-radius : shape('small');
+      }
+    }
+
+    &.m:pressed:hover {
+      &:hover:pressed {
+        -fx-border-radius : shape('medium');
+      }
+    }
+
+    &.l:pressed:hover,
+    &.xl:pressed:hover {
+      &:hover:pressed {
+        -fx-border-radius : shape('large');
       }
     }
   }

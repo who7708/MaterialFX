@@ -141,6 +141,24 @@
   -fx-background-radius: 12px
 }
 
+.mfx-button.xs.squared:selected {
+  -fx-background-radius: 16px;
+  -fx-border-radius: 16px
+}
+
+.mfx-button.xs.squared:selected > .surface {
+  -fx-border-radius: 16px
+}
+
+.mfx-button.s.squared:selected {
+  -fx-background-radius: 20px;
+  -fx-border-radius: 20px
+}
+
+.mfx-button.s.squared:selected > .surface {
+  -fx-background-radius: 20px
+}
+
 .mfx-button.m.squared,
 .mfx-button.m:selected {
   -fx-background-radius: 16px;
@@ -150,6 +168,15 @@
 .mfx-button.m.squared > .surface,
 .mfx-button.m:selected > .surface {
   -fx-background-radius: 16px
+}
+
+.mfx-button.m.squared:selected {
+  -fx-background-radius: 28px;
+  -fx-border-radius: 28px
+}
+
+.mfx-button.m.squared:selected > .surface {
+  -fx-background-radius: 28px
 }
 
 .mfx-button.l.squared,
@@ -165,6 +192,24 @@
 .mfx-button.xl.squared > .surface,
 .mfx-button.xl:selected > .surface {
   -fx-background-radius: 28px
+}
+
+.mfx-button.l.squared:selected {
+  -fx-background-radius: 48px;
+  -fx-border-radius: 48px
+}
+
+.mfx-button.l.squared:selected > .surface {
+  -fx-background-radius: 48px
+}
+
+.mfx-button.xl.squared:selected {
+  -fx-background-radius: 68px;
+  -fx-border-radius: 68px
+}
+
+.mfx-button.xl.squared:selected > .surface {
+  -fx-background-radius: 68px
 }
 
 .mfx-button:focus-visible {
@@ -396,4 +441,371 @@
 
 .mfx-button.tonal.toggle:selected > .mfx-ripple-generator {
   -mfx-ripple-color: -md-sys-color-on-secondary
+}
+
+.mfx-icon-button {
+  -fx-background-color: transparent
+}
+
+.mfx-icon-button > .mfx-icon-wrapper > .mfx-font-icon {
+  -mfx-color: -md-sys-color-on-surface-variant
+}
+
+.mfx-icon-button > .mfx-icon-wrapper > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-primary
+}
+
+.mfx-icon-button:selected > .mfx-icon-wrapper > .mfx-font-icon {
+  -mfx-color: -md-sys-color-primary
+}
+
+.mfx-icon-button > .surface {
+  -fx-background-color: -md-sys-color-primary
+}
+
+.mfx-icon-button.xs {
+  -fx-background-radius: 16px;
+  -fx-border-radius: 16px;
+  -fx-min-width: 32px;
+  -fx-min-height: 32px;
+  -fx-padding: 0px 6px 0px 6px
+}
+
+.mfx-icon-button.xs > .mfx-icon-wrapper > .mfx-font-icon {
+  -mfx-size: 16px
+}
+
+.mfx-icon-button.xs > .surface {
+  -fx-background-radius: 16px
+}
+
+.mfx-icon-button.xs.narrow {
+  -fx-min-width: 28px;
+  -fx-padding: 0px 4px 0px 4px
+}
+
+.mfx-icon-button.xs.wide {
+  -fx-min-width: 40px;
+  -fx-padding: 0px 10px 0px 10px
+}
+
+.mfx-icon-button.s {
+  -fx-background-radius: 20px;
+  -fx-border-radius: 20px;
+  -fx-min-width: 40px;
+  -fx-min-height: 40px;
+  -fx-padding: 0px 8px 0px 8px
+}
+
+.mfx-icon-button.s > .mfx-icon-wrapper > .mfx-font-icon {
+  -mfx-size: 20px
+}
+
+.mfx-icon-button.s > .surface {
+  -fx-background-radius: 20px
+}
+
+.mfx-icon-button.s.narrow {
+  -fx-min-width: 32px;
+  -fx-padding: 0px 4px 0px 4px
+}
+
+.mfx-icon-button.s.wide {
+  -fx-min-width: 52px;
+  -fx-padding: 0px 14px 0px 14px
+}
+
+.mfx-icon-button.m {
+  -fx-background-radius: 28px;
+  -fx-border-radius: 28px;
+  -fx-min-width: 56px;
+  -fx-min-height: 56px;
+  -fx-padding: 0px 16px 0px 16px
+}
+
+.mfx-icon-button.m > .mfx-icon-wrapper > .mfx-font-icon {
+  -mfx-size: 24px
+}
+
+.mfx-icon-button.m > .surface {
+  -fx-background-radius: 28px
+}
+
+.mfx-icon-button.m.narrow {
+  -fx-min-width: 48px;
+  -fx-padding: 0px 12px 0px 12px
+}
+
+.mfx-icon-button.m.wide {
+  -fx-min-width: 72px;
+  -fx-padding: 0px 24px 0px 24px
+}
+
+.mfx-icon-button.l {
+  -fx-background-radius: 48px;
+  -fx-border-radius: 48px;
+  -fx-min-width: 96px;
+  -fx-min-height: 96px;
+  -fx-padding: 0px 32px 0px 32px
+}
+
+.mfx-icon-button.l > .mfx-icon-wrapper > .mfx-font-icon {
+  -mfx-size: 32px
+}
+
+.mfx-icon-button.l > .surface {
+  -fx-background-radius: 48px
+}
+
+.mfx-icon-button.l.narrow {
+  -fx-min-width: 64px;
+  -fx-padding: 0px 16px 0px 16px
+}
+
+.mfx-icon-button.l.wide {
+  -fx-min-width: 128px;
+  -fx-padding: 0px 48px 0px 48px
+}
+
+.mfx-icon-button.xl {
+  -fx-background-radius: 68px;
+  -fx-border-radius: 68px;
+  -fx-min-width: 136px;
+  -fx-min-height: 136px;
+  -fx-padding: 0px 48px 0px 48px
+}
+
+.mfx-icon-button.xl > .mfx-icon-wrapper > .mfx-font-icon {
+  -mfx-size: 40px
+}
+
+.mfx-icon-button.xl > .surface {
+  -fx-background-radius: 68px
+}
+
+.mfx-icon-button.xl.narrow {
+  -fx-min-width: 104px;
+  -fx-padding: 0px 32px 0px 32px
+}
+
+.mfx-icon-button.xl.wide {
+  -fx-min-width: 184px;
+  -fx-padding: 0px 72px 0px 72px
+}
+
+.mfx-icon-button.s.squared,
+.mfx-icon-button.s:selected,
+.mfx-icon-button.xs.squared,
+.mfx-icon-button.xs:selected {
+  -fx-background-radius: 12px;
+  -fx-border-radius: 12px
+}
+
+.mfx-icon-button.s.squared > .surface,
+.mfx-icon-button.s:selected > .surface,
+.mfx-icon-button.xs.squared > .surface,
+.mfx-icon-button.xs:selected > .surface {
+  -fx-background-radius: 12px
+}
+
+.mfx-icon-button.xs.squared:selected {
+  -fx-background-radius: 16px;
+  -fx-border-radius: 16px
+}
+
+.mfx-icon-button.xs.squared:selected > .surface {
+  -fx-background-radius: 16px
+}
+
+.mfx-icon-button.s.squared:selected {
+  -fx-background-radius: 20px;
+  -fx-border-radius: 20px
+}
+
+.mfx-icon-button.s.squared:selected > .surface {
+  -fx-background-radius: 20px
+}
+
+.mfx-icon-button.m.squared,
+.mfx-icon-button.m:selected {
+  -fx-background-radius: 16px;
+  -fx-border-radius: 16px
+}
+
+.mfx-icon-button.m.squared > .surface,
+.mfx-icon-button.m:selected > .surface {
+  -fx-background-radius: 16px
+}
+
+.mfx-icon-button.m.squared:selected {
+  -fx-background-radius: 28px;
+  -fx-border-radius: 28px
+}
+
+.mfx-icon-button.m.squared:selected > .surface {
+  -fx-background-radius: 28px
+}
+
+.mfx-icon-button.l.squared,
+.mfx-icon-button.l:selected,
+.mfx-icon-button.xl.squared,
+.mfx-icon-button.xl:selected {
+  -fx-background-radius: 28px;
+  -fx-border-radius: 28px
+}
+
+.mfx-icon-button.l.squared > .surface,
+.mfx-icon-button.l:selected > .surface,
+.mfx-icon-button.xl.squared > .surface,
+.mfx-icon-button.xl:selected > .surface {
+  -fx-background-radius: 28px
+}
+
+.mfx-icon-button.l.squared:selected {
+  -fx-background-radius: 48px;
+  -fx-border-radius: 48px
+}
+
+.mfx-icon-button.l.squared:selected > .surface {
+  -fx-background-radius: 48px
+}
+
+.mfx-icon-button.xl.squared:selected {
+  -fx-background-radius: 68px;
+  -fx-border-radius: 68px
+}
+
+.mfx-icon-button.xl.squared:selected > .surface {
+  -fx-background-radius: 68px
+}
+
+.mfx-icon-button:focus-visible {
+  -fx-border-color: -md-sys-color-secondary;
+  -fx-border-insets: -4px;
+  -fx-border-width: 3px
+}
+
+.mfx-icon-button:disabled {
+  -fx-background-color: transparent !important
+}
+
+.mfx-icon-button:disabled > .mfx-icon-wrapper > .mfx-font-icon {
+  -fx-opacity: 38% !important;
+  -mfx-color: -md-sys-color-on-surface !important
+}
+
+.mfx-icon-button:disabled > .surface {
+  -fx-background-color: -md-sys-color-on-surface !important
+}
+
+.mfx-icon-button.filled {
+  -fx-background-color: -md-sys-color-primary
+}
+
+.mfx-icon-button.filled > .mfx-icon-wrapper > .mfx-font-icon {
+  -mfx-color: -md-sys-color-on-primary
+}
+
+.mfx-icon-button.filled > .mfx-icon-wrapper > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-on-primary
+}
+
+.mfx-icon-button.filled > .surface {
+  -fx-background-color: -md-sys-color-on-primary
+}
+
+.mfx-icon-button.filled.toggle {
+  -fx-background-color: -md-sys-color-surface-container
+}
+
+.mfx-icon-button.filled.toggle > .mfx-icon-wrapper > .mfx-font-icon {
+  -mfx-color: -md-sys-color-on-surface-variant
+}
+
+.mfx-icon-button.filled.toggle > .mfx-icon-wrapper > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-on-surface-variant
+}
+
+.mfx-icon-button.filled.toggle > .surface {
+  -fx-background-color: -md-sys-color-on-surface-variant
+}
+
+.mfx-icon-button.filled.toggle:selected {
+  -fx-background-color: -md-sys-color-primary
+}
+
+.mfx-icon-button.filled.toggle:selected > .mfx-icon-wrapper > .mfx-font-icon {
+  -mfx-color: -md-sys-color-on-primary
+}
+
+.mfx-icon-button.filled.toggle:selected > .mfx-icon-wrapper > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-on-primary
+}
+
+.mfx-icon-button.filled.toggle:selected > .surface {
+  -fx-background-color: -md-sys-color-on-primary
+}
+
+.mfx-icon-button.outlined {
+  -fx-background-color: transparent;
+  -fx-border-color: -md-sys-color-outline-variant
+}
+
+.mfx-icon-button.outlined > .mfx-icon-wrapper > .mfx-font-icon {
+  -mfx-color: -md-sys-color-on-surface-variant
+}
+
+.mfx-icon-button.outlined > .mfx-icon-wrapper > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-on-surface-variant
+}
+
+.mfx-icon-button.outlined > .surface {
+  -fx-background-color: -md-sys-color-on-surface-variant
+}
+
+.mfx-icon-button.outlined:focus-visible {
+  -fx-border-color: -md-sys-color-outline-variant, -md-sys-color-secondary;
+  -fx-border-insets: 0px, -4px;
+  -fx-border-width: 1px, 3px
+}
+
+.mfx-icon-button.outlined.toggle:selected {
+  -fx-background-color: -md-sys-color-inverse-surface;
+  -fx-border-color: transparent
+}
+
+.mfx-icon-button.outlined.toggle:selected > .mfx-icon-wrapper > .mfx-font-icon {
+  -mfx-color: -md-sys-color-inverse-on-surface
+}
+
+.mfx-icon-button.outlined.toggle:selected > .mfx-icon-wrapper > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-inverse-on-surface
+}
+
+.mfx-icon-button.outlined.toggle:selected > .surface {
+  -fx-background-color: -md-sys-color-inverse-on-surface
+}
+
+.mfx-icon-button.tonal {
+  -fx-background-color: -md-sys-color-secondary-container
+}
+
+.mfx-icon-button.tonal > .mfx-icon-wrapper > .mfx-font-icon {
+  -mfx-color: -md-sys-color-on-secondary-container
+}
+
+.mfx-icon-button.tonal > .surface {
+  -fx-background-color: -md-sys-color-on-secondary-container
+}
+
+.mfx-icon-button.tonal.toggle:selected {
+  -fx-background-color: -md-sys-color-secondary
+}
+
+.mfx-icon-button.tonal.toggle:selected > .mfx-icon-wrapper > .mfx-font-icon {
+  -mfx-color: -md-sys-color-on-secondary
+}
+
+.mfx-icon-button.tonal.toggle:selected > .surface {
+  -fx-background-color: -md-sys-color-on-secondary
 }
