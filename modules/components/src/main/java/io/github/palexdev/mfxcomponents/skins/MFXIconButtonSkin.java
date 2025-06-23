@@ -43,11 +43,19 @@ import javafx.scene.paint.Color;
 
 import static io.github.palexdev.mfxcore.events.WhenEvent.intercept;
 
+/// Default skin implementation for all [MFXIconButton][MFXIconButton]s and is just a simplification of the [MFXButtonSkin].
+/// Icon buttons are designed to only show an icon, no text. Therefore we can optimize the skin to not have a label node.
+///
+/// This skin uses behaviors of type [MFXButtonBehavior].
+///
+/// The layout is simple: the [MFXSurface] responsible for showing the various interaction states (applying an overlay background)
+/// and the [MFXIconWrapper] responsible for showing the icon. We use the [MFXRippleGenerator] inside [MFXIconWrapper]
+/// for convenience.
 public class MFXIconButtonSkin extends SkinBase<MFXButton, MFXButtonBehavior> {
     //================================================================================
     // Properties
     //================================================================================
-    private final MFXIconWrapper icon;
+    protected final MFXIconWrapper icon;
     private final MFXSurface surface;
 
     //================================================================================
@@ -95,6 +103,11 @@ public class MFXIconButtonSkin extends SkinBase<MFXButton, MFXButtonBehavior> {
     // Overridden Methods
     //================================================================================
 
+    /// Adds the following handlers:
+    /// - [MouseEvent#MOUSE_PRESSED] to call [MFXButtonBehavior#mousePressed]
+    /// - [MouseEvent#MOUSE_CLICKED] to call [MFXButtonBehavior#mouseClicked]
+    /// - [KeyEvent#KEY_PRESSED] to call [MFXButtonBehavior#keyPressed] and to generate the ripple effect at the center
+    /// when the ENTER or SPACEBAR keys are pressed.
     @Override
     protected void initBehavior(MFXButtonBehavior behavior) {
         MFXButton button = getSkinnable();

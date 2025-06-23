@@ -21,7 +21,6 @@ package io.github.palexdev.mfxcomponents.variants.button;
 import io.github.palexdev.mfxcomponents.variants.Variant;
 
 public enum SizeVariant implements Variant {
-    // Size
     XS,
     S,
     M,

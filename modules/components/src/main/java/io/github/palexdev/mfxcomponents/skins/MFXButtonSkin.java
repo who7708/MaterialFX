@@ -67,6 +67,12 @@ public class MFXButtonSkin<C extends MFXButtonBase<B>, B extends MFXButtonBehavi
     //================================================================================
     // Overridden Methods
     //================================================================================
+
+    /// Adds the following handlers:
+    /// - [MouseEvent#MOUSE_PRESSED] to call [B#mousePressed(MouseEvent)]
+    /// - [MouseEvent#MOUSE_CLICKED] to call [B#mouseClicked(MouseEvent)]
+    /// - [KeyEvent#KEY_PRESSED] to call [B#keyPressed(KeyEvent)] and to generate the ripple effect at the center
+    /// when the ENTER or SPACEBAR keys are pressed.
     @Override
     protected void initBehavior(B behavior) {
         C button = getSkinnable();
