@@ -21,11 +21,9 @@ package io.github.palexdev.mfxcore.base.beans;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 
-/**
- * JavaFX allows you to create custom {@code Bounds} objects, see {@link BoundingBox}, the thing is
- * that it automatically computes the max X/Y/Z values. This can be quite unfortunate in some rare
- * cases because maybe you need some kind of special bounds, this bean is specifically for such edge cases.
- */
+/// JavaFX allows you to create custom `Bounds` objects, see [BoundingBox], the thing is that it automatically computes
+/// the max X/Y/Z values. This can be quite unfortunate in some rare cases because maybe you need some kind of special bounds,
+/// this bean is specifically for such edge cases.
 public class CustomBounds {
     //================================================================================
     // Properties
@@ -61,9 +59,7 @@ public class CustomBounds {
     // Static Methods
     //================================================================================
 
-    /**
-     * @return a copy of the given {@link Bounds} object as a {@code CustomBounds} object.
-     */
+    /// @return a copy of the given [Bounds] object as a `CustomBounds` object.
     public static CustomBounds from(Bounds bounds) {
         return new CustomBounds(
             bounds.getMinX(),

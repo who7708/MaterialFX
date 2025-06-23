@@ -1,16 +1,14 @@
 package io.github.palexdev.mfxcore.base.properties.styleable;
 
+import java.util.Arrays;
+import java.util.function.Function;
+
 import io.github.palexdev.mfxcore.base.beans.Position;
 import javafx.css.*;
 import javafx.scene.text.Font;
 
-import java.util.Arrays;
-import java.util.function.Function;
-
-/**
- * Convenience {@link StyleableObjectProperty} for {@link io.github.palexdev.mfxcore.base.beans.Position}, settable via CSS thanks to
- * {@link StyleablePositionProperty.PositionConverter}.
- */
+/// Convenience [StyleableObjectProperty] for [Position], settable via CSS thanks to [StyleablePositionProperty.PositionConverter].
+// TODO add support for units
 public class StyleablePositionProperty extends StyleableObjectProperty<Position> {
 
     //================================================================================
@@ -65,21 +63,12 @@ public class StyleablePositionProperty extends StyleableObjectProperty<Position>
     // Internal Classes
     //================================================================================
 
-    /**
-     * Style converter implementation to make {@link Position} settable via CSS.
-     * The related property is {@link StyleablePositionProperty}.
-     * <p>
-     * For this to properly work, you must use a specific format. The converter expects a string value,
-     * with two double numbers which will be in order the x and the y for the new {@code Position}, so:
-     * <pre>
-     * {@code
-     * .node {
-     *     -fx-property-name: "100 30";
-     * }
-     * }
-     * </pre>
-     */
-
+    /// Style converter implementation to make [Position] settable via CSS.
+    /// The related property is [StyleablePositionProperty].
+    ///
+    /// For this to properly work, you must use a specific format. The converter expects a string value,
+    /// with two double numbers which will be in order the x and the y for the new `Position`, so:
+    /// `.node{-fx-property-name: "100 30";}`
     public static class PositionConverter extends StyleConverter<String, Position> {
 
         // lazy, thread-safe instantiation
@@ -87,11 +76,9 @@ public class StyleablePositionProperty extends StyleableObjectProperty<Position>
             static final PositionConverter INSTANCE = new PositionConverter();
         }
 
-        /**
-         * Gets the {@code SizeConverter} instance.
-         *
-         * @return the {@code SizeConverter} instance
-         */
+        /// Gets the `SizeConverter` instance.
+        ///
+        /// @return the `SizeConverter` instance
         public static StyleConverter<String, Position> getInstance() {
             return Holder.INSTANCE;
         }

@@ -27,12 +27,10 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.util.Duration;
 
-/**
- * Convenience factory for various animations applied to {@code Nodes}.
- *
- * @see #extraOffset
- * @see Timeline
- */
+/// Convenience factory for various animations applied to `Nodes`.
+///
+/// @see #extraOffset
+/// @see Timeline
 public enum AnimationFactory {
     FADE_IN {
         @Override
@@ -136,36 +134,30 @@ public enum AnimationFactory {
     public static final Interpolator INTERPOLATOR_V1 = Interpolator.SPLINE(0.25, 0.1, 0.25, 1);
     public static final Interpolator INTERPOLATOR_V2 = Interpolator.SPLINE(0.0825D, 0.3025D, 0.0875D, 0.9975D);
 
-    /**
-     * This special variable is used in slide animations when the "travel distance" is computed.
-     * This extra offset is added to the computed value to ensure the node is outside the parent, for a smooth animation.
-     */
+    /// This special variable is used in slide animations when the "travel distance" is computed.
+    /// This extra offset is added to the computed value to ensure the node is outside the parent, for a smooth animation.
     @SuppressWarnings("NonFinalFieldInEnum")
     public static double extraOffset = 5.0;
 
-    /**
-     * Computes the distance between the node and the left side of its parent by using its
-     * {@link Node#boundsInParentProperty()}. This distance ensures the node is going to be outside/inside the parent
-     * towards the animation's ending.
-     *
-     * @see #extraOffset
-     */
+    /// Computes the distance between the node and the left side of its parent by using its
+    /// [Node#boundsInParentProperty()]. This distance ensures the node is going to be outside/inside the parent
+    /// towards the animation's ending.
+    ///
+    /// @see #extraOffset
     public double computeDistanceLeft(Node node) {
         double w = node.getBoundsInParent().getWidth();
         return node.getBoundsInParent().getMinX() + w + extraOffset;
     }
 
-    /**
-     * Computes the distance between the node and the right side of its parent. For this computation the
-     * {@link Node#parentProperty()} must not return a {@code null} value (the node must be child of some other node).
-     * <p>
-     * If the parent is {@code null} a 'fallback' value is returned, that is the width of the node plus the extra offset.
-     * <p>
-     * Otherwise, the value is computed like this:
-     * {@code parent.getLayoutBounds().getWidth() - node.getBoundsInParent().getMaxX() + node.getBoundsInParent().getWidth() + extraOffset}
-     *
-     * @see #extraOffset
-     */
+    /// Computes the distance between the node and the right side of its parent. For this computation the
+    /// [Node#parentProperty()] must not return a `null` value (the node must be a child of some other node).
+    ///
+    /// If the parent is `null,` a 'fallback' value is returned: the width of the node plus the extra offset.
+    ///
+    /// Otherwise, the value is computed like this:
+    /// `parent.getLayoutBounds().getWidth() - node.getBoundsInParent().getMaxX() + node.getBoundsInParent().getWidth() + extraOffset`
+    ///
+    /// @see #extraOffset
     public double computeDistanceRight(Node node) {
         double w = node.getBoundsInParent().getWidth();
         Parent parent = node.getParent();
@@ -173,29 +165,25 @@ public enum AnimationFactory {
         return parent.getLayoutBounds().getWidth() - node.getBoundsInParent().getMaxX() + w + extraOffset;
     }
 
-    /**
-     * Computes the distance between the node and the top side of its parent by using its
-     * {@link Node#boundsInParentProperty()}. This distance ensures the node is going to be outside/inside the parent
-     * towards the animation's ending.
-     *
-     * @see #extraOffset
-     */
+    /// Computes the distance between the node and the top side of its parent by using its
+    /// [Node#boundsInParentProperty()]. This distance ensures the node is going to be outside/inside the parent
+    /// towards the animation's ending.
+    ///
+    /// @see #extraOffset
     public double computeDistanceTop(Node node) {
         double h = node.getBoundsInParent().getHeight();
         return node.getBoundsInParent().getMinY() + h + extraOffset;
     }
 
-    /**
-     * Computes the distance between the node and the bottom side of its parent. For this computation the
-     * {@link Node#parentProperty()} must not return a {@code null} value (the node must be child of some other node).
-     * <p>
-     * If the parent is {@code null} a 'fallback' value is returned, that is the height of the node plus the extra offset.
-     * <p>
-     * Otherwise, the value is computed like this:
-     * {@code parent.getLayoutBounds().getHeight() - node.getBoundsInParent().getMaxY() + node.getBoundsInParent().getHeight() + extraOffset}
-     *
-     * @see #extraOffset
-     */
+    /// Computes the distance between the node and the bottom side of its parent. For this computation the
+    /// [Node#parentProperty()] must not return a `null` value (the node must be a child of some other node).
+    ///
+    /// If the parent is `null`, a 'fallback' value is returned: the height of the node plus the extra offset.
+    ///
+    /// Otherwise, the value is computed like this:
+    /// `parent.getLayoutBounds().getHeight() - node.getBoundsInParent().getMaxY() + node.getBoundsInParent().getHeight() + extraOffset`
+    ///
+    /// @see #extraOffset
     public double computeDistanceBottom(Node node) {
         double h = node.getBoundsInParent().getHeight();
         Parent parent = node.getParent();
@@ -203,41 +191,31 @@ public enum AnimationFactory {
         return parent.getLayoutBounds().getHeight() - node.getBoundsInParent().getMaxY() + h + extraOffset;
     }
 
-    /**
-     * Calls {@link #build(Node, double, Interpolator)} with {@link #INTERPOLATOR_V1} as the default interpolator.
-     */
+    /// Calls [#build(Node, double, Interpolator)] with [#INTERPOLATOR_V1] as the default interpolator.
     public Timeline build(Node node, double millis) {
         return build(node, millis, INTERPOLATOR_V1);
     }
 
-    /**
-     * Calls {@link #build(Node, double)} with the given duration converted to milliseconds.
-     */
+    /// Calls [#build(Node, double)] with the given duration converted to milliseconds.
     public Timeline build(Node node, Duration duration) {
         return build(node, duration.toMillis());
     }
 
-    /**
-     * Calls {@link #build(Node, double, Interpolator)} with the given duration converted to milliseconds and the given
-     * interpolator.
-     */
+    /// Calls [#build(Node, double, Interpolator)] with the given duration converted to milliseconds and the given
+    /// interpolator.
     public Timeline build(Node node, Duration duration, Interpolator i) {
         return build(node, duration.toMillis(), i);
     }
 
-    /**
-     * Each enum constant will produce a {@link Timeline} with the given parameters.
-     *
-     * @param node   the {@link Node} on which perform the animation
-     * @param millis the duration of the animation in milliseconds
-     * @param i      the {@link Interpolator} used by the animations
-     */
+    /// Each enum constant will produce a [Timeline] with the given parameters.
+    ///
+    /// @param node   the [Node] on which perform the animation
+    /// @param millis the duration of the animation in milliseconds
+    /// @param i      the [Interpolator] used by the animations
     public Timeline build(Node node, double millis, Interpolator i) {
         return TimelineBuilder.build().add(keyFrames(node, millis, i)).getAnimation();
     }
 
-    /**
-     * Each enum constant should produce the {@link KeyFrame}s for the animation from the given parameters.
-     */
+    /// Each enum constant should produce the [KeyFrames][KeyFrame] for the animation from the given parameters.
     public abstract KeyFrame[] keyFrames(Node node, double millis, Interpolator i);
 }

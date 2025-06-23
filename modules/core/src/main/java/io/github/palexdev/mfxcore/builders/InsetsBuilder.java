@@ -21,9 +21,7 @@ package io.github.palexdev.mfxcore.builders;
 import javafx.geometry.Insets;
 import javafx.scene.layout.CornerRadii;
 
-/**
- * Convenience class to build {@link Insets} objects.
- */
+/// Convenience class to build [Insets] objects.
 public class InsetsBuilder {
     //================================================================================
     // Properties

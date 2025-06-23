@@ -18,62 +18,46 @@
 
 package io.github.palexdev.mfxcore.utils;
 
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+
 import io.github.palexdev.mfxcore.base.beans.range.DoubleRange;
 import io.github.palexdev.mfxcore.base.beans.range.FloatRange;
 import io.github.palexdev.mfxcore.base.beans.range.IntegerRange;
 import io.github.palexdev.mfxcore.base.beans.range.LongRange;
 
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-
-/**
- * Utils class for working with numbers.
- */
+/// Utils class for working with numbers.
 public class NumberUtils {
 
-    private NumberUtils() {
-    }
+    private NumberUtils() {}
 
-    /**
-     * Limits the given value to the given min-max range by returning the nearest bound
-     * if it exceeds or val if it's in range.
-     */
+    /// Limits the given value to the given min-max range by returning the nearest bound if it exceeds or val if it's in range.
     public static double clamp(double val, double min, double max) {
         return Math.max(min, Math.min(max, val));
     }
 
-    /**
-     * Limits the given value to the given min-max range by returning the nearest bound
-     * if it exceeds or val if it's in range.
-     */
+    /// Limits the given value to the given min-max range by returning the nearest bound if it exceeds or val if it's in range.
     public static float clamp(float val, float min, float max) {
         return Math.max(min, Math.min(max, val));
     }
 
-    /**
-     * Limits the given value to the given min-max range by returning the nearest bound
-     * if it exceeds or val if it's in range.
-     */
+    /// Limits the given value to the given min-max range by returning the nearest bound if it exceeds or val if it's in range.
     public static int clamp(int val, int min, int max) {
         return Math.max(min, Math.min(max, val));
     }
 
-    /**
-     * Limits the given value to the given min-max range by returning the nearest bound
-     * if it exceeds or val if it's in range.
-     */
+    /// Limits the given value to the given min-max range by returning the nearest bound if it exceeds or val if it's in range.
     public static long clamp(long val, long min, long max) {
         return Math.max(min, Math.min(max, val));
     }
 
-    /**
-     * Given a certain value, the range of possible values, and a different range, converts the given value
-     * from its range to the given second range.
-     * <p></p>
-     * For example let's say I have a value of 0 that can go from -100 to 100 and I want to convert the
-     * value to a range of 0 to 100, the converted value will be 50 (0 is at the middle in the -100-100 range, and
-     * 50 is at the middle in the 0-100 range).
-     */
+    /// Given a certain value, the range of possible values, and a different range, converts the given value
+    /// from its range to the given second range.
+    ///
+    ///
+    /// For example let's say I have a value of 0 that can go from -100 to 100 and I want to convert the
+    /// value to a range of 0 to 100, the converted value will be 50 (0 is at the middle in the -100-100 range, and
+    /// 50 is at the middle in the 0-100 range).
     public static double mapOneRangeToAnother(double value, DoubleRange fromRange, DoubleRange toRange, int decimalPrecision) {
         double deltaA = fromRange.getMax() - fromRange.getMin();
         double deltaB = toRange.getMax() - toRange.getMin();
@@ -85,14 +69,13 @@ public class NumberUtils {
         return (double) Math.round(finalNumber * calcScale) / calcScale;
     }
 
-    /**
-     * Given a certain value, the range of possible values, and a different range, converts the given value
-     * from its range to the given second range.
-     * <p></p>
-     * For example let's say I have a value of 0 that can go from -100 to 100 and I want to convert the
-     * value to a range of 0 to 100, the converted value will be 50 (0 is at the middle in the -100-100 range, and
-     * 50 is at the middle in the 0-100 range).
-     */
+    /// Given a certain value, the range of possible values, and a different range, converts the given value
+    /// from its range to the given second range.
+    ///
+    ///
+    /// For example let's say I have a value of 0 that can go from -100 to 100 and I want to convert the
+    /// value to a range of 0 to 100, the converted value will be 50 (0 is at the middle in the -100-100 range, and
+    /// 50 is at the middle in the 0-100 range).
     public static float mapOneRangeToAnother(float value, FloatRange fromRange, FloatRange toRange, int decimalPrecision) {
         double deltaA = fromRange.getMax() - fromRange.getMin();
         double deltaB = toRange.getMax() - toRange.getMin();
@@ -104,14 +87,13 @@ public class NumberUtils {
         return (float) Math.round(finalNumber * calcScale) / calcScale;
     }
 
-    /**
-     * Given a certain value, the range of possible values, and a different range, converts the given value
-     * from its range to the given second range.
-     * <p></p>
-     * For example let's say I have a value of 0 that can go from -100 to 100 and I want to convert the
-     * value to a range of 0 to 100, the converted value will be 50 (0 is at the middle in the -100-100 range, and
-     * 50 is at the middle in the 0-100 range).
-     */
+    /// Given a certain value, the range of possible values, and a different range, converts the given value
+    /// from its range to the given second range.
+    ///
+    ///
+    /// For example let's say I have a value of 0 that can go from -100 to 100 and I want to convert the
+    /// value to a range of 0 to 100, the converted value will be 50 (0 is at the middle in the -100-100 range, and
+    /// 50 is at the middle in the 0-100 range).
     public static int mapOneRangeToAnother(int value, IntegerRange fromRange, IntegerRange toRange, int decimalPrecision) {
         double deltaA = fromRange.getMax() - fromRange.getMin();
         double deltaB = toRange.getMax() - toRange.getMin();
@@ -123,14 +105,13 @@ public class NumberUtils {
         return (int) Math.round(finalNumber * calcScale) / calcScale;
     }
 
-    /**
-     * Given a certain value, the range of possible values, and a different range, converts the given value
-     * from its range to the given second range.
-     * <p></p>
-     * For example let's say I have a value of 0 that can go from -100 to 100 and I want to convert the
-     * value to a range of 0 to 100, the converted value will be 50 (0 is at the middle in the -100-100 range, and
-     * 50 is at the middle in the 0-100 range).
-     */
+    /// Given a certain value, the range of possible values, and a different range, converts the given value
+    /// from its range to the given second range.
+    ///
+    ///
+    /// For example let's say I have a value of 0 that can go from -100 to 100 and I want to convert the
+    /// value to a range of 0 to 100, the converted value will be 50 (0 is at the middle in the -100-100 range, and
+    /// 50 is at the middle in the 0-100 range).
     public static long mapOneRangeToAnother(long value, LongRange fromRange, LongRange toRange, int decimalPrecision) {
         double deltaA = fromRange.getMax() - fromRange.getMin();
         double deltaB = toRange.getMax() - toRange.getMin();
@@ -142,14 +123,13 @@ public class NumberUtils {
         return Math.round(finalNumber * calcScale) / calcScale;
     }
 
-    /**
-     * Given a certain value, the range of possible values, and a different range, converts the given value
-     * from its range to the given second range.
-     * <p></p>
-     * For example let's say I have a value of 0 that can go from -100 to 100 and I want to convert the
-     * value to a range of 0 to 100, the converted value will be 50 (0 is at the middle in the -100-100 range, and
-     * 50 is at the middle in the 0-100 range).
-     */
+    /// Given a certain value, the range of possible values, and a different range, converts the given value
+    /// from its range to the given second range.
+    ///
+    ///
+    /// For example let's say I have a value of 0 that can go from -100 to 100 and I want to convert the
+    /// value to a range of 0 to 100, the converted value will be 50 (0 is at the middle in the -100-100 range, and
+    /// 50 is at the middle in the 0-100 range).
     public static double mapOneRangeToAnother(double value, DoubleRange fromRange, DoubleRange toRange) {
         double deltaA = fromRange.getMax() - fromRange.getMin();
         double deltaB = toRange.getMax() - toRange.getMin();
@@ -159,14 +139,13 @@ public class NumberUtils {
         return (value * scale) + offset;
     }
 
-    /**
-     * Given a certain value, the range of possible values, and a different range, converts the given value
-     * from its range to the given second range.
-     * <p></p>
-     * For example let's say I have a value of 0 that can go from -100 to 100 and I want to convert the
-     * value to a range of 0 to 100, the converted value will be 50 (0 is at the middle in the -100-100 range, and
-     * 50 is at the middle in the 0-100 range).
-     */
+    /// Given a certain value, the range of possible values, and a different range, converts the given value
+    /// from its range to the given second range.
+    ///
+    ///
+    /// For example let's say I have a value of 0 that can go from -100 to 100 and I want to convert the
+    /// value to a range of 0 to 100, the converted value will be 50 (0 is at the middle in the -100-100 range, and
+    /// 50 is at the middle in the 0-100 range).
     public static float mapOneRangeToAnother(float value, FloatRange fromRange, FloatRange toRange) {
         double deltaA = fromRange.getMax() - fromRange.getMin();
         double deltaB = toRange.getMax() - toRange.getMin();
@@ -176,14 +155,13 @@ public class NumberUtils {
         return (float) ((value * scale) + offset);
     }
 
-    /**
-     * Given a certain value, the range of possible values, and a different range, converts the given value
-     * from its range to the given second range.
-     * <p></p>
-     * For example let's say I have a value of 0 that can go from -100 to 100 and I want to convert the
-     * value to a range of 0 to 100, the converted value will be 50 (0 is at the middle in the -100-100 range, and
-     * 50 is at the middle in the 0-100 range).
-     */
+    /// Given a certain value, the range of possible values, and a different range, converts the given value
+    /// from its range to the given second range.
+    ///
+    ///
+    /// For example let's say I have a value of 0 that can go from -100 to 100 and I want to convert the
+    /// value to a range of 0 to 100, the converted value will be 50 (0 is at the middle in the -100-100 range, and
+    /// 50 is at the middle in the 0-100 range).
     public static int mapOneRangeToAnother(int value, IntegerRange fromRange, IntegerRange toRange) {
         double deltaA = fromRange.getMax() - fromRange.getMin();
         double deltaB = toRange.getMax() - toRange.getMin();
@@ -193,14 +171,13 @@ public class NumberUtils {
         return (int) ((value * scale) + offset);
     }
 
-    /**
-     * Given a certain value, the range of possible values, and a different range, converts the given value
-     * from its range to the given second range.
-     * <p></p>
-     * For example let's say I have a value of 0 that can go from -100 to 100 and I want to convert the
-     * value to a range of 0 to 100, the converted value will be 50 (0 is at the middle in the -100-100 range, and
-     * 50 is at the middle in the 0-100 range).
-     */
+    /// Given a certain value, the range of possible values, and a different range, converts the given value
+    /// from its range to the given second range.
+    ///
+    ///
+    /// For example let's say I have a value of 0 that can go from -100 to 100 and I want to convert the
+    /// value to a range of 0 to 100, the converted value will be 50 (0 is at the middle in the -100-100 range, and
+    /// 50 is at the middle in the 0-100 range).
     public static long mapOneRangeToAnother(long value, LongRange fromRange, LongRange toRange) {
         double deltaA = fromRange.getMax() - fromRange.getMin();
         double deltaB = toRange.getMax() - toRange.getMin();
@@ -210,9 +187,7 @@ public class NumberUtils {
         return (long) ((value * scale) + offset);
     }
 
-    /**
-     * Given a certain value, finds the closest value in the given numbers list.
-     */
+    /// Given a certain value, finds the closest value in the given numbers list.
     public static double closestValueTo(double val, List<Double> list) {
         if (list.isEmpty()) {
             return 0.0;
@@ -229,9 +204,7 @@ public class NumberUtils {
         return res;
     }
 
-    /**
-     * Given a certain value, finds the closest value in the given numbers list.
-     */
+    /// Given a certain value, finds the closest value in the given numbers list.
     public static float closestValueTo(float val, List<Float> list) {
         if (list.isEmpty()) {
             return 0;
@@ -248,9 +221,7 @@ public class NumberUtils {
         return res;
     }
 
-    /**
-     * Given a certain value, finds the closest value in the given numbers list.
-     */
+    /// Given a certain value, finds the closest value in the given numbers list.
     public static int closestValueTo(int val, List<Integer> list) {
         if (list.isEmpty()) {
             return 0;
@@ -267,9 +238,7 @@ public class NumberUtils {
         return res;
     }
 
-    /**
-     * Given a certain value, finds the closest value in the given numbers list.
-     */
+    /// Given a certain value, finds the closest value in the given numbers list.
     public static long closestValueTo(long val, List<Long> list) {
         if (list.isEmpty()) {
             return 0;
@@ -286,60 +255,46 @@ public class NumberUtils {
         return res;
     }
 
-    /**
-     * Formats the given double value to have the given number of decimal places.
-     */
+    /// Formats the given double value to have the given number of decimal places.
     public static double formatTo(double value, int decimalPrecision) {
         int calcScale = (int) Math.pow(10, decimalPrecision);
         return (double) Math.round(value * calcScale) / calcScale;
     }
 
-    /**
-     * Returns the given value as a string the specified number of decimal places.
-     */
+    /// Returns the given value as a string the specified number of decimal places.
     public static String formatToString(double value, int decimalPrecision) {
         return String.format("%." + decimalPrecision + "f", value);
     }
 
-    /**
-     * Returns a random double between the specified min-max range.
-     * <p></p>
-     * Uses {@link ThreadLocalRandom#nextDouble(double, double)}.
-     */
+    /// Returns a random double between the specified min-max range.
+    ///
+    /// Uses [ThreadLocalRandom#nextDouble(double,double)].
     public static double getRandomDoubleBetween(double min, double max) {
         return ThreadLocalRandom.current().nextDouble(min, max);
     }
 
-    /**
-     * Returns a random float value between 0 and 1.
-     * <p></p>
-     * Uses {@link ThreadLocalRandom#nextFloat()}
-     */
+    /// Returns a random float value between 0 and 1.
+    ///
+    /// Uses [ThreadLocalRandom#nextFloat()]
     public static float getRandomFloat() {
         return ThreadLocalRandom.current().nextFloat();
     }
 
-    /**
-     * Returns a random int value between the specified min-max range.
-     * <p></p>
-     * Uses {@link ThreadLocalRandom#nextInt(int, int)}.
-     */
+    /// Returns a random int value between the specified min-max range.
+    ///
+    /// Uses [ThreadLocalRandom#nextInt(int,int)].
     public static int getRandomIntBetween(int min, int max) {
         return ThreadLocalRandom.current().nextInt(min, max);
     }
 
-    /**
-     * Returns a random long value between the specified min-max range.
-     * <p></p>
-     * Uses {@link ThreadLocalRandom#nextLong(long, long)}.
-     */
+    /// Returns a random long value between the specified min-max range.
+    ///
+    /// Uses [ThreadLocalRandom#nextLong(long,long)].
     public static long getRandomLongBetween(long min, long max) {
         return ThreadLocalRandom.current().nextLong(min, max);
     }
 
-    /**
-     * Checks if the given number is even or odd, just a convenience method for aesthetic.
-     */
+    /// Checks if the given number is even or odd, just a convenience method for aesthetic.
     public static boolean isEven(int number) {
         return (number % 2 == 0);
     }

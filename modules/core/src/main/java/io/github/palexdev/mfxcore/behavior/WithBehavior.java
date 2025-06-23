@@ -23,41 +23,31 @@ import java.util.function.Supplier;
 import io.github.palexdev.mfxcore.base.properties.functional.SupplierProperty;
 import javafx.scene.Node;
 
-/**
- * Public API for all components that want to integrate with the new Behavior API.
- *
- * @param <B> the type of behavior the component will use
- * @see BehaviorBase
- */
+/// Public API for all components that want to integrate with the new Behavior API.
+///
+/// @param <B> the type of behavior the component will use
+/// @see BehaviorBase
 public interface WithBehavior<B extends BehaviorBase<? extends Node>> {
 
-    /**
-     * @return the instance of the current behavior object
-     */
+    /// @return the instance of the current behavior object
     B getBehavior();
 
-    /**
-     * @return a {@link Supplier} that is the provider for the default behavior used by the component.
-     */
+    /// @return a [Supplier] that is the provider for the default behavior used by the component.
     Supplier<B> defaultBehaviorProvider();
 
     default Supplier<B> getBehaviorProvider() {
         return behaviorProviderProperty().get();
     }
 
-    /**
-     * Specifies the {@link Supplier} used to produce a behavior object for the component.
-     */
+    /// Specifies the [Supplier] used to produce a behavior object for the component.
     SupplierProperty<B> behaviorProviderProperty();
 
     default void setBehaviorProvider(Supplier<B> factory) {
         behaviorProviderProperty().set(factory);
     }
 
-    /**
-     * Restores the component's behavior to the default one using {@link #defaultBehaviorProvider()}
-     * and {@link #setBehaviorProvider(Supplier)}.
-     */
+    /// Restores the component's behavior to the default one using [#defaultBehaviorProvider()]
+    /// and [#setBehaviorProvider(Supplier)].
     default void setDefaultBehaviorProvider() {
         setBehaviorProvider(defaultBehaviorProvider());
     }

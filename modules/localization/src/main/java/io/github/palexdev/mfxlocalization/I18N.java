@@ -18,6 +18,11 @@
 
 package io.github.palexdev.mfxlocalization;
 
+import java.text.MessageFormat;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.concurrent.Callable;
+
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -25,17 +30,10 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.stage.Stage;
 
-import java.text.MessageFormat;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.concurrent.Callable;
-
-/**
- * Class to handle internationalization.
- * <p>
- * To change the project's language you should use {@link #setLanguage(Language)} before
- * loading any node (for example at the top of the {@link Application#start(Stage)} method).
- */
+/// Class to handle internationalization.
+///
+/// To change the project's language you should use [#setLanguage(Language)] before
+/// loading any node (for example at the top of the [Application#start(Stage)] method).
 public class I18N {
     //================================================================================
     // Properties
@@ -54,30 +52,24 @@ public class I18N {
     // Methods
     //================================================================================
 
-    /**
-     * @return the String associated with the given key.
-     * The resource bundle used is loaded from the current specified locale, {@link #localeProperty()}
-     */
+    /// @return the String associated with the given key.
+    /// The resource bundle used is loaded from the current specified locale, [#localeProperty()]
     public static String get(String key, Object... args) {
         ResourceBundle bundle = getBundle(getLocale());
         return MessageFormat.format(bundle.getString(key), args);
     }
 
-    /**
-     * @return the String associated with the given key.
-     * The resource bundle used is loaded from the specified language parameter
-     */
+    /// @return the String associated with the given key.
+    /// The resource bundle used is loaded from the specified language parameter
     public static String get(Language language, String key, Object... args) {
         ResourceBundle bundle = getBundle(language.getLocale());
         return MessageFormat.format(bundle.getString(key), args);
     }
 
-    /**
-     * @return the String associated with the given key.
-     * The resource bundle used is loaded from the current specified locale, {@link #localeProperty()}
-     * If the bundle doesn't provide any value for the given key, returns the value from the
-     * default language, {@link Language#defaultLanguage()}
-     */
+    /// @return the String associated with the given key.
+    /// The resource bundle used is loaded from the current specified locale, [#localeProperty()]
+    /// If the bundle doesn't provide any value for the given key, returns the value from the
+    /// default language, [Language#defaultLanguage()]
     public static String getOrDefault(String key, Object... args) {
         ResourceBundle bundle = getBundle(getLocale());
         try {
@@ -88,12 +80,10 @@ public class I18N {
         }
     }
 
-    /**
-     * @return the String associated with the given key.
-     * The resource bundle used is loaded from the specified language parameter.
-     * If the bundle doesn't provide any value for the given key, returns the value from the
-     * default language, {@link Language#defaultLanguage()}
-     */
+    /// @return the String associated with the given key.
+    /// The resource bundle used is loaded from the specified language parameter.
+    /// If the bundle doesn't provide any value for the given key, returns the value from the
+    /// default language, [Language#defaultLanguage()]
     public static String getOrDefault(Language language, String key, Object... args) {
         ResourceBundle bundle = getBundle(language.getLocale());
         try {
@@ -104,11 +94,9 @@ public class I18N {
         }
     }
 
-    /**
-     * @return the String associated with the given key.
-     * The resource bundle used is loaded from the current specified locale, {@link #localeProperty()}
-     * If the bundle doesn't provide any value for the given key, returns the given def parameter
-     */
+    /// @return the String associated with the given key.
+    /// The resource bundle used is loaded from the current specified locale, [#localeProperty()]
+    /// If the bundle doesn't provide any value for the given key, returns the given def parameter
     public static String getOrDefault(String key, String def, Object... args) {
         ResourceBundle bundle = getBundle(getLocale());
         try {
@@ -119,11 +107,9 @@ public class I18N {
         }
     }
 
-    /**
-     * @return the String associated with the given key.
-     * The resource bundle used is loaded from the specified language parameter.
-     * If the bundle doesn't provide any value for the given key, returns the given def parameter
-     */
+    /// @return the String associated with the given key.
+    /// The resource bundle used is loaded from the specified language parameter.
+    /// If the bundle doesn't provide any value for the given key, returns the given def parameter
     public static String getOrDefault(Language language, String key, String def, Object... args) {
         ResourceBundle bundle = getBundle(language.getLocale());
         try {
@@ -134,25 +120,19 @@ public class I18N {
         }
     }
 
-    /**
-     * @return a {@link StringBinding} that updates whenever the {@link #localeProperty()} changes.
-     * The localized String is loaded using {@link #getOrDefault(String, Object...)}
-     */
+    /// @return a [StringBinding] that updates whenever the [#localeProperty()] changes.
+    /// The localized String is loaded using [#getOrDefault(String,Object...)]
     public static StringBinding getBinding(String key, Object... args) {
         return Bindings.createStringBinding(() -> getOrDefault(key, args), locale);
     }
 
-    /**
-     * @return a {@link StringBinding} that updates whenever the {@link #localeProperty()} changes.
-     * The value is computed according to the given {@link Callable}
-     */
+    /// @return a [StringBinding] that updates whenever the [#localeProperty()] changes.
+    /// The value is computed according to the given [Callable]
     public static StringBinding getBinding(Callable<String> callable) {
         return Bindings.createStringBinding(callable, locale);
     }
 
-    /**
-     * Responsible for loading a {@link ResourceBundle} for the given Locale
-     */
+    /// Responsible for loading a [ResourceBundle] for the given Locale
     private static ResourceBundle getBundle(Locale locale) {
         return ResourceBundle.getBundle(getBundleBaseName(), locale);
     }
@@ -164,15 +144,13 @@ public class I18N {
         return locale.get();
     }
 
-    /**
-     * Specifies the current MaterialFX language.
-     * <p></p>
-     * <b>NOTE:</b> it is not recommended to set the Locale from this property, you
-     * should use the given setter, {@link #setLanguage(Language)}, since MaterialFX may not
-     * support all Locales.
-     *
-     * @see Language
-     */
+    /// Specifies the current MaterialFX language.
+    ///
+    /// **NOTE:** it is not recommended to set the Locale from this property, you
+    /// should use the given setter, [#setLanguage(Language)], since MaterialFX may not
+    /// support all Locales.
+    ///
+    /// @see Language
     public static ObjectProperty<Locale> localeProperty() {
         return locale;
     }
@@ -181,16 +159,12 @@ public class I18N {
         locale.set(language.getLocale());
     }
 
-    /**
-     * @return all the supported languages
-     */
+    /// @return all the supported languages
     public static Language[] getSupportedLanguages() {
         return Language.values();
     }
 
-    /**
-     * @return the {@link ResourceBundle}'s base name
-     */
+    /// @return the [ResourceBundle]'s base name
     public static String getBundleBaseName() {
         return "io.github.palexdev.mfxlocalization.mfxlang";
     }

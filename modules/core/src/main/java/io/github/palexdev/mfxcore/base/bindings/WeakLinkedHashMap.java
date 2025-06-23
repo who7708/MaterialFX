@@ -24,18 +24,16 @@ import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * A special {@link WeakHashMap} that allows to retrieve the keys ordered by insertion.
- * <p>
- * Writing a {@code LinkedWeakHashMap} would have been too much work and a very hard task.
- * For this reason this Map simply uses a {@link LinkedList} to store the keys (wrapped in {@link WeakReference}s) by
- * their insertion order.
- * <p></p>
- * Just like the {@link WeakHashMap} this list is cleared (all null references are removed) when
- * major operations occur, such as: put, putAll, combine.
- * <p></p>
- * Allows to retrieve the first and the last keys, and also a <b>copy</b> of the actual {@link LinkedList}.
- */
+/// A special [WeakHashMap] that allows to retrieve the keys ordered by insertion.
+///
+/// Writing a `LinkedWeakHashMap` would have been too much work and a very hard task.
+/// For this reason this Map simply uses a [LinkedList] to store the keys (wrapped in [WeakReference]s) by
+/// their insertion order.
+///
+/// Just like the [WeakHashMap] this list is cleared (all null references are removed) when
+/// major operations occur, such as: put, putAll, combine.
+///
+/// Allows retrieving the first and the last keys, and also a **copy** of the actual [LinkedList].
 public class WeakLinkedHashMap<K, V> extends WeakHashMap<K, V> {
     //================================================================================
     // Properties
@@ -64,10 +62,8 @@ public class WeakLinkedHashMap<K, V> extends WeakHashMap<K, V> {
     // Methods
     //================================================================================
 
-    /**
-     * Scans the {@link LinkedList} contains the keys references and removes the null ones.
-     * Also calls {@link #size()} to also trigger the {@link WeakHashMap} cleaning too.
-     */
+    /// Scans the [LinkedList] contains the keys references and removes the null ones.
+    /// Also calls [#size()] to also trigger the [WeakHashMap] cleaning too.
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private void clearReferences() {
         orderedKeys.removeIf(reference -> reference != null && reference.get() == null);
@@ -85,54 +81,43 @@ public class WeakLinkedHashMap<K, V> extends WeakHashMap<K, V> {
     @SafeVarargs
     private void updateKeysList(Map.Entry<K, V>... entries) {
         LinkedHashSet<K> uniqueKeys = orderedKeys.stream().map(WeakReference::get).collect(Collectors.toCollection(LinkedHashSet::new));
-        List<K> keys = Stream.of(entries).map(Map.Entry::getKey).collect(Collectors.toList());
+        List<K> keys = Stream.of(entries).map(Map.Entry::getKey).toList();
         uniqueKeys.addAll(keys);
         orderedKeys = uniqueKeys.stream().map(WeakReference::new).collect(Collectors.toCollection(LinkedList::new));
         clearReferences();
     }
 
 
-    /**
-     * Allows to combine the given {@code BindingsMap} to this one.
-     * <p>
-     * This method exists to ensure that insertion order is kept with the {@link LinkedList} but most
-     * importantly ensures that there are no duplicates in the list by using a {@link LinkedHashSet}.
-     */
+    /// Allows combining the given `BindingsMap` to this one.
+    ///
+    /// This method exists to ensure that the insertion order is kept with the [LinkedList] but most
+    ///  importantly, ensures that there are no duplicates in the list by using a [LinkedHashSet].
     public void combine(WeakLinkedHashMap<K, V> source) {
         LinkedHashSet<K> uniqueKeys = Stream.concat(orderedKeys.stream(), source.orderedKeys.stream())
             .map(WeakReference::get)
             .collect(Collectors.toCollection(LinkedHashSet::new));
         orderedKeys = uniqueKeys.stream().map(WeakReference::new).collect(LinkedList::new, LinkedList::add, LinkedList::addAll);
         clearReferences();
-        for (Map.Entry<K, V> entry : source.entrySet()) {
-            super.put(entry.getKey(), entry.getValue());
-        }
+        super.putAll(source);
     }
 
-    /**
-     * Adds the given key to the keys {@link LinkedList}, performs {@link #clearReferences()}
-     * and then calls the super method.
-     */
+    /// Adds the given key to the keys [LinkedList], performs [#clearReferences()] and then calls the super method.
     @Override
     public V put(K key, V value) {
         updateKeysList(key);
         return super.put(key, value);
     }
 
-    /**
-     * Overridden to call {@link #putAll(Map.Entry[])}.
-     */
+    /// Overridden to call [#putAll(Map.Entry[])].
     @SuppressWarnings("unchecked")
     @Override
     public void putAll(Map<? extends K, ? extends V> m) {
         putAll(m.entrySet().toArray(Map.Entry[]::new));
     }
 
-    /**
-     * For each entry adds the key to the keys {@link LinkedList},
-     * then calls the super method.
-     * At the end performs {@link #clearReferences()}.
-     */
+    /// For each entry adds the key to the keys [LinkedList], then calls the super method.
+    ///
+    /// At the end performs [#clearReferences()].
     @SafeVarargs
     public final void putAll(Map.Entry<K, V>... entries) {
         updateKeysList(entries);
@@ -141,51 +126,38 @@ public class WeakLinkedHashMap<K, V> extends WeakHashMap<K, V> {
         }
     }
 
-    /**
-     * Removes the given key from the keys {@link LinkedList}
-     * and then calls the super method.
-     */
+    /// Removes the given key from the keys [LinkedList] and then calls the super method.
     @Override
     public V remove(Object key) {
         orderedKeys.removeIf(reference -> reference != null && reference.get() == key);
         return super.remove(key);
     }
 
-    /**
-     * Clears the keys {@link LinkedList} and then calls the super method.
-     */
+    /// Clears the keys [LinkedList] and then calls the super method.
     @Override
     public void clear() {
         orderedKeys.clear();
         super.clear();
     }
 
-    /**
-     * UNSUPPORTED
-     */
+    /// @throws UnsupportedOperationException
     @Override
     public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * @return a copy of the {@link LinkedList} containing the Map's keys ordered by insertion
-     */
+    /// @return a copy of the [LinkedList] containing the Map's keys ordered by insertion
     public LinkedList<WeakReference<K>> unmodifiableKeysList() {
         return new LinkedList<>(orderedKeys);
     }
 
-    /**
-     * @return the first inserted key
-     */
+    /// @return the first inserted key
     public K getFirstKey() {
         if (isEmpty()) return null;
         return orderedKeys.getFirst().get();
     }
 
-    /**
-     * @return the last inserted key
-     */
+    /// @return the last inserted key
     public K getLastKey() {
         if (isEmpty()) return null;
         return orderedKeys.getLast().get();

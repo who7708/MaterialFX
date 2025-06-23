@@ -184,7 +184,7 @@ public class MFXButton extends MFXSelectable<MFXButtonBehavior> implements WithV
     /// Specifies the button's behavior, either as a regular button or as a toggle.
     /// Applies/removes the `.toggle` CSS style class to the button as needed.
     ///
-    /// Can be set in CSS via the property: '-mfx-toggleable'.
+    /// Can be set from CSS via the property: '-mfx-toggleable'.
     ///
     /// #### Note!
     ///

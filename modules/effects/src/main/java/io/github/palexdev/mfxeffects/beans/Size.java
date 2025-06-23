@@ -18,15 +18,13 @@
 
 package io.github.palexdev.mfxeffects.beans;
 
+import java.util.Objects;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 
-import java.util.Objects;
-
-/**
- * This bean contains two {@link DoubleProperty} to keep track/specify the sizes of something
- * in terms of width and height.
- */
+/// This bean contains two [DoubleProperty] to keep track/specify the sizes of something
+/// in terms of width and height.
 public class Size {
     //================================================================================
     // Properties
@@ -49,16 +47,12 @@ public class Size {
         return new Size(width, height);
     }
 
-    /**
-     * @return a new {@code Size} object with both width and height set to 0
-     */
+    /// @return a new `Size` object with both width and height set to 0
     public static Size empty() {
         return of(0, 0);
     }
 
-    /**
-     * @return a new {@code Size} object with both width and height set to -1
-     */
+    /// @return a new `Size` object with both width and height set to -1
     public static Size invalid() {
         return of(-1, -1);
     }

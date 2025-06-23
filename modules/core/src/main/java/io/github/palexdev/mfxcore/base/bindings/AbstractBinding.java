@@ -18,26 +18,24 @@
 
 package io.github.palexdev.mfxcore.base.bindings;
 
+import java.util.Optional;
+
 import io.github.palexdev.mfxcore.base.bindings.base.IBinding;
 import io.github.palexdev.mfxcore.enums.BindingState;
 import javafx.beans.value.ObservableValue;
 
-import java.util.Optional;
-
-/**
- * Base class for all types of bindings, implements {@link IBinding}.
- * <p>
- * This abstract class allows to have common properties in one place (such as the {@code Target} and the state) but
- * adds new features as well.
- * <p></p>
- * This defines a map of particular {@code Sources}, {@link ExternalSource}, which can be used to perform any operation
- * when they change. However, they are intended to invalidate the binding when needed, in special occasions.
- * <p></p>
- * This also defines a series of {@link Runnable}s that allow to run operations before and after the aforementioned
- * invalidations.
- *
- * @param <T> the type of the target's observable
- */
+/// Base class for all types of bindings, implements [IBinding].
+///
+/// This abstract class allows having common properties in one place (such as the `Target` and the state) but
+/// adds new features as well.
+///
+/// This defines a map of particular `Sources`, [ExternalSource], which can be used to perform any operation
+/// when they change. However, they are intended to invalidate the binding when needed, on special occasions.
+///
+/// This also defines a series of [Runnables][Runnable] that allow running operations before and after the aforementioned
+/// invalidations.
+///
+/// @param <T> the type of the target's observable
 @SuppressWarnings("rawtypes")
 public abstract class AbstractBinding<T> implements IBinding<T> {
     //================================================================================
@@ -47,22 +45,16 @@ public abstract class AbstractBinding<T> implements IBinding<T> {
     protected BindingState state = BindingState.NULL;
     protected final WeakLinkedHashMap<ObservableValue, ExternalSource> invalidatingSources = new WeakLinkedHashMap<>();
 
-    protected Runnable beforeTargetInvalidation = () -> {
-    };
-    protected Runnable beforeSourceInvalidation = () -> {
-    };
-    protected Runnable afterTargetInvalidation = () -> {
-    };
-    protected Runnable afterSourceInvalidation = () -> {
-    };
+    protected Runnable beforeTargetInvalidation = () -> {};
+    protected Runnable beforeSourceInvalidation = () -> {};
+    protected Runnable afterTargetInvalidation = () -> {};
+    protected Runnable afterSourceInvalidation = () -> {};
 
     //================================================================================
     // Abstract Methods
     //================================================================================
 
-    /**
-     * Adds and activates the given {@link ExternalSource} to this binding.
-     */
+    /// Adds and activates the given [ExternalSource] to this binding.
     public abstract <S> AbstractBinding<T> addInvalidatingSource(ExternalSource<S> source);
 
     //================================================================================
@@ -78,112 +70,74 @@ public abstract class AbstractBinding<T> implements IBinding<T> {
         return state;
     }
 
-    /**
-     * Shortcut for:
-     * <pre>
-     * {@code
-     * addInvalidatingSource(new ExternalSource<>(source)
-     *          .setAction((o, n) -> invalidate());
-     * }
-     * </pre>
-     */
+    /// Shortcut for: `addInvalidatingSource(new ExternalSource<>(source).setAction((o, n) -> invalidate());`
     public <S> AbstractBinding<T> addTargetInvalidatingSource(ObservableValue<? extends S> source) {
         return addInvalidatingSource(new ExternalSource<>(source).setAction((o, n) -> invalidate()));
     }
 
-    /**
-     * Shortcut for:
-     * <pre>
-     * {@code
-     * addInvalidatingSource(new ExternalSource<>(source)
-     *          .setAction((o, n) -> invalidateSource());
-     * }
-     * </pre>
-     */
+    /// Shortcut for: `addInvalidatingSource(new ExternalSource<>(source).setAction((o, n) -> invalidateSource());`
     public <S> AbstractBinding<T> addSourcesInvalidatingSource(ObservableValue<? extends S> source) {
         return addInvalidatingSource(new ExternalSource<>(source).setAction((o, n) -> invalidateSource()));
     }
 
-    /**
-     * Removes and disposes the given {@link ExternalSource} from this binding.
-     */
+    /// Removes and disposes the given [ExternalSource] from this binding.
     public <S> AbstractBinding<T> removeInvalidatingSource(ObservableValue<? extends S> source) {
         Optional.ofNullable(invalidatingSources.remove(source))
             .ifPresent(ExternalSource::dispose);
         return this;
     }
 
-    /**
-     * Calls {@link #removeInvalidatingSource(ObservableValue)} with {@link ExternalSource#getObservable()}.
-     */
+    /// Calls [#removeInvalidatingSource(ObservableValue)] with [ExternalSource#getObservable()].
     public <S> AbstractBinding<T> removeInvalidatingSource(ExternalSource<S> source) {
         return removeInvalidatingSource(source.getObservable());
     }
 
-    /**
-     * Disposes and removes all the {@link ExternalSource}s from this binding.
-     */
+    /// Disposes and removes all the [ExternalSources][ExternalSource] from this binding.
     public AbstractBinding<T> clearInvalidatingSources() {
         invalidatingSources.values().forEach(ExternalSource::dispose);
         invalidatingSources.clear();
         return this;
     }
 
-    /**
-     * @return the action performed before invalidating the target
-     */
+    /// @return the action performed before invalidating the target.
     public Runnable getBeforeTargetInvalidation() {
         return beforeTargetInvalidation;
     }
 
-    /**
-     * Sets the action to perform before invalidating the target.
-     */
+    /// Sets the action to perform before invalidating the target.
     public AbstractBinding<T> setBeforeTargetInvalidation(Runnable beforeTargetInvalidation) {
         this.beforeTargetInvalidation = beforeTargetInvalidation;
         return this;
     }
 
-    /**
-     * @return the action performed before invalidating the source
-     */
+    /// @return the action performed before invalidating the source.
     public Runnable getBeforeSourceInvalidation() {
         return beforeSourceInvalidation;
     }
 
-    /**
-     * Sets the action to perform before invalidating the source.
-     */
+    /// Sets the action to perform before invalidating the source.
     public AbstractBinding<T> setBeforeSourceInvalidation(Runnable beforeSourceInvalidation) {
         this.beforeSourceInvalidation = beforeSourceInvalidation;
         return this;
     }
 
-    /**
-     * @return the action performed after invalidating the target
-     */
+    /// @return the action performed after invalidating the target.
     public Runnable getAfterTargetInvalidation() {
         return afterTargetInvalidation;
     }
 
-    /**
-     * Sets the action to perform after invalidating the target.
-     */
+    /// Sets the action to perform after invalidating the target.
     public AbstractBinding<T> setAfterTargetInvalidation(Runnable afterTargetInvalidation) {
         this.afterTargetInvalidation = afterTargetInvalidation;
         return this;
     }
 
-    /**
-     * @return the action performed after invalidating the source
-     */
+    /// @return the action performed after invalidating the source.
     public Runnable getAfterSourceInvalidation() {
         return afterSourceInvalidation;
     }
 
-    /**
-     * Sets the action to perform after invalidating the source.
-     */
+    /// Sets the action to perform after invalidating the source.
     public AbstractBinding<T> setAfterSourceInvalidation(Runnable afterSourceInvalidation) {
         this.afterSourceInvalidation = afterSourceInvalidation;
         return this;

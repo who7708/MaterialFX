@@ -21,17 +21,14 @@ package io.github.palexdev.mfxeffects.animations.motion;
 import io.github.palexdev.mfxeffects.animations.base.Curve;
 import io.github.palexdev.mfxeffects.utils.NumberUtils;
 
-/**
- * A curve that is 0.0 until {@code begin}, then curved (according to given {@code Curve}) from
- * 0.0 at {@code begin} to 1.0 at {@code end}, then remains 1.0 past {@code end}.
- * <p>
- * An {@code Interval} can be used to delay an animation. For example, a six-second
- * animation that uses an {@code Interval} with its {@code begin} set to 0.5 and its {@code end}
- * set to 1.0 will essentially become a three-second animation that starts
- * three seconds later.
- * <p>
- * <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_interval.mp4>Interval</a>
- */
+/// A curve that is `0.0` until `begin`, then curved (according to the given `Curve`) from
+/// `0.0` at `begin` to `1.0` at `end` then remains `1.0` past `end`.
+///
+/// An `Interval` can be used to delay an animation.
+/// For example, a six-second animation that uses an `Interval` with its `begin` set to 0.5 and its `end`
+/// set to 1.0 will essentially become a three-second animation that starts three seconds later.
+///
+/// [Interval](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_interval.mp4)
 public class Interval extends Curve {
     private final double begin;
     private final double end;

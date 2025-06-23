@@ -22,11 +22,9 @@ import io.github.palexdev.mfxcore.base.bindings.base.Updater;
 import io.github.palexdev.mfxcore.enums.BindingType;
 import javafx.beans.value.ObservableValue;
 
-/**
- * Concrete implementation of {@link AbstractSource} the most basic type of source.
- *
- * @param <S> both the source's and target's observables type
- */
+/// Concrete implementation of [AbstractSource], the most basic type of source.
+///
+/// @param <S> both the source's and target's observables type
 public class Source<S> extends AbstractSource<S, S> {
     //================================================================================
     // Properties
@@ -52,17 +50,15 @@ public class Source<S> extends AbstractSource<S, S> {
     // Methods
     //================================================================================
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * Operates differently depending on which binding activated this.
-     * <p>
-     * For unidirectional bindings the target instance is null so the {@link #getTargetUpdater()} is called
-     * then exits.
-     * <p>
-     * For bidirectional bindings the target instance is not null. Before calling the {@link #getTargetUpdater()}
-     * we first must check that the update is not has not been invoked because of a "bounce" effect, {@link Target#isFromSource()}.
-     */
+    /// {@inheritDoc}
+    ///
+    /// Operates differently depending on which binding activated this.
+    ///
+    /// For unidirectional bindings the target instance is `null`, so the [#getTargetUpdater()] is called
+    /// then exits.
+    ///
+    /// For bidirectional bindings the target instance is not null. Before calling the [#getTargetUpdater()]
+    /// we first must check that the update is not has not been invoked because of a "bounce" effect, [Target#isFromSource()].
     @Override
     public void updateTarget(S oldValue, S newValue) {
         if (target.bindingType() == BindingType.UNIDIRECTIONAL) {
@@ -79,18 +75,16 @@ public class Source<S> extends AbstractSource<S, S> {
         targetUpdater.update(oldValue, newValue);
     }
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * Operates differently depending on which binding activated this.
-     * <p>
-     * For unidirectional bindings the target instance is null so the {@link #getTargetUpdater()} is called
-     * then exits.
-     * <p>
-     * For bidirectional bindings the target instance is not null. The call to {@link #getSourceUpdater()}
-     * is surrounded by a try-finally block in which we also set {@link Target#isFromSource()} to true, if anything goes wrong
-     * the finally block ensures to reset {@link Target#isFromSource()} back to false.
-     */
+    /// {@inheritDoc}
+    ///
+    /// Operates differently depending on which binding activated this.
+    ///
+    /// For unidirectional bindings the target instance is `null`, so the [#getTargetUpdater()] is called
+    /// then exits.
+    ///
+    /// For bidirectional bindings the target instance is not null. The call to [#getSourceUpdater()]
+    /// is surrounded by a try-finally block in which we also set [Target#isFromSource()] to true, if anything goes wrong,
+    /// the finally block ensures to reset [Target#isFromSource()] back to false.
     @Override
     public void updateSource(S oldValue, S newValue) {
         if (target == null) {
@@ -106,25 +100,21 @@ public class Source<S> extends AbstractSource<S, S> {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * For unidirectional bindings. The listener added to this source's observable is responsible for
-     * triggering {@link #updateTarget(Object, Object)}.
-     */
+    /// {@inheritDoc}
+    ///
+    /// For unidirectional bindings. The listener added to this source's observable is responsible for
+    /// triggering [#updateTarget(Object,Object)].
     @Override
     protected void listen() {
         if (obvListener == null) obvListener = (ov, o, n) -> updateTarget(o, n);
         observable.addListener(obvListener);
     }
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * For bidirectional bindings. The source's target is set to the given one.
-     * Then {@link #listen()} is called. Then a listener to the given target is added and is responsible for
-     * triggering {@link #updateSource(Object, Object)}.
-     */
+    /// {@inheritDoc}
+    ///
+    /// For bidirectional bindings. The source's target is set to the given one.
+    /// Then [#listen()] is called. Then a listener to the given target is added and is responsible for
+    /// triggering [#updateSource(Object,Object)].
     @Override
     protected void listen(Target<S> target) {
         listen();
@@ -134,12 +124,10 @@ public class Source<S> extends AbstractSource<S, S> {
         target.getObservable().addListener(tgtListener);
     }
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * Removes the listeners added to this source's observable and the target's observable (if not null).
-     * Then sets all its properties and listeners to null.
-     */
+    /// {@inheritDoc}
+    ///
+    /// Removes the listeners added to this source's observable and the target's observable (if not `null`).
+    /// Then sets all its properties and listeners to `null`.
     @Override
     public void dispose() {
         observable.removeListener(obvListener);
@@ -156,49 +144,37 @@ public class Source<S> extends AbstractSource<S, S> {
     // Getters/Setters
     //================================================================================
 
-    /**
-     * @return the {@link Updater} responsible for updating the target
-     */
+    /// @return the [Updater] responsible for updating the target
     public Updater<S> getTargetUpdater() {
         return targetUpdater;
     }
 
-    /**
-     * Sets the target {@link Updater}.
-     */
+    /// Sets the target [Updater].
     public Source<S> setTargetUpdater(Updater<S> targetUpdater) {
         this.targetUpdater = targetUpdater;
         return this;
     }
 
-    /**
-     * @return the {@link Updater} responsible for updating the source
-     */
+    /// @return the [Updater] responsible for updating the source
     public Updater<S> getSourceUpdater() {
         return sourceUpdater;
     }
 
-    /**
-     * Sets the source {@link Updater}.
-     */
+    /// Sets the source [Updater].
     public Source<S> setSourceUpdater(Updater<S> sourceUpdater) {
         this.sourceUpdater = sourceUpdater;
         return this;
     }
 
-    /**
-     * Attempts set the target updater by using {@link Updater#implicit(ObservableValue)}
-     * on the given target.
-     */
+    /// Attempts to set the target updater by using [#implicit(ObservableValue)]
+    /// on the given target.
     public Source<S> implicit(ObservableValue<? extends S> target) {
         targetUpdater = Updater.implicit(target);
         return this;
     }
 
-    /**
-     * Attempts to set the target and sources updater by using {@link Updater#implicit(ObservableValue)}
-     * on both the given target and source.
-     */
+    /// Attempts to set the target and sources updater by using [#implicit(ObservableValue)]
+    /// on both the given target and source.
     public Source<S> implicit(ObservableValue<? extends S> target, ObservableValue<? extends S> source) {
         targetUpdater = Updater.implicit(target);
         sourceUpdater = Updater.implicit(source);

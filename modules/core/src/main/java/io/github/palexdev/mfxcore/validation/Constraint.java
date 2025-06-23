@@ -22,18 +22,14 @@ import io.github.palexdev.mfxcore.enums.ChainMode;
 import io.github.palexdev.mfxcore.observables.When;
 import javafx.beans.binding.BooleanExpression;
 
-/**
- * Bean used by {@link MFXValidator} to define a condition to be met in order
- * for the validator' state to be valid.
- * <p></p>
- * This bean allows to specify the {@link Severity} of the condition, the message
- * to show when invalid, and of course the {@link BooleanExpression} that is the condition itself.
- * <p>
- * It also allows to specify how this constraint should chain with others by setting its {@link ChainMode},
- * {@link #setChainMode(ChainMode)}.
- * <p></p>
- * To build a constraint you can use the offered static methods, the {@link Builder}, or the parameterized constructors.
- */
+/// Bean used by [MFXValidator] to define a condition to be met in order for the validator's state to be valid.
+///
+/// This bean allows specifying the [Severity] of the condition, the message to show when invalid,
+/// and of course the [BooleanExpression] that is the condition itself.
+///
+/// It also allows specifying how this constraint should chain with others by setting its [ChainMode], [#setChainMode(ChainMode)].
+///
+/// To build a constraint, you can use the offered static methods, the [Builder], or the parameterized constructors.
 public class Constraint {
     //================================================================================
     // Properties
@@ -51,9 +47,7 @@ public class Constraint {
     protected Constraint() {
     }
 
-    /**
-     * Calls {@link #Constraint(Severity, String, BooleanExpression)} with {@link Severity#ERROR}.
-     */
+    /// Calls [#Constraint(Severity,String,BooleanExpression)] with [Severity#ERROR].
     public Constraint(String message, BooleanExpression condition) {
         this(Severity.ERROR, message, condition);
     }
@@ -71,16 +65,12 @@ public class Constraint {
     // Static Methods
     //================================================================================
 
-    /**
-     * @return a new {@code Constraint} with ERROR severity and the given message and condition
-     */
+    /// @return a new `Constraint` with ERROR severity and the given message and condition
     public static Constraint of(String message, BooleanExpression condition) {
         return new Constraint(message, condition);
     }
 
-    /**
-     * @return a new {@code Constraint} with the given severity, message and condition
-     */
+    /// @return a new `Constraint` with the given severity, message and condition
     public static Constraint of(Severity severity, String message, BooleanExpression condition) {
         return new Constraint(severity, message, condition);
     }
@@ -89,13 +79,11 @@ public class Constraint {
     // Methods
     //================================================================================
 
-    /**
-     * Used by {@link MFXValidator} when the constraint in being removed from it.
-     * <p>
-     * Upon its creation a listener is added to update the validator with the {@link When}
-     * construct. Since we need the instance to properly dispose it afterward, we store the reference here,
-     * the disposal can then be easily automatically handled by {@link MFXValidator#removeConstraint(Constraint)}.
-     */
+    /// Used by [MFXValidator] when the constraint in being removed from it.
+    ///
+    /// Upon its creation, a listener is added to update the validator with the [When]
+    /// construct. Since we need the instance to properly dispose of it afterward, we store the reference here;
+    /// the disposal can then be easily automatically handled by [MFXValidator#removeConstraint(Constraint)].
     protected void dispose() {
         if (when != null) when.dispose();
     }
@@ -104,65 +92,47 @@ public class Constraint {
     // Getters/Setters
     //================================================================================
 
-    /**
-     * @return whether the specified condition is valid
-     */
+    /// @return whether the specified condition is valid
     public boolean isValid() {
         return condition.getValue();
     }
 
-    /**
-     * @return the severity of the condition
-     */
+    /// @return the severity of the condition
     public Severity getSeverity() {
         return severity;
     }
 
-    /**
-     * Sets the severity of the condition.
-     */
+    /// Sets the severity of the condition.
     protected void setSeverity(Severity severity) {
         this.severity = severity;
     }
 
-    /**
-     * @return the message to show in case the condition is not valid
-     */
+    /// @return the message to show in case the condition is not valid
     public String getMessage() {
         return message;
     }
 
-    /**
-     * Sets the message to show in case the condition is not valid.
-     */
+    /// Sets the message to show in case the condition is not valid.
     protected void setMessage(String message) {
         this.message = message;
     }
 
-    /**
-     * @return the {@link BooleanExpression} used to define the condition
-     */
+    /// @return the [BooleanExpression] used to define the condition
     public BooleanExpression getCondition() {
         return condition;
     }
 
-    /**
-     * Sets the {@link BooleanExpression} used to define the condition.
-     */
+    /// Sets the [BooleanExpression] used to define the condition.
     protected void setCondition(BooleanExpression condition) {
         this.condition = condition;
     }
 
-    /**
-     * @return the mode defining how this constraint will be chained to other constraints
-     */
+    /// @return the mode defining how this constraint will be chained to other constraints
     public ChainMode getChainMode() {
         return chainMode;
     }
 
-    /**
-     * Sets the mode defining how this constraint will be chained to other constraints.
-     */
+    /// Sets the mode defining how this constraint will be chained to other constraints.
     public Constraint setChainMode(ChainMode chainMode) {
         this.chainMode = chainMode;
         return this;

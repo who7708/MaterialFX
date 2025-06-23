@@ -28,9 +28,7 @@ import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyFloatWrapper;
 import javafx.beans.value.ObservableValue;
 
-/**
- * Implementation of {@link SynchronizedProperty} for float values.
- */
+/// Implementation of [SynchronizedProperty] for float values.
 public class SynchronizedFloatProperty extends ReadOnlyFloatWrapper implements SynchronizedProperty<Number> {
     //================================================================================
     // Properties
@@ -64,9 +62,7 @@ public class SynchronizedFloatProperty extends ReadOnlyFloatWrapper implements S
     // Implemented/Overridden Methods
     //================================================================================
 
-    /**
-     * {@inheritDoc}
-     */
+    /// {@inheritDoc}
     @Override
     public void setAndWait(Number value, ObservableValue<?> observable) {
         if (!Helper.check(this, value, observable)) return;
@@ -79,35 +75,27 @@ public class SynchronizedFloatProperty extends ReadOnlyFloatWrapper implements S
         set(value.floatValue());
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /// {@inheritDoc}
     @Override
     public boolean isWaiting() {
         return waiting.get();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /// {@inheritDoc}
     @Override
     public ReadOnlyBooleanProperty waiting() {
         return waiting.getReadOnlyProperty();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /// {@inheritDoc}
     @Override
     public void awake() {
         waiting.set(false);
     }
 
-    /**
-     * {@inheritDoc}
-     * <p></p>
-     * Overridden to not fire a change event if {@link #waiting()} is true.
-     */
+    /// {@inheritDoc}
+    ///
+    /// Overridden to not fire a change event if [#waiting()] is true.
     @Override
     protected void fireValueChangedEvent() {
         if (isWaiting()) return;
@@ -118,16 +106,14 @@ public class SynchronizedFloatProperty extends ReadOnlyFloatWrapper implements S
     // Binding
     //================================================================================
 
-    /**
-     * Creates a unidirectional bindings with the given observable.
-     * <p>
-     * The binding is created using the new {@link MFXBindings} mechanism.
-     * <p></p>
-     * If the property is already bound it is automatically unbound before bindings to the new observable.
-     *
-     * @throws IllegalArgumentException if the given observable is the property itself
-     * @see MFXBindings
-     */
+    /// Creates a unidirectional bindings with the given observable.
+    ///
+    /// The binding is created using the new [MFXBindings] mechanism.
+    ///
+    /// If the property is already bound, it is automatically unbound before bindings to the new observable.
+    ///
+    /// @throws IllegalArgumentException if the given observable is the property itself
+    /// @see MFXBindings
     @Override
     public void bind(ObservableValue<? extends Number> source) {
         if (this == source) {
@@ -138,19 +124,17 @@ public class SynchronizedFloatProperty extends ReadOnlyFloatWrapper implements S
         MFXBindings.instance().bind(this).source(source).get();
     }
 
-    /**
-     * Creates a bidirectional bindings between this property and the given property.
-     * <p>
-     * The binding is created using the new {@link MFXBindings} mechanism.
-     * <p></p>
-     * If the property is already bound unidirectionally it is automatically unbound.
-     * <p>
-     * If the property is already bound bidirectionally it won't be automatically unbound, just like JavaFX,
-     * this way you can have multiple bidirectional bindings
-     *
-     * @throws IllegalArgumentException if the given observable is the property itself
-     * @see MFXBindings
-     */
+    /// Creates a bidirectional bindings between this property and the given property.
+    ///
+    /// The binding is created using the new [MFXBindings] mechanism.
+    ///
+    /// If the property is already bound unidirectionally, it is automatically unbound.
+    ///
+    /// If the property is already bound bidirectionally, it won't be automatically unbound, just like JavaFX,
+    /// this way you can have multiple bidirectional bindings
+    ///
+    /// @throws IllegalArgumentException if the given observable is the property itself
+    /// @see MFXBindings
     @Override
     public void bindBidirectional(Property<Number> other) {
         if (this == other) {
@@ -162,34 +146,26 @@ public class SynchronizedFloatProperty extends ReadOnlyFloatWrapper implements S
             .addSource(new Source<>(other).implicit(this, other)).get();
     }
 
-    /**
-     * Overridden to call {@link MFXBindings#unbind(ObservableValue)}.
-     */
+    /// Overridden to call [MFXBindings#unbind(ObservableValue)].
     @Override
     public void unbind() {
         MFXBindings.instance().unbind(this);
     }
 
-    /**
-     * Overridden to call {@link MFXBindings#unbindBidirectional(ObservableValue, ObservableValue)}.
-     */
+    /// Overridden to call [MFXBindings#unbindBidirectional(ObservableValue,ObservableValue)].
     @Override
     public void unbindBidirectional(Property<Number> other) {
         MFXBindings.instance().unbindBidirectional(this, other);
     }
 
-    /**
-     * Delegate method for {@link MFXBindings#disposeBidirectional(ObservableValue)}.
-     */
+    /// Delegate method for [MFXBindings#disposeBidirectional(ObservableValue)].
     public void clearBidirectional() {
         MFXBindings.instance().disposeBidirectional(this);
     }
 
-    /**
-     * Overridden to check the {@link MFXBindings#isBound(ObservableValue)} and {@link MFXBindings#isIgnoreBinding(ObservableValue)}.
-     *
-     * @return true only if `MFXBindings.isBound()` is true and `isIgnoreBound()` is false
-     */
+    /// Overridden to check the [MFXBindings#isBound(ObservableValue)] and [MFXBindings#isIgnoreBinding(ObservableValue)].
+    ///
+    /// @return true only if `MFXBindings.isBound()` is true and `isIgnoreBound()` is false
     @Override
     public boolean isBound() {
         return MFXBindings.instance().isBound(this) && !MFXBindings.instance().isIgnoreBinding(this);

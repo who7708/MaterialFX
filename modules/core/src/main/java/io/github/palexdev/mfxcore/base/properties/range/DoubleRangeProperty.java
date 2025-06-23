@@ -22,9 +22,7 @@ import io.github.palexdev.mfxcore.base.beans.range.DoubleRange;
 import io.github.palexdev.mfxcore.base.beans.range.NumberRange;
 import io.github.palexdev.mfxcore.base.properties.base.NumberRangeProperty;
 
-/**
- * Implementation of {@link NumberRangeProperty} for {@code Double} ranges.
- */
+/// Implementation of [NumberRangeProperty] for `Double` ranges.
 public class DoubleRangeProperty extends NumberRangeProperty<Double> {
 
     //================================================================================

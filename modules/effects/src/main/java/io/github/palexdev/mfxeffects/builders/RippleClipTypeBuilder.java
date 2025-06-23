@@ -24,9 +24,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
-/**
- * Convenience class for building Ripple clip shapes.
- */
+/// Convenience class for building Ripple clip shapes.
 public class RippleClipTypeBuilder {
     private RippleClipType rippleClipType = RippleClipType.NO_CLIP;
     private double radius = 0;

@@ -18,16 +18,14 @@
 
 package io.github.palexdev.mfxcore.utils.converters;
 
-import javafx.util.StringConverter;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Locale;
 
-/**
- * A {@link StringConverter} capable of converting {@link LocalDate} to/from Strings.
- */
+import javafx.util.StringConverter;
+
+/// A [StringConverter] capable of converting [LocalDate] to/from Strings.
 public class DateStringConverter extends StringConverter<LocalDate> {
     //================================================================================
     // Properties

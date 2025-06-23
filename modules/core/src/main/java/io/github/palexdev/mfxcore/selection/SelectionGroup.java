@@ -11,44 +11,40 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
 
-/**
- * Custom implementation and expansion of that pitiful thing that is {@link javafx.scene.control.ToggleGroup}.
- * <p>
- * A {@code SelectionGroup} will work with anything that implements the necessary API described by the {@link Selectable}
- * interface. Not only that, it is also a lot more flexible and convenient.
- * <p>
- * You can set the selection to be single or multiple, by just setting the {@link #selectionModeProperty()}, as well as
- * tell the group to always keep at least one {@link Selectable} active, by setting the {@link #atLeastOneSelectedProperty()}
- * to true. All of these can be changed anytime, although you better know the side effects of some particular cases, will
- * be listed below.
- * <p>
- * So you now have a grouping API for everything, not only controls, as long as they implement {@link Selectable}, and you
- * also have capabilities such as 'at most/at least one selected', in single and multiple configurations, in just one class!
- * <p></p>
- * All of this sounds good right? Well, there are some caveats of course.
- * <p>
- * First of all, keep in mind that if you want to use this you will be forced to use the two custom properties:
- * {@link SelectionProperty} and {@link SelectionGroupProperty}, the reason for this is to make the implementation/integration
- * for users less of a pain and less error-prone, more info can be found in the relative's docs.
- * <p>
- * Since this also supports multiple selection, for obvious reasons, the selection is a collection of {@code Selectables}.
- * To be precise, both the collections used to keep the {@code Selectables} that are managed by the group, ant the ones
- * that are currently selected, are {@link ObservableSet} backed by a {@link LinkedHashSet}. As you may have guessed, Sets
- * are not the best for element retrieval unlike Lists (at least until sequenced collections become a thing), for this
- * reason there is a convenience method, {@link #getFirstSelected()}, that allows to get the first selected {@code Selectable}
- * in the Set. The usage of such collections vastly helps to avoid duplicates while also having fast lookups (contains).
- * <p></p>
- * <b>Special cases when changing config</b>
- * <p> 1) When switching from MULTIPLE to SINGLE selection mode, the selection will be the same only and only if there was
- * only one {@code Selectable} in the selection Set, in all other cases the selection is <b>cleared!</b>
- * <p> 2) When activating the 'atLeastOneSelected' mode, if there are {@code Selectables} in the group the first will
- * be immediately selected! If none is available, the first added to the group will be.
- * <p> 3) If 'atLeastOneSelected' mode is active and multiple {@code Selectables} are added at the same time to the group,
- * and two or more of them are selected, the last will prevail, the others will be deselected (if in SINGLE selection mode)
- * <p></p>
- * Last but not least, to avoid some if statements, this makes use of polymorphism delegating the selection handling to
- * two internal classes, one for SINGLE selection mode, the other for the MULTIPLE mode.
- */
+/// Custom implementation and expansion of that pitiful thing that is [javafx.scene.control.ToggleGroup].
+///
+/// A `SelectionGroup` will work with anything that implements the necessary API described by the [Selectable]
+/// interface. Not only that, it is also a lot more flexible and convenient.
+///
+/// You can set the selection to be single or multiple, by just setting the [#selectionModeProperty()], as well as
+/// tell the group to always keep at least one [Selectable] active, by setting the [#atLeastOneSelectedProperty()]
+/// to true. All of these can be changed anytime, although you better know the side effects of some particular cases, will
+/// be listed below.
+///
+/// So you now have a grouping API for everything, not only controls, as long as they implement [Selectable], and you
+/// also have capabilities such as 'at most/at least one selected', in single and multiple configurations, in just one class!
+///
+/// All of this sounds good right? Well, there are some caveats of course.
+///
+/// First of all, keep in mind that if you want to use this you will be forced to use the two custom properties:
+/// [SelectionProperty] and [SelectionGroupProperty], the reason for this is to make the implementation/integration
+/// for users less of a pain and less error-prone, more info can be found in the relative's docs.
+///
+/// Since this also supports multiple selection, for obvious reasons, the selection is a collection of `Selectables`.
+/// To be precise, both the collections used to keep the `Selectables` that are managed by the group, and the ones
+/// that are currently selected, are [ObservableSet] backed by a [LinkedHashSet].
+/// The usage of such collections vastly helps to avoid duplicates while also having fast lookups (contains).
+///
+/// **Special cases when changing config**
+///  1) When switching from MULTIPLE to SINGLE selection mode, the selection will be the same only and only if there was
+/// only one `Selectable` in the selection Set, in all other cases the selection is **cleared!**
+///  2) When activating the 'atLeastOneSelected' mode, if there are `Selectables` in the group the first will
+/// be immediately selected! If none is available, the first added to the group will be.
+///  3) If 'atLeastOneSelected' mode is active and multiple `Selectables` are added at the same time to the group,
+/// and two or more of them are selected, the last will prevail, the others will be deselected (if in SINGLE selection mode)
+///
+/// Last but not least, to avoid some if statements, this makes use of polymorphism delegating the selection handling to
+/// two internal classes, one for SINGLE selection mode, the other for the MULTIPLE mode.
 public class SelectionGroup {
     //================================================================================
     // Properties
@@ -74,10 +70,14 @@ public class SelectionGroup {
             }
         }
     };
-    private final ObservableSet<Selectable> selectables = FXCollections.observableSet(new LinkedHashSet<>());
-    private final ObservableSet<Selectable> selection = FXCollections.observableSet(new LinkedHashSet<>());
-    private SelectionHandler handler;
 
+    private final SequencedSet<Selectable> _selectables = new LinkedHashSet<>();
+    private final ObservableSet<Selectable> selectables = FXCollections.observableSet(_selectables);
+
+    private final SequencedSet<Selectable> _selection = new LinkedHashSet<>();
+    private final ObservableSet<Selectable> selection = FXCollections.observableSet(_selection);
+
+    private SelectionHandler handler;
     private boolean isSwitching = false;
     private boolean isRemoval = false;
 
@@ -104,17 +104,15 @@ public class SelectionGroup {
     // Methods
     //================================================================================
 
-    /**
-     * Adds the given {@link Selectable} to this group (if not already present).
-     * <p></p>
-     * If the given {@code Selectable}'s group is not the same as this, {@link Selectable#setSelectionGroup(SelectionGroup)}
-     * is also called. See {@link SelectionGroupProperty}.
-     * <p></p>
-     * When adding a {@code Selectable} to a group, there are a bunch of things to consider. The group has no guarantees
-     * that the given objects are in a state such that its rules won't be broken. For this reason, it's mandatory to perform
-     * a check on the {@code Selectable}'s state by invoking {@link #handleSelection(Selectable, boolean)}. If the returned
-     * correct state is different, then it's important to also fix it by invoking {@link Selectable#setSelected(boolean)}.
-     */
+    /// Adds the given [Selectable] to this group (if not already present).
+    ///
+    /// If the given `Selectable`'s group is not the same as this, [Selectable#setSelectionGroup(SelectionGroup)]
+    /// is also called. See [SelectionGroupProperty].
+    ///
+    /// When adding a `Selectable` to a group, there are a bunch of things to consider. The group has no guarantees
+    /// that the given objects are in a state such that its rules won't be broken. For this reason, it's mandatory to perform
+    /// a check on the `Selectable`'s state by invoking [#handleSelection(Selectable,boolean)]. If the returned
+    /// correct state is different, then it's important to also fix it by invoking [Selectable#setSelected(boolean)].
     public SelectionGroup add(Selectable selectable) {
         if (selectable == null || !selectables.add(selectable)) return this;
 
@@ -128,9 +126,7 @@ public class SelectionGroup {
         return this;
     }
 
-    /**
-     * Calls {@link #add(Selectable)} on each given {@code Selectable}.
-     */
+    /// Calls [#add(Selectable)] on each given `Selectable`.
     public SelectionGroup addAll(Selectable... selectables) {
         for (Selectable selectable : selectables) {
             add(selectable);
@@ -138,9 +134,7 @@ public class SelectionGroup {
         return this;
     }
 
-    /**
-     * Calls {@link #add(Selectable)} on each given {@code Selectable}.
-     */
+    /// Calls [#add(Selectable)] on each given `Selectable`.
     public SelectionGroup addAll(Collection<? extends Selectable> selectables) {
         for (Selectable selectable : selectables) {
             add(selectable);
@@ -148,11 +142,9 @@ public class SelectionGroup {
         return this;
     }
 
-    /**
-     * Removes the given {@link Selectable} from the group (if present).
-     * <p>
-     * The removal will also trigger {@link #onSelectablesChanged(SetChangeListener.Change)}.
-     */
+    /// Removes the given [Selectable] from the group (if present).
+    ///
+    /// The removal will also trigger [#onSelectablesChanged(SetChangeListener.Change)].
     public SelectionGroup remove(Selectable selectable) {
         if (!selectables.contains(selectable)) return this;
         isRemoval = true;
@@ -161,9 +153,7 @@ public class SelectionGroup {
         return this;
     }
 
-    /**
-     * Calls {@link #remove(Selectable)} on each given {@code Selectable}.
-     */
+    /// Calls [#remove(Selectable)] on each given `Selectable`.
     public SelectionGroup removeAll(Selectable... selectables) {
         for (Selectable selectable : selectables) {
             remove(selectable);
@@ -171,9 +161,7 @@ public class SelectionGroup {
         return this;
     }
 
-    /**
-     * Calls {@link #remove(Selectable)} on each given {@code Selectable}.
-     */
+    /// Calls [#remove(Selectable)] on each given `Selectable`.
     public SelectionGroup removeAll(Collection<? extends Selectable> selectables) {
         for (Selectable selectable : selectables) {
             remove(selectable);
@@ -181,26 +169,22 @@ public class SelectionGroup {
         return this;
     }
 
-    /**
-     * Removes all the {@link Selectable}s from the group.
-     */
+    /// Removes all the [Selectables][Selectable] from the group.
     public SelectionGroup clear() {
         selectables.clear();
         return this;
     }
 
-    /**
-     * Given a {@link Selectable} and its current or 'requested' state returns a value that won't break the rules
-     * of the {@code SelectionGroup}.
-     * <p>
-     * For example (but there are many other cases), if the 'atLeastOneSelected' mode is on, the given {@code Selectable}
-     * is the last selected one, and the requested selection state is 'false', the group won't allow it and return 'true'
-     * instead.
-     * <p>
-     * This is the same mechanism used by {@link SelectionProperty} to avoid 'illegal' selection states.
-     * <p>
-     * Delegates to the current selection handler.
-     */
+    /// Given a [Selectable] and its current or 'requested' state returns a value that won't break the rules
+    /// of the `SelectionGroup`.
+    ///
+    /// For example (but there are many other cases), if the 'atLeastOneSelected' mode is on, the given `Selectable`
+    /// is the last selected one, and the requested selection state is 'false', the group won't allow it and return 'true'
+    /// instead.
+    ///
+    /// This is the same mechanism used by [SelectionProperty] to avoid 'illegal' selection states.
+    ///
+    /// Delegates to the current selection handler.
     public boolean check(Selectable selectable, boolean state) {
         return handler.check(selectable, state);
     }
@@ -209,32 +193,28 @@ public class SelectionGroup {
     // Protected Methods
     //================================================================================
 
-    /**
-     * Given a {@link Selectable} and its current or 'requested' state returns a value that won't break the rules
-     * of the {@code SelectionGroup}.
-     * <p>
-     * This is used by {@link SelectionProperty} to not feed the {@link SelectionProperty#set(boolean)} method values that
-     * would break the rules of the {@link SelectionGroup}. In other words, when the state is requested to switch to
-     * selected/deselected, the property first asks the group if it is allowed, in case it is not, the {@code newValue}
-     * parameter is "corrected".
-     * <p></p>
-     * The difference between this and {@link #check(Selectable, boolean)} is that other than returning the correct state for
-     * the given {@link Selectable}, this will also modify the state of the group. In fact, according to the returned state,
-     * the given {@link Selectable} will be also added/removed to/from the selection Set ({@link #getSelection()}).
-     */
+    /// Given a [Selectable] and its current or 'requested' state returns a value that won't break the rules
+    /// of the `SelectionGroup`.
+    ///
+    /// This is used by [SelectionProperty] to not feed the [SelectionProperty#set(boolean)] method values that
+    /// would break the rules of the [SelectionGroup]. In other words, when the state is requested to switch to
+    /// selected/deselected, the property first asks the group if it is allowed, in case it is not, the `newValue`
+    /// parameter is "corrected".
+    ///
+    /// The difference between this and [#check(Selectable,boolean)] is that other than returning the correct state for
+    /// the given [Selectable], this will also modify the state of the group. In fact, according to the returned state,
+    /// the given [Selectable] will be also added/removed to/from the selection Set ([#getSelection()]).
     protected boolean handleSelection(Selectable selectable, boolean state) {
         if (!selectables.contains(selectable)) return state;
         return handler.handle(selectable, state);
     }
 
-    /**
-     * Triggers when a {@link Selectable} is removed from the {@link ObservableSet} containing all the {@code Selectables}
-     * managed by the group.
-     * <p>
-     * This will cause the {@link Selectable} to be also removed from the selection {@link ObservableSet} (meaning that
-     * {@link #onSelectionChanged(SetChangeListener.Change)} will also be triggered) as well as its {@code SelectionGroup}
-     * to be set to {@code null}.
-     */
+    /// Triggers when a [Selectable] is removed from the [ObservableSet] containing all the `Selectables`
+    /// managed by the group.
+    ///
+    /// This will cause the [Selectable] to be also removed from the selection [ObservableSet] (meaning that
+    /// [#onSelectionChanged(SetChangeListener.Change)] will also be triggered) as well as its `SelectionGroup`
+    /// to be set to `null`.
     protected void onSelectablesChanged(SetChangeListener.Change<? extends Selectable> c) {
         Selectable removed = c.getElementRemoved();
         if (c.wasRemoved()) {
@@ -243,17 +223,15 @@ public class SelectionGroup {
         }
     }
 
-    /**
-     * Triggers when a {@link Selectable} is removed from the {@link ObservableSet} containing all the {@code Selectables}
-     * that are currently selected.
-     * <p>
-     * This executes two actions in two specific occasions:
-     * <p> 1) If the removed {@code Selectable} is selected and the removal has not been triggered by any of the
-     * 'remove' methods then the {@code Selectable} is deselected ({@code selectable.setSelected(false)})
-     * <p> 2) If the selection is now empty, the 'atLeastOneSelected' mode is on and the removal was triggered by one of
-     * the 'remove' methods, then ensures that there's at least one {@code Selectable} that is selected by using
-     * {@link #getFirstSelectable()} and then if present {@code selectable.setSelected(true)}
-     */
+    /// Triggers when a [Selectable] is removed from the [ObservableSet] containing all the `Selectables`
+    /// that are currently selected.
+    ///
+    /// This executes two actions in two specific occasions:
+    ///  1) If the removed `Selectable` is selected and the removal has not been triggered by any of the
+    /// 'remove' methods then the `Selectable` is deselected (`selectable.setSelected(false)`)
+    ///  2) If the selection is now empty, the 'atLeastOneSelected' mode is on and the removal was triggered by one of
+    /// the 'remove' methods, then ensures that there's at least one `Selectable` that is selected by using
+    /// [#getFirstSelectable()] and then if present `selectable.setSelected(true)`
     protected void onSelectionChanged(SetChangeListener.Change<? extends Selectable> c) {
         Selectable removed = c.getElementRemoved();
         if (c.wasRemoved() && removed.isSelected() && !isRemoval) {
@@ -264,19 +242,17 @@ public class SelectionGroup {
         }
     }
 
-    /**
-     * @return the state of a special flag that indicates whether changes currently occurring in the group are caused
-     * by a "switch" operation. This occurs when the group is in SINGLE selection mode, and a {@link Selectable} is going
-     * to take the place of another one (the current selected).
-     * <p></p>
-     * More details: this flag is set to true when the selection Set is going to be cleared so that the new {@code Selectable}
-     * can take its place. The flag is reset immediately after. However, before the reset, listeners attached to the selection
-     * Set will trigger causing the {@link #handleSelection(Selectable, boolean)} to trigger again. This can be problematic
-     * when the "At least one selected" feature is on because since the "switch" process has not been completed yet, the
-     * group will try to select the first {@code Selectable} in the {@link #getSelectables()} Set, so that the rule is
-     * respected. This behavior is undesired, the flag will stop the group from doing this, afterward the "switch" process
-     * is completed.
-     */
+    /// @return the state of a special flag that indicates whether changes currently occurring in the group are caused
+    /// by a "switch" operation. This occurs when the group is in SINGLE selection mode, and a [Selectable] is going
+    /// to take the place of another one (the current selected).
+    ///
+    /// More details: this flag is set to true when the selection Set is going to be cleared so that the new `Selectable`
+    /// can take its place. The flag is reset immediately after. However, before the reset, listeners attached to the selection
+    /// Set will trigger, causing the [#handleSelection(Selectable, boolean)] to trigger again. This can be problematic
+    /// when the "At least one selected" feature is on. Since the "switch" process has not been completed yet, the
+    /// group will try to select the first `Selectable` in the [#getSelectables()] Set, so that the rule is
+    /// respected. This behavior is undesired; the flag will stop the group from doing this, afterward the "switch" process
+    /// is completed.
     public boolean isSwitching() {
         return isSwitching;
     }
@@ -370,55 +346,43 @@ public class SelectionGroup {
     // Getters
     //================================================================================
 
-    /**
-     * @return an unmodifiable {@link ObservableSet} which contains all the {@code Selectables} managed by the group
-     */
+    /// @return an unmodifiable [ObservableSet] which contains all the `Selectables` managed by the group
     public ObservableSet<Selectable> getSelectables() {
         return FXCollections.unmodifiableObservableSet(selectables);
     }
 
-    /**
-     * @return an unmodifiable {@link ObservableSet} which contains all the {@code Selectables} that are currently selected
-     */
+    /// @return an unmodifiable [ObservableSet] which contains all the `Selectables` that are currently selected
     public ObservableSet<Selectable> getSelection() {
         return FXCollections.unmodifiableObservableSet(selection);
     }
 
-    /**
-     * @return {@link #getSelectables()} but as a modifiable List, changes to this collection won't have any effect on the
-     * group
-     */
+    /// @return [#getSelectables()] but as a modifiable List, changes to this collection won't have any effect on the
+    /// group
     public List<Selectable> getSelectablesList() {
         return new ArrayList<>(selectables);
     }
 
-    /**
-     * @return {@link #getSelection()} but as a modifiable List, changes to this collection won't have any effect on the
-     * group
-     */
+    /// @return [#getSelection()] but as a modifiable List, changes to this collection won't have any effect on the
+    /// group
     public List<Selectable> getSelectionList() {
         return new ArrayList<>(selection);
     }
 
-    /**
-     * Convenience method to get the first added {@link Selectable} of this group. As the group may contain no
-     * {@code Selectables}, this returns an {@link Optional} instead of raising an Exception.
-     */
+    /// Convenience method to get the first added [Selectable] of this group. As the group may contain no
+    /// `Selectables`, this returns an [Optional] instead of raising an Exception.
     protected Optional<Selectable> getFirstSelectable() {
         try {
-            return Optional.of(getSelectablesList().get(0));
+            return Optional.of(_selectables.getFirst());
         } catch (Exception ex) {
             return Optional.empty();
         }
     }
 
-    /**
-     * Convenience method to get the first selected {@link Selectable} of this group. As the group selection may be empty,
-     * this returns an {@link Optional} instead of raising an Exception.
-     */
+    /// Convenience method to get the first selected [Selectable] of this group. As the group selection may be empty,
+    /// this returns an [Optional] instead of raising an Exception.
     public Optional<Selectable> getFirstSelected() {
         try {
-            return Optional.of(getSelectionList().get(0));
+            return Optional.of(_selection.getFirst());
         } catch (Exception ex) {
             return Optional.empty();
         }
@@ -428,9 +392,7 @@ public class SelectionGroup {
         return selectionMode.get();
     }
 
-    /**
-     * Specifies the selection mode of the group, can be set to single or multiple selection.
-     */
+    /// Specifies the selection mode of the group, can be set to single or multiple selection.
     public ObjectProperty<SelectionMode> selectionModeProperty() {
         return selectionMode;
     }
@@ -443,14 +405,12 @@ public class SelectionGroup {
         return atLeastOneSelected.get();
     }
 
-    /**
-     * Specifies whether the group should always keep at least one of its {@code Selectables} selected.
-     * <p>
-     * This may be useful for use cases in which a user is forced to pick a choice, not matter what as long as it is one
-     * of the offered.
-     *
-     * @see SelectionGroup
-     */
+    /// Specifies whether the group should always keep at least one of its `Selectables` selected.
+    ///
+    /// This may be useful for use cases in which a user is forced to pick a choice, no matter what, as long as it is one
+    /// of the offered.
+    ///
+    /// @see SelectionGroup
     public BooleanProperty atLeastOneSelectedProperty() {
         return atLeastOneSelected;
     }

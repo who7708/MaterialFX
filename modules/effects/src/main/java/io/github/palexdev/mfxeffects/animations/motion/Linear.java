@@ -20,11 +20,9 @@ package io.github.palexdev.mfxeffects.animations.motion;
 
 import io.github.palexdev.mfxeffects.animations.base.Curve;
 
-/**
- * The identity map over the unit interval.
- * <p></p>
- * <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_linear.mp4>Linear</a>
- */
+/// The identity map over the unit interval.
+///
+/// [Linear](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_linear.mp4)
 public class Linear extends Curve {
     @Override
     public double curve(double t) {

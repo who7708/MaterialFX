@@ -23,12 +23,9 @@ import javafx.beans.property.BooleanProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
-/**
- * A {@code BooleanListBinding} is a particular binding that takes a list of
- * {@link BooleanProperty} and observes each one of them updating its value
- * when they change. The value is true only when all properties are true, it's false
- * when even only one of them is false.
- */
+/// A `BooleanListBinding` is a particular binding that takes a list of [BooleanProperty] and observes each one of them
+/// updating its value when they change. The value is true only when all properties are true, it's false when
+/// even only one of them is false.
 public class BooleanListBinding extends BooleanBinding {
     private final ObservableList<BooleanProperty> boundList;
     private final ListChangeListener<BooleanProperty> changeListener;

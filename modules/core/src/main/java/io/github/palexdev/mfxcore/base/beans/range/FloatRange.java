@@ -23,9 +23,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Implementation of {@link NumberRange} to represent a Float range.
- */
+/// Implementation of [NumberRange] to represent a Float range.
 public class FloatRange extends NumberRange<Float> {
 
     //================================================================================
@@ -39,30 +37,22 @@ public class FloatRange extends NumberRange<Float> {
     // Static Methods
     //================================================================================
 
-    /**
-     * @return a new instance of {@code FloatRange} with the given min and max bounds.
-     */
+    /// @return a new instance of `FloatRange` with the given min and max bounds.
     public static FloatRange of(Float min, Float max) {
         return new FloatRange(min, max);
     }
 
-    /**
-     * @return a new instance of {@code FloatRange} with the given val as both min and max bounds.
-     */
+    /// @return a new instance of `FloatRange` with the given val as both min and max bounds.
     public static FloatRange of(Float val) {
         return new FloatRange(val, val);
     }
 
-    /**
-     * Checks if the given value is contained in the given range (bounds are included).
-     */
+    /// Checks if the given value is contained in the given range (bounds are included).
     public static boolean inRangeOf(float val, FloatRange range) {
         return Math.max(range.getMin(), val) == Math.min(val, range.getMax());
     }
 
-    /**
-     * Expands a range of floats to a {@code List} with the given step.
-     */
+    /// Expands a range of floats to a `List` with the given step.
     public static List<Float> expandRange(FloatRange range, float step) {
         List<Float> l = new ArrayList<>();
         float start = range.getMin();
@@ -73,11 +63,9 @@ public class FloatRange extends NumberRange<Float> {
         return l;
     }
 
-    /**
-     * Expands a range of floats to a {@code Set} with the given step.
-     * <p>
-     * The {@code Set} is ordered.
-     */
+    /// Expands a range of floats to a `Set` with the given step.
+    ///
+    /// The `Set` is ordered.
     public static Set<Float> expandRangeToSet(FloatRange range, float step) {
         Set<Float> s = new LinkedHashSet<>();
         float start = range.getMin();
@@ -88,9 +76,7 @@ public class FloatRange extends NumberRange<Float> {
         return s;
     }
 
-    /**
-     * Expands a range of floats to an array.
-     */
+    /// Expands a range of floats to an array.
     public static Float[] expandRangeToArray(float min, float max, float step) {
         return expandRange(of(min, max), step).toArray(Float[]::new);
     }

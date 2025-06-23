@@ -18,6 +18,10 @@
 
 package io.github.palexdev.mfxcore.filter;
 
+import java.util.Collections;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
 import io.github.palexdev.mfxcore.base.beans.BiPredicateBean;
 import io.github.palexdev.mfxcore.filter.base.AbstractFilter;
 import io.github.palexdev.mfxcore.utils.fx.FXCollectors;
@@ -26,17 +30,11 @@ import javafx.collections.ObservableList;
 import javafx.util.StringConverter;
 import javafx.util.converter.BooleanStringConverter;
 
-import java.util.Collections;
-import java.util.function.Function;
-import java.util.stream.Stream;
-
-/**
- * Extension of {@link AbstractFilter} for boolean fields.
- * <p></p>
- * Offers the following default {@link BiPredicateBean}s:
- * <p> - "is": checks for booleans equality
- * <p> - "is not": checks for booleans inequality
- */
+/// Extension of [AbstractFilter] for boolean fields.
+///
+/// Offers the following default [BiPredicateBeans][BiPredicateBean]:
+/// - "is": checks for booleans equality
+/// - "is not": checks for booleans inequality
 public class BooleanFilter<T> extends AbstractFilter<T, Boolean> {
 
     //================================================================================

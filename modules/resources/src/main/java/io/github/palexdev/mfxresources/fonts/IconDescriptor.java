@@ -20,37 +20,27 @@ package io.github.palexdev.mfxresources.fonts;
 
 import java.util.Map;
 
-/**
- * Public API used to describe a <a href="https://fonts.google.com/knowledge/glossary/icon_font">Font Icon</a>.
- * <p>
- * A font icon is identified by: a unique name, which is usually prefixed by a string representing the vendor of the font
- * and/or the class; and it's corresponding unicode character which is also unique.
- */
+/// Public API used to describe a [Font Icon](https://fonts.google.com/knowledge/glossary/icon_font).
+///
+/// A font icon is identified by: a unique name, which is usually prefixed by a string representing the vendor of the font
+/// and/or the class; and it's corresponding Unicode character which is also unique.
 public interface IconDescriptor {
 
-    /**
-     * @return the name of an icon inside the font resource
-     */
+    /// @return the name of an icon inside the font resource
     String getDescription();
 
-    /**
-     * @return the code of the icon inside the font resource
-     */
+    /// @return the code of the icon inside the font resource
     char getCode();
 
-    /**
-     * @return the descriptor associated with the given description or {@code null} if none is found
-     */
+    /// @return the descriptor associated with the given description or `null` if none is found
     default IconDescriptor findByDescription(String description) {
         return null;
     }
 
-    /**
-     * Optionally a class(especially enums) implementing {@code IconDescriptor} can choose to offer
-     * a {@code Map} which holds its icons as [description -> code].
-     * <p>
-     * This makes the search of an icon by its description much faster.
-     */
+    /// Optionally, a class(especially enums) implementing `IconDescriptor` can choose to offer
+    /// a `Map` which holds its icons as `[description -> code]`.
+    ///
+    /// This makes the search of an icon by its description much faster.
     default Map<String, Character> getCache() {
         return Map.of();
     }

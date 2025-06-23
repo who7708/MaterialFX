@@ -18,6 +18,11 @@
 
 package io.github.palexdev.mfxcore.validation;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.function.BiConsumer;
+
 import io.github.palexdev.mfxcore.enums.ChainMode;
 import io.github.palexdev.mfxcore.observables.When;
 import javafx.beans.InvalidationListener;
@@ -27,26 +32,17 @@ import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.function.BiConsumer;
-
-/**
- * A basic implementation of a validator in JavaFX.
- * <p>
- * This validator allows to specify the conditions to be met as {@link Constraint}s,
- * and also allows to add other {@link MFXValidator}s as dependencies, meaning that
- * the validator will be valid only when all its constraints are valid and all its dependencies
- * are also valid.
- * <p></p>
- * You can track every single constraint change by defining the {@link #setOnUpdated(BiConsumer)}
- * action performed when the {@link #update()} method is triggered.
- * <p></p>
- * You have two ways of querying the validator's state:
- * <p> One is to simply query the {@link #validProperty()}
- * <p> The other is to call {@link #validate()}
- */
+/// A basic implementation of a validator in JavaFX.
+///
+/// This validator allows specifying the conditions to be met as [Constraints][Constraint], and also allows adding other [MFXValidator]s
+/// as dependencies, meaning that the validator will be valid only when all its constraints **and** dependencies are valid.
+///
+/// You can track every single constraint change by defining the [#setOnUpdated(BiConsumer)] action performed when the
+/// [#update()] method is triggered.
+///
+/// You have two ways of querying the validator's state:
+///  1) Query the [#validProperty()]
+///  2) Call [#validate()]
 public class MFXValidator {
     //================================================================================
     // Properties
@@ -72,85 +68,63 @@ public class MFXValidator {
     // Methods
     //================================================================================
 
-    /**
-     * Adds the given {@link Constraint} to the validator's constraint list.
-     * <p>
-     * Also adds an {@link InvalidationListener} to the constraint's condition
-     * to trigger the {@link #update()} method when it changes. This is needed
-     * to automatically update the {@link #validProperty()}.
-     * <p></p>
-     * The listener is build using the new {@link When} construct.
-     */
+    /// Adds the given [Constraint] to the validator's constraint list.
+    ///
+    /// Also adds an [InvalidationListener] to the constraint's condition to trigger the [#update()] method when it changes.
+    /// This is needed to automatically update the [#validProperty()].
+    ///
+    /// The listener is build using the new [When] construct.
     public MFXValidator constraint(Constraint constraint) {
         constraint.when = When.onInvalidated(constraint.getCondition()).then(value -> update()).listen();
         constraints.add(constraint);
         return this;
     }
 
-    /**
-     * Creates a {@link Constraint} with the given parameters, then calls {@link #constraint(Constraint)}.
-     */
+    /// Creates a [Constraint] with the given parameters, then calls [#constraint(Constraint)].
     public MFXValidator constraint(Severity severity, String message, BooleanExpression condition) {
         return constraint(Constraint.of(severity, message, condition));
     }
 
-    /**
-     * Creates a {@link Constraint} with ERROR severity and the given message and condition, then calls {@link #constraint(Constraint)}.
-     */
+    /// Creates a [Constraint] with ERROR severity and the given message and condition, then calls [#constraint(Constraint)].
     public MFXValidator constraint(String message, BooleanExpression condition) {
         return constraint(Severity.ERROR, message, condition);
     }
 
-    /**
-     * Removes the given {@link Constraint} from the validator.
-     * <p>
-     * Also invokes {@link Constraint#dispose()} to properly dispose the listener added by
-     * {@link #constraint(Constraint)}.
-     */
+    /// Removes the given [Constraint] from the validator.
+    ///
+    /// Also invokes [#dispose()] to properly dispose the listener added by [#constraint(Constraint)].
     public MFXValidator removeConstraint(Constraint constraint) {
         if (constraints.remove(constraint)) constraint.dispose();
         return this;
     }
 
-    /**
-     * Adds the given {@link MFXValidator} dependency to this validator.
-     * <p>
-     * Also adds an {@link InvalidationListener} to the dependency {@link #validProperty()}
-     * to trigger the {@link #update()} method when it changes. This is needed to automatically update
-     * the {@link #validProperty()}
-     */
+    /// Adds the given [MFXValidator] dependency to this validator.
+    ///
+    /// Also adds an [InvalidationListener] to the dependency [#validProperty()] to trigger the [#update()] method when it changes.
+    /// This is needed to automatically update the [#validProperty()].
     public MFXValidator dependsOn(MFXValidator validator) {
         validator.when = When.onInvalidated(validator.validProperty()).then(value -> update()).listen();
         dependencies.add(validator);
         return this;
     }
 
-    /**
-     * Removes the given validator dependency from this validator.
-     * <p>
-     * Also calls {@link MFXValidator#dispose()} on the dependency to properly
-     * dispose the listener added by {@link #dependsOn(MFXValidator)}.
-     */
+    /// Removes the given validator dependency from this validator.
+    ///
+    /// Also calls [#dispose()] on the dependency to properly dispose the listener added by [#dependsOn(MFXValidator)].
     public MFXValidator removeDependency(MFXValidator validator) {
         if (dependencies.remove(validator)) validator.dispose();
         return this;
     }
 
-    /**
-     * This method queries all the validator's dependencies and constraints
-     * to build a list containing all the unmet constraints.
-     * <p>
-     * If the list is not empty then the validator' state is invalid.
-     * <p></p>
-     * The list can also be sorted by constraint severity by setting
-     * {@link #setSortBySeverity(boolean)} to true.
-     * <p></p>
-     * The method can be also set to "fail fast" meaning that we do not
-     * care about all the invalid conditions but it's also enough to get
-     * the first one. This applies to both dependencies and constraints.
-     * In this case the sorting is ignored of course since the list
-     * will always contain at most one constraint.
-     */
+    /// This method queries all the validator's dependencies and constraints to build a list containing all the unmet constraints.
+    ///
+    /// If the list is not empty then the validator's state is invalid.
+    ///
+    /// The list can also be sorted by constraint severity by setting [#setSortBySeverity(boolean)] to true.
+    ///
+    /// The method can be also set to "fail fast" meaning that we do not care about all the invalid conditions,
+    /// but it's also enough to get the first one. This applies to both dependencies and constraints.
+    /// In this case the sorting is ignored of course since the list will always contain at most one constraint.
     public List<Constraint> validate() {
         List<Constraint> invalidConstraints = new ArrayList<>();
         for (MFXValidator dependency : dependencies) {
@@ -169,16 +143,16 @@ public class MFXValidator {
         return invalidConstraints;
     }
 
-    /**
-     * This is the method responsible for updating the validator' state.
-     * Despite being public it should not be necessary to call it automatically as the
-     * constraints and the dependencies automatically trigger this method.
-     * <p>
-     * Note that constraints are evaluated in order of insertion and according to their
-     * {@link Constraint#getChainMode()}, so be careful with OR modes.
-     * <p></p>
-     * At the end invokes {@link #onUpdated()}.
-     */
+    /// This is the method responsible for updating the validator' state.
+    ///
+    /// Despite being public it should not be necessary to call it automatically as the constraints and the dependencies
+    /// automatically trigger this method.
+    ///
+    /// Note that constraints are evaluated in order of insertion and according to their [Constraint#getChainMode()],
+    ///  so be careful with `OR` modes.
+    ///
+    ///
+    /// At the end invokes [#onUpdated()].
     public void update() {
         boolean valid = true;
         for (MFXValidator dependency : dependencies) {
@@ -191,10 +165,7 @@ public class MFXValidator {
         onUpdated();
     }
 
-    /**
-     * Calls {@link #validate()} then chains all the invalid constraints' messages
-     * into a String.
-     */
+    /// Calls [#validate()] then chains all the invalid constraints' messages into a String.
     public String validateToString() {
         List<Constraint> invalidConstraints = validate();
         if (invalidConstraints.isEmpty()) return "";
@@ -204,23 +175,19 @@ public class MFXValidator {
         return sb.toString();
     }
 
-    /**
-     * This is called when the {@link #update()} method is triggered and
-     * it's responsible for running the action specified by the user, {@link #setOnUpdated(BiConsumer)}.
-     */
+    /// This is called when the [#update()] method is triggered and it's responsible for running the action specified
+    /// by the user, [#setOnUpdated(BiConsumer)].
     protected void onUpdated() {
         if (onUpdated != null) {
             onUpdated.accept(isValid(), validate());
         }
     }
 
-    /**
-     * Used when another validator is being removed from the dependencies.
-     * <p>
-     * When a dependency is added, a listener is added to update the main validator with the {@link When}
-     * construct. Since we need the instance to properly dispose it afterward, we store the reference here,
-     * the disposal can then be easily automatically handled by {@link MFXValidator#removeDependency(MFXValidator)}.
-     */
+    /// Used when another validator is being removed from the dependencies.
+    ///
+    /// When a dependency is added, a listener is added to update the main validator with the [When] construct.
+    /// Since we need the instance to properly dispose it afterward, we store the reference here.
+    /// The disposal is easily and automatically handled by [#removeDependency(MFXValidator)].
     protected void dispose() {
         if (when != null) when.dispose();
     }
@@ -229,17 +196,12 @@ public class MFXValidator {
     // Getters/Setters
     //================================================================================
 
-    /**
-     * @return whether the validator' state is valid
-     */
+    /// @return whether the validator' state is valid
     public boolean isValid() {
         return valid.get();
     }
 
-    /**
-     * Specifies the validator' state. This is given by chaining all the
-     * validator's dependencies and constraints.
-     */
+    /// Specifies the validator' state. This is given by chaining all the validator's dependencies and constraints.
     public ReadOnlyBooleanProperty validProperty() {
         return valid.getReadOnlyProperty();
     }
@@ -248,50 +210,37 @@ public class MFXValidator {
         this.valid.set(valid);
     }
 
-    /**
-     * @return the action to perform after an {@link #update()}
-     * @see #setOnUpdated(BiConsumer)
-     */
+    /// @return the action to perform after an [#update()]
+    /// @see #setOnUpdated(BiConsumer)
     public BiConsumer<Boolean, List<Constraint>> getOnUpdated() {
         return onUpdated;
     }
 
-    /**
-     * Allows to specify the action to perform every time the {@link #update()} method
-     * is triggered. The action is a {@link BiConsumer} carrying the validator' state
-     * and the list of invalid constraints (empty if valid of course).
-     */
+    /// Allows to specify the action to perform every time the [#update()] method is triggered.
+    /// The action is a [BiConsumer] carrying the validator' state  and the list of invalid constraints (empty if valid of course).
     public MFXValidator setOnUpdated(BiConsumer<Boolean, List<Constraint>> onUpdated) {
         this.onUpdated = onUpdated;
         return this;
     }
 
-    /**
-     * @return whether the invalid constraints list is sorted by severity
-     */
+    /// @return whether the invalid constraints list is sorted by severity
     public boolean isSortBySeverity() {
         return sortBySeverity;
     }
 
-    /**
-     * Allows to specify whether to sort the invalid constraints list by severity when
-     * calling {@link #validate()}.
-     */
+    /// Allows to specify whether to sort the invalid constraints list by severity when
+    /// calling [#validate()].
     public MFXValidator setSortBySeverity(boolean sortBySeverity) {
         this.sortBySeverity = sortBySeverity;
         return this;
     }
 
-    /**
-     * @return whether the {@link #validate()} method should fail fast
-     */
+    /// @return whether the [#validate()] method should fail fast
     public boolean isFailFast() {
         return failFast;
     }
 
-    /**
-     * Sets whether the {@link #validate()} method should fail fast.
-     */
+    /// Sets whether the [#validate()] method should fail fast.
     public MFXValidator setFailFast(boolean failFast) {
         this.failFast = failFast;
         return this;

@@ -18,6 +18,10 @@
 
 package io.github.palexdev.mfxcore.filter;
 
+import java.util.Collections;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
 import io.github.palexdev.mfxcore.base.beans.BiPredicateBean;
 import io.github.palexdev.mfxcore.filter.base.NumberFilter;
 import io.github.palexdev.mfxcore.utils.fx.FXCollectors;
@@ -26,21 +30,15 @@ import javafx.collections.ObservableList;
 import javafx.util.StringConverter;
 import javafx.util.converter.LongStringConverter;
 
-import java.util.Collections;
-import java.util.function.Function;
-import java.util.stream.Stream;
-
-/**
- * Extension of {@link NumberFilter} for long fields.
- * <p></p>
- * Offers the following default {@link BiPredicateBean}s:
- * <p> - "is": checks for longs equality
- * <p> - "is not": checks for longs inequality
- * <p> - "greater than": checks if a long is greater than another long
- * <p> - "greater or equal to": checks if a long is greater or equal to another long
- * <p> - "lesser than": checks if a long is lesser than another long
- * <p> - "lesser or equal to": checks if a long is lesser or equal to another long
- */
+/// Extension of [NumberFilter] for long fields.
+///
+/// Offers the following default [BiPredicateBeans][BiPredicateBean]:
+///  - "is": checks for longs equality
+///  - "is not": checks for longs inequality
+///  - "greater than": checks if a long is greater than another long
+///  - "greater or equal to": checks if a long is greater or equal to another long
+///  - "lesser than": checks if a long is lesser than another long
+///  - "lesser or equal to": checks if a long is lesser or equal to another long
 public class LongFilter<T> extends NumberFilter<T, Long> {
 
     //================================================================================

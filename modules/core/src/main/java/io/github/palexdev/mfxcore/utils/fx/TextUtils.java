@@ -26,19 +26,15 @@ import javafx.scene.layout.Region;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-/**
- * Utils class for JavaFX's {@code Labels} and {@code MFXLabels}.
- */
+/// Utils class for JavaFX's `Labels` and `MFXLabels`.
 public class TextUtils {
 
     private TextUtils() {
     }
 
-    /**
-     * Checks if the text of the specified {@code Label} is truncated.
-     *
-     * @param label The specified label
-     */
+    /// Checks if the text of the specified `Label` is truncated.
+    ///
+    /// @param label The specified label
     public static boolean isLabelTruncated(Label label) {
         String originalString = label.getText();
         Text textNode = (Text) label.lookup(".text");
@@ -49,13 +45,11 @@ public class TextUtils {
         return false;
     }
 
-    /**
-     * Registers a listener to the specified {@code Label} which checks if the text
-     * is truncated and updates the specified boolean property accordingly.
-     *
-     * @param isTruncated The boolean property to change
-     * @param label       The specified label
-     */
+    /// Registers a listener to the specified `Label` which checks if the text
+    /// is truncated and updates the specified boolean property accordingly.
+    ///
+    /// @param isTruncated The boolean property to change
+    /// @param label       The specified label
     public static void registerTruncatedLabelListener(BooleanProperty isTruncated, Label label) {
         label.needsLayoutProperty().addListener((observable, oldValue, newValue) -> {
             String originalString = label.getText();
@@ -66,14 +60,12 @@ public class TextUtils {
         });
     }
 
-    /**
-     * Computes the min width of a text node so that all the text is visible. Uses {@link RegionUtils#getRegionWidth(Region)}.
-     * <p>
-     * Uses {@link Label} as helper.
-     *
-     * @param font the label font
-     * @param text the label text
-     */
+    /// Computes the min width of a text node so that all the text is visible. Uses [RegionUtils#getRegionWidth(Region)].
+    ///
+    /// Uses [Label] as a helper.
+    ///
+    /// @param font the label font
+    /// @param text the label text
     public static double computeLabelWidth(Font font, String text) {
         Label helper = new Label(text);
         helper.setMaxWidth(Double.MAX_VALUE);
@@ -82,14 +74,12 @@ public class TextUtils {
         return RegionUtils.getRegionWidth(helper);
     }
 
-    /**
-     * Computes the min height of a text node.
-     * <p>
-     * Uses {@link Label} as helper.
-     *
-     * @param font the node font
-     * @param text the node text
-     */
+    /// Computes the min height of a text node.
+    ///
+    /// Uses [Label] as a helper.
+    ///
+    /// @param font the node font
+    /// @param text the node text
     public static double computeLabelHeight(Font font, String text) {
         Label helper = new Label(text);
         helper.setMaxWidth(Double.MAX_VALUE);
@@ -97,12 +87,10 @@ public class TextUtils {
         return RegionUtils.getRegionHeight(helper);
     }
 
-    /**
-     * Computes both the width and the height of a {@link Label}
-     * for the given font and text.
-     *
-     * @return the bean containing the computed values
-     */
+    /// Computes both the width and the height of a [Label]
+    /// for the given font and text.
+    ///
+    /// @return the bean containing the computed values
     public static Size computeLabelSizes(Font font, String text) {
         Label helper = new Label(text);
         helper.setMaxWidth(Double.MAX_VALUE);
@@ -110,56 +98,48 @@ public class TextUtils {
         return NodeUtils.getNodeSizes(helper);
     }
 
-    /**
-     * Computes the min width of a text node so that all the text is visible.
-     * <p>
-     * Uses {@link Text} as helper.
-     *
-     * @param font the node font
-     * @param text the node text
-     */
+    /// Computes the min width of a text node so that all the text is visible.
+    ///
+    /// Uses [Text] as a helper.
+    ///
+    /// @param font the node font
+    /// @param text the node text
     public static double computeTextWidth(Font font, String text) {
         Text helper = new Text(text);
         helper.setFont(font);
         return NodeUtils.getNodeWidth(helper);
     }
 
-    /**
-     * Computes the min height of a text node.
-     * <p>
-     * Uses {@link Text} as helper.
-     *
-     * @param font the node font
-     * @param text the node text
-     */
+    /// Computes the min height of a text node.
+    ///
+    /// Uses [Text] as a helper.
+    ///
+    /// @param font the node font
+    /// @param text the node text
     public static double computeTextHeight(Font font, String text) {
         Text helper = new Text(text);
         helper.setFont(font);
         return NodeUtils.getNodeHeight(helper);
     }
 
-    /**
-     * Computes both the min height and width of a text node.
-     * <p>
-     * Uses {@link Text} as helper.
-     *
-     * @param font the node font
-     * @param text the node text
-     */
+    /// Computes both the min height and width of a text node.
+    ///
+    /// Uses [Text] as a helper.
+    ///
+    /// @param font the node font
+    /// @param text the node text
     public static Size computeTextSizes(Font font, String text) {
         Text helper = new Text(text);
         helper.setFont(font);
         return NodeUtils.getNodeSizes(helper);
     }
 
-    /**
-     * Computes the min width for the specified {@link Label} so that all the text is visible.
-     * <p>
-     * Uses {@link #computeTextWidth(Font, String)}, but also takes into account the label's
-     * graphic bounds (if not null) and the {@link Label#graphicTextGapProperty()}.
-     * <p></p>
-     * Note: this works only after the label has been laid out.
-     */
+    /// Computes the min width for the specified [Label] so that all the text is visible.
+    ///
+    /// Uses [#computeTextWidth(Font, String)], but also takes into account the label's
+    /// graphic bounds (if not null) and the [Label#graphicTextGapProperty()].
+    ///
+    /// Note: this works only after the label has been laid out.
     public static double computeLabelWidth(Label label) {
         Node graphic = label.getGraphic();
         double gap = (graphic != null) ? label.getGraphicTextGap() : 0.0;
@@ -170,14 +150,12 @@ public class TextUtils {
                gap;
     }
 
-    /**
-     * Computes the min height for the specified {@link Label} so that all the text is visible.
-     * <p>
-     * Uses {@link #computeTextHeight(Font, String)}, but also takes into account the label's
-     * graphic bounds (if not null).
-     * <p></p>
-     * Note: this works only after the label has been laid out.
-     */
+    /// Computes the min height for the specified [Label] so that all the text is visible.
+    ///
+    /// Uses [#computeTextHeight(Font,String)], but also takes into account the label's
+    /// graphic bounds (if not null).
+    ///
+    /// Note: this works only after the label has been laid out.
     public static double computeLabelHeight(Label label) {
         Node graphic = label.getGraphic();
         return label.snappedTopInset() +

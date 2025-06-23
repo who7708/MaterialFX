@@ -21,9 +21,7 @@ package io.github.palexdev.mfxcore.base.properties;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.scene.Node;
 
-/**
- * Simple extension of {@link ReadOnlyObjectWrapper} for {@link Node}s.
- */
+/// Simple extension of [ReadOnlyObjectWrapper] for [Nodes][Node].
 public class NodeProperty extends ReadOnlyObjectWrapper<Node> {
 
     //================================================================================

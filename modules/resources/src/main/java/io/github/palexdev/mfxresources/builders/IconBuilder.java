@@ -34,9 +34,7 @@ import javafx.scene.Node;
 import javafx.scene.effect.Effect;
 import javafx.scene.paint.Color;
 
-/**
- * A commodity class to build {@link MFXFontIcon}s with fluent API.
- */
+/// A commodity class to build [MFXFontIcon]s with fluent API.
 public class IconBuilder {
     //================================================================================
     // Properties

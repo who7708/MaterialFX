@@ -18,10 +18,6 @@
 
 package io.github.palexdev.mfxcore.utils.fx;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.*;
-import javafx.scene.paint.Color;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
@@ -29,36 +25,36 @@ import java.awt.image.SampleModel;
 import java.awt.image.SinglePixelPackedSampleModel;
 import java.nio.IntBuffer;
 
-/**
- * Class copied from javafx.embed.swing to avoid adding the Swing module.
- */
+import javafx.scene.image.*;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+
+/// Class copied from javafx.embed.swing to avoid adding the Swing module.
 public class SwingFXUtils {
 
     private SwingFXUtils() {
     } // no instances
 
-    /**
-     * Snapshots the specified {@link BufferedImage} and stores a copy of
-     * its pixels into a JavaFX {@link Image} object, creating a new
-     * object if needed.
-     * The returned {@code Image} will be a static snapshot of the state
-     * of the pixels in the {@code BufferedImage} at the time the method
-     * completes.  Further changes to the {@code BufferedImage} will not
-     * be reflected in the {@code Image}.
-     * <p>
-     * The optional JavaFX {@link WritableImage} parameter may be reused
-     * to store the copy of the pixels.
-     * A new {@code Image} will be created if the supplied object is null,
-     * is too small or of a type which the image pixels cannot be easily
-     * converted into.
-     *
-     * @param bimg the {@code BufferedImage} object to be converted
-     * @param wimg an optional {@code WritableImage} object that can be
-     *             used to store the returned pixel data
-     * @return an {@code Image} object representing a snapshot of the
-     * current pixels in the {@code BufferedImage}.
-     * @since JavaFX 2.2
-     */
+    /// Snapshots the specified [BufferedImage] and stores a copy of
+    /// its pixels into a JavaFX [Image] object, creating a new
+    /// object if needed.
+    /// The returned `Image` will be a static snapshot of the state
+    /// of the pixels in the `BufferedImage` at the time the method
+    /// completes.  Further changes to the `BufferedImage` will not
+    /// be reflected in the `Image`.
+    ///
+    /// The optional JavaFX [WritableImage] parameter may be reused
+    /// to store the copy of the pixels.
+    /// A new `Image` will be created if the supplied object is null,
+    /// is too small or of a type which the image pixels cannot be easily
+    /// converted into.
+    ///
+    /// @param bimg the `BufferedImage` object to be converted
+    /// @param wimg an optional `WritableImage` object that can be
+    ///                         used to store the returned pixel data
+    /// @return an `Image` object representing a snapshot of the
+    /// current pixels in the `BufferedImage`.
+    /// @since JavaFX 2.2
     public static WritableImage toFXImage(BufferedImage bimg, WritableImage wimg) {
         int bw = bimg.getWidth();
         int bh = bimg.getHeight();
@@ -113,15 +109,13 @@ public class SwingFXUtils {
         return wimg;
     }
 
-    /**
-     * Determine the optimal BufferedImage type to use for the specified
-     * {@code fxFormat} allowing for the specified {@code bimg} to be used
-     * as a potential default storage space if it is not null and is compatible.
-     *
-     * @param fxFormat the PixelFormat of the source FX Image
-     * @param bimg     an optional existing {@code BufferedImage} to be used
-     *                 for storage if it is compatible, or null
-     */
+    /// Determine the optimal BufferedImage type to use for the specified
+    /// `fxFormat` allowing for the specified `bimg` to be used
+    /// as a potential default storage space if it is not null and is compatible.
+    ///
+    /// @param fxFormat the PixelFormat of the source FX Image
+    /// @param bimg     an optional existing `BufferedImage` to be used
+    ///                 for storage if it is compatible, or null
     static int
     getBestBufferedImageType(PixelFormat<?> fxFormat, BufferedImage bimg,
                              boolean isOpaque) {
@@ -142,46 +136,33 @@ public class SwingFXUtils {
                 return bimgType;
             }
         }
-        switch (fxFormat.getType()) {
-            default:
-            case BYTE_BGRA_PRE:
-            case INT_ARGB_PRE:
-                return BufferedImage.TYPE_INT_ARGB_PRE;
-            case BYTE_BGRA:
-            case INT_ARGB:
-                return BufferedImage.TYPE_INT_ARGB;
-            case BYTE_RGB:
-                return BufferedImage.TYPE_INT_RGB;
-            case BYTE_INDEXED:
-                return (fxFormat.isPremultiplied()
-                    ? BufferedImage.TYPE_INT_ARGB_PRE
-                    : BufferedImage.TYPE_INT_ARGB);
-        }
+        return switch (fxFormat.getType()) {
+            default -> BufferedImage.TYPE_INT_ARGB_PRE;
+            case BYTE_BGRA, INT_ARGB -> BufferedImage.TYPE_INT_ARGB;
+            case BYTE_RGB -> BufferedImage.TYPE_INT_RGB;
+            case BYTE_INDEXED -> (fxFormat.isPremultiplied()
+                ? BufferedImage.TYPE_INT_ARGB_PRE
+                : BufferedImage.TYPE_INT_ARGB);
+        };
     }
 
-    /**
-     * Determine the appropriate {@link WritablePixelFormat} type that can
-     * be used to transfer data into the indicated BufferedImage.
-     *
-     * @param bimg the BufferedImage that will be used as a destination for
-     *             a {@code PixelReader<IntBuffer>#getPixels()} operation.
-     */
+    /// Determine the appropriate [WritablePixelFormat] type that can
+    /// be used to transfer data into the indicated BufferedImage.
+    ///
+    /// @param bimg the BufferedImage that will be used as a destination for
+    ///             a `PixelReader<IntBuffer>#getPixels()` operation.
     private static WritablePixelFormat<IntBuffer>
     getAssociatedPixelFormat(BufferedImage bimg) {
-        switch (bimg.getType()) {
+        // Should not happen...
+        return switch (bimg.getType()) {
             // We lie here for xRGB, but we vetted that the src data was opaque
             // so we can ignore the alpha.  We use ArgbPre instead of Argb
             // just to get a loop that does not have divides in it if the
             // PixelReader happens to not know the data is opaque.
-            case BufferedImage.TYPE_INT_RGB:
-            case BufferedImage.TYPE_INT_ARGB_PRE:
-                return PixelFormat.getIntArgbPreInstance();
-            case BufferedImage.TYPE_INT_ARGB:
-                return PixelFormat.getIntArgbInstance();
-            default:
-                // Should not happen...
-                throw new InternalError("Failed to validate BufferedImage type");
-        }
+            case BufferedImage.TYPE_INT_RGB, BufferedImage.TYPE_INT_ARGB_PRE -> PixelFormat.getIntArgbPreInstance();
+            case BufferedImage.TYPE_INT_ARGB -> PixelFormat.getIntArgbInstance();
+            default -> throw new InternalError("Failed to validate BufferedImage type");
+        };
     }
 
     private static boolean checkFXImageOpaque(PixelReader pr, int iw, int ih) {
@@ -196,35 +177,32 @@ public class SwingFXUtils {
         return true;
     }
 
-    /**
-     * Snapshots the specified JavaFX {@link Image} object and stores a
-     * copy of its pixels into a {@link BufferedImage} object, creating
-     * a new object if needed.
-     * The method will only convert a JavaFX {@code Image} that is readable
-     * as per the conditions on the
-     * {@link Image#getPixelReader() Image.getPixelReader()}
-     * method.
-     * If the {@code Image} is not readable, as determined by its
-     * {@code getPixelReader()} method, then this method will return null.
-     * If the {@code Image} is a writable, or other dynamic image, then
-     * the {@code BufferedImage} will only be set to the current state of
-     * the pixels in the image as determined by its {@link PixelReader}.
-     * Further changes to the pixels of the {@code Image} will not be
-     * reflected in the returned {@code BufferedImage}.
-     * <p>
-     * The optional {@code BufferedImage} parameter may be reused to store
-     * the copy of the pixels.
-     * A new {@code BufferedImage} will be created if the supplied object
-     * is null, is too small or of a type which the image pixels cannot
-     * be easily converted into.
-     *
-     * @param img  the JavaFX {@code Image} to be converted
-     * @param bimg an optional {@code BufferedImage} object that may be
-     *             used to store the returned pixel data
-     * @return a {@code BufferedImage} containing a snapshot of the JavaFX
-     * {@code Image}, or null if the {@code Image} is not readable.
-     * @since JavaFX 2.2
-     */
+    /// Snapshots the specified JavaFX [Image] object and stores a
+    /// copy of its pixels into a [BufferedImage] object, creating
+    /// a new object if needed.
+    /// The method will only convert a JavaFX `Image` that is readable
+    /// as per the conditions on the [Image#getPixelReader()] method.
+    ///
+    /// If the `Image` is not readable, as determined by its
+    /// `getPixelReader()` method, then this method will return null.
+    /// If the `Image` is a writable, or other dynamic image, then
+    /// the `BufferedImage` will only be set to the current state of
+    /// the pixels in the image as determined by its [PixelReader].
+    /// Further changes to the pixels of the `Image` will not be
+    /// reflected in the returned `BufferedImage`.
+    ///
+    /// The optional `BufferedImage` parameter may be reused to store
+    /// the copy of the pixels.
+    /// A new `BufferedImage` will be created if the supplied object
+    /// is null, is too small or of a type which the image pixels cannot
+    /// be easily converted into.
+    ///
+    /// @param img  the JavaFX `Image` to be converted
+    /// @param bimg an optional `BufferedImage` object that may be
+    ///             used to store the returned pixel data
+    /// @return a `BufferedImage` containing a snapshot of the JavaFX
+    /// `Image`, or null if the `Image` is not readable.
+    /// @since JavaFX 2.2
     public static BufferedImage fromFXImage(Image img, BufferedImage bimg) {
         PixelReader pr = img.getPixelReader();
         if (pr == null) {

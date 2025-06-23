@@ -18,16 +18,14 @@
 
 package io.github.palexdev.mfxcore.base.properties.functional;
 
+import java.util.Comparator;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 
-import java.util.Comparator;
-
-/**
- * Simply an {@link ObjectProperty} that wraps a {@link Comparator}.
- *
- * @param <T> the type of objects that may be compared by the comparator
- */
+/// Simply a [ObjectProperty] that wraps a [Comparator].
+///
+/// @param <T> the type of objects that may be compared by the comparator
 public class ComparatorProperty<T> extends ReadOnlyObjectWrapper<Comparator<T>> {
 
     //================================================================================

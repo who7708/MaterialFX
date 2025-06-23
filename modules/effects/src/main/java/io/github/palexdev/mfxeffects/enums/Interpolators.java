@@ -18,13 +18,11 @@
 
 package io.github.palexdev.mfxeffects.enums;
 
-import javafx.animation.Interpolator;
-
 import java.util.function.Function;
 
-/**
- * Enumerator that offers some new {@link Interpolator}s for JavaFX's animations.
- */
+import javafx.animation.Interpolator;
+
+/// Enumerator that offers some new [Interpolator]s for JavaFX's animations.
 public enum Interpolators {
     INTERPOLATOR_V1(null) {
         public Interpolator toInterpolator() {
@@ -106,9 +104,7 @@ public enum Interpolators {
         this.curve = curve;
     }
 
-    /**
-     * Converts a {@code Function<Double, Double>} to a JavaFX's {@link Interpolator}.
-     */
+    /// Converts a `Function<Double, Double>` to a JavaFX's [Interpolator].
     public abstract Interpolator toInterpolator();
 
     public Function<Double, Double> getCurve() {

@@ -18,46 +18,33 @@
 
 package io.github.palexdev.mfxcore.utils.fx;
 
+import java.util.Random;
+
 import io.github.palexdev.mfxcore.utils.NumberUtils;
 import io.github.palexdev.mfxcore.utils.RandomUtils;
 import javafx.scene.paint.*;
 
-import java.util.Random;
-
-/**
- * Utils class for JavaFX's {@code Colors} and CSS.
- */
+/// Utils class for JavaFX's `Colors` and CSS.
 public class ColorUtils {
 
     private ColorUtils() {
     }
 
-    /**
-     * Converts a JavaFX Paint object to the right CSS string.
-     * <p>
-     * Supports: {@link Color}, {@link LinearGradient}, {@link RadialGradient}.
-     */
+    /// Converts a JavaFX Paint object to the right CSS string.
+    ///
+    /// Supports: [Color], [LinearGradient], [RadialGradient].
     public static String toCss(Paint paint) {
-        if (paint == null) return "";
-
-        if (paint instanceof LinearGradient) {
-            LinearGradient gradient = (LinearGradient) paint;
-            return linearGradientToString(gradient);
-        }
-
-        if (paint instanceof RadialGradient) {
-            RadialGradient gradient = (RadialGradient) paint;
-            return radialGradientToString(gradient);
-        }
-
-        return rgb((Color) paint);
+        return switch (paint) {
+            case null -> "";
+            case LinearGradient gradient -> linearGradientToString(gradient);
+            case RadialGradient gradient -> radialGradientToString(gradient);
+            default -> rgb((Color) paint);
+        };
     }
 
-    /**
-     * Converts a JavaFX's {@code Color} to CSS corresponding rgb function.
-     *
-     * @return the rgb function as a string
-     */
+    /// Converts a JavaFX's `Color` to CSS corresponding rgb function.
+    ///
+    /// @return the rgb function as a string
     public static String rgb(Color color) {
         if (color == null) return "";
         return String.format("rgb(%d, %d, %d)",
@@ -66,11 +53,9 @@ public class ColorUtils {
             (int) (255 * color.getBlue()));
     }
 
-    /**
-     * Converts a JavaFX's {@code Color} to CSS corresponding rgba function.
-     *
-     * @return the rgba function as a string
-     */
+    /// Converts a JavaFX's `Color` to CSS corresponding rgba function.
+    ///
+    /// @return the rgba function as a string
     public static String rgba(Color color) {
         if (color == null) return "";
         return String.format("rgba(%d, %d, %d, %s)",
@@ -80,10 +65,8 @@ public class ColorUtils {
             color.getOpacity());
     }
 
-    /**
-     * @return a new {@link Color} which has the same RGB components of the given one but the opacity
-     * is set to the desired value (clamped between 0.0 and 1.0)
-     */
+    /// @return a new [Color] which has the same RGB components of the given one but the opacity
+    /// is set to the desired value (clamped between 0.0 and 1.0)
     public static Color atAlpha(Color color, double alpha) {
         double cAlpha = NumberUtils.clamp(alpha, 0.0, 1.0);
         return Color.color(
@@ -94,9 +77,7 @@ public class ColorUtils {
         );
     }
 
-    /**
-     * Generates a random {@link  Color} using {@link Random}.
-     */
+    /// Generates a random [Color] using [Random].
     public static Color getRandomColor() {
         return Color.rgb(
             RandomUtils.random.nextInt(256),
@@ -105,9 +86,7 @@ public class ColorUtils {
         );
     }
 
-    /**
-     * Generates a random {@link  Color} using {@link Random} and the given opacity.
-     */
+    /// Generates a random [Color] using [Random] and the given opacity.
     public static Color getRandomColor(double opacity) {
         return Color.rgb(
             RandomUtils.random.nextInt(256),
@@ -117,15 +96,13 @@ public class ColorUtils {
         );
     }
 
-    /**
-     * Util method to convert {@link LinearGradient} to a CSS string.
-     * <p></p>
-     * This is partly a copy of {@link LinearGradient#toString()} but {@code Stops} are correctly converted
-     * for CSS.
-     *
-     * @param gradient the linear gradient to convert
-     * @see Stop
-     */
+    /// Util method to convert [LinearGradient] to a CSS string.
+    ///
+    /// This is partly a copy of [#toString()] but `Stops` are correctly converted
+    /// for CSS.
+    ///
+    /// @param gradient the linear gradient to convert
+    /// @see Stop
     public static String linearGradientToString(LinearGradient gradient) {
         if (gradient == null) return "";
         final StringBuilder s = new StringBuilder("linear-gradient(from ")
@@ -154,15 +131,13 @@ public class ColorUtils {
         return s.toString();
     }
 
-    /**
-     * Util method to convert {@link RadialGradient} to a CSS string.
-     * <p></p>
-     * This is partly a copy of {@link RadialGradient#toString()} but {@code Stops} are correctly converted
-     * for CSS.
-     *
-     * @param gradient the radial gradient to convert
-     * @see Stop
-     */
+    /// Util method to convert [RadialGradient] to a CSS string.
+    ///
+    /// This is partly a copy of [#toString()] but `Stops` are correctly converted
+    /// for CSS.
+    ///
+    /// @param gradient the radial gradient to convert
+    /// @see Stop
     public static String radialGradientToString(RadialGradient gradient) {
         if (gradient == null) return "";
         final StringBuilder s = new StringBuilder("radial-gradient(focus-angle ").append(gradient.getFocusAngle())
@@ -192,37 +167,25 @@ public class ColorUtils {
 
     }
 
-    /**
-     * Properly converts a {@link Stop} to string. Partly copied from
-     * {@link Stop#toString()} but the color is converted using {@link #rgba(Color)}.
-     */
+    /// Properly converts a [Stop] to string. Partly copied from [Stop#toString()] but the color is converted using [#rgba(Color)].
     public static String stopToString(Stop stop) {
         return rgba(stop.getColor()) + " " + stop.getOffset() * 100 + "%";
     }
 
-    /**
-     * Converts the given color to a String
-     * in hexadecimal format.
-     */
+    /// Converts the given color to a String in hexadecimal format.
     public static String toWeb(Color color) {
         if (color == null) return "";
         String cs = color.toString();
         return "#" + cs.substring(2, cs.length() - 2);
     }
 
-    /**
-     * Converts the given color to a String
-     * in hexadecimal format, also includes the color's opacity.
-     */
+    /// Converts the given color to a String in hexadecimal format, also includes the color's opacity.
     public static String toWebAlpha(Color color) {
         if (color == null) return "";
         return "#" + color.toString().substring(2);
     }
 
-    /**
-     * Converts the given color to a String
-     * in HSL format.
-     */
+    /// Converts the given color to a String in HSL format.
     public static String toHSL(Color color) {
         if (color == null) return "";
 
@@ -262,10 +225,7 @@ public class ColorUtils {
         return "hsl(" + Math.round(h) + "deg, " + Math.round(s * 100) + "%, " + Math.round(l * 100) + "%)";
     }
 
-    /**
-     * Converts the given color to a String
-     * in HSB format.
-     */
+    /// Converts the given color to a String in HSB format.
     public static String toHSB(Color color) {
         if (color == null) return "";
 
@@ -329,5 +289,4 @@ public class ColorUtils {
             return value + "px";
         }
     }
-
 }

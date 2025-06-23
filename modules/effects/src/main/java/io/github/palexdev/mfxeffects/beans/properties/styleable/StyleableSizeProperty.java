@@ -18,17 +18,14 @@
 
 package io.github.palexdev.mfxeffects.beans.properties.styleable;
 
+import java.util.Arrays;
+import java.util.function.Function;
+
 import io.github.palexdev.mfxeffects.beans.Size;
 import javafx.css.*;
 import javafx.scene.text.Font;
 
-import java.util.Arrays;
-import java.util.function.Function;
-
-/**
- * Convenience {@link StyleableObjectProperty} for {@link Size}, settable via CSS thanks to
- * {@link SizeConverter}.
- */
+/// Convenience [StyleableObjectProperty] for [Size], settable via CSS thanks to [SizeConverter].
 public class StyleableSizeProperty extends SimpleStyleableObjectProperty<Size> {
 
     //================================================================================
@@ -92,20 +89,12 @@ public class StyleableSizeProperty extends SimpleStyleableObjectProperty<Size> {
     // Internal Classes
     //================================================================================
 
-    /**
-     * Style converter implementation to make {@link Size} settable via CSS.
-     * The related property is {@link StyleableSizeProperty}.
-     * <p>
-     * For this to properly work, you must use a specific format. The converter expects a string value,
-     * with two double numbers which will be in order the width and the height for the new {@code Size}, so:
-     * <pre>
-     * {@code
-     * .node {
-     *     -fx-property-name: "100 30";
-     * }
-     * }
-     * </pre>
-     */
+    /// Style converter implementation to make [Size] settable via CSS.
+    /// The related property is [StyleableSizeProperty].
+    ///
+    /// For this to properly work, you must use a specific format. The converter expects a string value,
+    /// with two double numbers which will be in order the width and the height for the new `Size`, so:
+    /// `.node{-fx-property-name: "100 30";}`
     public static class SizeConverter extends StyleConverter<String, Size> {
 
         // lazy, thread-safe instantiation
@@ -113,11 +102,9 @@ public class StyleableSizeProperty extends SimpleStyleableObjectProperty<Size> {
             static final SizeConverter INSTANCE = new SizeConverter();
         }
 
-        /**
-         * Gets the {@code SizeConverter} instance.
-         *
-         * @return the {@code SizeConverter} instance
-         */
+        /// Gets the `SizeConverter` instance.
+        ///
+        /// @return the `SizeConverter` instance
         public static StyleConverter<String, Size> getInstance() {
             return Holder.INSTANCE;
         }

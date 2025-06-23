@@ -18,26 +18,24 @@
 
 package io.github.palexdev.mfxcore.base.bindings;
 
+import java.util.Optional;
+
 import io.github.palexdev.mfxcore.base.bindings.base.IBinding;
 import io.github.palexdev.mfxcore.base.bindings.base.ISource;
 import io.github.palexdev.mfxcore.enums.BindingState;
 import io.github.palexdev.mfxcore.enums.BindingType;
 import javafx.beans.value.ObservableValue;
 
-import java.util.Optional;
-
-/**
- * Concrete implementation of {@link AbstractBinding} to define bidirectional bindings.
- * <p></p>
- * Bidirectional bindings can have multiple sources and multiple other sources, {@link ExternalSource},
- * which should be used to invalidate the binding (either of target or sources) when needed, in special occasions.
- * <p></p>
- * Note that sources can use whatever source type you want as long as the source can correctly:
- * <p> - produce values compatibles with the target when updating the target
- * <p> - produce values compatibles with the source when the target changed
- *
- * @param <T> the binding's target type
- */
+/// Concrete implementation of [AbstractBinding] to define bidirectional bindings.
+///
+/// Bidirectional bindings can have multiple sources and multiple other sources, [ExternalSource],
+/// which should be used to invalidate the binding (either of target or sources) when needed, on special occasions.
+///
+/// Note that sources can use whatever source type you want as long as the source can correctly:
+/// - Produce values compatibles with the target when updating the target
+/// - Produce values compatibles with the source when the target changed
+///
+/// @param <T> the binding's target type
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class BidirectionalBinding<T> extends AbstractBinding<T> {
     //================================================================================
@@ -63,21 +61,16 @@ public class BidirectionalBinding<T> extends AbstractBinding<T> {
     // Methods
     //================================================================================
 
-    /**
-     * Sets this binding's target.
-     *
-     * @throws IllegalStateException if the binding' state is {@link BindingState#BOUND}
-     */
+    /// Sets this binding's target.
+    ///
+    /// @throws IllegalStateException if the binding' state is [BindingState#BOUND]
     public BidirectionalBinding<T> target(ObservableValue<? extends T> observable) {
         if (mayBeBound()) throw new IllegalStateException("Cannot set target as this binding is currently active");
         super.target = new Target<>(observable);
         return this;
     }
 
-    /**
-     * Adds all the given sources to this binding. If a given source was already present it is not
-     * overwritten.
-     */
+    /// Adds all the given sources to this binding. If a given source was already present, it is not overwritten.
     @SafeVarargs
     public final BidirectionalBinding<T> addSources(AbstractSource<?, T>... sources) {
         for (AbstractSource<?, T> source : sources) {
@@ -86,28 +79,23 @@ public class BidirectionalBinding<T> extends AbstractBinding<T> {
         return this;
     }
 
-    /**
-     * Adds the given source to this binding. If the given source was already present it is not
-     * overwritten.
-     */
+    /// Adds the given source to this binding. If the given source was already present, it is not overwritten.
     public <S> BidirectionalBinding<T> addSource(AbstractSource<S, T> source) {
         if (sources.containsKey(source.getObservable())) return this;
         sources.put(source.getObservable(), source);
         return this;
     }
 
-    /**
-     * {@inheritDoc}
-     * <p></p>
-     * Before activating the binding checks if there are already unidirectional or bidirectional bindings registered
-     * for the given target and eventually disposes them.
-     * <p>
-     * Then activates the all the sources with {@link AbstractSource#listen(Target)}, registers the binding in {@link MFXBindings}
-     * and sets the state to {@link BindingState#BOUND}.
-     *
-     * @throws IllegalStateException if the binding has been disposed before OR the target is null
-     *                               OR there are no sources
-     */
+    /// {@inheritDoc}
+    ///
+    /// Before activating the binding checks if there are already unidirectional or bidirectional bindings registered
+    /// for the given target and eventually disposes them.
+    ///
+    /// Then activates all the sources with [AbstractSource#listen(Target)], registers the binding in [MFXBindings]
+    /// and sets the state to [BindingState#BOUND].
+    ///
+    /// @throws IllegalStateException if the binding has been disposed before OR the target is null
+    ///                                                             OR there are no sources
     @Override
     public BidirectionalBinding<T> get() {
         if (isDisposed())
@@ -131,14 +119,12 @@ public class BidirectionalBinding<T> extends AbstractBinding<T> {
         return this;
     }
 
-    /**
-     * {@inheritDoc}
-     * <p></p>
-     * For bidirectional bindings the target is updated with the value from the last added
-     * source. This is possible thanks to {@link WeakLinkedHashMap}, {@link WeakLinkedHashMap#getLastKey()}.
-     * <p></p>
-     * Also runs {@link #getBeforeTargetInvalidation()} and {@link #getAfterTargetInvalidation()}.
-     */
+    /// {@inheritDoc}
+    ///
+    /// For bidirectional bindings the target is updated with the value from the last added source.
+    /// This is possible thanks to [WeakLinkedHashMap], [WeakLinkedHashMap#getLastKey()].
+    ///
+    /// Also runs [#getBeforeTargetInvalidation()] and [#getAfterTargetInvalidation()].
     @Override
     public IBinding<T> invalidate() {
         Optional.ofNullable(sources.getLastKey())
@@ -151,11 +137,9 @@ public class BidirectionalBinding<T> extends AbstractBinding<T> {
         return this;
     }
 
-    /**
-     * {@inheritDoc}
-     * <p></p>
-     * Also runs {@link #getBeforeSourceInvalidation()} and {@link #getAfterSourceInvalidation()}.
-     */
+    /// {@inheritDoc}
+    ///
+    /// Also runs [#getBeforeSourceInvalidation()] and [#getAfterSourceInvalidation()].
     @Override
     public IBinding<T> invalidateSource() {
         beforeSourceInvalidation.run();
@@ -170,12 +154,10 @@ public class BidirectionalBinding<T> extends AbstractBinding<T> {
         return this;
     }
 
-    /**
-     * {@inheritDoc}
-     * <p></p>
-     * Disposes all the sources and removes them, calls {@link #clearInvalidatingSources()},
-     * sets the state to {@link BindingState#UNBOUND} then un-registers the binding from {@link MFXBindings}.
-     */
+    /// {@inheritDoc}
+    ///
+    /// Disposes all the sources and removes them, calls [#clearInvalidatingSources()],
+    /// sets the state to [BindingState#UNBOUND] then unregisters the binding from [MFXBindings].
     @Override
     public BidirectionalBinding<T> unbind() {
         sources.values().forEach(ISource::dispose);
@@ -186,13 +168,10 @@ public class BidirectionalBinding<T> extends AbstractBinding<T> {
         return this;
     }
 
-    /**
-     * Disposes only the given source if present.
-     * <p></p>
-     * If that was the last source then the state is set to {@link BindingState#UNBOUND} and
-     * the binding is un-registered from {@link MFXBindings}. Note that unlike {@link #unbind}
-     * this won't dispose and remove the invalidating sources!
-     */
+    /// Disposes only the given source if present.
+    ///
+    /// If that was the last source, then the state is set to [BindingState#UNBOUND] and the binding is unregistered from [MFXBindings].
+    /// Note that unlike [#unbind()] this won't dispose and remove the invalidating sources!
     public <S> BidirectionalBinding<T> unbind(ObservableValue<? extends S> source) {
         AbstractSource s = sources.remove(source);
         if (s != null) {
@@ -206,13 +185,9 @@ public class BidirectionalBinding<T> extends AbstractBinding<T> {
         return this;
     }
 
-    /**
-     * {@inheritDoc}
-     * <p></p>
-     * Calls {@link #unbind()}.
-     * <p>
-     * Then sets the remaining properties to null and the state to {@link BindingState#DISPOSED}.
-     */
+    /// {@inheritDoc}
+    ///
+    /// Calls [#unbind()] and then sets the remaining properties to `null` and the state to [BindingState#DISPOSED].
     @Override
     public void dispose() {
         unbind();

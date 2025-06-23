@@ -18,15 +18,13 @@
 
 package io.github.palexdev.mfxcore.base.properties.resettable;
 
+import java.util.Objects;
+
 import io.github.palexdev.mfxcore.base.properties.base.ResettableProperty;
 import javafx.beans.property.ReadOnlyFloatWrapper;
 import javafx.beans.property.SimpleFloatProperty;
 
-import java.util.Objects;
-
-/**
- * A {@link SimpleFloatProperty} that implements {@link ResettableProperty}.
- */
+/// A [SimpleFloatProperty] that implements [ResettableProperty].
 public class ResettableFloatProperty extends ReadOnlyFloatWrapper implements ResettableProperty<Number> {
     //================================================================================
     // Properties

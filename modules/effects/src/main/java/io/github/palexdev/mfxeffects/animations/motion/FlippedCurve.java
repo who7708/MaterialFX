@@ -20,11 +20,9 @@ package io.github.palexdev.mfxeffects.animations.motion;
 
 import io.github.palexdev.mfxeffects.animations.base.Curve;
 
-/**
- * This {@link Curve} is capable of flipping the motion of other curves:
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_bounce_in.mp4>BounceIn</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_flipped.mp4>Flipped BounceIn</a>
- */
+/// This [Curve] is capable of flipping the motion of other curves:
+///  - [BounceIn](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_bounce_in.mp4)
+///  - [Flipped BounceIn](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_flipped.mp4)
 public class FlippedCurve extends Curve {
     private final Curve curve;
 

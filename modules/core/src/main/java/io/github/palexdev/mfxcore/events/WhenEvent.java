@@ -35,58 +35,52 @@ import javafx.event.EventHandler;
 import javafx.event.EventTarget;
 import javafx.event.EventType;
 
-/**
- * In the veins of the great and so useful {@link When} construct, this class, strongly inspired by it and its implementations,
- * allows to do pretty much the same things but on {@link Event}s.
- * <p>
- * This construct can be read as "When an event of a given type, occurs on a given event target, then do this" or "Intercept events
- * of a given type on a given event target, then do this".
- * <p></p>
- * Just like the {@link When} construct, you can specify an action on the intercept event, a condition under which process
- * or not the event, an action to perform if the condition was not met, and of course you can create a handler that is
- * one shot, in other words automatically disposed after the first time its triggered.
- * <p>
- * The one thing that is missing as of now is the possibility of run the set action immediately (the executeNow() functionality)
- * as the action needs an event, and the only way would be to generate synthetic events, which is not easy and may not work
- * as intended.
- * <p>
- * Another difference is that, handlers can be registered as filters too, you can specify such behavior using {@link #asFilter()}.
- * <p></p>
- * To activate this construct after you've set everything make sure to call {@link #register()}.
- * <p></p>
- * <pre>
- * {@code
- * // A full example could be...
- * MFXButton bnt = new MFXButton("Click me");
- * WhenEvent.intercept(btn, MouseEvent.MOUSE_CLICKED)
- *     .condition(e -> e.getButton() == MouseButton.PRIMARY)
- *     .process(e -> System.out.println("Button was clicked"))
- *     .otherwise((w, e) -> {
- *         // What happens here is that, if the pressed mouse button was not the primary
- *         // then we print it to the console, and then we dispose the construct,
- *         // meaning that further events won't be processed
- *         // Note that the 'w' parameter in the lambda is a WeakReference to the construct,
- *         // so first we make sure it was not garbage collected (not null)
- *         System.out.println("Not the primary button!");
- *         WhenEvent<MouseEvent> we = w.get();
- *         if (we != null) we.dispose();
- *     })
- *     .asFilter()
- *     .oneShot()
- *     .register();
- *
- *     // More details
- *     // 1) Note that the asFilter functionality can be quite useful. In fact, you can even create
- *     // a filter that consumes the events, thus avoiding other constructs or handlers to process the same type of events
- *     // 2) This specific example I would call it as a "full one shot" haha. Check this, if you press the
- *     // PRIMARY button, the oneShot() will be taken into account, so the construct will only run once and then disposed
- *     // If you press any other button, you enter the "otherwise" action, and there it is also disposed.
- *     // So, this specific example will run once and only once
- * }
- * </pre>
- *
- * @see EventTarget
- */
+/// In the veins of the great and so useful [When] construct, this class, strongly inspired by it and its implementations,
+/// allows doing pretty much the same things but on [Events][Event].
+///
+/// This construct can be read as "When an event of a given type occurs on a given event target, then do this" or
+/// "Intercept events of a given type on a given event target, then do this".
+///
+/// Just like the [When] construct, you can:
+///  - Specify an action on the intercept event
+///  - Specify a condition under which process or not the event
+///  - Specify an action to perform if the condition was not met
+///  - Make the handler one shot, in other words it is automatically disposed after the first time it's triggered.
+///
+/// The one thing missing as of now is the possibility of run the set action immediately (the executeNow() functionality)
+/// as the action needs an event. The only way would be to generate synthetic events, which is not easy and may not work
+/// as intended.
+///
+/// Another difference is that handlers can be registered as filters too, you can specify such behavior using [#asFilter()].
+///
+/// To activate this construct after you've set everything, make sure to call [#register()].
+///
+/// ```
+/// // A full example could be...
+/// Button bnt = new Button("Click me");
+/// WhenEvent.intercept(btn, MouseEvent.MOUSE_CLICKED)
+///   .condition(e -> e.getButton() == MouseButton.PRIMARY)
+///   .process(e -> System.out.println("Button was clicked"))
+///   .otherwise((w, e) -> {
+///     // What happens here is that, if the pressed mouse button was not the primary
+///     // then we print it to the console, and then we dispose the construct,
+///     // meaning that further events won't be processed
+///     // Note that the 'w' parameter in the lambda is a WeakReference to the construct,
+///     // so first we make sure it was not garbage collected (not null)
+///     System.out.println("Not the primary button!");
+///     WhenEvent<MouseEvent> we = w.get();
+///     if (we != null) we.dispose();
+///}).asFilter().oneShot().register();
+/// // More details
+/// // 1) Note that the asFilter functionality can be quite useful. In fact, you can even create
+/// // a filter that consumes the events, thus avoiding other constructs or handlers to process the same type of events
+/// // 2) This specific example I would call it as a "full one shot" haha. Check this: if you press the
+/// // PRIMARY button, the oneShot() will be taken into account, so the construct will only run once and then disposed
+/// // If you press any other button, you enter the "otherwise" action, and there it is also disposed.
+/// // So, this specific example will run once and only once`
+///```
+///
+/// @see EventTarget
 public class WhenEvent<T extends Event> implements DisposableAction {
     //================================================================================
     // Properties
@@ -119,37 +113,29 @@ public class WhenEvent<T extends Event> implements DisposableAction {
     // Methods
     //================================================================================
 
-    /**
-     * Sets the {@link Consumer} used to "process" any given event.
-     */
+    /// Sets the [Consumer] used to "process" any given event.
     public WhenEvent<T> process(Consumer<T> action) {
         this.action = action;
         return this;
     }
 
-    /**
-     * Sets the condition under which an event will be passed to the action specified by {@link #process(Consumer)}.
-     *
-     * @see #otherwise(BiConsumer)
-     */
+    /// Sets the condition under which an event will be passed to the action specified by [#process(Consumer)].
+    ///
+    /// @see #otherwise(BiConsumer)
     public WhenEvent<T> condition(Function<T, Boolean> condition) {
         this.condition = condition;
         return this;
     }
 
-    /**
-     * Allows you to specify an action to run for events that fails the check set by {@link #condition(Function)}.
-     */
+    /// Allows you to specify an action to run for events that fails the check set by [#condition(Function)].
     public WhenEvent<T> otherwise(BiConsumer<WeakReference<WhenEvent<T>>, T> otherwise) {
         this.otherwise = otherwise;
         return this;
     }
 
-    /**
-     * Responsible for building the {@link EventHandler} with all the given parameters and then add it on the specified
-     * event target. This method won't run if the construct was disposed before, or if the handler is not null
-     * (meaning that it was already registered before).
-     */
+    /// Responsible for building the [EventHandler] with all the given parameters and then add it on the specified
+    /// event target. This method won't run if the construct was disposed before, or if the handler is not null
+    /// (meaning that it was already registered before).
     public WhenEvent<T> register() {
         if (isDisposed() || handler != null) return this;
         rurWrapper = new RegUnRegWrapper();
@@ -176,12 +162,10 @@ public class WhenEvent<T extends Event> implements DisposableAction {
         return this;
     }
 
-    /**
-     * Invoked by {@link #register()} if everything went well. Here, the construct is added to a static Map that retains
-     * all the built constructs, the mapping is as follows: {@code EventTarget -> Set<WhenEvent<?>>}.
-     * <p>
-     * Finally, the built {@link EventHandler} is added on the specified {@link EventTarget}.
-     */
+    /// Invoked by [#register()] if everything went well. Here, the construct is added to a static Map that retains
+    /// all the built constructs. The mapping is as follows: `EventTarget -> Set<WhenEvent<?>>`.
+    ///
+    /// Finally, the built [EventHandler] is added on the specified [EventTarget].
     protected void doRegister() {
         WeakHashSet<WhenEvent<?>> set = whens.computeIfAbsent(target, n -> new WeakHashSet<>());
         set.add(this);
@@ -189,43 +173,33 @@ public class WhenEvent<T extends Event> implements DisposableAction {
         active = true;
     }
 
-    /**
-     * @return whether the construct is "one-shot"
-     * @see #oneShot()
-     */
+    /// @return whether the construct is "one-shot"
+    /// @see #oneShot()
     public boolean isOneShot() {
         return oneShot;
     }
 
-    /**
-     * Sets the construct as 'one-shot', meaning that once an event occurs the first time and the action is executed,
-     * the construct will automatically dispose itself.
-     */
+    /// Sets the construct as 'one-shot', meaning that once an event occurs the first time and the action is executed,
+    /// the construct will automatically dispose itself.
     public WhenEvent<T> oneShot() {
         this.oneShot = true;
         return this;
     }
 
-    /**
-     * @return whether the built {@link EventHandler} will be registered as a simple handler or filter
-     * @see #asFilter()
-     */
+    /// @return whether the built [EventHandler] will be registered as a simple handler or filter
+    /// @see #asFilter()
     public boolean isFilter() {
         return asFilter;
     }
 
-    /**
-     * Sets a flag that will make the built {@link EventHandler} be registered as a filter.
-     */
+    /// Sets a flag that will make the built [EventHandler] be registered as a filter.
     public WhenEvent<T> asFilter() {
         this.asFilter = true;
         return this;
     }
 
-    /**
-     * Unregisters the {@link EventHandler} from the event target, sets everything to null, and removes the construct from
-     * the "global" map.
-     */
+    /// Unregisters the [EventHandler] from the event target, sets everything to null, and removes the construct from
+    /// the "global" map.
     @Override
     public void dispose() {
         if (target != null) {
@@ -241,76 +215,57 @@ public class WhenEvent<T extends Event> implements DisposableAction {
         }
     }
 
-    /**
-     * Calls {@link #dispose()} on the given {@code WhenEvent} construct.
-     */
+    /// Calls [#dispose()] on the given `WhenEvent` construct.
     public static void dispose(WhenEvent<?> w) {
         if (w != null) w.dispose();
     }
 
-    /**
-     * Calls {@link #dispose(WhenEvent)} on each of the given {@code WhenEvent} constructs.
-     */
+    /// Calls [#dispose(WhenEvent)] on each of the given `WhenEvent` constructs.
     public static void dispose(WhenEvent<?>... whens) {
         for (WhenEvent<?> w : whens) w.dispose();
     }
 
-    /**
-     * @return whether the construct is active and not disposed, the flag is set if {@link #doRegister()} run successfully
-     */
+    /// @return whether the construct is active and not disposed, the flag is set if [#doRegister()] run successfully
     public boolean isActive() {
         return active;
     }
 
-    /**
-     * @return whether this construct has been disposed before. By default, checks if the given {@link EventType} and
-     * event target are null
-     */
+    /// @return whether this construct has been disposed before. By default, checks if the given [EventType] and
+    /// event target is null
     public boolean isDisposed() {
         return target == null &&
                eventType == null;
     }
 
-    /**
-     * @return the total number of existing {@code WhenEvent} constructs for a given target
-     */
+    /// @return the total number of existing `WhenEvent` constructs for a given target
     public static int size(EventTarget target) {
         return Optional.ofNullable(whens.get(target))
             .map(WeakHashSet::size)
             .orElse(0);
     }
 
-    /**
-     * @return the total number of existing {@code WhenEvent} constructs for any registered {@link ObservableValue}
-     */
+    /// @return the total number of existing `WhenEvent` constructs for any registered [ObservableValue]
     public static int totalSize() {
         return whens.keySet().stream()
             .mapToInt(WhenEvent::size)
             .sum();
     }
 
-    /**
-     * @return this construct wrapped in a {@link WeakReference}
-     */
+    /// @return this construct wrapped in a [WeakReference]
     protected final WeakReference<WhenEvent<T>> asWeak() {
         return new WeakReference<>(this);
     }
 
-    /**
-     * This is called when handling the construct's disposal.
-     * The aforementioned Map used to store the built {@code WhenEvent} constructs, uses this mapping:
-     * <pre>
-     * {@code
-     * [key -> value] = [EventTarget -> WeakHashSet<WhenEvent<?>>]
-     * }
-     * </pre>
-     * This is because {@code WhenEvent} allows to register multiple constructs on a single event target,
-     * for this reason, there are several things to consider on disposal:
-     * <p> 1) There is a non-null Set mapped to the current event target
-     * <p> 2) The construct can be removed from the Set without any null check, but after the removal
-     * it's good to check whether the Set is now empty
-     * <p> 3) In such case, we can also remove the mapping from the Map.
-     */
+    /// This is called when handling the construct's disposal.
+    /// The aforementioned Map used to store the built `WhenEvent` constructs, uses this mapping:
+    /// `[key -> value] = [EventTarget -> WeakHashSet<WhenEvent<?>>]`
+    ///
+    /// This is because `WhenEvent` allows registering multiple constructs on a single event target,
+    /// for this reason, there are several things to consider on disposal:
+    ///  1) There is a non-null Set mapped to the current event target
+    ///  2) The construct can be removed from the Set without any null check, but after the removal
+    /// it's good to check whether the Set is now empty
+    ///  3) In such case, we can also remove the mapping from the Map.
     protected final void handleMapDisposal() {
         WeakHashSet<WhenEvent<?>> set = whens.get(target);
         if (set == null) return;
@@ -323,10 +278,8 @@ public class WhenEvent<T extends Event> implements DisposableAction {
     //================================================================================
     public static class WhenEventsMap extends WeakHashMap<EventTarget, WeakHashSet<WhenEvent<?>>> {}
 
-    /**
-     * Utility internal class that allows to remove some ifs when registering/unregistering the {@link EventHandler}
-     * on the event target.
-     */
+    /// Utility internal class that allows to remove some ifs when registering/unregistering the [EventHandler]
+    /// on the event target.
     protected class RegUnRegWrapper {
         private final TriConsumer<EventTarget, EventType<T>, EventHandler<T>> reg;
         private final TriConsumer<EventTarget, EventType<T>, EventHandler<T>> unReg;

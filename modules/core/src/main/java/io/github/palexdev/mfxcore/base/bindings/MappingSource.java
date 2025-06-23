@@ -22,14 +22,11 @@ import io.github.palexdev.mfxcore.base.bindings.base.Updater;
 import io.github.palexdev.mfxcore.enums.BindingType;
 import javafx.beans.value.ObservableValue;
 
-/**
- * Concrete implementation of {@link AbstractSource}. This type of {@code Source} is capable of
- * mapping the source's type S to the target's type and vice-versa to perform both {@link #updateTarget(Object, Object)}
- * and {@link #updateSource(Object, Object)}.
- *
- * @param <S> the source's observable type
- * @param <T> the target's observable type
- */
+/// Concrete implementation of [AbstractSource]. This type of `Source` is capable of mapping the source's type `S` to
+/// the target's type and vice versa to perform both [#updateTarget(Object, Object)] and [#updateSource(Object, Object)].
+///
+/// @param <S> the source's observable type
+/// @param <T> the target's observable type
 public class MappingSource<S, T> extends AbstractSource<S, T> {
     //================================================================================
     // Properties
@@ -55,17 +52,14 @@ public class MappingSource<S, T> extends AbstractSource<S, T> {
     // Methods
     //================================================================================
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * Operates differently depending on which binding activated this.
-     * <p>
-     * For unidirectional bindings the target instance is null so the {@link #getTargetUpdater()} is called
-     * then exits.
-     * <p>
-     * For bidirectional bindings the target instance is not null. Before calling the {@link #getTargetUpdater()}
-     * we first must check that the update is not has not been invoked because of a "bounce" effect, {@link Target#isFromSource()}.
-     */
+    /// {@inheritDoc}
+    ///
+    /// Operates differently depending on which binding activated this.
+    ///
+    /// For unidirectional bindings the target instance is `null` so the [#getTargetUpdater()] is called then exits.
+    ///
+    /// For bidirectional bindings the target instance is not null. Before calling the [#getTargetUpdater()]
+    /// we first must check that the update is not has not been invoked because of a "bounce" effect, [Target#isFromSource()].
     @Override
     public void updateTarget(S oldValue, S newValue) {
         if (target.bindingType() == BindingType.UNIDIRECTIONAL) {
@@ -82,18 +76,15 @@ public class MappingSource<S, T> extends AbstractSource<S, T> {
         targetUpdater.update(oldValue, newValue);
     }
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * Operates differently depending on which binding activated this.
-     * <p>
-     * For unidirectional bindings the target instance is null so the {@link #getTargetUpdater()} is called
-     * then exits.
-     * <p>
-     * For bidirectional bindings the target instance is not null. The call to {@link #getSourceUpdater()}
-     * is surrounded by a try-finally block in which we also set {@link Target#isFromSource()} to true, if anything goes wrong
-     * the finally block ensures to reset {@link Target#isFromSource()} back to false.
-     */
+    /// {@inheritDoc}
+    ///
+    /// Operates differently depending on which binding activated this.
+    ///
+    /// For unidirectional bindings the target instance is `null` so the [#getTargetUpdater()] is called then exits.
+    ///
+    /// For bidirectional bindings the target instance is not null. The call to [#getSourceUpdater()]
+    /// is surrounded by a try-finally block in which we also set [Target#isFromSource()] to true, if anything goes wrong,
+    /// the finally block ensures to reset [Target#isFromSource()] back to false.
     @Override
     public void updateSource(T oldValue, T newValue) {
         if (target == null) {
@@ -109,25 +100,21 @@ public class MappingSource<S, T> extends AbstractSource<S, T> {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * For unidirectional bindings. The listener added to this source's observable is responsible for
-     * triggering {@link #updateTarget(Object, Object)}.
-     */
+    /// {@inheritDoc}
+    ///
+    /// For unidirectional bindings. The listener added to this source's observable is responsible for
+    /// triggering [#updateTarget(Object, Object)].
     @Override
     protected void listen() {
         if (obvListener == null) obvListener = (ov, o, n) -> updateTarget(o, n);
         observable.addListener(obvListener);
     }
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * For bidirectional bindings. The source's target is set to the given one.
-     * Then {@link #listen()} is called. Then a listener to the given target is added and is responsible for
-     * triggering {@link #updateSource(Object, Object)}.
-     */
+    /// {@inheritDoc}
+    ///
+    /// For bidirectional bindings. The source's target is set to the given one.
+    /// Then [#listen()] is called. Then a listener to the given target is added and is responsible for
+    /// triggering [#updateSource(Object, Object)].
     @Override
     protected void listen(Target<T> target) {
         listen();
@@ -137,12 +124,10 @@ public class MappingSource<S, T> extends AbstractSource<S, T> {
         target.getObservable().addListener(tgtListener);
     }
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * Removes the listeners added to this source's observable and the target's observable (if not null).
-     * Then sets all its properties and listeners to null.
-     */
+    /// {@inheritDoc}
+    ///
+    /// Removes the listeners added to this source's observable and the target's observable (if not null).
+    /// Then sets all its properties and listeners to null.
     @Override
     public void dispose() {
         observable.removeListener(obvListener);
@@ -159,49 +144,37 @@ public class MappingSource<S, T> extends AbstractSource<S, T> {
     // Getters/Setters
     //================================================================================
 
-    /**
-     * @return the {@link MappedUpdater} responsible for mapping the source's values to a compatible type and then
-     * update the target
-     */
+    /// @return the [MappedUpdater] responsible for mapping the source's values to a compatible type and then
+    /// update the target
     public MappedUpdater<S, T> getTargetUpdater() {
         return targetUpdater;
     }
 
-    /**
-     * Sets the {@link MappedUpdater} for the target.
-     */
+    /// Sets the [MappedUpdater] for the target.
     public MappingSource<S, T> setTargetUpdater(MappedUpdater<S, T> targetUpdater) {
         this.targetUpdater = targetUpdater;
         return this;
     }
 
-    /**
-     * Sets the {@link MappedUpdater} for the target.
-     */
+    /// Sets the [MappedUpdater] for the target.
     public MappingSource<S, T> setTargetUpdater(Mapper<S, T> mapper, Updater<T> updater) {
         this.targetUpdater = new MappedUpdater<>(mapper, updater);
         return this;
     }
 
-    /**
-     * @return the {@link MappedUpdater} responsible for mapping the target's values to a compatible type and then
-     * update the source
-     */
+    /// @return the [MappedUpdater] responsible for mapping the target's values to a compatible type and then
+    /// update the source
     public MappedUpdater<T, S> getSourceUpdater() {
         return sourceUpdater;
     }
 
-    /**
-     * Sets the {@link MappedUpdater} for the source.
-     */
+    /// Sets the [MappedUpdater] for the source.
     public MappingSource<S, T> setSourceUpdater(MappedUpdater<T, S> sourceUpdater) {
         this.sourceUpdater = sourceUpdater;
         return this;
     }
 
-    /**
-     * Sets the {@link MappedUpdater} for the source.
-     */
+    /// Sets the [MappedUpdater] for the source.
     public MappingSource<S, T> setSourceUpdater(Mapper<T, S> mapper, Updater<S> updater) {
         this.sourceUpdater = new MappedUpdater<>(mapper, updater);
         return this;

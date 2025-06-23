@@ -22,9 +22,7 @@ import io.github.palexdev.mfxcore.base.beans.range.IntegerRange;
 import io.github.palexdev.mfxcore.base.beans.range.NumberRange;
 import io.github.palexdev.mfxcore.base.properties.base.NumberRangeProperty;
 
-/**
- * Implementation of {@link NumberRangeProperty} for {@code Integer} ranges.
- */
+/// Implementation of [NumberRangeProperty] for `Integer` ranges.
 public class IntegerRangeProperty extends NumberRangeProperty<Integer> {
 
     //================================================================================

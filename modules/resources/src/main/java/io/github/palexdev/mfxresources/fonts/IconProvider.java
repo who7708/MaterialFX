@@ -18,46 +18,34 @@
 
 package io.github.palexdev.mfxresources.fonts;
 
-import javafx.scene.text.Font;
-
 import java.io.InputStream;
 import java.util.function.Function;
 
-/**
- * Public API to implement an {@code IconProvider}. These contain important information about an icon font.
- * In particular, they should expose:
- * <p> - The path to the font
- * <p> - A converter function, that maps an icon description/name to its unicode character, see {@link IconDescriptor}
- * <p> - A way to load the icon font as an {@link InputStream}
- */
+import javafx.scene.text.Font;
+
+/// Public API to implement an `IconProvider`. These contain important information about an icon font.
+/// In particular, they should expose:
+///  - The path to the font
+///  - A converter function that maps an icon description/name to its Unicode character, see [IconDescriptor]
+///  - A way to load the icon font as an [InputStream]
 public interface IconProvider {
-    /**
-     * @return the path to the icon font resource
-     */
+    /// @return the path to the icon font resource
     String getFontPath();
 
-    /**
-     * @return the function that will be used to convert the icon description/name to its corresponding unicode character
-     */
+    /// @return the function that will be used to convert the icon description/name to its corresponding Unicode character
     Function<String, Character> getConverter();
 
-    /**
-     * This should load the font resource as an {@link InputStream}.
-     */
+    /// This should load the font resource as an [InputStream].
     InputStream load();
 
-    /**
-     * @return the result of {@link #load()} as a {@link Font} using {@link Font#loadFont(String, double)},
-     * the default used size is 16.0
-     */
+    /// @return the result of [#load()] as a [Font] using [Font#loadFont(String, double)],
+    /// the default used size is 16.0
     default Font loadFont() {
         return loadFont(16.0);
     }
 
-    /**
-     * @return the result of {@link #load()} as a {@link Font} using {@link Font#loadFont(String, double)}
-     * with the given size
-     */
+    /// @return the result of [#load()] as a [Font] using [Font#loadFont(String, double)]
+    /// with the given size
     default Font loadFont(double size) {
         return Font.loadFont(load(), size);
     }

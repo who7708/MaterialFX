@@ -22,11 +22,9 @@ import io.github.palexdev.mfxeffects.animations.base.Curve;
 import io.github.palexdev.mfxeffects.beans.Offset;
 import javafx.animation.Interpolator;
 
-/**
- * This class holds a collection of {@link Curve}s (JavaFX's {@link Interpolator}s) to produce any kind of animation
- * you could ever want. These have been ported from the {@code Flutter} framework, in particular from the
- * <a href=https://github.com/flutter/flutter/tree/master/packages/flutter/lib/src/animation>animations</a> package.
- */
+/// This class holds a collection of [Curve]s (JavaFX's [Interpolator]s) to produce any kind of animation
+/// you could ever want. These have been ported from the `Flutter` framework, in particular from the
+/// [animations](https://github.com/flutter/flutter/tree/master/packages/flutter/lib/src/animation) package.
 public class Motion {
     public static final Curve LINEAR = new Linear();
     public static final Curve DECELERATE = new DecelerateCurve();

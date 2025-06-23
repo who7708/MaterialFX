@@ -18,16 +18,14 @@
 
 package io.github.palexdev.mfxcore.base.properties.functional;
 
+import java.util.function.Consumer;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 
-import java.util.function.Consumer;
-
-/**
- * Simply an {@link ObjectProperty} that wraps a {@link Consumer}.
- *
- * @param <T> the consumer's input type
- */
+/// Simply a [ObjectProperty] that wraps a [Consumer].
+///
+/// @param <T> the consumer's input type
 public class ConsumerProperty<T> extends ReadOnlyObjectWrapper<Consumer<T>> {
 
     //================================================================================

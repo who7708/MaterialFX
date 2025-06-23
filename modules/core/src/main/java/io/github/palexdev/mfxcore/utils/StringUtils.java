@@ -18,26 +18,22 @@
 
 package io.github.palexdev.mfxcore.utils;
 
-import io.github.palexdev.mfxlocalization.I18N;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-/**
- * Utils class for {@code Strings}.
- */
+import io.github.palexdev.mfxlocalization.I18N;
+
+/// Utils class for `Strings`.
 public class StringUtils {
     public static final String EMPTY = "";
     public static final int INDEX_NOT_FOUND = -1;
 
-    /**
-     * Finds the difference between two {@code Strings}.
-     *
-     * @param str1 The first String
-     * @param str2 The second String
-     * @return the difference between the two given strings
-     */
+    /// Finds the difference between two `Strings`.
+    ///
+    /// @param str1 The first String
+    /// @param str2 The second String
+    /// @return the difference between the two given strings
     public static String difference(final String str1, final String str2) {
         if (str1 == null) {
             return str2;
@@ -52,12 +48,10 @@ public class StringUtils {
         return str2.substring(at);
     }
 
-    /**
-     * Finds the index at which two {@code CharSequences} differ.
-     *
-     * @param cs1 The first sequence
-     * @param cs2 The second sequence
-     */
+    /// Finds the index at which two `CharSequences` differ.
+    ///
+    /// @param cs1 The first sequence
+    /// @param cs2 The second sequence
     public static int indexOfDifference(final CharSequence cs1, final CharSequence cs2) {
         if (cs1 == cs2) {
             return INDEX_NOT_FOUND;
@@ -77,14 +71,12 @@ public class StringUtils {
         return INDEX_NOT_FOUND;
     }
 
-    /**
-     * Replaces the last occurrence of the given string with a new string.
-     *
-     * @param string      The string to modify
-     * @param substring   The last occurrence to find
-     * @param replacement The replacement
-     * @return The modified string
-     */
+    /// Replaces the last occurrence of the given string with a new string.
+    ///
+    /// @param string      The string to modify
+    /// @param substring   The last occurrence to find
+    /// @param replacement The replacement
+    /// @return The modified string
     public static String replaceLast(String string, String substring, String replacement) {
         int index = string.lastIndexOf(substring);
         if (index == -1)
@@ -110,13 +102,11 @@ public class StringUtils {
         return str;
     }
 
-    /**
-     * <p>Checks if a CharSequence contains a search CharSequence irrespective of case,
-     * handling {@code null}. Case-insensitivity is defined as by
-     * {@link String#equalsIgnoreCase(String)}.
-     *
-     * <p>A {@code null} CharSequence will return {@code false}.</p>
-     */
+    /// Checks if a CharSequence contains a search CharSequence irrespective of case,
+    /// handling `null`. Case-insensitivity is defined as by
+    /// [String#equalsIgnoreCase(String)].
+    ///
+    /// A `null` CharSequence will return `false`.
     public static boolean containsIgnoreCase(final CharSequence str, final CharSequence searchStr) {
         if (str == null || searchStr == null) {
             return false;
@@ -131,52 +121,42 @@ public class StringUtils {
         return false;
     }
 
-    /**
-     * Checks if thee given string starts with the specifies prefix, ignores case.
-     */
+    /// Checks if the given string starts with the specified prefix, ignores case.
     public static boolean startsWithIgnoreCase(String str, String prefix) {
         return str.regionMatches(true, 0, prefix, 0, prefix.length());
     }
 
-    /**
-     * Checks if the given string ends with the given prefix, ignores case.
-     */
+    /// Checks if the given string ends with the given prefix, ignores case.
     public static boolean endsWithIgnoreCase(String str, String suffix) {
         int suffixLength = suffix.length();
         return str.regionMatches(true, str.length() - suffixLength, suffix, 0, suffixLength);
     }
 
-    /**
-     * Checks if the given string contains at least one of the given words.
-     *
-     * @param split this is the character that will split the input string, see {@link String#split(String)}
-     */
+    /// Checks if the given string contains at least one of the given words.
+    ///
+    /// @param split this is the character that will split the input string, see [String#split(String)]
     public static boolean containsAny(String str, String split, String... words) {
         List<String> inputStringList = Arrays.asList(str.split(split));
         List<String> wordsList = Arrays.asList(words);
         return wordsList.stream().anyMatch(inputStringList::contains);
     }
 
-    /**
-     * Checks if the given string contains all the specifies words.
-     *
-     * @param split this is the character that will split the input string, see {@link String#split(String)}
-     */
+    /// Checks if the given string contains all the specified words.
+    ///
+    /// @param split this is the character that will split the input string, see [String#split(String)]
     public static boolean containsAll(String str, String split, String... words) {
         List<String> inputStringList = Arrays.asList(str.split(split));
         List<String> wordsList = Arrays.asList(words);
         return new HashSet<>(inputStringList).containsAll(wordsList);
     }
 
-    /**
-     * A useful method to convert a given elapsed time in seconds to a
-     * String.
-     * <p></p>
-     * <p> - "Just now" if elapsed is less than 60 seconds
-     * <p> - minutes + " minutes ago" if the elapsed seconds is greater than 60 seconds
-     * <p> - hours + " minutes ago" if the elapsed minutes are greater than 60 minutes
-     * <p> - days + " days ago" if the elapsed hours are greater than 24
-     */
+    /// A useful method to convert a given elapsed time in seconds to a
+    /// String.
+    ///
+    ///  - "Just now" if elapsed is less than 60 seconds
+    ///  - \<minutes> + "minutes ago" if the elapsed seconds is greater than 60 seconds
+    ///  - \<hours> + "minutes ago" if the elapsed minutes are greater than 60 minutes
+    ///  - \<days> + "days ago" if the elapsed hours are greater than 24
     public static String timeToHumanReadable(long elapsedSeconds) {
         if (elapsedSeconds < 60) {
             return I18N.getOrDefault("stringUtil.now");
@@ -191,9 +171,7 @@ public class StringUtils {
         }
     }
 
-    /**
-     * Generates a random alphabetic string of given length
-     */
+    /// Generates a random alphabetic string of given length
     public static String randAlphabetic(int length) {
         return RandomUtils.random.ints(97, 123)
             .limit(length)
@@ -201,9 +179,7 @@ public class StringUtils {
             .toString();
     }
 
-    /**
-     * Generates a random alphanumeric string of given length
-     */
+    /// Generates a random alphanumeric string of given length
     public static String randAlphanumeric(int length) {
         return RandomUtils.random.ints(48, 123)
             .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))

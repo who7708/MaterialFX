@@ -62,7 +62,7 @@ import javafx.css.StyleablePropertyFactory;
 /// It also implements [WithVariants]. The specs define a bunch of different configurations; we can distinguish two types:
 /// - Configurations that apply on the group itself, like the [GroupVariant] and the [SizeVariant] (inherited from [ButtonsConfig])
 /// - Configurations that apply on the buttons, which are the same defined in [MFXButton] and [MFXIconButton]. To make this
-/// more convenient, we grouped them into [ButtonsConfig] and can be set through [#setButtonsConfig()].
+/// more convenient, we grouped them into [ButtonsConfig] and can be set through [#setButtonsConfig(ButtonsConfig)].
 /// When buttons are added to the group, the configuration is automatically applied by [#updateGroup(ListChangeListener.Change)]
 ///
 /// Buttons can be added or removed through the delegate methods [#addButton(MFXButton)], [#addButton(String, MFXFontIcon)],

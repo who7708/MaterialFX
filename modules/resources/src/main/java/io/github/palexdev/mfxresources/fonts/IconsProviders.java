@@ -29,9 +29,7 @@ import io.github.palexdev.mfxresources.fonts.fontawesome.FontAwesomeRegular;
 import io.github.palexdev.mfxresources.fonts.fontawesome.FontAwesomeSolid;
 import javafx.scene.text.Font;
 
-/**
- * This enum contains all the "officially" supported icon fonts.
- */
+/// This enum contains all the "officially" supported icon fonts.
 public enum IconsProviders implements IconProvider {
     FONTAWESOME_BRANDS("FontAwesome/brands/FontAwesomeBrands.ttf", FontAwesomeBrands::toCode),
     FONTAWESOME_REGULAR("FontAwesome/regular/FontAwesomeRegular.ttf", FontAwesomeRegular::toCode),
@@ -69,23 +67,18 @@ public enum IconsProviders implements IconProvider {
         return MFXResources.loadFont(font);
     }
 
-    /**
-     * Registers the given {@link IconProvider} to the given prefix.
-     * <p>
-     * When {@link MFXFontIcon} is going to receive a description with such prefix, it's automatically going to use this
-     * provider.
-     * <p></p>
-     * If a provider for a prefix is already present, it will be replaced with this new one.
-     */
+    /// Registers the given [IconProvider] to the given prefix.
+    ///
+    /// When [MFXFontIcon] is going to receive a description with such prefix, it's automatically going to use this provider.
+    ///
+    /// If a provider for a prefix is already present, it will be replaced with this new one.
     public static void registerProvider(String prefix, IconProvider provider) {
         PROVIDERS.put(prefix, provider);
     }
 
-    /**
-     * Creates an anonymous {@link IconProvider} implementation that returns the given converter and font.
-     * <p>
-     * Delegates to {@link #registerProvider(String, IconProvider)}.
-     */
+    /// Creates an anonymous [IconProvider] implementation that returns the given converter and font.
+    ///
+    /// Delegates to [#registerProvider(String,IconProvider)].
     public static void registerProvider(String prefix, Font font, Function<String, Character> converter) {
         registerProvider(prefix, new IconProvider() {
             @Override
@@ -115,11 +108,9 @@ public enum IconsProviders implements IconProvider {
         });
     }
 
-    /**
-     * Given an icon descriptor as a String, attempts to return an {@link IconProvider} for its prefix.
-     * <p>
-     * If none is found returns {@code null}.
-     */
+    /// Given an icon descriptor as a String, attempts to return an [IconProvider] for its prefix.
+    ///
+    /// If none is found returns `null`.
     public static IconProvider getProvider(String description) {
         String prefix = PROVIDERS.floorKey(description);
         if (prefix != null && description.startsWith(prefix))
@@ -127,9 +118,7 @@ public enum IconsProviders implements IconProvider {
         return null;
     }
 
-    /**
-     * Delegates to {@link #getProvider(String)}.
-     */
+    /// Delegates to [#getProvider(String)].
     public static IconProvider getProvider(IconDescriptor descriptor) {
         return getProvider(descriptor.getDescription());
     }

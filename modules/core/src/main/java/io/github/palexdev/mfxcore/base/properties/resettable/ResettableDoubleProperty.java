@@ -18,15 +18,13 @@
 
 package io.github.palexdev.mfxcore.base.properties.resettable;
 
+import java.util.Objects;
+
 import io.github.palexdev.mfxcore.base.properties.base.ResettableProperty;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.beans.property.SimpleDoubleProperty;
 
-import java.util.Objects;
-
-/**
- * A {@link SimpleDoubleProperty} that implements {@link ResettableProperty}.
- */
+/// A [SimpleDoubleProperty] that implements [ResettableProperty].
 public class ResettableDoubleProperty extends ReadOnlyDoubleWrapper implements ResettableProperty<Number> {
     //================================================================================
     // Properties

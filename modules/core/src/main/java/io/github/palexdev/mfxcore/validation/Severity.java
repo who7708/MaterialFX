@@ -18,10 +18,7 @@
 
 package io.github.palexdev.mfxcore.validation;
 
-/**
- * Enumeration to indicate the severity of an
- * unmet {@link Constraint}.
- */
+/// Enumeration to indicate the severity of an unmet [Constraint].
 public enum Severity {
     INFO, WARNING, ERROR
 }

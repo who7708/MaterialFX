@@ -23,10 +23,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-/**
- * This class wraps a {@link ScheduledExecutorService} to make it reusable by keeping
- * a reference to the {@link ScheduledFuture}.
- */
+/// This class wraps a [ScheduledExecutorService] to make it reusable by keeping a reference to the [ScheduledFuture].
 public class ReusableScheduledExecutor {
     //================================================================================
     // Properties
@@ -45,16 +42,12 @@ public class ReusableScheduledExecutor {
     // Delegate Methods
     //================================================================================
 
-    /**
-     * Cancels the task by calling {@link ScheduledFuture#cancel(boolean)} with false as argument.
-     */
+    /// Cancels the task by calling [ScheduledFuture#cancel(boolean)] with false as argument.
     public void cancel() {
         task.cancel(false);
     }
 
-    /**
-     * Cancels the task by calling {@link ScheduledFuture#cancel(boolean)} with true as argument.
-     */
+    /// Cancels the task by calling [ScheduledFuture#cancel(boolean)] with true as argument.
     public void cancelNow() {
         task.cancel(true);
     }

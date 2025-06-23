@@ -18,16 +18,14 @@
 
 package io.github.palexdev.mfxcore.base.properties.functional;
 
+import java.util.function.Predicate;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 
-import java.util.function.Predicate;
-
-/**
- * Simply an {@link ObjectProperty} that wraps a {@link Predicate}.
- *
- * @param <T> the predicate's input type
- */
+/// Simply an [ObjectProperty] that wraps a [Predicate].
+///
+/// @param <T> the predicate's input type
 public class PredicateProperty<T> extends ReadOnlyObjectWrapper<Predicate<T>> {
 
     //================================================================================

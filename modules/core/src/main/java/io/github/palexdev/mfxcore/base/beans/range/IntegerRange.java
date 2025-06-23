@@ -23,9 +23,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-/**
- * Implementation of {@link NumberRange} to represent an Integer range.
- */
+/// Implementation of [NumberRange] to represent an Integer range.
 public class IntegerRange extends NumberRange<Integer> implements Iterable<Integer> {
 
     //================================================================================
@@ -39,37 +37,27 @@ public class IntegerRange extends NumberRange<Integer> implements Iterable<Integ
     // Static Methods
     //================================================================================
 
-    /**
-     * @return a new instance of {@code IntegerRange} with the given min and max bounds.
-     */
+    /// @return a new instance of `IntegerRange` with the given min and max bounds.
     public static IntegerRange of(Integer min, Integer max) {
         return new IntegerRange(min, max);
     }
 
-    /**
-     * @return a new instance of {@code IntegerRange} with the given val as both min and max bounds.
-     */
+    /// @return a new instance of `IntegerRange` with the given val as both min and max bounds.
     public static IntegerRange of(Integer val) {
         return new IntegerRange(val, val);
     }
 
-    /**
-     * Checks if the given value is contained in the given range (bounds are included).
-     */
+    /// Checks if the given value is contained in the given range (bounds are included).
     public static boolean inRangeOf(int val, IntegerRange range) {
         return Math.max(range.getMin(), val) == Math.min(val, range.getMax());
     }
 
-    /**
-     * Expands a range of integers to a {@code List} with step=1.
-     */
+    /// Expands a range of integers to a `List` with step=1.
     public static List<Integer> expandRange(IntegerRange range) {
         return IntStream.rangeClosed(range.getMin(), range.getMax()).collect(ArrayList::new, List::add, List::addAll);
     }
 
-    /**
-     * Expands a range of integers to a {@code List} with the given step.
-     */
+    /// Expands a range of integers to a `List` with the given step.
     public static List<Integer> expandRange(IntegerRange range, int step) {
         List<Integer> l = new ArrayList<>();
         int start = range.getMin();
@@ -80,20 +68,16 @@ public class IntegerRange extends NumberRange<Integer> implements Iterable<Integ
         return l;
     }
 
-    /**
-     * Expands a range of integers to a {@code Set} with step=1.
-     * <p>
-     * The {@code Set} is ordered.
-     */
+    /// Expands a range of integers to a `Set` with step=1.
+    ///
+    /// The `Set` is ordered.
     public static Set<Integer> expandRangeToSet(IntegerRange range) {
         return IntStream.rangeClosed(range.getMin(), range.getMax()).collect(LinkedHashSet::new, Set::add, Set::addAll);
     }
 
-    /**
-     * Expands a range of integers to a {@code Set} with the given step.
-     * <p>
-     * The {@code Set} is ordered.
-     */
+    /// Expands a range of integers to a `Set` with the given step.
+    ///
+    /// The `Set` is ordered.
     public static Set<Integer> expandRangeToSet(IntegerRange range, int step) {
         Set<Integer> s = new LinkedHashSet<>();
         int start = range.getMin();
@@ -104,31 +88,23 @@ public class IntegerRange extends NumberRange<Integer> implements Iterable<Integ
         return s;
     }
 
-    /**
-     * Expands a range of integers to an array.
-     */
+    /// Expands a range of integers to an array.
     public static Integer[] expandRangeToArray(IntegerRange range) {
         return expandRangeToArray(range.getMin(), range.getMax());
     }
 
-    /**
-     * Expands a range of integers to an array.
-     */
+    /// Expands a range of integers to an array.
     public static Integer[] expandRangeToArray(int min, int max) {
         return expandRange(of(min, max)).toArray(Integer[]::new);
     }
 
-    /**
-     * @return a sequential {@code Stream} with this range as its source.
-     */
+    /// @return a sequential `Stream` with this range as its source.
     public Stream<Integer> stream() {
         return StreamSupport.stream(spliterator(), false);
     }
 
-    /**
-     * @return Returns a possibly parallel {@code Stream} with this range as its source.
-     * It is allowable for this method to return a sequential stream.
-     */
+    /// @return Returns a possibly parallel `Stream` with this range as its source.
+    /// It is allowable for this method to return a sequential stream.
     public Stream<Integer> parallelStream() {
         return StreamSupport.stream(spliterator(), true);
     }

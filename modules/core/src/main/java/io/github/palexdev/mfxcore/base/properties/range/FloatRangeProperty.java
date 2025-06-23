@@ -22,9 +22,7 @@ import io.github.palexdev.mfxcore.base.beans.range.FloatRange;
 import io.github.palexdev.mfxcore.base.beans.range.NumberRange;
 import io.github.palexdev.mfxcore.base.properties.base.NumberRangeProperty;
 
-/**
- * Implementation of {@link NumberRangeProperty} for {@code Float} ranges.
- */
+/// Implementation of [NumberRangeProperty] for `Float` ranges.
 public class FloatRangeProperty extends NumberRangeProperty<Float> {
 
     //================================================================================

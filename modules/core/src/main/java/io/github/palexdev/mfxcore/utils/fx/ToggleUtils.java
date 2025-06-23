@@ -25,9 +25,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 
-/**
- * Utils class for {@code ToggleButtons}.
- */
+/// Utils class for `ToggleButtons`.
 public class ToggleUtils {
 
     private static final EventHandler<MouseEvent> consumeMouseEventFilter = (MouseEvent mouseEvent) -> {
@@ -42,12 +40,10 @@ public class ToggleUtils {
         ((ToggleButton) toggle).addEventFilter(MouseEvent.MOUSE_CLICKED, consumeMouseEventFilter);
     }
 
-    /**
-     * Adds a handler to the given {@code ToggleGroup} to make sure there's always at least
-     * one {@code ToggleButton} selected.
-     *
-     * @param toggleGroup The given ToggleGroup
-     */
+    /// Adds a handler to the given `ToggleGroup` to make sure there's always at least
+    /// one `ToggleButton` selected.
+    ///
+    /// @param toggleGroup The given ToggleGroup
     public static void addAlwaysOneSelectedSupport(final ToggleGroup toggleGroup) {
         toggleGroup.getToggles().addListener((ListChangeListener.Change<? extends Toggle> c) -> {
             while (c.next()) {
@@ -59,10 +55,8 @@ public class ToggleUtils {
         toggleGroup.getToggles().forEach(ToggleUtils::addConsumeMouseEventFilter);
     }
 
-    /**
-     * Copied from {@link ToggleGroup}. It's a package-private method that is used in Toggles
-     * when the selection state changes and a toggle group is set.
-     */
+    /// Copied from [ToggleGroup]. It's a package-private method used in Toggles
+    /// when the selection state changes and a toggle group is set.
     public static void clearSelectedToggle(ToggleGroup toggleGroup) {
         Toggle selectedToggle = toggleGroup.getSelectedToggle();
         if (!selectedToggle.isSelected()) {

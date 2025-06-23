@@ -18,17 +18,15 @@
 
 package io.github.palexdev.mfxcore.utils;
 
-import javafx.application.Platform;
-
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-/**
- * Utils class to help with concurrency and callables.
- */
+import javafx.application.Platform;
+
+/// Utils class to help with concurrency and callables.
 public class ExecutionUtils {
 
     private ExecutionUtils() {
@@ -38,13 +36,11 @@ public class ExecutionUtils {
         Throwable t;
     }
 
-    /**
-     * Invokes a Runnable on the JavaFX Application Thread and waits for it to finish.
-     *
-     * @param run The Runnable that has to be called on JFX thread.
-     * @throws InterruptedException If the execution is interrupted.
-     * @throws ExecutionException   If an exception is occurred in the run method of the Runnable
-     */
+    /// Invokes a Runnable on the JavaFX Application Thread and waits for it to finish.
+    ///
+    /// @param run The Runnable that has to be called on the JFX thread.
+    /// @throws InterruptedException If the execution is interrupted.
+    /// @throws ExecutionException   If an exception is occurred in the run method of the Runnable
     public static void runAndWaitEx(final Runnable run)
         throws InterruptedException, ExecutionException {
         if (Platform.isFxApplicationThread()) {
@@ -83,21 +79,16 @@ public class ExecutionUtils {
         }
     }
 
-    /**
-     * Calls {@link #runAndWaitEx(Runnable)} but consumes/ignores any thrown exception.
-     */
+    /// Calls [#runAndWaitEx(Runnable)] but consumes/ignores any thrown exception.
     public static void runAndWait(final Runnable runnable) {
         try {
             runAndWaitEx(runnable);
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
     }
 
-    /**
-     * Tries to execute the given callable and prints the stacktrace in case of exception.
-     *
-     * @return the callable result or null in case of exception
-     */
+    /// Tries to execute the given callable and prints the stacktrace in case of exception.
+    ///
+    /// @return the callable result or null in case of exception
     public static <V> V tryCallableAndPrint(Callable<V> callable) {
         try {
             return callable.call();
@@ -107,11 +98,9 @@ public class ExecutionUtils {
         }
     }
 
-    /**
-     * Tries to execute the given callable but ignores the exception in case of fail.
-     *
-     * @return the callable result or null in case of exception
-     */
+    /// Tries to execute the given callable but ignores the exception in case of fail.
+    ///
+    /// @return the callable result or null in case of exception
     public static <V> V tryCallableAndIgnore(Callable<V> callable) {
         try {
             return callable.call();

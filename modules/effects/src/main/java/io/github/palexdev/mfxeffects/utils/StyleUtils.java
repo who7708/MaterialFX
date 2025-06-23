@@ -18,28 +18,26 @@
 
 package io.github.palexdev.mfxeffects.utils;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 import javafx.css.CssMetaData;
 import javafx.css.Styleable;
 import javafx.geometry.Insets;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
 public class StyleUtils {
 
     private StyleUtils() {
     }
 
-    /**
-     * Changes the background color of a {@code Region} to the desired one.
-     *
-     * @param region The region to change the background color to
-     * @param fill   The desired color
-     */
+    /// Changes the background color of a `Region` to the desired one.
+    ///
+    /// @param region The region to change the background color to
+    /// @param fill   The desired color
     public static void updateBackground(Region region, Paint fill) {
         final Background background = region.getBackground();
         if (background == null || background.getFills().isEmpty()) {
@@ -54,13 +52,11 @@ public class StyleUtils {
         region.setBackground(new Background(fills.toArray(BackgroundFill[]::new)));
     }
 
-    /**
-     * Changes the background color of a {@code Region} to the desired one and lets specify the background insets.
-     *
-     * @param region           The region to change the background color to
-     * @param fill             The desired color
-     * @param backgroundInsets The background insets to use
-     */
+    /// Changes the background color of a `Region` to the desired one and lets specify the background insets.
+    ///
+    /// @param region           The region to change the background color to
+    /// @param fill             The desired color
+    /// @param backgroundInsets The background insets to use
     public static void updateBackground(Region region, Paint fill, Insets backgroundInsets) {
         final Background background = region.getBackground();
         if (background == null || background.getFills().isEmpty()) {
@@ -89,36 +85,28 @@ public class StyleUtils {
         region.setBackground(new Background(fills.toArray(BackgroundFill[]::new)));
     }
 
-    /**
-     * Sets the background of the given region to the given color.
-     */
+    /// Sets the background of the given region to the given color.
     public static void setBackground(Region region, Paint fill) {
         setBackground(region, fill, CornerRadii.EMPTY, Insets.EMPTY);
     }
 
-    /**
-     * Sets the background of the given region to the given color, with the given radius.
-     */
+    /// Sets the background of the given region to the given color, with the given radius.
     public static void setBackground(Region region, Paint fill, CornerRadii radius) {
         setBackground(region, fill, radius, Insets.EMPTY);
     }
 
-    /**
-     * Sets the background of the given region to the given color, with the given radius and insets.
-     */
+    /// Sets the background of the given region to the given color, with the given radius and insets.
     public static void setBackground(Region region, Paint fill, CornerRadii radius, Insets insets) {
         region.setBackground(new Background(new BackgroundFill(fill, radius, insets)));
     }
 
-    /**
-     * Tries to parse the given Region's corner radius.
-     * <p>
-     * To be more precise it tries to parse both the background and the
-     * border radius. The background radius is prioritized over the border one
-     * but in case the background is null or empty then the border one is used.
-     * <p>
-     * In case of both null or empty returns {@link  CornerRadii#EMPTY}.
-     */
+    /// Tries to parse the given Region's corner radius.
+    ///
+    /// To be more precise, it tries to parse both the background and the border radius.
+    /// The background radius is prioritized over the border one, but in case the background is null or empty,
+    /// then the border one is used.
+    ///
+    /// In the case of both null or empty returns [CornerRadii#EMPTY].
     public static CornerRadii parseCornerRadius(Region region) {
         CornerRadii backRadius = CornerRadii.EMPTY;
         CornerRadii bordRadius = CornerRadii.EMPTY;

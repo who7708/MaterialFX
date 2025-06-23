@@ -2,15 +2,13 @@ package io.github.palexdev.mfxcore.selection;
 
 import javafx.beans.property.SimpleObjectProperty;
 
-/**
- * Extension of {@link SimpleObjectProperty} meant to be used by classes implementing {@link Selectable}.
- * <p></p>
- * This property overrides the {@link #set(SelectionGroup)} method to correctly handle the assignment/removal/switch of a
- * {@link Selectable} from a {@link SelectionGroup}, see {@link #set(SelectionGroup)} for more info.
- * <p>
- * Note that for this purpose this property needs the reference of the {@link Selectable} in which it will operate, in order
- * to add/remove the {@code Selectable} to/from the {@link SelectionGroup}.
- */
+/// Extension of [SimpleObjectProperty] meant to be used by classes implementing [Selectable].
+///
+/// This property overrides the [#set(SelectionGroup)] method to correctly handle the assignment/removal/switch of a
+/// [Selectable] from a [SelectionGroup], see [#set(SelectionGroup)] for more info.
+///
+/// Note that for this purpose this property needs the reference of the [Selectable] in which it will operate
+/// to be able to add/remove the `Selectable` to/from the [SelectionGroup].
 public class SelectionGroupProperty extends SimpleObjectProperty<SelectionGroup> {
     //================================================================================
     // Properties
@@ -33,17 +31,15 @@ public class SelectionGroupProperty extends SimpleObjectProperty<SelectionGroup>
     // Overridden Methods
     //================================================================================
 
-    /**
-     * {@inheritDoc}
-     * <p></p>
-     * Overridden to correctly handle the addition/removal of a {@link Selectable} to/from a {@link SelectionGroup}.
-     * <p>
-     * If the {@code Selectable} was already in a group, it first needs to be removed from it by calling
-     * {@link SelectionGroup#remove(Selectable)}.
-     * <p>
-     * Then it's added to the new group with {@link SelectionGroup#add(Selectable)} and finally the {@code super.set(...)}
-     * method is invoked.
-     */
+    /// {@inheritDoc}
+    ///
+    /// Overridden to correctly handle the addition/removal of a [Selectable] to/from a [SelectionGroup].
+    ///
+    /// If the `Selectable` was already in a group, it first needs to be removed from it by calling
+    /// [SelectionGroup#remove(Selectable)].
+    ///
+    /// Then it's added to the new group with [SelectionGroup#add(Selectable)], and finally, the `super.set(...)`
+    /// method is invoked.
     @Override
     public void set(SelectionGroup newValue) {
         SelectionGroup oldValue = get();

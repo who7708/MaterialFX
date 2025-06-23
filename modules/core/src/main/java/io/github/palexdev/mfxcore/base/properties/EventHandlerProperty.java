@@ -23,11 +23,9 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 
-/**
- * Simply an {@link ObjectProperty} that wraps an {@link EventHandler} for an {@link Event} of type T.
- *
- * @param <T> the type of {@link Event}
- */
+/// Simply a [ObjectProperty] that wraps an [EventHandler] for an [Event] of type T.
+///
+/// @param <T> the type of [Event]
 public class EventHandlerProperty<T extends Event> extends ReadOnlyObjectWrapper<EventHandler<T>> {
 
     //================================================================================

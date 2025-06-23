@@ -23,10 +23,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
-/**
- * Special extension of {@link RegionDragResizer} which can be used to resize a {@link Stage} by its content
- * (given that the root of the content is a {@link Region}).
- */
+/// Special extension of [RegionDragResizer] which can be used to resize a [Stage] by its content
+/// (given that the root of the content is a [Region]).
 public class StageResizer extends RegionDragResizer {
     //================================================================================
     // Properties

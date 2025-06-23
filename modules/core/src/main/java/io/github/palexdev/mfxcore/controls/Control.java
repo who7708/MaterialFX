@@ -27,27 +27,25 @@ import io.github.palexdev.mfxcore.behavior.WithBehavior;
 import javafx.scene.Node;
 import javafx.scene.control.Skin;
 
-/**
- * Base class that can be used as a starting point to implement UI components that perfectly integrate with the new Behavior
- * and Skin APIs, see {@link WithBehavior} and {@link MFXSkinnable}.
- * <p>
- * The integration with the new Behavior API is achieved by having a specific property, {@link #behaviorProviderProperty()},
- * which allows changing at any time the component's behavior. The property automatically handles initialization and disposal
- * of behaviors. A reference to the current built behavior object is kept to be retrieved via {@link #getBehavior()}.
- * <p></p>
- * Enforces the use of {@link SkinBase} instances as Skin implementations and makes the {@link #createDefaultSkin()}
- * final thus denying users to override it. Similar to the behavior, to set custom skins, you can:
- * <p> - Use the provider property, {@link #skinProviderProperty()}
- * <p> - Override {@link #buildSkin()} <b>(not recommended)</b>
- * <p> - Call {@link #setSkin(Skin)} directly <b>(absolutely not recommended)</b>
- * <p>
- * The skin provider is more of a convenience to the user that does not need to inline-override the method responsible for
- * creating the skin. The new mechanism is much more flexible and automatically integrates with the behavior API.
- * <p>
- * As a consequence, components that inherit from this do not support the "-fx-skin" CSS property. You'll have to do it in code.
- *
- * @param <B> the behavior type used by the component
- */
+/// Base class that can be used as a starting point to implement UI components that perfectly integrate with the new Behavior
+/// and Skin APIs, see [WithBehavior] and [MFXSkinnable].
+///
+/// The integration with the new Behavior API is achieved by having a specific property, [#behaviorProviderProperty()],
+/// which allows changing at any time the component's behavior. The property automatically handles initialization and disposal
+/// of behaviors. A reference to the current built behavior object is kept to be retrieved via [#getBehavior()].
+///
+/// Enforces the use of [SkinBase] instances as Skin implementations and makes the [#createDefaultSkin()] method final,
+/// thus denying users to override it. Similar to the behavior, to set custom skins, you can:
+///  - Use the provider property, [#skinProviderProperty()]
+///  - Override [#buildSkin()] **(not recommended)**
+///  - Call [#setSkin(Skin)] directly **(absolutely not recommended)**
+///
+/// The skin provider is more of a convenience to the user that does not need to inline-override the method responsible for
+/// creating the skin. The new mechanism is much more flexible and automatically integrates with the behavior API.
+///
+/// As a consequence, components that inherit from this do not support the "-fx-skin" CSS property. You'll have to do it in code.
+///
+/// @param <B> the behavior type used by the component
 @SuppressWarnings({"rawtypes", "unchecked"})
 public abstract class Control<B extends BehaviorBase<? extends Node>>
     extends javafx.scene.control.Control implements WithBehavior<B>, MFXSkinnable<SkinBase<?, ?>> {
@@ -88,13 +86,11 @@ public abstract class Control<B extends BehaviorBase<? extends Node>>
     // Methods
     //================================================================================
 
-    /**
-     * This is the core method responsible for creating the component's skin when the {@link #skinProviderProperty()}
-     * changes. Does not allow {@code null} skins and automatically call {@link SkinBase#initBehavior(BehaviorBase)}}
-     * with the current behavior.
-     * <p></p>
-     * Note that the very first skin instance is created by JavaFX with the usual {@link #createDefaultSkin()}.
-     */
+    /// This is the core method responsible for creating the component's skin when the [#skinProviderProperty()]
+    /// changes. Does not allow `null` skins and automatically call [SkinBase#initBehavior(BehaviorBase)].
+    /// with the current behavior.
+    ///
+    /// Note that the very first skin instance is created by JavaFX with the usual [#createDefaultSkin()].
     protected SkinBase<?, ?> buildSkin() {
         SkinBase skin = getSkinProvider().get();
         if (skin == null)
@@ -107,11 +103,9 @@ public abstract class Control<B extends BehaviorBase<? extends Node>>
     // Overridden Methods
     //================================================================================
 
-    /**
-     * {@inheritDoc}
-     * <p></p>
-     * Overridden to be final and to delegate to {@link #buildSkin()}}. We still need this to initialize the component.
-     */
+    /// {@inheritDoc}
+    ///
+    /// Overridden to be final and to delegate to [#buildSkin()]. We still need this to initialize the component.
     @Override
     protected final SkinBase<?, ?> createDefaultSkin() {
         return buildSkin();

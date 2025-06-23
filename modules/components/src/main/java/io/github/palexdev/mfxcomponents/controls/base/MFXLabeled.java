@@ -25,7 +25,6 @@ import io.github.palexdev.mfxcore.base.properties.styleable.StyleableDoublePrope
 import io.github.palexdev.mfxcore.behavior.BehaviorBase;
 import io.github.palexdev.mfxcore.controls.Labeled;
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
-import io.github.palexdev.mfxcore.controls.SkinBase;
 import io.github.palexdev.mfxcore.utils.fx.StyleUtils;
 import javafx.css.CssMetaData;
 import javafx.css.Styleable;
@@ -37,8 +36,6 @@ import javafx.scene.Node;
 ///
 /// In addition to the features brought by [Labeled], this also implements [MFXStyleable] and makes size computation methods
 /// public.
-///
-/// **Note:** the correct way to change the skin is to call [#changeSkin(SkinBase)].
 // TODO tooltip integration
 public abstract class MFXLabeled<B extends BehaviorBase<? extends Node>> extends Labeled<B> implements MFXStyleable {
 
@@ -110,7 +107,7 @@ public abstract class MFXLabeled<B extends BehaviorBase<? extends Node>> extends
     /// the user control over the node displaying the text.
     /// Through this property, you can control the text node's opacity (not the control, not the label).
     ///
-    /// Can be set in CSS via the property: '-mfx-text-opacity'.
+    /// Can be set from CSS via the property: '-mfx-text-opacity'.
     public StyleableDoubleProperty textOpacityProperty() {
         return textOpacity;
     }

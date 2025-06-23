@@ -18,16 +18,14 @@
 
 package io.github.palexdev.mfxcore.utils.converters;
 
-import io.github.palexdev.mfxcore.utils.EnumUtils;
-import javafx.util.StringConverter;
-
 import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
-/**
- * A {@link StringConverter} capable of converting {@link Month} to/from Strings.
- */
+import io.github.palexdev.mfxcore.utils.EnumUtils;
+import javafx.util.StringConverter;
+
+/// A [StringConverter] capable of converting [Month] to/from Strings.
 public class MonthStringConverter extends StringConverter<Month> {
     //================================================================================
     // Properties

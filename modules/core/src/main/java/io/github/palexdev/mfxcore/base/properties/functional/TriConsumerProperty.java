@@ -22,13 +22,11 @@ import io.github.palexdev.mfxcore.base.TriConsumer;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 
-/**
- * Simply an {@link ObjectProperty} that wraps a {@link TriConsumer}.
- *
- * @param <T> the consumer's first argument
- * @param <U> the consumer's second argument
- * @param <R> the consumer's third argument
- */
+/// Simply a [ObjectProperty] that wraps a [TriConsumer].
+///
+/// @param <T> the consumer's first argument
+/// @param <U> the consumer's second argument
+/// @param <R> the consumer's third argument
 public class TriConsumerProperty<T, U, R> extends ReadOnlyObjectWrapper<TriConsumer<T, U, R>> {
 
     //================================================================================

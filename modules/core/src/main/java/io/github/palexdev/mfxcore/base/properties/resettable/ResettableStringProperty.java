@@ -18,15 +18,13 @@
 
 package io.github.palexdev.mfxcore.base.properties.resettable;
 
+import java.util.Objects;
+
 import io.github.palexdev.mfxcore.base.properties.base.ResettableProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleStringProperty;
 
-import java.util.Objects;
-
-/**
- * A {@link SimpleStringProperty} that implements {@link ResettableProperty}.
- */
+/// A [SimpleStringProperty] that implements [ResettableProperty].
 public class ResettableStringProperty extends ReadOnlyStringWrapper implements ResettableProperty<String> {
     //================================================================================
     // Properties

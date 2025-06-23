@@ -20,10 +20,9 @@ package io.github.palexdev.mfxcore.enums;
 
 import io.github.palexdev.mfxlocalization.I18N;
 
-/**
- * Enumeration to specify how two predicates should be chained.
- * Also specify how a ChainMode enumeration should be represented in UI.
- */
+/// Enumeration to specify how two predicates should be chained.
+///
+/// Also specify how a ChainMode enumeration should be represented in UI.
 @SuppressWarnings("NonFinalFieldInEnum")
 public enum ChainMode {
     AND("&"),
@@ -40,9 +39,7 @@ public enum ChainMode {
         return this == AND && useAlternativeAnd ? I18N.getOrDefault("chainMode.alternativeAnd") : this.text;
     }
 
-    /**
-     * Chains the given two boolean values according to the given {@link ChainMode}.
-     */
+    /// Chains the given two boolean values according to the given [ChainMode].
     public static boolean chain(ChainMode mode, boolean first, boolean second) {
         return (mode == AND) ? first && second : first || second;
     }

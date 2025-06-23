@@ -169,10 +169,8 @@ public enum AnimationPresets {
         };
     }
 
-    /**
-     * Used by the slide animations to clip the {@link MFXIconWrapper} so that icons that go outside its bounds are
-     * hidden. The animations automatically remove it once they stop/end.
-     */
+    /// Used by the slide animations to clip the [MFXIconWrapper] so that icons that go outside its bounds are
+    /// hidden. The animations automatically remove it once they stop/end.
     protected void clip(MFXIconWrapper wrapper) {
         if (wrapper.getClip() != null) {
             wrapper.preserveClip = true;

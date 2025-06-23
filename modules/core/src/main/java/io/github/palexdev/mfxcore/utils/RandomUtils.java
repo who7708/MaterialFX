@@ -21,26 +21,20 @@ package io.github.palexdev.mfxcore.utils;
 import java.util.List;
 import java.util.Random;
 
-/**
- * Set of utilities for random ops.
- */
+/// Set of utilities for random ops.
 public class RandomUtils {
     public static final Random random = new Random(System.currentTimeMillis());
 
     private RandomUtils() {
     }
 
-    /**
-     * @return a random value from the given array
-     */
+    /// @return a random value from the given array
     public static <T> T randFromArray(T[] array) {
         int index = random.nextInt(array.length);
         return array[index];
     }
 
-    /**
-     * @return a random value from the given list
-     */
+    /// @return a random value from the given list
     public static <T> T randFromList(List<T> list) {
         int index = random.nextInt(list.size());
         return list.get(index);

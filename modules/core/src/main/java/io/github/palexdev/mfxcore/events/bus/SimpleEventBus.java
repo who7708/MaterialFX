@@ -5,27 +5,25 @@ import java.util.function.Consumer;
 
 import io.github.palexdev.mfxcore.events.Event;
 
-/**
- * A basic implementation of an event bus. Takes inspiration from many DI frameworks that use similar mechanisms to
- * dispatch events across the app.
- * <p></p>
- * The basic features include:
- * <p> - The infrastructure makes use of {@link IEvent} and {@link Subscriber} interfaces
- * <p> - Subscribe/Unsubscribe mechanisms based on the aforementioned classes. You can subscribe to events of type
- * {@code IEvent} and specify a {@code Subscriber} which represents the action to perform when such events occur.
- * The removal of subscribers requires both the event type and the subscriber itself, as it is allowed to register multiple
- * subscribers for any single event type.
- * <p></p>
- * <b>Trivia: Why this?</b>
- * <p>
- * Long story short. I transitioned one of my projects from Spring to another framework that didn't have events functionality.
- * I could not use JavaFX ones of course, so I developed my own simple solution.
- *
- * @see IEventBus
- * @see IEvent
- * @see Event
- * @see Subscriber
- */
+/// A basic implementation of an event bus. Takes inspiration from many DI frameworks that use similar mechanisms to
+/// dispatch events across the app.
+///
+/// The basic features include:
+///  - The infrastructure makes use of [IEvent] and [Subscriber] interfaces
+///  - Subscribe/Unsubscribe mechanisms based on the aforementioned classes. You can subscribe to events of type
+///  `IEvent` and specify a `Subscriber` which represents the action to perform when such events occur.
+///  The removal of subscribers requires both the event type and the subscriber itself, as it is allowed to register multiple
+///  subscribers for any single event type.
+///
+/// **Trivia: Why this?**
+///
+/// Long story short. I transitioned one of my projects from Spring to another framework that didn't have events functionality.
+/// I could not use JavaFX ones of course, so I developed my own simple solution.
+///
+/// @see IEventBus
+/// @see IEvent
+/// @see Event
+/// @see Subscriber
 public class SimpleEventBus implements IEventBus {
     //================================================================================
     // Properties
@@ -36,11 +34,9 @@ public class SimpleEventBus implements IEventBus {
     // Methods
     //================================================================================
 
-    /**
-     * When an event is published by {@link #publish(Event)} this is called. After getting all the
-     * {@code Subscribers} added by {@link #subscribe(Class, Subscriber)} for the given event's type, loops over
-     * all of them passing the given event, so {@link Subscriber#handle(Event)} is triggered.
-     */
+    /// When an event is published by [#publish(Event)] this is called. After getting all the
+    /// `Subscribers` added by [#subscribe(Class,Subscriber)] for the given event's type, loops over
+    /// all of them passing the given event, so [Subscriber#handle(Event)] is triggered.
     protected <E extends Event> void notifySubscribers(E event) {
         Queue<Subscriber<Event>> subscribers = this.subscribers.get(event.getClass());
         if (subscribers == null || subscribers.isEmpty()) return;
@@ -52,7 +48,6 @@ public class SimpleEventBus implements IEventBus {
     //================================================================================
     // Overridden Methods
     //================================================================================
-
     @SuppressWarnings("unchecked")
     @Override
     public <E extends Event> void subscribe(Class<E> evt, Subscriber<E> subscriber) {
@@ -63,15 +58,13 @@ public class SimpleEventBus implements IEventBus {
         queue.add((Subscriber<Event>) subscriber);
     }
 
-    /**
-     * {@inheritDoc}
-     * <p></p>
-     * Subscribers in this bus are stored in a {@link PriorityQueue}, which automatically sorts them by their
-     * {@link Subscriber#priority()}. This handy mechanism allows user to priority certain actions over others.
-     * The lesser the {@code priority} value, the more important the subscriber is.
-     * <p>
-     * For subscribers with the same priority, the order is undefined!
-     */
+    /// {@inheritDoc}
+    ///
+    /// Subscribers in this bus are stored in a [PriorityQueue], which automatically sorts them by their
+    /// [Subscriber#priority()]. This handy mechanism allows the user to prioritize certain actions over others.
+    /// The **lesser** the `priority` value, the **more important** the subscriber is.
+    ///
+    /// For subscribers with the same priority, the order is undefined!
     @Override
     public <E extends Event> void subscribe(Class<E> evt, Consumer<E> subscriber, int priority) {
         subscribe(evt, new Subscriber<>() {

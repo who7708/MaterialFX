@@ -22,9 +22,7 @@ import io.github.palexdev.mfxcore.base.beans.range.LongRange;
 import io.github.palexdev.mfxcore.base.beans.range.NumberRange;
 import io.github.palexdev.mfxcore.base.properties.base.NumberRangeProperty;
 
-/**
- * Implementation of {@link NumberRangeProperty} for {@code Long} ranges.
- */
+/// Implementation of [NumberRangeProperty] for `Long` ranges.
 public class LongRangeProperty extends NumberRangeProperty<Long> {
 
     //================================================================================

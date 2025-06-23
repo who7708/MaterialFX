@@ -45,9 +45,7 @@ import javafx.util.Duration;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-/**
- * Allows building CSS stylesheets by code and apply them on any {@link Parent}.
- */
+/// Allows building CSS stylesheets by code and apply them on any [Parent].
 public class CSSFragment {
     //================================================================================
     // Properties
@@ -69,11 +67,9 @@ public class CSSFragment {
     // Static Methods
     //================================================================================
 
-    /**
-     * Applies the given CSS to the given {@link Parent}
-     *
-     * @see #applyOn(Parent)
-     */
+    /// Applies the given CSS to the given [Parent]
+    ///
+    /// @see #applyOn(Parent)
     public static void applyOn(String css, Parent parent) {
         CSSFragment f = new CSSFragment(css);
         f.applyOn(parent);
@@ -83,13 +79,11 @@ public class CSSFragment {
     // Methods
     //================================================================================
 
-    /**
-     * Converts a CSS string to a data uri that can be used by JavaFX nodes to parse styles.
-     * <p>
-     * Subsequent calls to this will be faster as the converted CSS is cached.
-     *
-     * @see <a href="https://en.wikipedia.org/wiki/Data_URI_scheme">Data URI Scheme</a>
-     */
+    /// Converts a CSS string to a data uri that can be used by JavaFX nodes to parse styles.
+    ///
+    /// Subsequent calls to this will be faster as the converted CSS is cached.
+    ///
+    /// @see [Data URI Scheme](https://en.wikipedia.org/wiki/Data_URI_scheme)
     public String toDataUri() {
         if (converted == null) {
             converted = DATA_URI_PREFIX + new String(enc.encode(css.getBytes(UTF_8)), UTF_8);
@@ -97,57 +91,45 @@ public class CSSFragment {
         return converted;
     }
 
-    /**
-     * If this CSS fragment has not been applied yet to the given {@link Parent}, applies it
-     * using {@link Parent#getStylesheets()}
-     *
-     * @see #isAppliedOn(Parent)
-     */
+    /// If this CSS fragment has not been applied yet to the given [Parent], applies it
+    /// using [Parent#getStylesheets()]
+    ///
+    /// @see #isAppliedOn(Parent)
     public void applyOn(Parent parent) {
         if (!isAppliedOn(parent))
             parent.getStylesheets().add(toDataUri());
     }
 
-    /**
-     * If this CSS fragment has not been applied yet to the given {@link Scene}, applies it
-     * using {@link Scene#getStylesheets()}.
-     *
-     * @see #isAppliedOn(Scene)
-     */
+    /// If this CSS fragment has not been applied yet to the given [Scene], applies it
+    /// using [Parent#getStylesheets()].
+    ///
+    /// @see #isAppliedOn(Scene)
     public void applyOn(Scene scene) {
         if (!isAppliedOn(scene))
             scene.getStylesheets().add(toDataUri());
     }
 
-    /**
-     * If this CSS fragment has not been applied yet as the {@link Application}'s global user agent stylesheet, calls
-     * {@link Application#setUserAgentStylesheet(String)}.
-     */
+    /// If this CSS fragment has not been applied yet as the [Application]'s global user agent stylesheet, calls
+    /// [Application#setUserAgentStylesheet(String)].
     public void setGlobal() {
         if (!isGlobal())
             Application.setUserAgentStylesheet(toDataUri());
     }
 
-    /**
-     * Checks whether this CSS fragment has already been applied to the given {@link Parent}
-     * by checking if its stylesheets list contains this (converted to a Data URI).
-     */
+    /// Checks whether this CSS fragment has already been applied to the given [Parent]
+    /// by checking if its stylesheets list contains this (converted to a Data URI).
     public boolean isAppliedOn(Parent parent) {
         return parent.getStylesheets().contains(toDataUri());
     }
 
-    /**
-     * Checks whether this CSS fragment has already been applied to the given {@link Scene}
-     * by checking if its stylesheets list contains this (converted to a Data URI).
-     */
+    /// Checks whether this CSS fragment has already been applied to the given [Scene]
+    /// by checking if its stylesheets list contains this (converted to a Data URI).
     public boolean isAppliedOn(Scene scene) {
         return scene.getStylesheets().contains(toDataUri());
     }
 
-    /**
-     * Checks whether this CSS fragment has already been applied as the {@link Application}'s global user agent stylesheet,
-     * by checking if {@link Application#getUserAgentStylesheet()} is equal to this (converted to a Data URI).
-     */
+    /// Checks whether this CSS fragment has already been applied as the [Application]'s global user agent stylesheet,
+    /// by checking if [Application#getUserAgentStylesheet()] is equal to this (converted to a Data URI).
     public boolean isGlobal() {
         return Objects.equals(Application.getUserAgentStylesheet(), toDataUri());
     }
@@ -178,25 +160,14 @@ public class CSSFragment {
     // Builder
     //================================================================================
 
-    /**
-     * Allows building {@code CSSFragments} with fluent API.
-     * <p></p>
-     * Usage example:
-     * <pre>
-     * {@code
-     * Parent p = ...;
-     * CssFragment.Builder.build()
-     *     .select(".aSelector")
-     *     .background(Color.RED)
-     *     .backgroundRadius(InsetsBuilder.uniform(10))
-     *     .select(".aSelector:hover")
-     *     .background(Color.ORANGE)
-     *     .border(Color.LIGHTGRAY)
-     *     .style("-my-custom-property: custom-value")
-     *     .applyOn(p);
-     * }
-     * </pre>
-     */
+    /// Allows building `CSSFragments` with fluent API.
+    ///
+    ///
+    /// Usage example:
+    /// <pre>
+    ///
+    /// `Parent p = ...;CssFragment.Builder.build().select(".aSelector").background(Color.RED).backgroundRadius(InsetsBuilder.uniform(10)).select(".aSelector:hover").background(Color.ORANGE).border(Color.LIGHTGRAY).style("-my-custom-property: custom-value").applyOn(p);`
+    /// </pre>
     public static class Builder {
         private final StringBuilder sb = new StringBuilder();
         private boolean isSelectorOpen = false;
@@ -206,10 +177,8 @@ public class CSSFragment {
             return new Builder();
         }
 
-        /**
-         * Use this to open a block for an element with its selector.
-         * It's unnecessary to add the ending '{\n' as it is automatically inserted when adding styles.
-         */
+        /// Use this to open a block for an element with its selector.
+        /// It's unnecessary to add the ending '{\n' as it is automatically inserted when adding styles.
         public Builder select(String selector) {
             if (isSelectorOpen) {
                 sb.append("\n}\n");
@@ -221,14 +190,13 @@ public class CSSFragment {
             return this;
         }
 
-        /**
-         * Opens a selector with the style classes of the given {@link Styleable} object. If the list is empty, then uses
-         * the simple class name.
-         * <p>
-         * Delegates to {@link #select(String)} and <b>beware</b> that the resulting selector is the result of chaining
-         * all the style classes.
-         * See: <href><a href="https://css-tricks.com/multiple-class-id-selectors/">css-tricks.com</a></href>
-         */
+        /// Opens a selector with the style classes of the given [Styleable] object. If the list is empty, then uses
+        /// the simple class name.
+        ///
+        /// Delegates to [#select(String)] and **beware** that the resulting selector is the result of chaining
+        /// all the style classes.
+        ///
+        /// See: [css-tricks.com](https://css-tricks.com/multiple-class-id-selectors)
         public Builder select(Styleable styleable) {
             ObservableList<String> classes = styleable.getStyleClass();
             if (classes.isEmpty()) return select(styleable.getClass().getSimpleName());
@@ -249,20 +217,15 @@ public class CSSFragment {
             return select(chain.toString());
         }
 
-        /**
-         * This method can be used to group multiple selectors since {@link #select(String)} automatically closes the
-         * previous one. An example of grouped selectors:
-         * <pre>
-         * {@code
-         * .my-selector-one,
-         * .my-selector-two {
-         *   -common-style: common-value;
-         * }
-         * }
-         * </pre>
-         * <p></p>
-         * If no selector was open before, fallbacks to {@link #select(String)}.
-         */
+        /// This method can be used to group multiple selectors since [#select(String)] automatically closes the
+        /// previous one. An example of grouped selectors:
+        /// <pre>
+        ///
+        /// `.my-selector-one,.my-selector-two{-common-style: common-value;}`
+        /// </pre>
+        ///
+        ///
+        /// If no selector was open before, fallbacks to [#select(String)].
         public Builder and(String selector) {
             if (isSelectorOpen) {
                 sb.append(",\n");
@@ -272,10 +235,8 @@ public class CSSFragment {
             return select(selector);
         }
 
-        /**
-         * Adds the given style to the fragment.
-         * It's unnecessary to add the ending ';\n' as it is automatically added.
-         */
+        /// Adds the given style to the fragment.
+        /// It's unnecessary to add the ending ';\n' as it is automatically added.
         public Builder style(String style) {
             if (!isSelectorOpen) throw new IllegalStateException("No selector was opened!");
             if (!isBracketOpen) {
@@ -286,9 +247,7 @@ public class CSSFragment {
             return this;
         }
 
-        /**
-         * Overridden to return the built CSS string.
-         */
+        /// Overridden to return the built CSS string.
         public String toCSS() {
             if (isSelectorOpen && !isBracketOpen) {
                 sb.append(" {}\n");
@@ -299,30 +258,24 @@ public class CSSFragment {
             return sb.toString().trim();
         }
 
-        /**
-         * Converts the built string to a {@link CSSFragment}.
-         */
+        /// Converts the built string to a [CSSFragment].
         public CSSFragment toFragment() {
             if (sb.length() == 0) throw new IllegalStateException("No styles set");
             return new CSSFragment(toCSS().trim());
         }
 
-        /**
-         * Applies the created {@link CSSFragment} on the given {@link Parent}.
-         *
-         * @see #toFragment()
-         * @see CSSFragment#applyOn(Parent)
-         */
+        /// Applies the created [CSSFragment] on the given [Parent].
+        ///
+        /// @see #toFragment()
+        /// @see CSSFragment#applyOn(Parent)
         public void applyOn(Parent parent) {
             toFragment().applyOn(parent);
         }
 
-        /**
-         * Applies the created {@link CSSFragment} on the given {@link Scene}.
-         *
-         * @see #toFragment()
-         * @see CSSFragment#applyOn(Scene)
-         */
+        /// Applies the created [CSSFragment] on the given [Scene].
+        ///
+        /// @see #toFragment()
+        /// @see CSSFragment#applyOn(Scene)
         public void applyOn(Scene scene) {
             toFragment().applyOn(scene);
         }
@@ -754,9 +707,7 @@ public class CSSFragment {
             return this;
         }
 
-        /**
-         * This will work only for {@link Text}.
-         */
+        /// This will work only for [Text].
         public Builder wrappingWidth(double val) {
             style("-fx-wrapping-width: " + val);
             return this;

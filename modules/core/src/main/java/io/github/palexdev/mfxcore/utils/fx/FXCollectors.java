@@ -18,42 +18,33 @@
 
 package io.github.palexdev.mfxcore.utils.fx;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
-import javafx.collections.ObservableSet;
-
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * Convenience class that offers some methods useful on combination with Java {@link Stream}
- * to collect to JavaFX's collections.
- */
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
+import javafx.collections.ObservableSet;
+
+/// Convenience class that offers some methods useful in combination with Java [Stream] to collect to JavaFX's collections.
 public class FXCollectors {
 
     private FXCollectors() {
     }
 
-    /**
-     * @return a collector that returns an {@link ObservableSet}
-     */
+    /// @return a collector that returns an [ObservableSet]
     public static <T> Collector<T, ?, ObservableSet<T>> toSet() {
         return Collectors.collectingAndThen(Collectors.toSet(), FXCollections::observableSet);
     }
 
-    /**
-     * @return a collector that returns an {@link ObservableList}
-     */
+    /// @return a collector that returns an [ObservableList]
     public static <T> Collector<T, ?, ObservableList<T>> toList() {
         return Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList);
     }
 
-    /**
-     * @return a collector that returns an {@link ObservableMap}
-     */
+    /// @return a collector that returns an [ObservableMap]
     public static <T, K, U> Collector<T, ?, ObservableMap<K, U>> toMap(
         Function<T, K> keyMapper,
         Function<T, U> valueMapper

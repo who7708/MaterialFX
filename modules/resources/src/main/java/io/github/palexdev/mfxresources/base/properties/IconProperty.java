@@ -22,10 +22,8 @@ import io.github.palexdev.mfxresources.fonts.IconDescriptor;
 import io.github.palexdev.mfxresources.fonts.MFXFontIcon;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 
-/**
- * Simple extension of {@link ReadOnlyObjectWrapper} to be used for {@link MFXFontIcon} objects,
- * also offers a series of convenient methods to manipulate the icon with fluent API.
- */
+/// Simple extension of [ReadOnlyObjectWrapper] to be used for [MFXFontIcon] objects,
+/// also offers a series of convenient methods to manipulate the icon with fluent API.
 public class IconProperty extends ReadOnlyObjectWrapper<MFXFontIcon> {
 
     //================================================================================
@@ -50,17 +48,13 @@ public class IconProperty extends ReadOnlyObjectWrapper<MFXFontIcon> {
     // Setters
     //================================================================================
 
-    /**
-     * Creates and sets a new {@link MFXFontIcon} with the given icon description.
-     */
+    /// Creates and sets a new [MFXFontIcon] with the given icon description.
     public IconProperty setDescription(String description) {
         set(new MFXFontIcon(description));
         return this;
     }
 
-    /**
-     * Creates and sets a new {@link MFXFontIcon} with the given icon description.
-     */
+    /// Creates and sets a new [MFXFontIcon] with the given icon description.
     public IconProperty setDescription(IconDescriptor description) {
         set(new MFXFontIcon(description));
         return this;

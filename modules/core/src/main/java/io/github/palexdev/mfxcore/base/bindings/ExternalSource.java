@@ -18,23 +18,20 @@
 
 package io.github.palexdev.mfxcore.base.bindings;
 
+import java.util.Objects;
+
 import io.github.palexdev.mfxcore.base.bindings.base.Updater;
 import javafx.beans.value.ObservableValue;
 
-import java.util.Objects;
-
-/**
- * Special type of {@code Source} whose function should be to invalidate a binding when this changes.
- * <p>
- * It's called {@code ExternalSource} because technically it has nothing to do with a binding, and the action performed
- * can be anything. However, they are part of a {@link AbstractBinding} as they should perform operations that can
- * influence the binding.
- * <p>
- * To be precise, this source allows you to define any action, but the intended way to use this is to
- * trigger bindings invalidation (either of target or sources).
- *
- * @param <S> the type of the source's observable
- */
+/// Special type of `Source` whose function should be to invalidate a binding when it changes.
+///
+/// It's called `ExternalSource` because technically it has nothing to do with a binding, and the action performed
+/// can be anything. However, they are part of a [AbstractBinding] as they should perform operations that can influence the binding.
+///
+/// To be precise, this source allows you to define any action, but the intended way to use this is to trigger bindings'
+/// invalidation (either of target or sources).
+///
+/// @param <S> the type of the source's observable
 public class ExternalSource<S> extends AbstractSource<S, S> {
     //================================================================================
     // Properties
@@ -69,51 +66,32 @@ public class ExternalSource<S> extends AbstractSource<S, S> {
     // Methods
     //================================================================================
 
-    /**
-     * Activates this invalidating source by adding a listener to it that will trigger the specified {@link #getAction()}.
-     */
+    /// Activates this invalidating source by adding a listener to it that will trigger the specified [#getAction()].
     @Override
     protected void listen() {
         if (obvListener == null) obvListener = (ov, o, n) -> action.update(o, n);
         observable.addListener(obvListener);
     }
 
-    /**
-     * Unsupported.
-     *
-     * @throws UnsupportedOperationException {@code ExternalSources} do not operate on a target
-     */
+    /// @throws UnsupportedOperationException `ExternalSources` do not operate on a target
     @Override
     protected void listen(Target<S> target) {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * Unsupported.
-     *
-     * @throws UnsupportedOperationException {@code ExternalSources} are not directly responsible for updating
-     *                                       a target
-     */
+    /// @throws UnsupportedOperationException `ExternalSources` are not directly responsible for updating a target
     @Override
     public void updateTarget(S oldValue, S newValue) {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * Unsupported.
-     *
-     * @throws UnsupportedOperationException {@code ExternalSources} are not directly responsible for
-     *                                       updating sources
-     */
+    /// @throws UnsupportedOperationException `ExternalSources` are not directly responsible for updating sources
     @Override
     public void updateSource(S oldValue, S newValue) {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * Disposes the source by removing the listener, then sets both the observable
-     * and listener to null.
-     */
+    /// Disposes the source by removing the listener, then sets both the observable and listener to null.
     @Override
     public void dispose() {
         observable.removeListener(obvListener);
@@ -121,16 +99,12 @@ public class ExternalSource<S> extends AbstractSource<S, S> {
         obvListener = null;
     }
 
-    /**
-     * @return the action performed by this source when it changes
-     */
+    /// @return the action performed by this source when it changes
     public Updater<S> getAction() {
         return action;
     }
 
-    /**
-     * Sets the action performed by this source whe int changes.
-     */
+    /// Sets the action performed by this source whe int changes.
     public ExternalSource<S> setAction(Updater<S> action) {
         this.action = action;
         return this;

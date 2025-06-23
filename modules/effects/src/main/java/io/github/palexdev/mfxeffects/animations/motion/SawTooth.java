@@ -20,14 +20,12 @@ package io.github.palexdev.mfxeffects.animations.motion;
 
 import io.github.palexdev.mfxeffects.animations.base.Curve;
 
-/**
- * A sawtooth curve that repeats a given number of times over the unit interval.
- * <p>
- * The curve rises linearly from 0.0 to 1.0 and then falls discontinuously back
- * to 0.0 each iteration.
- * <p>
- * <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_sawtooth.mp4>SawTooth</a>
- */
+/// A sawtooth curve that repeats a given number of times over the unit interval.
+///
+/// The curve rises linearly from `0.0` to `1.0` and then falls discontinuously back
+/// to `0.0` each iteration.
+///
+/// [SawTooth](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_sawtooth.mp4)
 public class SawTooth extends Curve {
     private final int count;
 

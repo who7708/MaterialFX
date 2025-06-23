@@ -23,20 +23,16 @@ import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 
-/**
- * Utility class which manages a preset number of {@code DropShadow} effects ordered by {@code DepthLevel}, but
- * it also allows to create custom {@code DropShadow} effects with {@link #shadowOf(Color, double, double, double, double)}.
- * <p></p>
- * {@link ElevationLevel}
- */
+/// Utility class which manages a preset number of `DropShadow` effects ordered by `DepthLevel`, but
+/// it also allows to create custom `DropShadow` effects with [#shadowOf(Color, double, double, double, double)].
+///
+/// [ElevationLevel]
 public class MFXElevationManager {
 
-    /**
-     * Returns a new instance of {@code DropShadow} with the specified characteristics.
-     *
-     * @return The desired custom {@code DropShadow} effect
-     * @see DropShadow
-     */
+    /// Returns a new instance of `DropShadow` with the specified characteristics.
+    ///
+    /// @return The desired custom `DropShadow` effect
+    /// @see DropShadow
     public static DropShadow shadowOf(Color color, double radius, double spread, double offsetX, double offsetY) {
         return new DropShadow(
             BlurType.GAUSSIAN,
@@ -48,12 +44,10 @@ public class MFXElevationManager {
         );
     }
 
-    /**
-     * Retrieves the {@code DropShadow} associated with the specified {@code DepthLevel}.
-     *
-     * @param level The desired {@code DepthLevel} between 1 and 5
-     * @return The desired {@code DropShadow} effect
-     */
+    /// Retrieves the `DropShadow` associated with the specified `DepthLevel`.
+    ///
+    /// @param level The desired `DepthLevel` between 1 and 5
+    /// @return The desired `DropShadow` effect
     public static DropShadow shadowOf(ElevationLevel level) {
         return new DropShadow(
             BlurType.GAUSSIAN,
@@ -65,21 +59,20 @@ public class MFXElevationManager {
         );
     }
 
-    /**
-     * Retrieves the {@code DropShadow} associated with the specified {@code DepthLevel} added to delta.
-     * <p></p>
-     * Example 1: for a depth level equal to 3 and a delta equal to 2, the returned {@code DropShadow} effect is
-     * the effected associated to a depth level of 5.
-     * <p></p>
-     * Example 2: for a depth level equal to 5 and a delta equal to whatever integer, the returned {@code DropShadow} effect is
-     * the effected associated to a depth level of 5.
-     *
-     * @param level The desired {@code DepthLevel} between 1 and 5
-     * @param delta The number of levels to shift
-     * @return The final {@code DropShadow} effect}
-     * <p></p>
-     * {@link #nextLevel(ElevationLevel)}
-     */
+    /// Retrieves the `DropShadow` associated with the specified `DepthLevel` added to delta.
+    ///
+    /// Example 1: for a depth level equal to 3 and a delta equal to 2, the returned `DropShadow` effect is
+    /// the effected associated with a depth level of 5.
+    ///
+    /// Example 2: for a depth level equal to 5 and a delta equal to whatever integer, the returned `DropShadow` effect is
+    /// the effected associated with a depth level of 5.
+    ///
+    /// @param level The desired `DepthLevel` between 1 and 5
+    /// @param delta The number of levels to shift
+    /// @return The final `DropShadow` effect}
+    ///
+    ///
+    /// [#nextLevel(ElevationLevel)]
     public static DropShadow shadowOf(ElevationLevel level, int delta) {
         ElevationLevel endLevel = level;
         for (int i = 0; i < delta; i++) {
@@ -88,13 +81,11 @@ public class MFXElevationManager {
         return shadowOf(endLevel);
     }
 
-    /**
-     * From a starting {@code DepthLevel} retrieves the {@code DropShadow} effect associated to the next {@code DepthLevel}.
-     *
-     * @param startLevel The starting {@code DepthLevel}
-     * @return The {@code DropShadow} effect associated to the next {@code DepthLevel}
-     * @see ElevationLevel
-     */
+    /// From a starting `DepthLevel` retrieves the `DropShadow` effect associated with the next `DepthLevel`.
+    ///
+    /// @param startLevel The starting `DepthLevel`
+    /// @return The `DropShadow` effect associated with the next `DepthLevel`
+    /// @see ElevationLevel
     private static ElevationLevel nextLevel(ElevationLevel startLevel) {
         return !(startLevel.equals(ElevationLevel.LEVEL5)) ? startLevel.next() : ElevationLevel.LEVEL5;
     }

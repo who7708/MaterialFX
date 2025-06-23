@@ -20,46 +20,42 @@ package io.github.palexdev.mfxeffects.animations.motion;
 
 import io.github.palexdev.mfxeffects.animations.base.Curve;
 
-/**
- * A cubic polynomial mapping of the unit interval.
- * <p>
- * Implements third-order Bézier curves.
- * <p></p>
- * Video examples of various curves based on this:
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_fast_linear_to_slow_ease_in.mp4>Fast Linear To Slow Ease In</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease.mp4>Ease</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in.mp4>Ease In</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_to_linear.mp4>Ease In To Linear</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_sine.mp4>Ease In Sine</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_quad.mp4>Ease In Quad</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_cubic.mp4>Ease In Cubic</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_quart.mp4>Ease In Quart</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_quint.mp4>Ease In Quint</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_expo.mp4>Ease In Expo</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_circ.mp4>Ease In Circ</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_back.mp4>Ease In Back</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_out.mp4>Ease Out</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_linear_to_ease_out.mp4>Linear To Ease Out</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_out_sine.mp4>Ease Out Sine</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_out_quad.mp4>Ease Out Quad</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_out_cubic.mp4>Ease Out Cubic</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_out_quart.mp4>Ease Out Quart</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_out_quint.mp4>Ease Out Quint</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_out_expo.mp4>Ease Out Expo</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_out_circ.mp4>Ease Out Circ</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_out_back.mp4>Ease Out Back</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_out.mp4>Ease In Out</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_out_sine.mp4>Ease In Out Sine</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_out_quad.mp4>Ease In Out Quad</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_out_cubic.mp4>Ease In Out Cubic</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_out_quart.mp4>Ease In Out Quart</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_out_quint.mp4>Ease In Out Quint</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_out_expo.mp4>Ease In Out Expo</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_out_circ.mp4>Ease In Out Circ</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_out_back.mp4>Ease In Out Back</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_fast_out_slow_in.mp4>Fast Out Slow In</a>
- * <p> - <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_slow_middle.mp4>Slow Middle</a>
- */
+/// A cubic polynomial mapping of the unit interval.
+/// Implements third-order Bézier curves.
+/// Video examples of various curves based on this:
+///  - [Fast Linear To Slow Ease In](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_fast_linear_to_slow_ease_in.mp4)
+///  - [Ease](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease.mp4)
+///  - [Ease In](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in.mp4)
+///  - [Ease In To Linear](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_to_linear.mp4)
+///  - [Ease In Sine](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_sine.mp4)
+///  - [Ease In Quad](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_quad.mp4)
+///  - [Ease In Cubic](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_cubic.mp4)
+///  - [Ease In Quart](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_quart.mp4)
+///  - [Ease In Quint](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_quint.mp4)
+///  - [Ease In Expo](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_expo.mp4)
+///  - [Ease In Circ](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_circ.mp4)
+///  - [Ease In Back](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_back.mp4)
+///  - [Ease Out](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_out.mp4)
+///  - [Linear To Ease Out](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_linear_to_ease_out.mp4)
+///  - [Ease Out Sine](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_out_sine.mp4)
+///  - [Ease Out Quad](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_out_quad.mp4)
+///  - [Ease Out Cubic](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_out_cubic.mp4)
+///  - [Ease Out Quart](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_out_quart.mp4)
+///  - [Ease Out Quint](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_out_quint.mp4)
+///  - [Ease Out Expo](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_out_expo.mp4)
+///  - [Ease Out Circ](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_out_circ.mp4)
+///  - [Ease Out Back](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_out_back.mp4)
+///  - [Ease In Out](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_out.mp4)
+///  - [Ease In Out Sine](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_out_sine.mp4)
+///  - [Ease In Out Quad](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_out_quad.mp4)
+///  - [Ease In Out Cubic](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_out_cubic.mp4)
+///  - [Ease In Out Quart](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_out_quart.mp4)
+///  - [Ease In Out Quint](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_out_quint.mp4)
+///  - [Ease In Out Expo](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_out_expo.mp4)
+///  - [Ease In Out Circ](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_out_circ.mp4)
+///  - [Ease In Out Back](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_out_back.mp4)
+///  - [Fast Out Slow In](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_fast_out_slow_in.mp4)
+///  - [Slow Middle](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_slow_middle.mp4)
 public class Cubic extends Curve {
     private final double x1;
     private final double y1;

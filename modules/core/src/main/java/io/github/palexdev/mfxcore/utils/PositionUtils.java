@@ -20,9 +20,7 @@ package io.github.palexdev.mfxcore.utils;
 
 import javafx.geometry.Pos;
 
-/**
- * Utilities for JavaFX's {@link Pos}.
- */
+/// Utilities for JavaFX's [Pos].
 public class PositionUtils {
 
     private PositionUtils() {

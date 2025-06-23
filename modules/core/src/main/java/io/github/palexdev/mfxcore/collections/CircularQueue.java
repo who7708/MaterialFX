@@ -20,11 +20,9 @@ package io.github.palexdev.mfxcore.collections;
 
 import java.util.LinkedList;
 
-/**
- * This is the implementation of a circular FIFO queue.
- * When the maximum size is reached the oldest element is removed and replaced
- * by the new one.
- */
+/// This is the implementation of a circular FIFO queue.
+///
+/// When the maximum size is reached, the oldest element is removed and replaced by the new one.
 public class CircularQueue<E> extends LinkedList<E> {
     //================================================================================
     // Properties
@@ -43,12 +41,10 @@ public class CircularQueue<E> extends LinkedList<E> {
     // Override Methods
     //================================================================================
 
-    /**
-     * Adds the specified element to the queue and if it is full removes the oldest element
-     * and then adds the new one.
-     * <p></p>
-     * {@inheritDoc}
-     */
+    /// {@inheritDoc}
+    ///
+    /// Adds the specified element to the queue and if it is full removes the oldest element
+    /// and then adds the new one.
     @Override
     public boolean add(E e) {
         if (super.size() == this.capacity) {
@@ -61,21 +57,16 @@ public class CircularQueue<E> extends LinkedList<E> {
     // Getters/Setters
     //================================================================================
 
-    /**
-     * @return the maximum number of elements the queue can contain before it starts deleting them
-     * from the head
-     */
+    /// @return the maximum number of elements the queue can contain before it starts deleting them
+    /// from the head
     public int getCapacity() {
         return capacity;
     }
 
-    /**
-     * Sets the maximum size of the queue and removes exceeding elements
-     * if the specified size is lesser than the number of elements.
-     *
-     * @param capacity The new desired size
-     * @throws IllegalArgumentException if the desired size is 0
-     */
+    /// Sets the maximum size of the queue and removes exceeding elements if the specified size is lesser than the number of elements.
+    ///
+    /// @param capacity The new desired size
+    /// @throws IllegalArgumentException if the desired size is 0
     public void setCapacity(int capacity) {
         if (capacity == 0) {
             throw new IllegalArgumentException("Size cannot be 0!");

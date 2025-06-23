@@ -20,13 +20,11 @@ package io.github.palexdev.mfxlocalization;
 
 import java.util.Locale;
 
-/**
- * Enumerator to list all the supported {@link Locale}s by MaterialFX.
- * <p>
- * Every {@code Language} enumeration is associated with a {@code Locale}.
- * <p>
- * The enumerator also specifies the project's default language, {@link #defaultLanguage()}.
- */
+/// Enumerator to list all the supported [Locale]s by MaterialFX.
+///
+/// Every `Language` enumeration is associated with a `Locale`.
+///
+/// The enumerator also specifies the project's default language, [#defaultLanguage()].
 public enum Language {
     ARABIC(Locale.forLanguageTag("ar")),
     ENGLISH(Locale.ENGLISH),
@@ -42,9 +40,7 @@ public enum Language {
         this.locale = locale;
     }
 
-    /**
-     * @return the project's default language, {@link Language#ENGLISH}
-     */
+    /// @return the project's default language, [#ENGLISH]
     public static Language defaultLanguage() {
         return ENGLISH;
     }

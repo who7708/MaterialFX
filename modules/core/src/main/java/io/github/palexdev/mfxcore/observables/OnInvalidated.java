@@ -42,17 +42,15 @@ public class OnInvalidated<T> extends When<T> {
         super(observable);
     }
 
-    /**
-     * Build a "wrapping" {@code OnInvalidated} construct for the given observable and {@link InvalidationListener}.
-     * <p>
-     * This should be used specifically when several listeners will execute the same action. To improve performance and
-     * memory usage, you can build the listener yourself and create the construct with this.
-     * <p>
-     * Automatically active upon creation!
-     * <p></p>
-     * <b>Note</b> however that this special construct will not have any of its features working (no action, no condition,
-     * no otherwise, etc.) because the listener is not built but the construct, of course.
-     */
+    /// Build a "wrapping" `OnInvalidated` construct for the given observable and [InvalidationListener].
+    ///
+    /// This should be used specifically when several listeners will execute the same action. To improve performance and
+    /// memory usage, you can build the listener yourself and create the construct with this.
+    ///
+    /// Automatically actived upon creation!
+    ///
+    /// **Note** however that this special construct will not have any of its features working (no action, no condition,
+    /// no otherwise, etc.) because the listener is not built but the construct, of course.
     public static <T> OnInvalidated<T> withListener(ObservableValue<T> observable, InvalidationListener il) {
         return new OnInvalidated<>(observable) {
             {

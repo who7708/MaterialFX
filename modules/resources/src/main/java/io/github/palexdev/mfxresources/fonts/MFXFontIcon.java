@@ -32,23 +32,21 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-/**
- * This class is used to display font icons given three main requirements:
- * <p> - The icon font to use
- * <p> - The function which will convert icon names to Unicode characters
- * <p> - The icon description/name
- * <p></p>
- * The new API allows {@code MFXFontIcon} to work with any icon font resource as long as the above requirements are met.
- * <p>
- * Users can switch between icon packs at any time with the provided method {@link #setIconsProvider(IconProvider)}.
- * To use a third party icon pack, first register the provider in {@link IconsProviders} either with
- * {@link IconsProviders#registerProvider(String, IconProvider)} or {@link IconsProviders#registerProvider(String, Font, Function)}
- * <p>
- * It is also possible to convert an icon description to its Unicode character and vice versa with {@link #descToCode(String)},
- * {@link #symbolToCode()}.
- * <p>
- * Now integrates with {@link MFXIconWrapper} in many ways with fluent API.
- */
+/// This class is used to display font icons given three main requirements:
+///  - The icon font to use
+///  - The function which will convert icon names to Unicode characters
+///  - The icon description/name
+///
+/// The new API allows `MFXFontIcon` to work with any icon font resource as long as the above requirements are met.
+///
+/// Users can switch between icon packs at any time with the provided method [#setIconsProvider(IconProvider)].
+/// To use a third party icon pack, first register the provider in [IconsProviders] either with
+/// [IconsProviders#registerProvider(String, IconProvider)] or [IconsProviders#registerProvider(String, Font, Function)]
+///
+/// It is also possible to convert an icon description to its Unicode character and vice versa with [#descToCode(String)],
+/// [#symbolToCode()].
+///
+/// Now integrates with [MFXIconWrapper] in many ways with fluent API.
 public class MFXFontIcon extends Text implements Cloneable {
     //================================================================================
     // Properties
@@ -109,17 +107,15 @@ public class MFXFontIcon extends Text implements Cloneable {
         fillProperty().bind(colorProperty());
     }
 
-    /**
-     * This is responsible for updating the icon's state. It's called whenever the description or font properties change.
-     * <p>
-     * With the latest version, {@code MFXFontIcon} is capable of automatically determine the icons' provider according
-     * to the set description. The provider must have been registered beforehand, as it is determined by
-     * {@link IconsProviders#getProvider(String)}. In case no provider is found, an {@link IllegalArgumentException} is
-     * thrown.
-     * <p>
-     * If the description is valid (not null, not blank, provider found), the text is updated by converting the description
-     * to a Unicode character, see {@link #descToCode(String)}.
-     */
+    /// This is responsible for updating the icon's state. It's called whenever the description or font properties change.
+    ///
+    /// With the latest version, `MFXFontIcon` is capable of automatically determining the icons' provider according
+    /// to the set description. The provider must have been registered beforehand, as it is determined by
+    /// [IconsProviders#getProvider(String)]. In case no provider is found, an [IllegalArgumentException] is
+    /// thrown.
+    ///
+    /// If the description is valid (not null, not blank, provider found), the text is updated by converting the description
+    /// to a Unicode character, see [#descToCode(String)].
     protected void update(String description) {
         if (changingFont) return;
         if (description == null || description.isBlank()) {
@@ -140,12 +136,10 @@ public class MFXFontIcon extends Text implements Cloneable {
         setText(descToCode(description));
     }
 
-    /**
-     * Switches icons pack to the given {@link IconProvider}.
-     * <p></p>
-     * Note that this will also clear the {@link #descriptionProperty()} to avoid any exception or invalid state during
-     * the transition.
-     */
+    /// Switches icons pack to the given [IconProvider].
+    ///
+    /// Note that this will also clear the [#descriptionProperty()] to avoid any exception or invalid state during
+    /// the transition.
     public MFXFontIcon setIconsProvider(IconProvider provider) {
         setDescriptionConverter(provider.getConverter());
         Font font = provider.loadFont();
@@ -154,44 +148,34 @@ public class MFXFontIcon extends Text implements Cloneable {
         return this;
     }
 
-    /**
-     * Converts the given icon description/name to a unicode character by using the current {@link #descriptionConverterProperty()}.
-     *
-     * @return the unicode character for the given description as a String
-     */
+    /// Converts the given icon description/name to a Unicode character by using the current [#descriptionConverterProperty()].
+    ///
+    /// @return the Unicode character for the given description as a String
     public String descToCode(String desc) {
         return String.valueOf(getDescriptionConverter().apply(desc));
     }
 
-    /**
-     * Converts back the current set icon from {@link #getText()} to a unicode character.
-     *
-     * @return the current unicode character as a String. "\0" (empty character) if the text is empty (no icon set)
-     */
+    /// Converts back the current set icon from [#getText()] to a Unicode character.
+    ///
+    /// @return the current Unicode character as a String. "\0" (empty character) if the text is empty (no icon set)
     public String symbolToCode() {
         String text = getText();
         if (text.isEmpty()) return "\0";
         return ("\\u" + Integer.toHexString(getText().charAt(0) | 0x10000).substring(1).toUpperCase());
     }
 
-    /**
-     * Wraps this font icon in a {@link MFXIconWrapper} and returns it.
-     */
+    /// Wraps this font icon in a [MFXIconWrapper] and returns it.
     public MFXIconWrapper wrap() {
         return new MFXIconWrapper(this);
     }
 
-    /**
-     * Wraps this font icon in a {@link MFXIconWrapper} and returns an instance of {@link IconWrapperBuilder} to customize
-     * the wrapper.
-     */
+    /// Wraps this font icon in a [MFXIconWrapper] and returns an instance of [IconWrapperBuilder] to customize
+    /// the wrapper.
     public IconWrapperBuilder wrapperBuilder() {
         return new IconWrapperBuilder(wrap());
     }
 
-    /**
-     * Responsible for changing the current font' size.
-     */
+    /// Responsible for changing the current font's size.
     private void setFontSize(double size) {
         String family = getFont().getFamily();
         setFont(Font.font(family, size));
@@ -250,11 +234,9 @@ public class MFXFontIcon extends Text implements Cloneable {
         return color.get();
     }
 
-    /**
-     * Specifies the color of the icon.
-     * <p></p>
-     * Settable in CSS via the property: '-mfx-color'.
-     */
+    /// Specifies the color of the icon.
+    ///
+    /// Settable from CSS via the property: '-mfx-color'.
     public StyleableObjectProperty<Color> colorProperty() {
         return color;
     }
@@ -268,11 +250,9 @@ public class MFXFontIcon extends Text implements Cloneable {
         return description.get();
     }
 
-    /**
-     * Specifies the icon's description/name inside the icon font pack.
-     * <p></p>
-     * Settable in CSS via the property: '-mfx-description'.
-     */
+    /// Specifies the icon's description/name inside the icon font pack.
+    ///
+    /// Settable from CSS via the property: '-mfx-description'.
     public StyleableStringProperty descriptionProperty() {
         return description;
     }
@@ -291,13 +271,11 @@ public class MFXFontIcon extends Text implements Cloneable {
         return size.get();
     }
 
-    /**
-     * Specifies the size of the icon, in other words the size of the current icon font pack.
-     * <p>
-     * On change this will automatically call {@link #setFontSize(double)}.
-     * <p></p>
-     * Settable in CSS via the property: '-mfx-size'.
-     */
+    /// Specifies the size of the icon, in other words the size of the current icon font pack.
+    ///
+    /// On change this will automatically call [#setFontSize(double)].
+    ///
+    /// Settable from CSS via the property: '-mfx-size'.
     public StyleableDoubleProperty sizeProperty() {
         return size;
     }
@@ -353,9 +331,7 @@ public class MFXFontIcon extends Text implements Cloneable {
         return getClassCssMetaData();
     }
 
-    /**
-     * Creates a new {@code MFXFontIcon} instance with the same properties from this.
-     */
+    /// Creates a new `MFXFontIcon` instance with the same properties from this.
     @SuppressWarnings({"MethodDoesntCallSuperMethod", "CloneDoesntDeclareCloneNotSupportedException"})
     @Override
     protected MFXFontIcon clone() {
@@ -384,10 +360,8 @@ public class MFXFontIcon extends Text implements Cloneable {
         return descriptionConverter.get();
     }
 
-    /**
-     * Specifies the function used by {@code MFXFontIcon} to convert the {@link #descriptionProperty()} to a unicode
-     * character representing the icon in the font resource.
-     */
+    /// Specifies the function used by `MFXFontIcon` to convert the [#descriptionProperty()] to a Unicode
+    /// character representing the icon in the font resource.
     public ObjectProperty<Function<String, Character>> descriptionConverterProperty() {
         return descriptionConverter;
     }

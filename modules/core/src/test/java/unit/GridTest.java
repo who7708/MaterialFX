@@ -18,6 +18,11 @@
 
 package unit;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
 import io.github.palexdev.mfxcore.collections.Grid;
 import io.github.palexdev.mfxcore.collections.Grid.Coordinates;
 import io.github.palexdev.mfxcore.utils.GridUtils;
@@ -25,11 +30,6 @@ import io.github.palexdev.mfxcore.utils.RandomUtils;
 import javafx.util.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -647,24 +647,24 @@ public class GridTest {
     @Test
     public void testLinearToCoordinate() {
         Coordinates p1 = GridUtils.indToSub(grid.getColumnsNum(), 0);
-        assertEquals(0, p1.getRow());
-        assertEquals(0, p1.getColumn());
+        assertEquals(0, p1.row());
+        assertEquals(0, p1.column());
 
         Coordinates p2 = GridUtils.indToSub(grid.getColumnsNum(), 6);
-        assertEquals(1, p2.getRow());
-        assertEquals(1, p2.getColumn());
+        assertEquals(1, p2.row());
+        assertEquals(1, p2.column());
 
         Coordinates p3 = GridUtils.indToSub(grid.getColumnsNum(), 12);
-        assertEquals(2, p3.getRow());
-        assertEquals(2, p3.getColumn());
+        assertEquals(2, p3.row());
+        assertEquals(2, p3.column());
 
         Coordinates p4 = GridUtils.indToSub(grid.getColumnsNum(), 18);
-        assertEquals(3, p4.getRow());
-        assertEquals(3, p4.getColumn());
+        assertEquals(3, p4.row());
+        assertEquals(3, p4.column());
 
         Coordinates p5 = GridUtils.indToSub(grid.getColumnsNum(), 24);
-        assertEquals(4, p5.getRow());
-        assertEquals(4, p5.getColumn());
+        assertEquals(4, p5.row());
+        assertEquals(4, p5.column());
     }
 
     public static Integer[][] getRandomIntMatrix(int rows, int columns) {

@@ -28,9 +28,7 @@ import io.github.palexdev.mfxresources.fonts.MFXFontIcon;
 import io.github.palexdev.mfxresources.utils.EnumUtils;
 import javafx.scene.paint.Color;
 
-/**
- * Enumerator class for FontAwesomeRegular icons. (Count: 163)
- */
+/// Enumerator class for FontAwesomeRegular icons. (Count: 163)
 public enum FontAwesomeRegular implements IconDescriptor {
     ADDRESS_BOOK("far-address-book", '\uE900'),
     ADDRESS_CARD("far-address-card", '\uE901'),
@@ -229,43 +227,33 @@ public enum FontAwesomeRegular implements IconDescriptor {
         return cache();
     }
 
-    /**
-     * @return a new {@link MFXFontIcon} with a random {@link IconDescriptor} from this enumeration
-     */
+    /// @return a new [MFXFontIcon] with a random [IconDescriptor] from this enumeration
     public static MFXFontIcon random() {
         FontAwesomeRegular desc = EnumUtils.randomEnum(FontAwesomeRegular.class);
         return new MFXFontIcon(desc);
     }
 
-    /**
-     * @return a new {@link MFXFontIcon} with a random {@link IconDescriptor} from this enumeration and the given size
-     */
+    /// @return a new [MFXFontIcon] with a random [IconDescriptor] from this enumeration and the given size
     public static MFXFontIcon random(double size) {
         return random().setSize(size);
     }
 
-    /**
-     * @return a new {@link MFXFontIcon} with a random {@link IconDescriptor} from this enumeration, the given color and size
-     */
+    /// @return a new [MFXFontIcon] with a random [IconDescriptor] from this enumeration, the given color and size
     public static MFXFontIcon random(Color color, double size) {
         return random().setColor(color).setSize(size);
     }
 
-    /**
-     * Converts the given icon description/name to its corresponding unicode character.
-     *
-     * @param desc the icon description/name
-     * @return the icon's unicode character
-     * @throws IllegalArgumentException if no icon with the given description could be found
-     */
+    /// Converts the given icon description/name to its corresponding Unicode character.
+    ///
+    /// @param desc the icon description/name
+    /// @return the icon's Unicode character
+    /// @throws IllegalArgumentException if no icon with the given description could be found
     public static char toCode(String desc) {
         return Optional.ofNullable(cache().get(desc))
             .orElseThrow(() -> new IllegalArgumentException("Icon description '" + desc + "' is invalid!"));
     }
 
-    /**
-     * Same as {@link IconDescriptor#getCache()}, allows to retrieve the cache from a static context.
-     */
+    /// Same as [#getCache()], allows to retrieve the cache from a static context.
     public static Map<String, Character> cache() {
         if (cache == null) {
             cache = Arrays.stream(values())

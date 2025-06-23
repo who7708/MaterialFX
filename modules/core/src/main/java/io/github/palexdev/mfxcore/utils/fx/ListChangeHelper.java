@@ -1,23 +1,21 @@
 package io.github.palexdev.mfxcore.utils.fx;
 
+import java.util.*;
+import java.util.function.Consumer;
+
 import io.github.palexdev.mfxcore.base.beans.range.IntegerRange;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 
-import java.util.*;
-import java.util.function.Consumer;
-
-/**
- * A helper class whose goal is to simplify the interactions with {@link Change}.
- * <p>
- * This is capable of handling permutations, replacements, removals and additions through actions that you can specify
- * with the relative setters.
- * <p>
- * To attach the listener to the source {@link ObservableList} it's enough to call {@link #init()}.
- * <p>
- * Once this is not needed anymore, it should be properly disposed by invoking {@link #dispose()}.
- */
+/// A helper class whose goal is to simplify the "interactions" with [Change].
+///
+/// This is capable of handling permutations, replacements, removals and additions through actions that you can specify
+/// with the relative setters.
+///
+/// To attach the listener to the source [ObservableList], it's enough to call [#init()].
+///
+/// Once this is not needed anymore, it should be properly disposed by invoking [#dispose()].
 public class ListChangeHelper<E> {
     //================================================================================
     // Properties
@@ -45,9 +43,7 @@ public class ListChangeHelper<E> {
     // Methods
     //================================================================================
 
-    /**
-     * Builds the {@link ListChangeListener} and attaches it to the given source {@link ObservableList}.
-     */
+    /// Builds the [ListChangeListener] and attaches it to the given source [ObservableList].
     public ListChangeHelper<E> init() {
         if (listener == null) {
             listener = this::onChanged;
@@ -56,37 +52,32 @@ public class ListChangeHelper<E> {
         return this;
     }
 
-    /**
-     * This is the core method invoked by the {@link ListChangeListener} built by the {@link #init()} method.
-     * <p>
-     * In the following lines, I'm going to describe what this does, how and why.
-     * <p></p>
-     * It's responsible for handling the following changes:
-     * <p> 1) Permutations: a map is built containing the original index mapped to the new one, see {@link #buildPermutationMap(Change)},
-     * the result is passed to the consumer, {@link #getOnPermutation()}
-     * <p> 2) Replacements: this one is tricky because as usual JavaFX code is pure garbage. Every replacement is treated
-     * both as a removal and an addition which indeed makes sense, but it just complicates things for no reason whatsoever.
-     * Essentially, there are two cases: a single {@code set()} operation which leads to {@link Change#getFrom()} and
-     * {@link Change#getTo()} to have the same value (easy to handle), and multiple sets {@code setAll()} which is simply
-     * a {@code clear()} operation followed by an {@code addAll()} operation. This is trickier to catch and this class
-     * handles such case as a clear operation, a no-arg action, {@link #getOnClear()}
-     * <p> 3) Removals: this! This is not even tricky, it's the pure definition of {@code garbage}. There are two cases
-     * here too. The first case is about single or contiguous removals, very easy to handle. The second case is the
-     * shitty one, and it's about sparse removals (e.g. [0, 1, 4, 7, 9]). Not only every removal is handled as a single
-     * change, but the {@link Change#getFrom()} and {@link Change#getTo()} are fucking messed up.
-     * <p>
-     * Let's consider the previous example: removals at indexes {@code [A, B, D, F, I]}. The first removal is contiguous
-     * {@code [A, B]} and so the range will be {@code [0, 1]}. The second removal is treated as a separate change and the
-     * range will be... exactly {@code [1, 1]}, so fucking obvious and convenient right? Essentially, for every removal,
-     * the range is shifted by the number of previously removed items, and this is a direct consequence of treating sparse
-     * removals as separate changes.
-     * <p>
-     * This helper handles this garbage by reconstructing the sequence. The result is a Set of indexes at which the
-     * removals originally occurred, so if we consider the previous example, the Set will look like this:
-     * {@code [0, 1, 3, 8]}. The action takes this Set as the only arg, {@link #getOnRemoved()}.
-     * <p> 4) Additions: these are very easy to handle as they can only be contiguous, for this reason the action only
-     * accepts the range, {@link #getOnAdded()}
-     */
+    /// This is the core method invoked by the [ListChangeListener] built by the [#init()] method.
+    ///
+    /// In the following lines, I'm going to describe what this does, how and why.
+    /// It's responsible for handling the following changes:
+    ///  1) Permutations: a map is built containing the original index mapped to the new one, see [#buildPermutationMap(Change)],
+    /// the result is passed to the consumer, [#getOnPermutation()]
+    ///  2) Replacements: this one is tricky because as usual JavaFX code is pure garbage. Every replacement is treated
+    /// both as a removal and an addition, which indeed makes sense, but it just complicates things for no reason whatsoever.
+    /// Essentially, there are two cases: a single `set()` operation leads to [Change#getFrom()] and
+    /// [Change#getTo()] to have the same value (easy to handle), and multiple sets `setAll()` which is simply
+    /// a `clear()` operation followed by an `addAll()` operation. The latter is trickier to catch, and this class
+    /// handles such case as a clear operation, a no-arg action, [#getOnClear()]
+    ///  3) Removals: this! This is not even tricky, it's the pure definition of `garbage`. There are two cases
+    /// here too. The first case is about single or contiguous removals, very easy to handle. The second case is the
+    /// shitty one, and it's about sparse removals (e.g. [0, 1, 4, 7, 9]). Not only every removal is handled as a single
+    /// change, but the [Change#getFrom()] and [Change#getTo()] are fucking messed up.
+    /// Let's consider the previous example: removals at indexes `[A, B, D, F, I]`. The first removal is contiguous
+    /// `[A, B]` and so the range will be `[0, 1]`. The second removal is treated as a separate change, and the
+    /// range will be... exactly `[1, 1]`, so fucking obvious and convenient right? Essentially, for every removal,
+    /// the range is shifted by the number of previously removed items, and this is a direct consequence of treating sparse
+    /// removals as separate changes.
+    /// This helper handles this garbage by reconstructing the sequence. The result is a `Set` of indexes at which the
+    /// removals originally occurred, so if we consider the previous example, the `Set` will look like this:
+    /// `[0, 1, 3, 8]`. The action takes this `Set` as the only arg, [#getOnRemoved()].
+    ///  4) Additions: these are very easy to handle as they can only be contiguous, for this reason the action only
+    /// accepts the range, [#getOnAdded()]
     public void onChanged(Change<? extends E> c) {
         int removedSize = 0;
         NavigableSet<Integer> removed = new TreeSet<>();
@@ -124,18 +115,14 @@ public class ListChangeHelper<E> {
         lastSize = c.getList().size();
     }
 
-    /**
-     * This is responsible for correctly reconstructing a sequence of sparse removals as detailed here: {@link #onChanged(Change)}.
-     */
+    /// This is responsible for correctly reconstructing a sequence of sparse removals as detailed here: [#onChanged(Change)].
     private IntegerRange computeRemovedRange(Change<? extends E> c, int toOffset) {
         int from = c.getTo() + toOffset;
         int to = c.getFrom() + (c.getRemovedSize() - 1) + toOffset;
         return IntegerRange.of(from, to);
     }
 
-    /**
-     * Removes the listener from the source and sets the latter to {@code null}.
-     */
+    /// Removes the listener from the source and sets the latter to `null`.
     public void dispose() {
         if (listener != null) source.removeListener(listener);
         source = null;
@@ -145,11 +132,9 @@ public class ListChangeHelper<E> {
     // Utility Methods
     //================================================================================
 
-    /**
-     * A generic utility that given a {@link Change} builds a map containing the old indexes
-     * (in the range given by {@link Change#getFrom()} and {@link Change#getTo()}) mapped to their permutation, found
-     * by calling {@link Change#getPermutation(int)}.
-     */
+    /// A generic utility that given a [Change] builds a map containing the old indexes
+    /// (in the range given by [Change#getFrom()] and [Change#getTo()]) mapped to their permutation, found
+    /// by calling [Change#getPermutation(int)].
     public static <E> Map<Integer, Integer> buildPermutationMap(Change<? extends E> c) {
         if (!c.wasPermutated()) return Map.of();
         IntegerRange range = IntegerRange.of(c.getFrom(), c.getTo() - 1);
@@ -160,11 +145,9 @@ public class ListChangeHelper<E> {
         return map;
     }
 
-    /**
-     * Shifts the pre-addition indexes given the range of added items in the source list. This piece of information is
-     * enough as indexes that come after the insertion point (given by {@link IntegerRange#getMin()}) just need to be
-     * shifted by the number of added items (given by {@link IntegerRange#diff()} + 1).
-     */
+    /// Shifts the pre-addition indexes given the range of added items in the source list. This piece of information is
+    /// enough as indexes that come after the insertion point (given by [IntegerRange#getMin()]) just need to be
+    /// shifted by the number of added items (given by [IntegerRange#diff()] + 1).
     public static List<Integer> shiftOnAdd(Collection<Integer> src, IntegerRange range) {
         List<Integer> srcL = src instanceof List ?
             (List<Integer>) src :
@@ -181,16 +164,15 @@ public class ListChangeHelper<E> {
         return srcL;
     }
 
-    /**
-     * Shifts the pre-removal indexes given the indexes at which removals occurred in the source list and the first
-     * removal index. This kind of shift is the most complex and expensive.
-     * <p>
-     * Unlike additions, removals in a list may not be contiguous, e.g. [2, 7, 1, 5, 10]. Which means that the simplest
-     * approach to shift every index would be to iterate over each of them and count all the removed index which are smaller.
-     * <p></p>
-     * This however, uses another approach. By first sorting the removed indexes, computes each shift by using
-     * {@link Collections#binarySearch(List, Object)}.
-     */
+    /// Shifts the pre-removal indexes given the indexes at which removals occurred in the source list and the first
+    /// removal index. This kind of shift is the most complex and expensive.
+    ///
+    /// Unlike additions, removals in a list may not be contiguous, e.g. \[2, 7, 1, 5, 10]. Which means that the simplest
+    /// approach to shift every index would be to iterate over each of them and count all the removed indexes that are smaller.
+    ///
+    ///
+    /// This, however, uses another approach. By first sorting the removed indexes, computes each shift by using
+    /// [Collections#binarySearch(List, Object)].
     public static List<Integer> shiftOnRemove(Collection<Integer> src, Collection<Integer> removed, int from) {
         List<Integer> srcL = src instanceof List ?
             (List<Integer>) src :
@@ -226,87 +208,65 @@ public class ListChangeHelper<E> {
     // Getters/Setters
     //================================================================================
 
-    /**
-     * @return the source {@link ObservableList} on which the lister is attached, see {@link #init()}
-     */
+    /// @return the source [ObservableList] on which the lister is attached, see [#init()]
     public ObservableList<E> getSource() {
         return source;
     }
 
-    /**
-     * @return the action performed when a permutation change happens in the source list, see {@link #onChanged(Change)}
-     */
+    /// @return the action performed when a permutation change happens in the source list, see [#onChanged(Change)]
     public Consumer<Map<Integer, Integer>> getOnPermutation() {
         return onPermutation;
     }
 
-    /**
-     * Sets the action performed when a permutation change happens in the source list, see {@link #onChanged(Change)}
-     */
+    /// Sets the action performed when a permutation change happens in the source list, see [#onChanged(Change)]
     public ListChangeHelper<E> setOnPermutation(Consumer<Map<Integer, Integer>> onPermutation) {
         this.onPermutation = Optional.ofNullable(onPermutation)
             .orElse(fn -> {});
         return this;
     }
 
-    /**
-     * @return the action performed when a replacement change happens in the source list, see {@link #onChanged(Change)}
-     */
+    /// @return the action performed when a replacement change happens in the source list, see [#onChanged(Change)]
     public Consumer<Integer> getOnReplace() {
         return onReplace;
     }
 
-    /**
-     * Sets the action performed when a replacement change happens in the source list, see {@link #onChanged(Change)}
-     */
+    /// Sets the action performed when a replacement change happens in the source list, see [#onChanged(Change)]
     public ListChangeHelper<E> setOnReplace(Consumer<Integer> onReplace) {
         this.onReplace = Optional.ofNullable(onReplace)
             .orElse(c -> {});
         return this;
     }
 
-    /**
-     * @return the action performed when a removal change happens in the source list, see {@link #onChanged(Change)}
-     */
+    /// @return the action performed when a removal change happens in the source list, see [#onChanged(Change)]
     public Consumer<NavigableSet<Integer>> getOnRemoved() {
         return onRemoved;
     }
 
-    /**
-     * Sets the action performed when a removal change happens in the source list, see {@link #onChanged(Change)}
-     */
+    /// Sets the action performed when a removal change happens in the source list, see [#onChanged(Change)]
     public ListChangeHelper<E> setOnRemoved(Consumer<NavigableSet<Integer>> onRemoved) {
         this.onRemoved = Optional.ofNullable(onRemoved)
             .orElse(c -> {});
         return this;
     }
 
-    /**
-     * @return the action performed when an addition change happens in the source list, see {@link #onChanged(Change)}
-     */
+    /// @return the action performed when an addition change happens in the source list, see [#onChanged(Change)]
     public Consumer<IntegerRange> getOnAdded() {
         return onAdded;
     }
 
-    /**
-     * Sets the action performed when an addition change happens in the source list, see {@link #onChanged(Change)}
-     */
+    /// Sets the action performed when an addition change happens in the source list, see [#onChanged(Change)]
     public ListChangeHelper<E> setOnAdded(Consumer<IntegerRange> onAdded) {
         this.onAdded = Optional.ofNullable(onAdded)
             .orElse(c -> {});
         return this;
     }
 
-    /**
-     * @return the action performed when a clear change happens in the source list, see {@link #onChanged(Change)}
-     */
+    /// @return the action performed when a clear change happens in the source list, see [#onChanged(Change)]
     public Runnable getOnClear() {
         return onClear;
     }
 
-    /**
-     * Sets the action performed when a clear change happens in the source list, see {@link #onChanged(Change)}
-     */
+    /// Sets the action performed when a clear change happens in the source list, see [#onChanged(Change)]
     public ListChangeHelper<E> setOnClear(Runnable onClear) {
         this.onClear = Optional.ofNullable(onClear)
             .orElse(() -> {});

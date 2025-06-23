@@ -22,36 +22,27 @@ import java.util.function.Supplier;
 
 import io.github.palexdev.mfxcore.base.properties.functional.SupplierProperty;
 
-/**
- * Public API for all components that want to integrate with the new Skin API.
- *
- * @param <S> the type of skin the component will use
- * @see SkinBase
- */
+/// Public API for all components that want to integrate with the new Skin API.
+///
+/// @param <S> the type of skin the component will use
+/// @see SkinBase
 public interface MFXSkinnable<S extends SkinBase<?, ?>> {
 
-    /**
-     * @return a {@link Supplier} that is the provider for the default skin used by the component.
-     */
+    /// @return a [Supplier] that is the provider for the default skin used by the component.
     Supplier<S> defaultSkinProvider();
 
     default Supplier<S> getSkinProvider() {
         return skinProviderProperty().get();
     }
 
-    /**
-     * Specifies the {@link Supplier} used to produce a skin object for the component.
-     */
+    /// Specifies the [Supplier] used to produce a skin object for the component.
     SupplierProperty<S> skinProviderProperty();
 
     default void setSkinProvider(Supplier<S> provider) {
         skinProviderProperty().set(provider);
     }
 
-    /**
-     * Restores the component's skin to the default one using {@link #defaultSkinProvider()}
-     * and {@link #setSkinProvider(Supplier)}.
-     */
+    /// Restores the component's skin to the default one using [#defaultSkinProvider()] and [#setSkinProvider(Supplier)].
     default void setDefaultSkinProvider() {
         setSkinProvider(defaultSkinProvider());
     }

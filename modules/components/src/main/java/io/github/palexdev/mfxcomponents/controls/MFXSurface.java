@@ -275,7 +275,7 @@ public class MFXSurface extends Region implements MFXStyleable {
     /// Specifies whether to animate the background's opacity when the interaction state changes,
     /// [#updateOpacity()] and [#animate(double)].
     ///
-    /// Can be set in CSS via the property: '-mfx-animated'.
+    /// Can be set from CSS via the property: '-mfx-animated'.
     public StyleableBooleanProperty animatedProperty() {
         return animated;
     }
@@ -290,7 +290,7 @@ public class MFXSurface extends Region implements MFXStyleable {
 
     /// Specifies the surface's background opacity when the owner is disabled.
     ///
-    /// Can be set in CSS via the property: '-mfx-disabled-opacity'.
+    /// Can be set from CSS via the property: '-mfx-disabled-opacity'.
     public StyleableDoubleProperty disabledOpacityProperty() {
         return disabledOpacity;
     }
@@ -305,7 +305,7 @@ public class MFXSurface extends Region implements MFXStyleable {
 
     /// Specifies the surface's background opacity when the owner is pressed.
     ///
-    /// Can be set in CSS via the property: '-mfx-pressed-opacity'.
+    /// Can be set from CSS via the property: '-mfx-pressed-opacity'.
     public StyleableDoubleProperty pressedOpacityProperty() {
         return pressedOpacity;
     }
@@ -320,7 +320,7 @@ public class MFXSurface extends Region implements MFXStyleable {
 
     /// Specifies the surface's background opacity when the owner is focused.
     ///
-    /// Can be set in CSS via the property: '-mfx-focused-opacity'.
+    /// Can be set from CSS via the property: '-mfx-focused-opacity'.
     public StyleableDoubleProperty focusedOpacityProperty() {
         return focusedOpacity;
     }
@@ -335,7 +335,7 @@ public class MFXSurface extends Region implements MFXStyleable {
 
     /// Specifies the surface's background opacity when the owner is hovered.
     ///
-    /// Can be set in CSS via the property: '-mfx-hover-opacity'.
+    /// Can be set from CSS via the property: '-mfx-hover-opacity'.
     public StyleableDoubleProperty hoverOpacityProperty() {
         return hoverOpacity;
     }
@@ -354,7 +354,7 @@ public class MFXSurface extends Region implements MFXStyleable {
     /// Unfortunately, since the crap that is JavaFX, handles the effects in strange ways, the shadow cannot be applied to the
     /// surface for various reasons. So, the effect will be applied on the owner instead.
     ///
-    /// Can be set in CSS via the property: '-mfx-elevation'.
+    /// Can be set from CSS via the property: '-mfx-elevation'.
     public StyleableObjectProperty<ElevationLevel> elevationProperty() {
         return elevation;
     }

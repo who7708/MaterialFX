@@ -22,15 +22,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-/**
- * Simple implementation of a Memoizer.
- * <p></p>
- * Memoization is a technique to store the results of expensive function calls and returning the cached result
- * when the same inputs occur again.
- * <p></p>
- * Given a {@code Function<T, U> fn}, use {@code Memoizer.memoize(fn)} to obtain a new function {@code Function<T, U> mfn}
- * which you can use from now on to store/cache the results.
- */
+/// Simple implementation of a Memoizer.
+///
+/// Memoization is a technique to store the results of expensive function calls by returning the cached result
+/// when the same inputs occur again.
+///
+/// Given a `Function<T, U> fn`, use `Memoizer.memoize(fn)` to get a new function `Function<T, U> mfn`
+/// which you can use from now on to store/cache the results.
 public class Memoizer<T, U> {
     public final Map<T, U> cache = new HashMap<>();
 

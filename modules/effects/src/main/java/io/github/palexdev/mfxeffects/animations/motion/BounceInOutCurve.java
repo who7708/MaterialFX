@@ -20,11 +20,9 @@ package io.github.palexdev.mfxeffects.animations.motion;
 
 import io.github.palexdev.mfxeffects.animations.base.Curve;
 
-/**
- * An oscillating curve that first grows and then shrink in magnitude.
- * <p></p>
- * <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_bounce_in_out.mp4>Bounce In Out</a>
- */
+/// An oscillating curve that first grows and then shrink in magnitude.
+///
+/// [Bounce In Out](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_bounce_in_out.mp4)
 public class BounceInOutCurve extends Curve {
     @Override
     public double curve(double t) {

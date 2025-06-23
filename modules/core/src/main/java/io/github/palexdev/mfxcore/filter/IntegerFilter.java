@@ -18,6 +18,10 @@
 
 package io.github.palexdev.mfxcore.filter;
 
+import java.util.Collections;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
 import io.github.palexdev.mfxcore.base.beans.BiPredicateBean;
 import io.github.palexdev.mfxcore.filter.base.NumberFilter;
 import io.github.palexdev.mfxcore.utils.fx.FXCollectors;
@@ -26,21 +30,15 @@ import javafx.collections.ObservableList;
 import javafx.util.StringConverter;
 import javafx.util.converter.IntegerStringConverter;
 
-import java.util.Collections;
-import java.util.function.Function;
-import java.util.stream.Stream;
-
-/**
- * Extension of {@link NumberFilter} for integer fields.
- * <p></p>
- * Offers the following default {@link BiPredicateBean}s:
- * <p> - "is": checks for integers equality
- * <p> - "is not": checks for integers inequality
- * <p> - "greater than": checks if a integer is greater than another integer
- * <p> - "greater or equal to": checks if a integer is greater or equal to another integer
- * <p> - "lesser than": checks if a integer is lesser than another integer
- * <p> - "lesser or equal to": checks if a integer is lesser or equal to another integer
- */
+/// Extension of [NumberFilter] for integer fields.
+///
+/// Offers the following default [BiPredicateBeans][BiPredicateBean]:
+///  - "is": checks for integers equality
+///  - "is not": checks for integers inequality
+///  - "greater than": checks if an integer is greater than another integer
+///  - "greater or equal to": checks if an integer is greater or equal to another integer
+///  - "lesser than": checks if an integer is lesser than another integer
+///  - "lesser or equal to": checks if an integer is lesser or equal to another integer
 public class IntegerFilter<T> extends NumberFilter<T, Integer> {
 
     //================================================================================

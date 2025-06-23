@@ -18,15 +18,13 @@
 
 package io.github.palexdev.mfxcore.base.properties.resettable;
 
+import java.util.Objects;
+
 import io.github.palexdev.mfxcore.base.properties.base.ResettableProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
 
-import java.util.Objects;
-
-/**
- * A {@link SimpleBooleanProperty} that implements {@link ResettableProperty}.
- */
+/// A [SimpleBooleanProperty] that implements [ResettableProperty].
 public class ResettableBooleanProperty extends ReadOnlyBooleanWrapper implements ResettableProperty<Boolean> {
     //================================================================================
     // Properties

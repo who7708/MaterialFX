@@ -23,9 +23,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Implementation of {@link NumberRange} to represent a Double range.
- */
+/// Implementation of [NumberRange] to represent a Double range.
 public class DoubleRange extends NumberRange<Double> {
 
     //================================================================================
@@ -39,30 +37,22 @@ public class DoubleRange extends NumberRange<Double> {
     // Static Methods
     //================================================================================
 
-    /**
-     * @return a new instance of {@code DoubleRange} with the given min and max bounds.
-     */
+    /// @return a new instance of `DoubleRange` with the given min and max bounds.
     public static DoubleRange of(Double min, Double max) {
         return new DoubleRange(min, max);
     }
 
-    /**
-     * @return a new instance of {@code DoubleRange} with the given val as both min and max bounds.
-     */
+    /// @return a new instance of `DoubleRange` with the given val as both min and max bounds.
     public static DoubleRange of(Double val) {
         return new DoubleRange(val, val);
     }
 
-    /**
-     * Checks if the given value is contained in the given range (bounds are included).
-     */
+    /// Checks if the given value is contained in the given range (bounds are included).
     public static boolean inRangeOf(double val, DoubleRange range) {
         return Math.max(range.getMin(), val) == Math.min(val, range.getMax());
     }
 
-    /**
-     * Expands a range of doubles to a {@code List} with the given step.
-     */
+    /// Expands a range of doubles to a `List` with the given step.
     public static List<Double> expandRange(DoubleRange range, double step) {
         List<Double> l = new ArrayList<>();
         double start = range.getMin();
@@ -73,11 +63,9 @@ public class DoubleRange extends NumberRange<Double> {
         return l;
     }
 
-    /**
-     * Expands a range of doubles to a {@code Set} with the given step.
-     * <p>
-     * The {@code Set} is ordered.
-     */
+    /// Expands a range of doubles to a `Set` with the given step.
+    ///
+    /// The `Set` is ordered.
     public static Set<Double> expandRangeToSet(DoubleRange range, double step) {
         Set<Double> s = new LinkedHashSet<>();
         double start = range.getMin();
@@ -88,9 +76,7 @@ public class DoubleRange extends NumberRange<Double> {
         return s;
     }
 
-    /**
-     * Expands a range of double to an array.
-     */
+    /// Expands a range of doubles to an array.
     public static Double[] expandRangeToArray(double min, double max, double step) {
         return expandRange(of(min, max), step).toArray(Double[]::new);
     }

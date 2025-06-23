@@ -18,14 +18,12 @@
 
 package io.github.palexdev.mfxeffects.beans.properties;
 
+import java.util.Optional;
+
 import io.github.palexdev.mfxeffects.beans.Position;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 
-import java.util.Optional;
-
-/**
- * Simple extension of {@link ReadOnlyObjectWrapper} for {@link Position} objects.
- */
+/// Simple extension of [ReadOnlyObjectWrapper] for [Position] objects.
 public class PositionProperty extends ReadOnlyObjectWrapper<Position> {
 
     //================================================================================
@@ -50,20 +48,16 @@ public class PositionProperty extends ReadOnlyObjectWrapper<Position> {
     // Methods
     //================================================================================
 
-    /**
-     * Convenience method to create a new {@link Position} object with the given parameters and set it
-     * as the new value of this property.
-     */
+    /// Convenience method to create a new [Position] object with the given parameters and set it
+    /// as the new value of this property.
     public void setPosition(double x, double y) {
         set(Position.of(x, y));
     }
 
-    /**
-     * Convenience method to set only the x of the current {@link Position} of this property.
-     * Note that if the value is null a new {@link Position} object is created with Y = 0.0.
-     * Also, if the value was not null, {@link #invalidated()} and {@link #fireValueChangedEvent()} are invoked programmatically
-     * only if the x was not the same as the given one, this is needed as the object will remain the same.
-     */
+    /// Convenience method to set only the x value.
+    /// Note that if the value is `null `, a new [Position] object is created with Y = 0.0.
+    /// Also, if the value was not `null`, [#invalidated()] and [#fireValueChangedEvent()] are invoked programmatically
+    /// only if the x was different from the given one, this is needed as the object will remain the same.
     public void setX(double x) {
         Optional.ofNullable(get())
             .ifPresentOrElse(
@@ -79,12 +73,10 @@ public class PositionProperty extends ReadOnlyObjectWrapper<Position> {
             );
     }
 
-    /**
-     * Convenience method to set only the y of the current {@link Position} of this property.
-     * Note that if the value is null a new {@link Position} object is created with  X = 0.0.
-     * Also, if the value was not null, {@link #invalidated()} and {@link #fireValueChangedEvent()} are invoked programmatically
-     * only if the y was not the same as the given one, this is needed as the object will remain the same.
-     */
+    /// Convenience method to set only the y value.
+    /// Note that if the value is `null `, a new [Position] object is created with  X = 0.0.
+    /// Also, if the value was not `null`, [#invalidated()] and [#fireValueChangedEvent()] are invoked programmatically
+    /// only if the y was different from the given one, this is needed as the object will remain the same.
     public void setY(double y) {
         Optional.ofNullable(get())
             .ifPresentOrElse(
@@ -100,36 +92,28 @@ public class PositionProperty extends ReadOnlyObjectWrapper<Position> {
             );
     }
 
-    /**
-     * Null-safe alternative to {@code get().getX()}, if the value is null returns 0.0.
-     */
+    /// Null-safe alternative to `get().getX()`, if the value is null returns 0.0.
     public double getX() {
         return Optional.ofNullable(get())
             .map(Position::getX)
             .orElse(0.0);
     }
 
-    /**
-     * Null-safe alternative to {@code get().getX()}, if the value is null returns the given value.
-     */
+    /// Null-safe alternative to `get().getX()`, if the value is null returns the given value.
     public double getX(double or) {
         return Optional.ofNullable(get())
             .map(Position::getX)
             .orElse(or);
     }
 
-    /**
-     * Null-safe alternative to {@code get().getY()}, if the value is null returns 0.0.
-     */
+    /// Null-safe alternative to `get().getY()`, if the value is null returns 0.0.
     public double getY() {
         return Optional.ofNullable(get())
             .map(Position::getY)
             .orElse(0.0);
     }
 
-    /**
-     * Null-safe alternative to {@code get().getY()}, if the value is null returns the given value.
-     */
+    /// Null-safe alternative to `get().getY()`, if the value is null returns the given value.
     public double getY(double or) {
         return Optional.ofNullable(get())
             .map(Position::getY)

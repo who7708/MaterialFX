@@ -25,10 +25,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-/**
- * A weak {@link HashSet}. An element stored in the {@code WeakHashSet} might be
- * garbage collected, if there is no strong reference to this element.
- */
+/// A weak [HashSet]. An element stored in the `WeakHashSet` might be garbage collected
+/// if there is no strong reference to this element.
 public class WeakHashSet<T> extends HashSet<T> {
     //================================================================================
     // Properties
@@ -60,14 +58,11 @@ public class WeakHashSet<T> extends HashSet<T> {
     // Methods
     //================================================================================
 
-    /**
-     * Adds the specified element to this set if it is not already
-     * present.
-     *
-     * @param t element to be added to this set.
-     * @return `true` if the set did not already contain the specified
-     * element.
-     */
+    /// Adds the specified element to this set if it is not already present.
+    ///
+    /// @param t element to be added to this set.
+    /// @return `true` if the set did not already contain the specified
+    /// element.
     @Override
     public boolean add(T t) {
         processQueue();
@@ -100,12 +95,10 @@ public class WeakHashSet<T> extends HashSet<T> {
         return true;
     }
 
-    /**
-     * Removes the given element from this set if it is present.
-     *
-     * @param o object to be removed from this set, if present.
-     * @return `true` if the set contained the specified element.
-     */
+    /// Removes the given element from this set if it is present.
+    ///
+    /// @param o object to be removed from this set, if present.
+    /// @return `true` if the set contained the specified element.
     @Override
     public boolean remove(Object o) {
         boolean ret = set.remove(WeakElement.of(o));
@@ -126,12 +119,10 @@ public class WeakHashSet<T> extends HashSet<T> {
     public void clear() {
     }
 
-    /**
-     * Returns `true` if this set contains the specified element.
-     *
-     * @param o element whose presence in this set is to be tested.
-     * @return `true` if this set contains the specified element.
-     */
+    /// Returns `true` if this set contains the specified element.
+    ///
+    /// @param o element whose presence in this set is to be tested.
+    /// @return `true` if this set contains the specified element.
     @Override
     public boolean contains(Object o) {
         return set.contains(WeakElement.of(o));
@@ -157,12 +148,9 @@ public class WeakHashSet<T> extends HashSet<T> {
         return set.isEmpty();
     }
 
-    /**
-     * Returns an iterator over the elements in this set. The elements
-     * are returned in no particular order.
-     *
-     * @return an Iterator over the elements in this set.
-     */
+    /// Returns an iterator over the elements in this set. The elements are returned in no particular order.
+    ///
+    /// @return an Iterator over the elements in this set.
     @Override
     public Iterator<T> iterator() {
         // Remove GCed elements
@@ -187,11 +175,10 @@ public class WeakHashSet<T> extends HashSet<T> {
         };
     }
 
-    /**
-     * Removes all GCed values from the delegate Set.
-     * Since we don't know how much the ReferenceQueue.poll() operation
-     * costs, we should call it only in methods that change the Set, like add or remove.
-     */
+    /// Removes all GCed values from the delegate Set.
+    ///
+    /// Since we don't know how much the ReferenceQueue.poll() operation
+    /// costs, we should call it only in methods that change the Set, like add or remove.
     protected void processQueue() {
         WeakElement<? extends T> e;
         while (true) {
@@ -205,13 +192,13 @@ public class WeakHashSet<T> extends HashSet<T> {
     // Internal Classes
     //================================================================================
 
-    /**
-     * A {@code WeakHasSet} stores objects of class WeakElement.
-     * A {@code WeakElement} wraps the element that should be stored in the {@code WeakHashSet}.
-     * {@code WeakElement} inherits from {@link WeakReference}.
-     * It redefines equals and hashCode which delegate to the corresponding methods
-     * of the wrapped element.
-     */
+    /// A `WeakHasSet` stores objects of class WeakElement.
+    ///
+    /// A `WeakElement` wraps the element that should be stored in the `WeakHashSet`.
+    /// `WeakElement` inherits from [WeakReference].
+    ///
+    /// It redefines equals and hashCode which delegate to the corresponding methods
+    /// of the wrapped element.
     protected static class WeakElement<T> extends WeakReference<T> {
         private final int hash;
 
@@ -233,10 +220,8 @@ public class WeakHashSet<T> extends HashSet<T> {
             return new WeakElement<>(t, q);
         }
 
-        /**
-         * A {@code WeakElement} is equal to another {@code WeakElement} if they both refer to objects
-         * that are, in turn, equal according to their own equals methods
-         */
+        /// A `WeakElement` is equal to another `WeakElement` if they both refer to objects
+        /// that are, in turn, equal according to their own equals methods
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
@@ -244,7 +229,7 @@ public class WeakHashSet<T> extends HashSet<T> {
             T t = get();
             Object oT = ((WeakElement<?>) o).get();
             if (t == oT) return true;
-            return (t == null || oT == null) ? false : t.equals(oT);
+            return t != null && t.equals(oT);
         }
 
         @Override

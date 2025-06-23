@@ -22,11 +22,9 @@ import io.github.palexdev.mfxcore.base.beans.range.NumberRange;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 
-/**
- * Simply an {@link ObjectProperty} that wraps a {@link NumberRange}.
- *
- * @param <N> the range's number type
- */
+/// Simply an [ObjectProperty] that wraps a [NumberRange].
+///
+/// @param <N> the range's number type
 public abstract class NumberRangeProperty<N extends Number & Comparable<N>> extends ReadOnlyObjectWrapper<NumberRange<N>> {
 
     //================================================================================
@@ -51,32 +49,26 @@ public abstract class NumberRangeProperty<N extends Number & Comparable<N>> exte
     // Abstract Methods
     //================================================================================
 
-    /**
-     * Convenience method to set a range with both min and max equal.
-     */
+    /// Convenience method to set a range with both min and max equal.
     public abstract void setRange(N value);
 
-    /**
-     * Convenience method to set a range with the given min and max values.
-     */
+    /// Convenience method to set a range with the given min and max values.
     public abstract void setRange(N min, N max);
 
     //================================================================================
     // Methods
     //================================================================================
 
-    /**
-     * Convenience method to get the range's lower bound.
-     * Null if the range is null.
-     */
+    /// Convenience method to get the range's lower bound.
+    ///
+    /// `Null` if the range is also `null`.
     public N getMin() {
         return get() == null ? null : get().getMin();
     }
 
-    /**
-     * Convenience method to get the range's upper bound.
-     * Null if the range is null.
-     */
+    /// Convenience method to get the range's upper bound.
+    ///
+    /// `Null` if the range is also `null`.
     public N getMax() {
         return get() == null ? null : get().getMin();
     }
@@ -85,9 +77,7 @@ public abstract class NumberRangeProperty<N extends Number & Comparable<N>> exte
     // Overridden Methods
     //================================================================================
 
-    /**
-     * Overridden to check equality between ranges and return in case ranges are the same.
-     */
+    /// Overridden to check equality between ranges and return in case ranges are the same.
     @Override
     public void set(NumberRange<N> newValue) {
         NumberRange<N> oldValue = get();

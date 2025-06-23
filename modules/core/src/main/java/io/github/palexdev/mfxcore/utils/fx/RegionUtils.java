@@ -28,13 +28,11 @@ public class RegionUtils {
     private RegionUtils() {
     }
 
-    /**
-     * Makes the given region circular.
-     * <p>
-     * <b>Notice: the region's pref width and height must be set and be equals</b>
-     *
-     * @param region The given region
-     */
+    /// Makes the given region circular.
+    ///
+    /// **Notice: the region's pref width and height must be set and be equal**
+    ///
+    /// @param region The given region
     public static void makeRegionCircular(Region region) {
         Circle circle = new Circle();
         circle.radiusProperty().bind(region.widthProperty().divide(2.0));
@@ -47,14 +45,12 @@ public class RegionUtils {
         }
     }
 
-    /**
-     * Makes the given region circular with the specified radius.
-     * <p>
-     * <b>Notice: the region's pref width and height must be set and be equals</b>
-     *
-     * @param region The given region
-     * @param radius The wanted radius
-     */
+    /// Makes the given region circular with the specified radius.
+    ///
+    /// **Notice: the region's pref width and height must be set and be equal**
+    ///
+    /// @param region The given region
+    /// @param radius The wanted radius
     public static void makeRegionCircular(Region region, double radius) {
         Circle circle = new Circle(radius);
         circle.centerXProperty().bind(region.widthProperty().divide(2.0));
@@ -66,12 +62,10 @@ public class RegionUtils {
         }
     }
 
-    /**
-     * Retrieves the region height if it isn't still laid out.
-     *
-     * @param region the Region of which to know the height
-     * @return the calculated height
-     */
+    /// Retrieves the region height if it isn't still laid out.
+    ///
+    /// @param region the Region of which to know the height
+    /// @return the calculated height
     public static double getRegionHeight(Region region) {
         Group group = new Group(region);
         Scene scene = new Scene(group);
@@ -82,12 +76,10 @@ public class RegionUtils {
         return region.getHeight();
     }
 
-    /**
-     * Retrieves the region width if it isn't still laid out.
-     *
-     * @param region the Region of which to know the width
-     * @return the calculated width
-     */
+    /// Retrieves the region width if it isn't still laid out.
+    ///
+    /// @param region the Region of which to know the width
+    /// @return the calculated width
     public static double getRegionWidth(Region region) {
         Group group = new Group(region);
         Scene scene = new Scene(group);
@@ -98,17 +90,13 @@ public class RegionUtils {
         return region.getWidth();
     }
 
-    /**
-     * Convenience method for adding the desired value to the region's prefWidth
-     */
+    /// Convenience method for adding the desired value to the region's prefWidth
     public static void addPrefWidth(Region region, double value) {
         double prefW = region.getPrefWidth();
         region.setPrefWidth(prefW + value);
     }
 
-    /**
-     * Convenience method for adding the desired value to the region's prefHeight
-     */
+    /// Convenience method for adding the desired value to the region's prefHeight
     public static void addPrefHeight(Region region, double value) {
         double prefH = region.getPrefHeight();
         region.setPrefHeight(prefH + value);

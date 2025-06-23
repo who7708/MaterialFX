@@ -20,31 +20,26 @@ package io.github.palexdev.mfxcore.base.beans;
 
 import javafx.animation.Transition;
 
-/**
- * This is an extension of {@link Position} to be used
- * with {@link Transition}s that start from a point P(x, y) and
- * end at a point P1(endX, endY).
- * <p></p>
- * A very basic example:
- * <p>
- * Let's say I want to move a point P from (x, y) to the left
- * (x1, y) with an animation. The transition would probably look like this:
- * <pre>
- * {@code
- *     double startX = ...;
- *     double startY = ...;
- *     double endX = ...;
- *     double endY = startY; // The y coordinate doesn't change so it is equal to the start one
- *     TransitionPositionBean position = TransitionPositionBean.of(startX, startY, endX, endY);
- *     Transition move = new Transition() {
- *             @Override
- *             protected void interpolate(double frac) {
- *                 p.setX(x - position.deltaX() * frac);
- *             }
- *      }
- * }
- * </pre>
- */
+/// This is an extension of [Position] to be used with [Transitions][Transition] that start from a point `P(x, y)` and end at a point `P1(endX, endY)`.
+///
+/// A very basic example:
+///
+/// Let's say I want to move a point `P` from `(x, y)` to the left with an animation so `(x1, y)`.
+/// The transition would probably look like this:
+/// ```
+/// double startX = ...;
+/// double startY = ...;
+/// double endX = ...;
+/// double endY = startY;
+/// // The y coordinate doesn't change, so it is equal to the start one
+/// PositionTransition position = PositionTransition.of(startX, startY, endX, endY);
+/// Transition move = new Transition(){
+///
+///@Overridevoidinterpolate(doublefrac){
+///     p.setX(x - position.deltaX() * frac);
+///}
+///}
+///```
 public class PositionTransition extends Position {
     //================================================================================
     // Properties
@@ -72,30 +67,22 @@ public class PositionTransition extends Position {
     // Getters/Setters
     //================================================================================
 
-    /**
-     * @return the end x coordinate
-     */
+    /// @return the end x coordinate
     public double getEndX() {
         return endX;
     }
 
-    /**
-     * @return the end y coordinate
-     */
+    /// @return the end y coordinate
     public double getEndY() {
         return endY;
     }
 
-    /**
-     * @return the difference between the star x and end x coordinates
-     */
+    /// @return the difference between the star x and end x coordinates
     public double deltaX() {
         return getX() - getEndX();
     }
 
-    /**
-     * @return the difference between the start y and end y coordinates
-     */
+    /// @return the difference between the start y and end y coordinates
     public double deltaY() {
         return getY() - getEndY();
     }

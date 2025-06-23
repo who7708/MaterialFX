@@ -21,12 +21,10 @@ package io.github.palexdev.mfxresources.fonts;
 import io.github.palexdev.mfxeffects.animations.Animations;
 import javafx.animation.Animation;
 
-/**
- * Helper class to manage a {@link MFXIconWrapper} state when switching icons through an animation.
- * It has three properties: the actual animation, the old icon, and the new icon.
- *
- * @see #onStopped(MFXIconWrapper)
- */
+/// Helper class to manage a [MFXIconWrapper] state when switching icons through an animation.
+/// It has three properties: the actual animation, the old icon, and the new icon.
+///
+/// @see #onStopped(MFXIconWrapper)
 public class IconAnimation {
     //================================================================================
     // Properties
@@ -59,13 +57,11 @@ public class IconAnimation {
             animation.stop();
     }
 
-    /**
-     * When the animation is played by {@link #play(MFXIconWrapper)} a listener is added to its state property.
-     * When the animation ends or is stopped, this method is invoked. By default, the only action performed here is removing
-     * the old icon from the children's list, thus ensuring the wrapper is in a consistent state.
-     * <p>
-     * Animation authors may want to override this and add code to reset the new icon state if the animation is interrupted.
-     */
+    /// When the animation is played by [#play(MFXIconWrapper)] a listener is added to its state property.
+    /// When the animation ends or is stopped, this method is invoked. By default, the only action performed here is removing
+    /// the old icon from the children's list, thus ensuring the wrapper is in a consistent state.
+    ///
+    /// Animation authors may want to override this and add code to reset the new icon state if the animation is interrupted.
     protected void onStopped(MFXIconWrapper wrapper) {
         wrapper.getChildren().remove(oldIcon);
     }

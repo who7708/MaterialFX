@@ -18,17 +18,15 @@
 
 package io.github.palexdev.mfxcore.base.properties.functional;
 
+import java.util.function.BiPredicate;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 
-import java.util.function.BiPredicate;
-
-/**
- * Simply an {@link ObjectProperty} that wraps a {@link BiPredicate}.
- *
- * @param <T> the predicate's first argument
- * @param <U> the predicate's second argument
- */
+/// Simply a [ObjectProperty] that wraps a [BiPredicate].
+///
+/// @param <T> the predicate's first argument
+/// @param <U> the predicate's second argument
 public class BiPredicateProperty<T, U> extends ReadOnlyObjectWrapper<BiPredicate<T, U>> {
 
     //================================================================================

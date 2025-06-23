@@ -18,6 +18,12 @@
 
 package io.github.palexdev.mfxcore.collections;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.BiFunction;
+
 import io.github.palexdev.mfxcore.enums.GridChangeType;
 import io.github.palexdev.mfxcore.utils.GridUtils;
 import javafx.beans.InvalidationListener;
@@ -28,22 +34,16 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.util.Pair;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.BiFunction;
-
-/**
- * Extension of {@link Grid} to provide observables capabilities.
- * Note though that since JavaFX's implementation of listeners/observables and such is utter garbage because of private
- * APIs, complex class structures and others unhappy design decisions... The observability of this data structure is
- * implemented through an {@link ObjectProperty} that always contains the last {@link Change} occurred.
- * <p></p>
- * Instead of implementing {@link Observable}, this implements {@link ObservableValue} to also get {@link ChangeListener}
- * capabilities. Note though that the relevant value carried by the listener is the {@code newValue} as once a {@link Change}
- * has been processed it should be disposed with {@link Change#endChange()} (this will reset the property to a useless state)
- */
+/// Extension of [Grid] to provide observables capabilities.
+///
+/// Note though that since JavaFX's implementation of listeners/observables and such is utter garbage because of private
+/// APIs, complex class structures and others unhappy design decisions... The observability of this data structure is
+/// implemented through an [ObjectProperty] that always contains the last [Change] occurred.
+///
+/// Instead of implementing [Observable], this implements [ObservableValue] to also get [ChangeListener] capabilities
+///
+/// Note though that the relevant value carried by the listener is the `newValue` as once a [Change]
+/// has been processed it should be disposed with [Change#endChange()] (this will reset the property to a useless state)
 public class ObservableGrid<T> extends Grid<T> implements ObservableValue<ObservableGrid.Change<T>> {
     //================================================================================
     // Properties
@@ -59,8 +59,7 @@ public class ObservableGrid<T> extends Grid<T> implements ObservableValue<Observ
     //================================================================================
     // Constructors
     //================================================================================
-    public ObservableGrid() {
-    }
+    public ObservableGrid() {}
 
     public ObservableGrid(int nRows, int nColumns) {
         super(nRows, nColumns);
@@ -81,14 +80,11 @@ public class ObservableGrid<T> extends Grid<T> implements ObservableValue<Observ
     // Static Methods
     //================================================================================
 
-    /**
-     * Given a list of items and the number of columns the grid will have,
-     * generates a new {@code Grid}.
-     * Every {@code columnsNum} the list is "sliced" in rows.
-     *
-     * @param list       the data to generate the grid
-     * @param columnsNum the number of columns for the grid, also used to "slice" the given list in rows
-     */
+    /// Given a list of items and the number of columns the grid will have, generates a new `Grid`.
+    /// Every `columnsNum` the list is "sliced" in rows.
+    ///
+    /// @param list       the data to generate the grid
+    /// @param columnsNum the number of columns for the grid, also used to "slice" the given list in rows
     public static <T> ObservableGrid<T> fromList(List<T> list, int columnsNum) {
         if (list.isEmpty()) {
             if (columnsNum == 0) return new ObservableGrid<>();
@@ -101,23 +97,18 @@ public class ObservableGrid<T> extends Grid<T> implements ObservableValue<Observ
         return new ObservableGrid<>(list, list.size() / columnsNum, columnsNum);
     }
 
-    /**
-     * Given an array of items and the number of columns the grid will have,
-     * generates a new {@code Grid}.
-     * Every {@code columnsNum} the array is "sliced" in rows.
-     *
-     * @param arr        the data to generate the grid
-     * @param columnsNum the number of columns for the grid, also used to "slice" the given array in rows
-     */
+    /// Given an array of items and the number of columns the grid will have, generates a new `Grid`.
+    /// Every `columnsNum` the array is "sliced" in rows.
+    ///
+    /// @param arr        the data to generate the grid
+    /// @param columnsNum the number of columns for the grid, also used to "slice" the given array in rows
     public static <T> ObservableGrid<T> fromArray(T[] arr, int columnsNum) {
         return fromList(List.of(arr), columnsNum);
     }
 
-    /**
-     * Given a 2D array of items generates a new {@code Grid}.
-     *
-     * @param matrix the data to generate the grid
-     */
+    /// Given a 2D array of items generates a new `Grid`.
+    ///
+    /// @param matrix the data to generate the grid
     public static <T> ObservableGrid<T> fromMatrix(T[][] matrix) {
         int rowsNum = matrix.length;
         int columnsNum = matrix[0].length;
@@ -188,7 +179,7 @@ public class ObservableGrid<T> extends Grid<T> implements ObservableValue<Observ
         List<T> added = new ArrayList<>();
         for (int i = 0; i < totalSize(); i++) {
             Coordinates rc = GridUtils.indToSub(columnsNum, i);
-            T val = valFunction.apply(rc.getRow(), rc.getColumn());
+            T val = valFunction.apply(rc.row(), rc.column());
             tmp.add(val);
             data.add(val);
         }
@@ -401,18 +392,13 @@ public class ObservableGrid<T> extends Grid<T> implements ObservableValue<Observ
         change.removeListener(listener);
     }
 
-    /**
-     * @return the last {@link Change} occurred or {@link Change#EMPTY} if no change occurred
-     * or the last change was disposed with {@link Change#endChange()}
-     */
+    /// @return the last [Change] occurred or [Change#EMPTY] if no change occurred or the last change was disposed with [Change#endChange()]
     @Override
     public Change<T> getValue() {
         return change.get();
     }
 
-    /**
-     * Delegate for {@link #getValue()}
-     */
+    /// Delegate for [#getValue()]
     public Change<T> getChange() {
         return getValue();
     }
@@ -421,22 +407,20 @@ public class ObservableGrid<T> extends Grid<T> implements ObservableValue<Observ
     // Internal Classes
     //================================================================================
 
-    /**
-     * Bean used to represent any type of change occurring in a {@link ObservableGrid} data structure.
-     * <p></p>
-     * The {@code Change} brings a series of useful information like:
-     * <p> - The grid's data after the change
-     * <p> - The change's type, see {@link GridChangeType}
-     * <p> - A list containing the added items
-     * <p> - A list containing the removed items
-     * <p> - The coordinates at which the change occurred. Note though that this information is not always available,
-     * see {@link #getCoordinates()}
-     * <p> - The linear index at which the change started (inclusive)
-     * <p> - The linear index at which the change ended (exclusive)
-     * <p> - The "step" which is an integer useful to iterate over the change's [start, end] range.
-     * When a change occurs on a row typically is 1, when it occurs on a column typically it is the number of
-     * columns of the grid before the change.
-     */
+    /// Bean used to represent any type of change occurring in a [ObservableGrid] data structure.
+    ///
+    /// The `Change` brings a series of useful information like:
+    ///  - The grid's data after the change
+    ///  - The change's type, see [GridChangeType]
+    ///  - A list containing the added items
+    ///  - A list containing the removed items
+    ///  - The coordinates at which the change occurred. Note though that this information is not always available,
+    /// see [#getCoordinates()]
+    ///  - The linear index at which the change started (inclusive)
+    ///  - The linear index at which the change ended (exclusive)
+    ///  - The "step" which is an integer useful to iterate over the change's \[start, end] range.
+    ///  When a change occurs on a row typically is 1, when it occurs on a column typically it is the number of
+    ///  columns of the grid before the change.
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static class Change<T> {
         public static final Change EMPTY = new Change();
@@ -469,47 +453,35 @@ public class ObservableGrid<T> extends Grid<T> implements ObservableValue<Observ
             return new ObservableGrid.Change<>(grid, type);
         }
 
-        /**
-         * @return the {@link ObservableGrid} instance this change refers to
-         */
+        /// @return the [ObservableGrid] instance this change refers to
         protected ObservableGrid<T> getGrid() {
             return grid;
         }
 
-        /**
-         * @return the grid's data as an unmodifiable {@link List}
-         */
+        /// @return the grid's data as an unmodifiable [List]
         public List<T> getData() {
             return data;
         }
 
-        /**
-         * @return the size of the grid as a {@link Pair} object. The key is the number of rows and
-         * the value is the number of columns
-         */
+        /// @return the size of the grid as a [Pair] object. The key is the number of rows and
+        /// the value is the number of columns
         public Pair<Integer, Integer> getSize() {
             return size;
         }
 
-        /**
-         * @return the type of operation that lead to this change, see {@link GridChangeType}
-         */
+        /// @return the type of operation that lead to this change, see [GridChangeType]
         public GridChangeType getType() {
             return type;
         }
 
-        /**
-         * @return a {@link List} containing all the added elements. For "replacement" operations
-         * this will contain all the new items
-         */
+        /// @return a [List] containing all the added elements. For "replacement" operations
+        /// this will contain all the new items
         public List<T> getAdded() {
             return added;
         }
 
-        /**
-         * @return a {@link List} containing all the removed elements. For "replacement" operations
-         * this will contain all the elements that have been replaced
-         */
+        /// @return a [List] containing all the removed elements. For "replacement" operations
+        /// this will contain all the elements that have been replaced
         public List<T> getRemoved() {
             return removed;
         }
@@ -536,17 +508,15 @@ public class ObservableGrid<T> extends Grid<T> implements ObservableValue<Observ
             return this;
         }
 
-        /**
-         * @return a {@link Coordinates} object that specifies the row and column at which the change occurred.
-         * This information is available only for the following changes:
-         * <p> - Set element
-         * <p> - Add row (column will be -1)
-         * <p> - Add column (row will be -1)
-         * <p> - Set row (column will be -1)
-         * <p> - Set column (row will be -1)
-         * <p> - Remove row (column will be -1)
-         * <p> - Remove column (row will be -1)
-         */
+        /// @return a [Coordinates] object that specifies the row and column at which the change occurred.
+        /// This information is available only for the following changes:
+        ///  - Set element
+        ///  - Add row (column will be -1)
+        ///  - Add column (row will be -1)
+        ///  - Set row (column will be -1)
+        ///  - Set column (row will be -1)
+        ///  - Remove row (column will be -1)
+        ///  - Remove column (row will be -1)
         public Coordinates getCoordinates() {
             return coordinates;
         }
@@ -561,9 +531,7 @@ public class ObservableGrid<T> extends Grid<T> implements ObservableValue<Observ
             return this;
         }
 
-        /**
-         * @return the linear index at which the change started
-         */
+        /// @return the linear index at which the change started
         public int getStart() {
             return start;
         }
@@ -573,9 +541,7 @@ public class ObservableGrid<T> extends Grid<T> implements ObservableValue<Observ
             return this;
         }
 
-        /**
-         * @return the linear index at which the change ended (exclusive)
-         */
+        /// @return the linear index at which the change ended (exclusive)
         public int getEnd() {
             return end;
         }
@@ -585,11 +551,9 @@ public class ObservableGrid<T> extends Grid<T> implements ObservableValue<Observ
             return this;
         }
 
-        /**
-         * @return an integer useful to iterate over the change's [start, end] range.
-         * When a change occurs on a row typically is 1, when it occurs on a column typically it is the number of
-         * columns of the grid before the change
-         */
+        /// @return an integer useful to iterate over the change's \[start, end] range.
+        /// When a change occurs on a row typically is 1, when it occurs on a column typically, it is the number of
+        /// columns of the grid before the change
         public int step() {
             return step;
         }
@@ -599,9 +563,7 @@ public class ObservableGrid<T> extends Grid<T> implements ObservableValue<Observ
             return this;
         }
 
-        /**
-         * Disposes this change and resets the grid's property responsible for holding new changes.
-         */
+        /// Disposes this change and resets the grid's property responsible for holding new changes.
         public void endChange() {
             grid.registerChange(EMPTY);
             grid = null;

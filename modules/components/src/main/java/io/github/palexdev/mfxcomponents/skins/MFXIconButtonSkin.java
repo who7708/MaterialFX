@@ -44,7 +44,7 @@ import javafx.scene.paint.Color;
 import static io.github.palexdev.mfxcore.events.WhenEvent.intercept;
 
 /// Default skin implementation for all [MFXIconButton][MFXIconButton]s and is just a simplification of the [MFXButtonSkin].
-/// Icon buttons are designed to only show an icon, no text. Therefore we can optimize the skin to not have a label node.
+/// Icon buttons are designed to only show an icon, no text. Therefore, we can optimize the skin to not have a label node.
 ///
 /// This skin uses behaviors of type [MFXButtonBehavior].
 ///

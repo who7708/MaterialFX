@@ -18,6 +18,10 @@
 
 package io.github.palexdev.mfxcore.filter;
 
+import java.util.Collections;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
 import io.github.palexdev.mfxcore.base.beans.BiPredicateBean;
 import io.github.palexdev.mfxcore.filter.base.AbstractFilter;
 import io.github.palexdev.mfxcore.utils.converters.EnumStringConverter;
@@ -26,20 +30,14 @@ import io.github.palexdev.mfxlocalization.I18N;
 import javafx.collections.ObservableList;
 import javafx.util.StringConverter;
 
-import java.util.Collections;
-import java.util.function.Function;
-import java.util.stream.Stream;
-
-/**
- * Extension of {@link AbstractFilter} for {@link Enum} fields.
- * <p></p>
- * Offers the following default {@link BiPredicateBean}s:
- * <p> - "is": checks for enums equality
- * <p> - "is not": checks for enums inequality
- * <p></p>
- * This filter is special because to extract the enumerations of a given E enum, it's
- * needed to also pass the type to the constructor. This is necessary for the {@link EnumStringConverter}.
- */
+/// Extension of [AbstractFilter] for [Enum] fields.
+///
+/// Offers the following default [BiPredicateBeans][BiPredicateBean]:
+/// - "is": checks for enums equality
+/// - "is not": checks for enums inequality
+///
+/// This filter is special because, to extract the enumerations of a given E enum, it's necessary to also pass the type
+/// to the constructor. This is necessary for the [EnumStringConverter].
 public class EnumFilter<T, E extends Enum<E>> extends AbstractFilter<T, E> {
     //================================================================================
     // Properties

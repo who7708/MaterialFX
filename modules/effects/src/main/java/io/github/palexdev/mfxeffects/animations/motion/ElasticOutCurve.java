@@ -20,13 +20,11 @@ package io.github.palexdev.mfxeffects.animations.motion;
 
 import io.github.palexdev.mfxeffects.animations.base.Curve;
 
-/**
- * An oscillating curve that shrinks in {@code magnitude} while overshooting its bounds.
- * <p></p>
- * <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_elastic_out.mp4>Elastic Out Example</a>
- * <p>
- * The above example is built with a {@code magnitude} of {@code 0.4}.
- */
+/// An oscillating curve that shrinks in `magnitude` while overshooting its bounds.
+///
+/// [Elastic Out Example](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_elastic_out.mp4)
+///
+/// The above example is built with a `magnitude` of `0.4`.
 public class ElasticOutCurve extends Curve {
     private final double period;
 

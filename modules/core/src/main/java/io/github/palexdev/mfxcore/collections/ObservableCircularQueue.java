@@ -1,17 +1,15 @@
 package io.github.palexdev.mfxcore.collections;
 
-import javafx.beans.property.SimpleListProperty;
-import javafx.collections.FXCollections;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * A crude implementation of an observable queue with limited capacity, the backing data structure is {@link CircularQueue}.
- *
- * @param <E> Any type
- */
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
+
+/// A crude implementation of an observable queue with limited capacity, the backing data structure is [CircularQueue].
+///
+/// @param <E> Any type
 public class ObservableCircularQueue<E> extends SimpleListProperty<E> {
     //================================================================================
     // Properties
@@ -98,16 +96,12 @@ public class ObservableCircularQueue<E> extends SimpleListProperty<E> {
     // Getters/Setters
     //================================================================================
 
-    /**
-     * Delegate of {@link CircularQueue#getCapacity()}.
-     */
+    /// Delegate of [#getCapacity()].
     public int getCapacity() {
         return queue.getCapacity();
     }
 
-    /**
-     * Delegate of {@link CircularQueue#setCapacity(int)}.
-     */
+    /// Delegate of [#setCapacity(int)].
     public void setCapacity(int capacity) {
         queue.setCapacity(capacity);
     }

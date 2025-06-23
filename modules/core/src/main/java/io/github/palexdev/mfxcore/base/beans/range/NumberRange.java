@@ -20,11 +20,9 @@ package io.github.palexdev.mfxcore.base.beans.range;
 
 import java.util.Objects;
 
-/**
- * Base class to represent a range of numbers between a min and a max.
- *
- * @param <N> The type of Number to represent (must also be a {@link Comparable})
- */
+/// Base class to represent a range of numbers between a min and a max.
+///
+/// @param <N> The type of Number to represent (must also be a [Comparable])
 public abstract class NumberRange<N extends Number & Comparable<N>> {
     //================================================================================
     // Properties
@@ -48,30 +46,22 @@ public abstract class NumberRange<N extends Number & Comparable<N>> {
     // Abstract Methods
     //================================================================================
 
-    /**
-     * @return the sum of {@link #getMin()} and {@link #getMax()}
-     */
+    /// @return the sum of [#getMin()] and [#getMax()]
     public abstract N sum();
 
-    /**
-     * @return the difference between {@link #getMax()} and {@link #getMin()}
-     */
+    /// @return the difference between [#getMax()] and [#getMin()]
     public abstract N diff();
 
     //================================================================================
     // Getters
     //================================================================================
 
-    /**
-     * @return the lower bound
-     */
+    /// @return the lower bound
     public N getMin() {
         return min;
     }
 
-    /**
-     * @return the upper bound
-     */
+    /// @return the upper bound
     public N getMax() {
         return max;
     }

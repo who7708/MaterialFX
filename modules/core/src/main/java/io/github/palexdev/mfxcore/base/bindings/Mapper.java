@@ -21,12 +21,10 @@ package io.github.palexdev.mfxcore.base.bindings;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-/**
- * Specialization of {@link Function} to also add the support for "orElse".
- *
- * @param <T> – the type of the input to the function
- * @param <R> – the type of the result of the function, as well as the type of the orElse supplier
- */
+/// Specialization of [Function] to also add the support for "orElse".
+///
+/// @param <T> – the type of the input to the function
+/// @param <R> – the type of the result of the function, as well as the type of the orElse supplier
 public class Mapper<T, R> implements Function<T, R> {
     //================================================================================
     // Properties
@@ -70,23 +68,17 @@ public class Mapper<T, R> implements Function<T, R> {
     // Getters/Setters
     //================================================================================
 
-    /**
-     * @return the {@link Function} of this mapper
-     */
+    /// @return the [Function] of this mapper
     public Function<T, R> getFn() {
         return fn;
     }
 
-    /**
-     * @return the "orElse" {@link Supplier} of this mapper
-     */
+    /// @return the "orElse" [Supplier] of this mapper
     public Supplier<R> getOrElse() {
         return orElse;
     }
 
-    /**
-     * Sets the "orElse" {@link Supplier} of this mapper.
-     */
+    /// Sets the "orElse" [Supplier] of this mapper.
     public Mapper<T, R> orElse(Supplier<R> orElse) {
         this.orElse = orElse;
         return this;

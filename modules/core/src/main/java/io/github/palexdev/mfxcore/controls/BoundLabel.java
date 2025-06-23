@@ -20,12 +20,10 @@ package io.github.palexdev.mfxcore.controls;
 
 import javafx.scene.control.Labeled;
 
-/**
- * This is a special Label which has all its main properties bound to
- * another {@link Labeled} control. This is especially useful for custom
- * controls and skins that have text, as the text properties are set on the control
- * and not on the text node itself, and that's why all properties are bound.
- */
+/// This is a special Label that has all its main properties bound to another [Labeled] control.
+///
+/// This is especially useful for custom controls and skins that have text, as the relative properties are set on the control
+/// and not on the text node itself, and that's why all properties are bound.
 public class BoundLabel extends Label {
 
     //================================================================================

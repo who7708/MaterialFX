@@ -28,9 +28,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-/**
- * Utils class for Java's time API.
- */
+/// Utils class for Java's time API.
 public class DateTimeUtils {
     public static final int CALENDAR_ROWS = 6;
     public static final int CALENDAR_COLUMNS = 7;
@@ -38,12 +36,10 @@ public class DateTimeUtils {
     private DateTimeUtils() {
     }
 
-    /**
-     * Builds a bi-dimensional array of integers (6 rows x 7 columns) that contains only the days
-     * of the month specified by the given {@link YearMonth}.
-     * <p></p>
-     * That means that at most 31 positions will contain a day, the others will contain null.
-     */
+    /// Builds a bi-dimensional array of integers (6 rows x 7 columns) that contains only the days
+    /// of the month specified by the given [YearMonth].
+    ///
+    /// That means that at most 31 positions will contain a day, the others will contain null.
     public static Integer[][] partialIntMonthMatrix(Locale locale, YearMonth yearMonth) {
         Map<DayOfWeek, Integer> weekDays = weekDays(locale);
         Integer[][] matrix = new Integer[CALENDAR_ROWS][CALENDAR_COLUMNS];
@@ -64,12 +60,10 @@ public class DateTimeUtils {
         return matrix;
     }
 
-    /**
-     * Builds a bi-dimensional array of {@link Day}s (6 rows x 7 columns) that contains only the days
-     * of the month specified by the given {@link YearMonth}.
-     * <p></p>
-     * That means that at most 31 positions will contain a day, the others will contain null.
-     */
+    /// Builds a bi-dimensional array of [Days][Day] (6 rows x 7 columns) that contains only the days
+    /// of the month specified by the given [YearMonth].
+    ///
+    /// That means that at most 31 positions will contain a day, the others will contain null.
     public static Day[][] partialDayMonthMatrix(Locale locale, YearMonth yearMonth) {
         Map<DayOfWeek, Integer> weekDays = weekDays(locale);
         Day[][] matrix = new Day[CALENDAR_ROWS][CALENDAR_COLUMNS];
@@ -91,11 +85,8 @@ public class DateTimeUtils {
         return matrix;
     }
 
-    /**
-     * Builds a bi-dimensional array of integers (6 rows x 7 columns) that completely
-     * fills the matrix. Empty positions will contain the days belonging the the previous/next
-     * month.
-     */
+    /// Builds a bi-dimensional array of integers (6 rows x 7 columns) that completely fills the matrix.
+    /// Empty positions will contain the days belonging to the previous/next month.
     public static Integer[][] fullIntMonthMatrix(Locale locale, YearMonth yearMonth) {
         Map<DayOfWeek, Integer> weekDays = weekDays(locale);
         Integer[][] matrix = new Integer[CALENDAR_ROWS][CALENDAR_COLUMNS];
@@ -139,11 +130,8 @@ public class DateTimeUtils {
         return matrix;
     }
 
-    /**
-     * Builds a bi-dimensional array of {@link Day}s (6 rows x 7 columns) that completely
-     * fills the matrix. Empty positions will contain the days belonging the the previous/next
-     * month.
-     */
+    /// Builds a bi-dimensional array of [Days][Day] (6 rows x 7 columns) that completely fills the matrix.
+    /// Empty positions will contain the days belonging to the previous/next month.
     public static Day[][] fullDayMonthMatrix(Locale locale, YearMonth yearMonth) {
         Map<DayOfWeek, Integer> weekDays = weekDays(locale);
         Day[][] matrix = new Day[CALENDAR_ROWS][CALENDAR_COLUMNS];
@@ -192,39 +180,29 @@ public class DateTimeUtils {
         return matrix;
     }
 
-    /**
-     * Builds a map containing the week days according to the given locale,
-     * see {@link #weekDays(Locale)} for further info.
-     * Then gets the starting {@link DayOfWeek} for the given month,
-     * and queries the map with it.
-     * <p>
-     * The result is the index at which the month starts.
-     */
+    /// Builds a map containing the week days according to the given locale, see [#weekDays(Locale)] for further info.
+    /// Then gets the starting [DayOfWeek] for the given month and queries the map with it.
+    ///
+    /// The result is the index at which the month starts.
     public static int startIndexFor(YearMonth yearMonth, Locale locale) {
         Map<DayOfWeek, Integer> weekDays = weekDays(locale);
         return weekDays.get(yearMonth.atDay(1).getDayOfWeek());
     }
 
-    /**
-     * Computes the index at which the month ends, by computing the
-     * starting index, {@link #startIndexFor(YearMonth, Locale)}, and then
-     * adding the length of the month to the result - 1.
-     */
+    /// Computes the index at which the month ends by computing the starting index, [#startIndexFor(YearMonth, Locale)],
+    /// and then adding the length of the month to the result - 1.
     public static int endIndexFor(YearMonth yearMonth, Locale locale) {
         int start = startIndexFor(yearMonth, locale);
         return start + yearMonth.lengthOfMonth() - 1;
     }
 
-    /**
-     * The {@link DayOfWeek} enumerator assumes that Monday is the first
-     * day of the week. This however depends on the country (locale).
-     * <p>
-     * This method generates a Map associating each {@link DayOfWeek} to
-     * its position in the week.
-     * <p>
-     * So, for example for the US locale, Sunday which is the seventh
-     * {@link DayOfWeek} is associated to 1, since the week starts with Sunday.
-     */
+    /// The [DayOfWeek] enumerator assumes that Monday is the first day of the week.
+    /// This, however, depends on the country (locale).
+    ///
+    /// This method generates a Map associating each [DayOfWeek] with its position in the week.
+    ///
+    /// So, for example, for the US locale, Sunday is the first.
+    /// [DayOfWeek] is associated to 1, since the week starts with Sunday.
     public static Map<DayOfWeek, Integer> weekDays(Locale locale) {
         DayOfWeek firstDay = WeekFields.of(locale).getFirstDayOfWeek();
         return IntStream.range(0, CALENDAR_COLUMNS)
@@ -232,45 +210,23 @@ public class DateTimeUtils {
             .collect(Collectors.toMap(
                 i -> firstDay.plus(i),
                 i -> i,
-                (anInt, anInt2) -> anInt2,
+                (_, anInt2) -> anInt2,
                 LinkedHashMap::new
             ));
     }
 
-    /**
-     * Converts the given {@link LocalDate} to a {@link YearMonth}.
-     */
+    /// Converts the given [LocalDate] to a [YearMonth].
     public static YearMonth dateToYearMonth(LocalDate date) {
         return YearMonth.of(date.getYear(), date.getMonth());
     }
 
-    /**
-     * Simple bean to wrap info about a day of a month such as:
-     * <p> - the referring {@link YearMonth}
-     * <p> - the {@link DayOfWeek}
-     * <p> - the day number in the month
-     */
-    public static class Day {
-        private final YearMonth yearMonth;
-        private final DayOfWeek dayOfWeek;
-        private final int monthDay;
-
-        private Day(YearMonth yearMonth, DayOfWeek dayOfWeek, int monthDay) {
-            this.yearMonth = yearMonth;
-            this.dayOfWeek = dayOfWeek;
-            this.monthDay = monthDay;
-        }
-
-        public YearMonth getYearMonth() {
-            return yearMonth;
-        }
-
-        public DayOfWeek getDayOfWeek() {
-            return dayOfWeek;
-        }
-
-        public int getMonthDay() {
-            return monthDay;
-        }
-    }
+    /// Simple record to wrap info about a day of a month such as:
+    ///  - the referring [YearMonth]
+    ///  - the [DayOfWeek]
+    ///  - the day number in the month
+    public record Day(
+        YearMonth yearMonth,
+        DayOfWeek dayOfWeek,
+        int monthDay
+    ) {}
 }

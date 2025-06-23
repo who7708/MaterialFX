@@ -20,9 +20,7 @@ package io.github.palexdev.mfxcore.base.bindings;
 
 import io.github.palexdev.mfxcore.base.bindings.base.Updater;
 
-/**
- * Specialization of {@link Updater} that is also capable of mapping the input before passing it to the {@link Updater}.
- */
+/// Specialization of [Updater] that is also capable of mapping the input before passing it to the [Updater].
 public class MappedUpdater<T, M> implements Updater<T> {
     //================================================================================
     // Properties
@@ -56,31 +54,23 @@ public class MappedUpdater<T, M> implements Updater<T> {
     // Getters/Setters
     //================================================================================
 
-    /**
-     * @return this updater's {@link Mapper}
-     */
+    /// @return this updater's [Mapper]
     public Mapper<T, M> getMapper() {
         return mapper;
     }
 
-    /**
-     * Sets this updater's {@link Mapper}.
-     */
+    /// Sets this updater's [Mapper].
     public MappedUpdater<T, M> setMapper(Mapper<T, M> mapper) {
         this.mapper = mapper;
         return this;
     }
 
-    /**
-     * @return the {@link Updater} object
-     */
+    /// @return the [Updater] object
     public Updater<M> getUpdater() {
         return updater;
     }
 
-    /**
-     * Sets the updater.
-     */
+    /// Sets the updater.
     public MappedUpdater<T, M> setUpdater(Updater<M> updater) {
         this.updater = updater;
         return this;

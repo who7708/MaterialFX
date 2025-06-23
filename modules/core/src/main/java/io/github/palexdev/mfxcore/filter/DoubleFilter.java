@@ -18,6 +18,10 @@
 
 package io.github.palexdev.mfxcore.filter;
 
+import java.util.Collections;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
 import io.github.palexdev.mfxcore.base.beans.BiPredicateBean;
 import io.github.palexdev.mfxcore.filter.base.NumberFilter;
 import io.github.palexdev.mfxcore.utils.fx.FXCollectors;
@@ -26,21 +30,15 @@ import javafx.collections.ObservableList;
 import javafx.util.StringConverter;
 import javafx.util.converter.DoubleStringConverter;
 
-import java.util.Collections;
-import java.util.function.Function;
-import java.util.stream.Stream;
-
-/**
- * Extension of {@link NumberFilter} for double fields.
- * <p></p>
- * Offers the following default {@link BiPredicateBean}s:
- * <p> - "is": checks for doubles equality
- * <p> - "is not": checks for doubles inequality
- * <p> - "greater than": checks if a double is greater than another double
- * <p> - "greater or equal to": checks if a double is greater or equal to another double
- * <p> - "lesser than": checks if a double is lesser than another double
- * <p> - "lesser or equal to": checks if a double is lesser or equal to another double
- */
+/// Extension of [NumberFilter] for double fields.
+///
+/// Offers the following default [BiPredicateBeans][BiPredicateBean]:
+/// - "is": checks for doubles equality
+/// - "is not": checks for doubles inequality
+/// - "greater than": checks if a double is greater than another double
+/// - "greater or equal to": checks if a double is greater or equal to another double
+/// - "lesser than": checks if a double is lesser than another double
+/// - "lesser or equal to": checks if a double is lesser or equal to another double
 public class DoubleFilter<T> extends NumberFilter<T, Double> {
 
     //================================================================================

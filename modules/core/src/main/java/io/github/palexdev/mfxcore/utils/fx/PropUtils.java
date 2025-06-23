@@ -18,17 +18,15 @@
 
 package io.github.palexdev.mfxcore.utils.fx;
 
+import java.util.Comparator;
+import java.util.function.*;
+
 import io.github.palexdev.mfxcore.base.TriFunction;
 import io.github.palexdev.mfxcore.base.properties.functional.*;
 import io.github.palexdev.mfxcore.utils.NumberUtils;
 import javafx.beans.property.*;
 
-import java.util.Comparator;
-import java.util.function.*;
-
-/**
- * Convenience methods related to properties.
- */
+/// Convenience methods related to properties.
 public class PropUtils {
 
     private PropUtils() {

@@ -18,15 +18,13 @@
 
 package io.github.palexdev.mfxcore.base.properties.resettable;
 
+import java.util.Objects;
+
 import io.github.palexdev.mfxcore.base.properties.base.ResettableProperty;
 import javafx.beans.property.ReadOnlyLongWrapper;
 import javafx.beans.property.SimpleLongProperty;
 
-import java.util.Objects;
-
-/**
- * A {@link SimpleLongProperty} that implements {@link ResettableProperty}.
- */
+/// A [SimpleLongProperty] that implements [ResettableProperty].
 public class ResettableLongProperty extends ReadOnlyLongWrapper implements ResettableProperty<Number> {
     //================================================================================
     // Properties

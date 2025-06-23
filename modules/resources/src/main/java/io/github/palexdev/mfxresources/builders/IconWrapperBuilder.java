@@ -33,9 +33,7 @@ import javafx.scene.Node;
 import javafx.scene.effect.Effect;
 import javafx.scene.input.MouseEvent;
 
-/**
- * A commodity class to build {@link MFXIconWrapper}s with fluent API.
- */
+/// A commodity class to build [MFXIconWrapper]s with fluent API.
 public class IconWrapperBuilder {
     //================================================================================
     // Properties

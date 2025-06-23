@@ -10,10 +10,8 @@ import javafx.css.StyleableObjectProperty;
 import javafx.css.StyleablePropertyFactory;
 import javafx.scene.text.FontSmoothingType;
 
-/**
- * Simple extension of {@link javafx.scene.text.Text} to allow setting the wrapping width property in CSS, as well
- * as setting the default style class to '.text', and the default font smoothing to {@link FontSmoothingType#LCD}.
- */
+/// Simple extension of [javafx.scene.text.Text] to allow setting the wrapping width property in CSS, as well
+/// as setting the default style class to '.text', and the default font smoothing to [FontSmoothingType#LCD].
 public class Text extends javafx.scene.text.Text {
 
     //================================================================================
@@ -51,12 +49,11 @@ public class Text extends javafx.scene.text.Text {
         return cssWrappingWidth.get();
     }
 
-    /**
-     * Allows to set the wrapping width in CSS with the property: '-fx-wrapping-width'.
-     * <p></p>
-     * It's named like this to avoid conflicts with {@link #wrappingWidthProperty()}, which won't be settable anymore
-     * since it's being bound to this one instead.
-     */
+    /// Allows setting the wrapping width in CSS with the property: '-fx-wrapping-width'.
+    ///
+    ///
+    /// It's named like this to avoid conflicts with [#wrappingWidthProperty()], which won't be settable anymore
+    /// since it's being bound to this one instead.
     public StyleableDoubleProperty cssWrappingWidthProperty() {
         return cssWrappingWidth;
     }

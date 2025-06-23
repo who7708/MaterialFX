@@ -21,37 +21,31 @@ package io.github.palexdev.mfxeffects.animations.base;
 import io.github.palexdev.mfxeffects.animations.motion.*;
 import javafx.animation.Interpolator;
 
-/**
- * Equivalent of JavaFX's {@link Interpolator} (in fact the class extends it), in {@code Flutter} they
- * are called {@code Curves}.
- * <p></p>
- * Aside from just a "rename", the protected method {@link Interpolator#curve(double)} has been made public
- * since some curves need to access other curves' algorithm; also adds a method to quickly create a {@link FlippedCurve}
- * from any implementation.
- * <p></p>
- *
- * @see Motion for a series of pre-defines curves
- * @see BounceInCurve
- * @see BounceOutCurve
- * @see BounceInOutCurve
- * @see Cubic
- * @see DecelerateCurve
- * @see ElasticInCurve
- * @see ElasticOutCurve
- * @see ElasticInOutCurve
- * @see FlippedCurve
- * @see Interval
- * @see Linear
- * @see SawTooth
- * @see ThreePointCubic
- * @see Threshold
- */
+/// Equivalent of JavaFX's [Interpolator] (in fact the class extends it), in `Flutter` they are called `Curves`.
+///
+/// Aside from just a "rename", the protected method [#curve(double)] has been made public
+/// since some curves need to access other curves' algorithm; also adds a method to quickly create a [FlippedCurve]
+/// from any implementation.
+///
+/// @see Motion for a series of pre-defines curves
+/// @see BounceInCurve
+/// @see BounceOutCurve
+/// @see BounceInOutCurve
+/// @see Cubic
+/// @see DecelerateCurve
+/// @see ElasticInCurve
+/// @see ElasticOutCurve
+/// @see ElasticInOutCurve
+/// @see FlippedCurve
+/// @see Interval
+/// @see Linear
+/// @see SawTooth
+/// @see ThreePointCubic
+/// @see Threshold
 public abstract class Curve extends Interpolator {
     public abstract double curve(double t);
 
-    /**
-     * Flips this curve's motion. This is done by creating a new {@link FlippedCurve}.
-     */
+    /// Flips this curve's motion. This is done by creating a new [FlippedCurve].
     public Curve flipped() {
         return new FlippedCurve(this);
     }

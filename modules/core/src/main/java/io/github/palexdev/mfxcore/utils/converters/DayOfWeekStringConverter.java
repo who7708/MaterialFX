@@ -18,16 +18,14 @@
 
 package io.github.palexdev.mfxcore.utils.converters;
 
-import io.github.palexdev.mfxcore.utils.EnumUtils;
-import javafx.util.StringConverter;
-
 import java.time.DayOfWeek;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
-/**
- * A {@link StringConverter} capable of converting {@link DayOfWeek} to/from Strings.
- */
+import io.github.palexdev.mfxcore.utils.EnumUtils;
+import javafx.util.StringConverter;
+
+/// A [StringConverter] capable of converting [DayOfWeek] to/from Strings.
 public class DayOfWeekStringConverter extends StringConverter<DayOfWeek> {
     //================================================================================
     // Properties

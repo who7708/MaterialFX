@@ -24,19 +24,17 @@ import io.github.palexdev.mfxcore.enums.BindingState;
 import io.github.palexdev.mfxcore.enums.BindingType;
 import javafx.beans.value.ObservableValue;
 
-/**
- * Concrete implementation of {@link AbstractBinding} to define unidirectional bindings.
- * <p></p>
- * Unidirectional bindings have a single source and can have multiple other sources, {@link ExternalSource},
- * which should be used to invalidate the binding when needed, in special occasions.
- * <p>
- * {@link #invalidateSource()} is unsupported as unidirectional bindings do not update their source.
- * <p></p>
- * Note that you can use whatever source you want as long as the source produces, when updating, values compatible
- * with this binding's target type.
- *
- * @param <T> the binding's target type
- */
+/// Concrete implementation of [AbstractBinding] to define unidirectional bindings.
+///
+/// Unidirectional bindings have a single source and can have multiple other sources, [ExternalSource],
+/// which should be used to invalidate the binding when needed, on special occasions.
+///
+/// The [#invalidateSource()] method is unsupported as unidirectional bindings do not update their source.
+///
+/// Note that you can use whatever source you want as long as the source produces, when updating, values compatible
+/// with this binding's target type.
+///
+/// @param <T> the binding's target type
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class Binding<T> extends AbstractBinding<T> {
     //================================================================================
@@ -63,55 +61,45 @@ public class Binding<T> extends AbstractBinding<T> {
     // Methods
     //================================================================================
 
-    /**
-     * Sets this binding's target.
-     *
-     * @throws IllegalStateException if the binding' state is {@link BindingState#BOUND}
-     */
+    /// Sets this binding's target.
+    ///
+    /// @throws IllegalStateException if the binding' state is [BindingState#BOUND]
     public Binding<T> target(ObservableValue<? extends T> observable) {
         if (mayBeBound()) throw new IllegalStateException("Cannot set target as this binding is currently active");
         super.target = new Target<>(observable);
         return this;
     }
 
-    /**
-     * Sets this binding's source, as no updater is given attempts to use {@link Updater#implicit(Target)}.
-     *
-     * @throws IllegalStateException if the binding' state is {@link BindingState#BOUND}
-     */
+    /// Sets this binding's source, as no updater is given attempts to use [Updater#implicit(Target)].
+    ///
+    /// @throws IllegalStateException if the binding' state is [BindingState#BOUND]
     public Binding<T> source(ObservableValue<? extends T> source) {
         if (mayBeBound()) throw new IllegalStateException("Cannot set source as this binding is currently active");
         this.source = new Source<>(source).setTargetUpdater(Updater.implicit(target));
         return this;
     }
 
-    /**
-     * Sets this binding' source.
-     *
-     * @throws IllegalStateException if the binding' state is {@link BindingState#BOUND}
-     */
+    /// Sets this binding's source.
+    ///
+    /// @throws IllegalStateException if the binding' state is [BindingState#BOUND]
     public <S> Binding<T> source(AbstractSource<S, T> source) {
         if (mayBeBound()) throw new IllegalStateException("Cannot set source as this binding is currently active");
         this.source = source;
         return this;
     }
 
-    /**
-     * Sets the binding' source from the given {@link Source.Builder}.
-     *
-     * @throws IllegalStateException if the binding' state is {@link BindingState#BOUND}
-     */
+    /// Sets the binding's source from the given [Source.Builder].
+    ///
+    /// @throws IllegalStateException if the binding' state is [BindingState#BOUND]
     public <S> Binding<T> source(Source.Builder<S> sBuilder) {
         if (mayBeBound()) throw new IllegalStateException("Cannot set source as this binding is currently active");
         this.source = sBuilder.get();
         return this;
     }
 
-    /**
-     * Sets the binding' source from the given {@link MappingSource.Builder}.
-     *
-     * @throws IllegalStateException if the binding' state is {@link BindingState#BOUND}
-     */
+    /// Sets the binding's source from the given [MappingSource.Builder].
+    ///
+    /// @throws IllegalStateException if the binding' state is [BindingState#BOUND]
     public <S> Binding<T> source(MappingSource.Builder<S, T> sBuilder) {
         if (mayBeBound()) throw new IllegalStateException("Cannot set source as this binding is currently active");
         this.source = sBuilder.get();
@@ -122,18 +110,15 @@ public class Binding<T> extends AbstractBinding<T> {
     // Methods
     //================================================================================
 
-    /**
-     * {@inheritDoc}
-     * <p></p>
-     * Before activating the binding checks if there are already unidirectional or bidirectional bindings registered
-     * for the given target and eventually disposes them.
-     * <p>
-     * Then activates the source with {@link AbstractSource#listen()}, registers the binding in {@link MFXBindings}
-     * and sets the state to {@link BindingState#BOUND}.
-     *
-     * @throws IllegalStateException if the binding has been disposed before OR the target is null
-     *                               OR the source is null
-     */
+    /// {@inheritDoc}
+    ///
+    /// Before activating the binding checks if there are already unidirectional or bidirectional bindings registered
+    /// for the given target and eventually disposes them.
+    ///
+    /// Then activates the source with [AbstractSource#listen()], registers the binding in [MFXBindings] and sets the state to [BindingState#BOUND].
+    ///
+    /// @throws IllegalStateException if the binding has been disposed before OR the target is null
+    ///                                                             OR the source is null
     @Override
     public Binding<T> get() {
         if (isDisposed())
@@ -158,11 +143,9 @@ public class Binding<T> extends AbstractBinding<T> {
         return this;
     }
 
-    /**
-     * {@inheritDoc}
-     * <p></p>
-     * Also runs {@link #getBeforeTargetInvalidation()} and {@link #getAfterTargetInvalidation()}.
-     */
+    /// {@inheritDoc}
+    ///
+    /// Also runs [#getBeforeTargetInvalidation()] and [#getAfterTargetInvalidation()].
     @Override
     public Binding<T> invalidate() {
         beforeTargetInvalidation.run();
@@ -171,11 +154,7 @@ public class Binding<T> extends AbstractBinding<T> {
         return this;
     }
 
-    /**
-     * Unsupported.
-     *
-     * @throws UnsupportedOperationException unidirectional bindings cannot update their source
-     */
+    /// @throws UnsupportedOperationException unidirectional bindings cannot update their source
     @Override
     public IBinding<T> invalidateSource() {
         throw new UnsupportedOperationException("Unidirectional bindings cannot update their source");
@@ -188,12 +167,10 @@ public class Binding<T> extends AbstractBinding<T> {
         return this;
     }
 
-    /**
-     * {@inheritDoc}
-     * <p></p>
-     * Disposes the source and sets it to null, calls {@link #clearInvalidatingSources()},
-     * sets the state to {@link BindingState#UNBOUND} then un-registers the binding from {@link MFXBindings}.
-     */
+    /// {@inheritDoc}
+    ///
+    /// Disposes the source and sets it to null, calls [#clearInvalidatingSources()], sets the state to [BindingState#UNBOUND]
+    /// and then unregisters the binding from [MFXBindings].
     @Override
     public Binding<T> unbind() {
         source.dispose();
@@ -204,13 +181,9 @@ public class Binding<T> extends AbstractBinding<T> {
         return this;
     }
 
-    /**
-     * {@inheritDoc}
-     * <p></p>
-     * Calls {@link #unbind()}.
-     * <p>
-     * Then sets the remaining properties to null and the state to {@link BindingState#DISPOSED}.
-     */
+    /// {@inheritDoc}
+    ///
+    /// Calls [#unbind()] and then sets the remaining properties to `null` and the state to [BindingState#DISPOSED].
     @Override
     public void dispose() {
         unbind();

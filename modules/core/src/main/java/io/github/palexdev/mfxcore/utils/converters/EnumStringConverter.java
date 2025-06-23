@@ -21,11 +21,9 @@ package io.github.palexdev.mfxcore.utils.converters;
 import io.github.palexdev.mfxcore.utils.EnumUtils;
 import javafx.util.StringConverter;
 
-/**
- * Implementation of {@link StringConverter} to work with a generic {@link Enum}.
- * <p></p>
- * For this to work, it's necessary to specify the enumerator class, see {@link Enum#valueOf(Class, String)}.
- */
+/// Implementation of [StringConverter] to work with a generic [Enum].
+///
+/// For this to work, it's necessary to specify the enumerator class, see [Enum#valueOf(Class, String)].
 public class EnumStringConverter<E extends Enum<E>> extends StringConverter<E> {
     //================================================================================
     // Properties
@@ -43,18 +41,14 @@ public class EnumStringConverter<E extends Enum<E>> extends StringConverter<E> {
     // Overridden Methods
     //================================================================================
 
-    /**
-     * Calls toString() on the given enumeration.
-     */
+    /// Calls toString() on the given enumeration.
     @Override
     public String toString(E e) {
         if (e == null) return "";
         return e.toString();
     }
 
-    /**
-     * Uses {@link EnumUtils#valueOfIgnoreCase(Class, String)} to convert the given String to an enumeration.
-     */
+    /// Uses [EnumUtils#valueOfIgnoreCase(Class, String)] to convert the given String to an enumeration.
     @Override
     public E fromString(String string) {
         return EnumUtils.valueOfIgnoreCase(type, string);

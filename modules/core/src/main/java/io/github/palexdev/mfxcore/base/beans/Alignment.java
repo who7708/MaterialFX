@@ -21,10 +21,7 @@ package io.github.palexdev.mfxcore.base.beans;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 
-/**
- * This immutable bean's purpose is to allow specifying positions based on
- * {@link HPos} and {@link VPos} enumerations.
- */
+/// This immutable bean's purpose is to allow specifying positions based on [HPos] and [VPos] enumerations.
 public class Alignment {
     //================================================================================
     // Properties

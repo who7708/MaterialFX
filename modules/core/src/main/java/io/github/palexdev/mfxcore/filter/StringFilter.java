@@ -18,6 +18,10 @@
 
 package io.github.palexdev.mfxcore.filter;
 
+import java.util.Collections;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
 import io.github.palexdev.mfxcore.base.beans.BiPredicateBean;
 import io.github.palexdev.mfxcore.filter.base.AbstractFilter;
 import io.github.palexdev.mfxcore.utils.StringUtils;
@@ -26,28 +30,22 @@ import io.github.palexdev.mfxlocalization.I18N;
 import javafx.collections.ObservableList;
 import javafx.util.StringConverter;
 
-import java.util.Collections;
-import java.util.function.Function;
-import java.util.stream.Stream;
-
-/**
- * Extension of {@link AbstractFilter} for String fields.
- * <p></p>
- * Offers the following default {@link BiPredicateBean}s:
- * <p> - "contains": checks if a String is contained in another String
- * <p> - "contains ignore case": checks if a String is contained in another String, case insensitive
- * <p> - "contains any": checks if any of the given words are contained in a String. Words are specified as a
- * single String split by ", ". Like this: "A, B, C, DEF GHI, E, F"
- * <p> - "contains all": checks if all the given words are contained in a String. Words are specified as a
- * single String split by ", ". Like this: "A, B, C, DEF GHI, E, F"
- * <p> - "ends with": checks if a String ends with another String
- * <p> - "ends with ignore case": checks if a String ends with another String, case insensitive
- * <p> - "starts with": checks if a String starts with another String
- * <p> - "starts with ignore case": checks if a String starts with another String, case insensitive
- * <p> - "equals": checks for Strings equality
- * <p> - "equals ignore case": checks for Strings equality, case-insensitive
- * <p> - "is not equal to": checks for Strings inequality
- */
+/// Extension of [AbstractFilter] for String fields.
+///
+/// Offers the following default [BiPredicateBean]s:
+///  - "contains": checks if a String is contained in another String
+///  - "contains ignore case": checks if a String is contained in another String, case-insensitive
+///  - "contains any": checks if any of the given words are contained in a String. Words are specified as a
+/// single String split by ", ". Like this: "A, B, C, DEF GHI, E, F"
+///  - "contains all": checks if all the given words are contained in a String. Words are specified as a
+/// single String split by ", ". Like this: "A, B, C, DEF GHI, E, F"
+///  - "ends with": checks if a String ends with another String
+///  - "ends with ignore case": checks if a String ends with another String, case-insensitive
+///  - "starts with": checks if a String starts with another String
+///  - "starts with ignore case": checks if a String starts with another String, case-insensitive
+///  - "equals": checks for Strings equality
+///  - "equals ignore case": checks for Strings equality, case-insensitive
+///  - "is not equal to": checks for Strings inequality
 public class StringFilter<T> extends AbstractFilter<T, String> {
 
     //================================================================================

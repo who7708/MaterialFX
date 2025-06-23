@@ -23,10 +23,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.util.Duration;
 
-/**
- * Simple immutable bean that has a node reference, a duration for the animation and
- * an action to perform when the animation ends.
- */
+/// Simple immutable bean that has a node reference, a duration for the animation and an action to perform when the animation ends.
 public class AnimationsData {
     //================================================================================
     // Properties
@@ -63,16 +60,12 @@ public class AnimationsData {
     // Static Methods
     //================================================================================
 
-    /**
-     * Builds a new AnimationsData object with the given node and duration, the action is set to null.
-     */
+    /// Builds a new AnimationsData object with the given node and duration, the action is set to `null`.
     public static AnimationsData of(Node node, Duration duration) {
         return of(node, duration, null);
     }
 
-    /**
-     * Builds a new AnimationsData object with the given node and duration and action.
-     */
+    /// Builds a new AnimationsData object with the given node and duration and action.
     public static AnimationsData of(Node node, Duration duration, EventHandler<ActionEvent> onFinished) {
         return new AnimationsData(node, duration, onFinished);
     }

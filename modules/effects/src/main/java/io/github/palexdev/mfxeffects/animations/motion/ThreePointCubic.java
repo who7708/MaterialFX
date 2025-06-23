@@ -21,30 +21,28 @@ package io.github.palexdev.mfxeffects.animations.motion;
 import io.github.palexdev.mfxeffects.animations.base.Curve;
 import io.github.palexdev.mfxeffects.beans.Offset;
 
-/**
- * A cubic polynomial composed of two curves that share a common center point.
- * <p>
- * The curve runs through three points: (0,0), the {@code midpoint}, and (1,1).
- * <p>
- * The {@link Motion} class contains a curve defined with this class:
- * {@link Motion#EASE_IN_OUT_CUBIC_EMPHASIZED}.
- * <p>
- * The {@code ThreePointCubic} class implements third-order Bézier curves, where two
- * curves share an interior {@code midpoint} that the curve passes through. If the
- * control points surrounding the middle point ({@code b1}, and {@code a2}) are not
- * co-linear with the middle point, then the curve's derivative will have a
- * discontinuity (a cusp) at the shared middle point.
- * <p></p>
- * <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_out_cubic_emphasized.mp4>ThreePointCubic Example</a>
- * Note: the above example is built with the given {@link Offset}s in order:
- * <pre>
- * {@code
- *   Offset(0.05, 0), Offset(0.133333, 0.06), // a1 and b1
- *   Offset(0.166666, 0.4), // midpoint
- *   Offset(0.208333, 0.82), Offset(0.25, 1) // a2 and b2
- * }
- * </pre>
- */
+/// A cubic polynomial composed of two curves that share a common center point.
+///
+/// The curve runs through three points: (0,0), the `midpoint`, and (1,1).
+///
+/// The [Motion] class contains a curve defined with this class:
+/// [Motion#EASE_IN_OUT_CUBIC_EMPHASIZED].
+///
+/// The `ThreePointCubic` class implements third-order Bézier curves, where two
+/// curves share an interior `midpoint` that the curve passes through. If the
+/// control points surrounding the middle point (`b1`, and `a2`) are not
+/// co-linear with the middle point, then the curve's derivative will have a
+/// discontinuity (a cusp) at the shared middle point.
+///
+///
+/// [ThreePointCubic](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_ease_in_out_cubic_emphasized.mp4)
+///
+/// Note: the above example is built with the given [Offset]s in order:
+/// ```
+/// Offset(0.05, 0), Offset(0.133333, 0.06), // a1 and b1
+/// Offset(0.166666, 0.4), // midpoint
+/// Offset(0.208333, 0.82), Offset(0.25, 1) // a2 and b2
+///```
 public class ThreePointCubic extends Curve {
     private final Offset a1;
     private final Offset b1;

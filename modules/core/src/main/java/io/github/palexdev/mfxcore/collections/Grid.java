@@ -18,72 +18,64 @@
 
 package io.github.palexdev.mfxcore.collections;
 
-import io.github.palexdev.mfxcore.utils.ColumnIterator;
-import io.github.palexdev.mfxcore.utils.GridUtils;
-import io.github.palexdev.mfxcore.utils.RowIterator;
-import javafx.util.Pair;
-
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-/**
- * Implementation of a dynamic matrix in Java.
- * <p>
- * This collection is backed by a 1D list and uses a row-major memory layout.
- * <p>
- * See <a href="https://eli.thegreenplace.net/2015/memory-layout-of-multi-dimensional-arrays">Explanation</a>
- * <p></p>
- * Note that because the grid uses a 1D data structure it can operate on both linear indexes or subscripts/coordinates.
- * <p>
- * <pre>
- * {@code
- * // This is how a 5x5 matrix appears with subscripts
- *     0 1 2 3 4
- * 0 [ A B C D E ]
- * 1 [ F G H I J ]
- * 2 [ K L M N O ]
- * 3 [ P Q R S T ]
- * 4 [ U V W X Y ]
- *
- * // This is how linear indexes work
- * [  0  1  2  3  4 ]
- * [  5  6  7  8  9 ]
- * [ 10 11 12 13 14 ]
- * [ 15 16 17 18 19 ]
- * [ 20 21 22 23 24 ]
- * // So...
- * Grid<String> grid = ...;
- * String e1 = grid.getElement(11); // Equals grid.getElement(2, 1); Both are "L"
- * String e2 = grid.getElement(23); // Equals grid.getElement(4, 3); Both are "X"
- * }
- * </pre>
- * <p></p>
- * These are all the possible operations:
- * <p> - Create a grid from a list, an array or a 2D array
- * <p> - Fill the grid with nulls, a given val, or a function to get the desired val
- * <p> - Get an element by linear index or coordinates
- * <p> - Set an element by linear index or coordinates
- * <p> - Get the diagonal
- * <p> - Set the diagonal
- * <p> - Get a row by index
- * <p> - Get a column by index
- * <p> - Add a row at end or at a given valid index
- * <p> - Add a column at end or at a given valid index
- * <p> - Replace a row at index
- * <p> - Replace a column at index
- * <p> - Remove a row at start, end, or at a given valid index
- * <p> - Remove a column at start, end, or at a given valid index
- * <p> - Transpose the grid
- * <p> - Clear the grid
- * <p> - Convert a linear index to coordinates
- * <p> - Convert a coordinate to a linear index
- * <p> - Iterate linearly (from 0 to {@link #totalSize()}), over rows {@link RowIterator},
- * over columns {@link ColumnIterator}
- *
- * @param <T> the type of data contained in the grid
- */
+import io.github.palexdev.mfxcore.utils.ColumnIterator;
+import io.github.palexdev.mfxcore.utils.GridUtils;
+import io.github.palexdev.mfxcore.utils.RowIterator;
+import javafx.util.Pair;
+
+/// Implementation of a dynamic matrix in Java.
+///
+/// This collection is backed by a 1D list and uses a row-major memory layout.
+/// See [explanation](https://eli.thegreenplace.net/2015/memory-layout-of-multi-dimensional-arrays)
+///
+/// Note that because the grid uses a 1D data structure, it can operate on both linear indexes or subscripts/coordinates.
+/// ```
+/// // This is how a 5x5 matrix appears with subscripts
+///     0 1 2 3 4
+/// 0 [ A B C D E ]
+/// 1 [ F G H I J ]
+/// 2 [ K L M N O ]
+/// 3 [ P Q R S T ]
+/// 4 [ U V W X Y ]
+/// // This is how linear indexes work
+///[  0  1  2  3  4 ]
+///[  5  6  7  8  9 ]
+///[ 10 11 12 13 14 ]
+///[ 15 16 17 18 19 ]
+///[ 20 21 22 23 24 ]
+/// // So...
+/// Grid<String> grid = ...;
+/// String e1 = grid.getElement(11); // Equals grid.getElement(2, 1); Both are "L"
+/// String e2 = grid.getElement(23); // Equals grid.getElement(4, 3); Both are "X"`
+///```
+///
+/// These are all the possible operations:
+/// - Create a grid from a list, an array or a 2D array
+/// - Fill the grid with nulls, a given val, or a function to get the desired val
+/// - Get an element by linear index or coordinates
+/// - Set an element by linear index or coordinates
+/// - Get the diagonal
+/// - Set the diagonal
+/// - Get a row by index
+/// - Get a column by index
+/// - Add a row at end or at a given valid index
+/// - Add a column at end or at a given valid index
+/// - Replace a row at index
+/// - Replace a column at index
+/// - Remove a row at start, end, or at a given valid index
+/// - Remove a column at start, end, or at a given valid index
+/// - Transpose the grid
+/// - Clear the grid
+/// - Convert a linear index to coordinates
+/// - Convert a coordinate to a linear index
+/// - Iterate linearly (from 0 to [#totalSize()]), over rows [RowIterator], over columns [ColumnIterator]
+///
+/// @param <T> the type of data contained in the grid
 public class Grid<T> implements Iterable<T> {
     //================================================================================
     // Properties
@@ -113,14 +105,11 @@ public class Grid<T> implements Iterable<T> {
     // Static Methods
     //================================================================================
 
-    /**
-     * Given a list of items and the number of columns the grid will have,
-     * generates a new {@code Grid}.
-     * Every {@code columnsNum} the list is "sliced" in rows.
-     *
-     * @param list       the data to generate the grid
-     * @param columnsNum the number of columns for the grid, also used to "slice" the given list in rows
-     */
+    /// Given a list of items and the number of columns the grid will have, generates a new `Grid`.
+    /// Every `columnsNum` the list is "sliced" in rows.
+    ///
+    /// @param list       the data to generate the grid
+    /// @param columnsNum the number of columns for the grid, also used to "slice" the given list in rows
     public static <T> Grid<T> fromList(List<T> list, int columnsNum) {
         if (list.isEmpty()) {
             if (columnsNum == 0) return new Grid<>();
@@ -133,23 +122,18 @@ public class Grid<T> implements Iterable<T> {
         return new Grid<>(list, list.size() / columnsNum, columnsNum);
     }
 
-    /**
-     * Given an array of items and the number of columns the grid will have,
-     * generates a new {@code Grid}.
-     * Every {@code columnsNum} the array is "sliced" in rows.
-     *
-     * @param arr        the data to generate the grid
-     * @param columnsNum the number of columns for the grid, also used to "slice" the given array in rows
-     */
+    /// Given an array of items and the number of columns the grid will have, generates a new `Grid`.
+    /// Every `columnsNum` the array is "sliced" in rows.
+    ///
+    /// @param arr        the data to generate the grid
+    /// @param columnsNum the number of columns for the grid, also used to "slice" the given array in rows
     public static <T> Grid<T> fromArray(T[] arr, int columnsNum) {
         return fromList(List.of(arr), columnsNum);
     }
 
-    /**
-     * Given a 2D array of items generates a new {@code Grid}.
-     *
-     * @param matrix the data to generate the grid
-     */
+    /// Given a 2D array of items generates a new `Grid`.
+    ///
+    /// @param matrix the data to generate the grid
     public static <T> Grid<T> fromMatrix(T[][] matrix) {
         int rowsNum = matrix.length;
         int columnsNum = matrix[0].length;
@@ -164,12 +148,9 @@ public class Grid<T> implements Iterable<T> {
     // Methods
     //================================================================================
 
-    /**
-     * Clears the grid data and using the already available {@link #getRowsNum()} and {@link #getColumnsNum()},
-     * fills it with {@code null}.
-     *
-     * @throws IllegalStateException if the rows num or columns num are 0
-     */
+    /// Clears the grid data, and using the already available [#getRowsNum()] and [#getColumnsNum()], fills it with `null`.
+    ///
+    /// @throws IllegalStateException if the rows num or columns num are 0
     public Grid<T> init() {
         if (rowsNum == 0 || columnsNum == 0)
             throw new IllegalStateException("Both rows num and columns num must be greater than 0 but they are "
@@ -182,11 +163,9 @@ public class Grid<T> implements Iterable<T> {
         return this;
     }
 
-    /**
-     * Clears the grid data and uses the given rows num and columns num to fill it with {@code null}.
-     *
-     * @throws IllegalStateException if the rows num or columns num are 0
-     */
+    /// Clears the grid data and uses the given rows num and columns num to fill it with `null`.
+    ///
+    /// @throws IllegalStateException if the rows num or columns num are 0
     public Grid<T> init(int rows, int columns) {
         if (rows == 0 || columns == 0)
             throw new IllegalStateException("Both rows num and columns num must be greater than 0 but they are "
@@ -201,11 +180,9 @@ public class Grid<T> implements Iterable<T> {
         return this;
     }
 
-    /**
-     * Clears the grid and uses the given rows num and columns num to fill it with the given value.
-     *
-     * @throws IllegalStateException if the rows num or columns num are 0
-     */
+    /// Clears the grid and uses the given rows num and columns num to fill it with the given value.
+    ///
+    /// @throws IllegalStateException if the rows num or columns num are 0
     public Grid<T> init(int rows, int columns, T val) {
         if (rows == 0 || columns == 0)
             throw new IllegalStateException("Both rows num and columns num must be greater than 0 but they are "
@@ -220,14 +197,11 @@ public class Grid<T> implements Iterable<T> {
         return this;
     }
 
-    /**
-     * Clears the grid and uses the given rows num and columns num to fill it with values provided by the given
-     * {@link BiFunction}.
-     *
-     * @param valFunction the function accepts the row index and column index of the loop and is expected
-     *                    to return a T value to add into the grid
-     * @throws IllegalStateException if the rows num or columns num are 0
-     */
+    /// Clears the grid and uses the given rows num and columns num to fill it with values provided by the given [BiFunction].
+    ///
+    /// @param valFunction the function accepts the row index and column index of the loop and is expected
+    ///                                                          to return a T value to add into the grid
+    /// @throws IllegalStateException if the rows num or columns num are 0
     public Grid<T> init(int rows, int columns, BiFunction<Integer, Integer, T> valFunction) {
         if (rows == 0 || columns == 0)
             throw new IllegalStateException("Both rows num and columns num must be greater than 0 but they are "
@@ -238,46 +212,36 @@ public class Grid<T> implements Iterable<T> {
         this.columnsNum = columns;
         for (int i = 0; i < totalSize(); i++) {
             Coordinates rc = GridUtils.indToSub(columns, i);
-            data.add(valFunction.apply(rc.getRow(), rc.getColumn()));
+            data.add(valFunction.apply(rc.row(), rc.column()));
         }
         return this;
     }
 
-    /**
-     * @return the element at the given linear index
-     */
+    /// @return the element at the given linear index
     public T getElement(int index) {
         return data.get(index);
     }
 
-    /**
-     * @return the element at the given coordinates.
-     * Uses {@link #getElement(int)} by first converting them to a linear index, {@link GridUtils#subToInd(int, int, int)}
-     */
+    /// @return the element at the given coordinates.
+    /// Uses [#getElement(int)] by first converting them to a linear index, see [GridUtils#subToInd(int,int,int)]
     public T getElement(int row, int column) {
         int index = GridUtils.subToInd(columnsNum, row, column);
         return getElement(index);
     }
 
-    /**
-     * Replaces the element at the given linear index with the given value.
-     */
+    /// Replaces the element at the given linear index with the given value.
     public void setElement(int index, T val) {
         data.set(index, val);
     }
 
-    /**
-     * Replaces the element at the given coordinates with the given value.
-     * Uses {@link #setElement(int, Object)} by first converting them to a linear index, {@link GridUtils#subToInd(int, int, int)}
-     */
+    /// Replaces the element at the given coordinates with the given value.
+    /// Uses [#setElement(int,Object)] by first converting them to a linear index, [GridUtils#subToInd(int,int,int)]
     public void setElement(int row, int column, T val) {
         setElement(GridUtils.subToInd(columnsNum, row, column), val);
     }
 
-    /**
-     * @return a list containing the elements along the diagonal of the grid. An empty list
-     * if the grid is empty
-     */
+    /// @return a list containing the elements along the diagonal of the grid. An empty list
+    /// if the grid is empty
     public List<T> getDiagonal() {
         if (isEmpty()) return List.of();
         return IntStream.iterate(0, i -> i < totalSize(), i -> i + (columnsNum + 1))
@@ -285,22 +249,18 @@ public class Grid<T> implements Iterable<T> {
             .collect(Collectors.toList());
     }
 
-    /**
-     * Calls {@link #setDiagonal(List)} by using {@link Arrays#asList(Object[])}
-     */
+    /// Calls [#setDiagonal(List)] by using [#asList(Object[])]
     @SafeVarargs
     public final void setDiagonal(T... diag) {
         setDiagonal(Arrays.asList(diag));
     }
 
-    /**
-     * Replaces the diagonal of the grid with the given one.
-     *
-     * @throws IllegalStateException    if this grid is not a square matrix. In other words if the
-     *                                  rows num and the columns num are not the same
-     * @throws IllegalArgumentException if the given diagonal is empty or if its size is not N
-     *                                  (where N is both the number of rows and columns)
-     */
+    /// Replaces the diagonal of the grid with the given one.
+    ///
+    /// @throws IllegalStateException    if this grid is not a square matrix. In other words, if the
+    ///                                                                                                    rows num and the columns num are not the same
+    /// @throws IllegalArgumentException if the given diagonal is empty, or if its size is not N
+    ///                                                                                                    (where N is both the number of rows and columns)
     public void setDiagonal(List<T> diag) {
         if (rowsNum != columnsNum)
             throw new IllegalStateException("Rows num and columns num are not the same, expecting square matrix");
@@ -318,10 +278,8 @@ public class Grid<T> implements Iterable<T> {
     }
 
 
-    /**
-     * @return a list containing the elements of the row at the given index
-     * @throws IndexOutOfBoundsException if the given index is not a valid row index
-     */
+    /// @return a list containing the elements of the row at the given index
+    /// @throws IndexOutOfBoundsException if the given index is not a valid row index
     public List<T> getRow(int index) {
         int start = index * columnsNum;
         int end = start + columnsNum;
@@ -330,10 +288,8 @@ public class Grid<T> implements Iterable<T> {
             .collect(Collectors.toList());
     }
 
-    /**
-     * @return a list containing the elements of the row at the given index, except
-     * for the items that are positioned in the specified "skippingColumns"
-     */
+    /// @return a list containing the elements of the row at the given index, except
+    /// for the items that are positioned in the specified "skippingColumns"
     public List<T> getRow(int index, Integer... skippingColumns) {
         int start = index * columnsNum;
         int end = start + columnsNum;
@@ -344,10 +300,8 @@ public class Grid<T> implements Iterable<T> {
             .collect(Collectors.toList());
     }
 
-    /**
-     * @return a list containing the elements of the column at the given index
-     * @throws IndexOutOfBoundsException if the given index is not a valid column index
-     */
+    /// @return a list containing the elements of the column at the given index
+    /// @throws IndexOutOfBoundsException if the given index is not a valid column index
     public List<T> getColumn(int index) {
         int end = (rowsNum - 1) * columnsNum + index;
         return IntStream.iterate(index, i -> i <= end, i -> i + columnsNum)
@@ -355,10 +309,8 @@ public class Grid<T> implements Iterable<T> {
             .collect(Collectors.toList());
     }
 
-    /**
-     * @return a list containing the elements of the column at the given index, except
-     * for the items that are positioned in the specified "skippingRows"
-     */
+    /// @return a list containing the elements of the column at the given index, except
+    /// for the items that are positioned in the specified "skippingRows"
     public List<T> getColumn(int index, Integer... skippingRows) {
         int end = (rowsNum - 1) * columnsNum + index;
         Set<Integer> tmpSet = Set.of(skippingRows);
@@ -368,37 +320,29 @@ public class Grid<T> implements Iterable<T> {
             .collect(Collectors.toList());
     }
 
-    /**
-     * Calls {@link #addRow(int, Object[])} with {@link #getRowsNum()} as index,
-     * results in appending a new row at the end.
-     */
+    /// Calls [#addRow(int,Object\[\])] with [#getRowsNum()] as index,
+    /// results in appending a new row at the end.
     @SafeVarargs
     public final void addRow(T... row) {
         addRow(rowsNum, row);
     }
 
-    /**
-     * Calls {@link #addRow(int, List)} by using {@link Arrays#asList(Object[])}.
-     */
+    /// Calls [#addRow(int,List)] by using [Arrays#asList(Object\[\])].
     @SafeVarargs
     public final void addRow(int index, T... row) {
         addRow(index, Arrays.asList(row));
     }
 
-    /**
-     * Calls {@link #addRow(int, List)} with {@link #getRowsNum()} as index,
-     * results in appending a new row at the end.
-     */
+    /// Calls [#addRow(int,List)] with [#getRowsNum()] as index,
+    /// results in appending a new row at the end.
     public void addRow(List<T> row) {
         addRow(rowsNum, row);
     }
 
-    /**
-     * Adds the given row at the given index.
-     *
-     * @throws IllegalArgumentException  if the given row is empty or if its size is not equal to the num of columns
-     * @throws IndexOutOfBoundsException if the given index is not a valid row index
-     */
+    /// Adds the given row at the given index.
+    ///
+    /// @throws IllegalArgumentException  if the given row is empty or if its size is not equal to the num of columns
+    /// @throws IndexOutOfBoundsException if the given index is not a valid row index
     public void addRow(int index, List<T> row) {
         if (row.isEmpty())
             throw new IllegalArgumentException("Row to add cannot be empty");
@@ -421,37 +365,29 @@ public class Grid<T> implements Iterable<T> {
         data.addAll(linearIndex, row);
     }
 
-    /**
-     * Calls {@link #addColumn(int, Object[])} with {@link #getColumnsNum()} as index,
-     * results in appending a new column at the end.
-     */
+    /// Calls [#addColumn(int,Object[])] with [#getColumnsNum()] as index,
+    /// results in appending a new column at the end.
     @SafeVarargs
     public final void addColumn(T... column) {
         addColumn(columnsNum, column);
     }
 
-    /**
-     * Calls {@link #addColumn(int, List)} by using {@link Arrays#asList(Object[])}.
-     */
+    /// Calls [#addColumn(int,List)] by using [#asList(Object[])].
     @SafeVarargs
     public final void addColumn(int index, T... column) {
         addColumn(index, Arrays.asList(column));
     }
 
-    /**
-     * Calls {@link #addColumn(int, List)} with {@link #getColumnsNum()} as index,
-     * results in appending a new row at the end.
-     */
+    /// Calls [#addColumn(int,List)] with [#getColumnsNum()] as index,
+    /// results in appending a new row at the end.
     public void addColumn(List<T> column) {
         addColumn(columnsNum, column);
     }
 
-    /**
-     * Adds the given column at the given index.
-     *
-     * @throws IllegalArgumentException  if the given column is empty or if its size is not equal to the num of rows
-     * @throws IndexOutOfBoundsException if the given index is not a valid column index
-     */
+    /// Adds the given column at the given index.
+    ///
+    /// @throws IllegalArgumentException  if the given column is empty, or if its size is not equal to the num of rows
+    /// @throws IndexOutOfBoundsException if the given index is not a valid column index
     public void addColumn(int index, List<T> column) {
         if (column.isEmpty())
             throw new IllegalArgumentException("Column to add cannot be empty");
@@ -478,20 +414,16 @@ public class Grid<T> implements Iterable<T> {
         }
     }
 
-    /**
-     * Calls {@link #setRow(int, List)} by using {@link Arrays#asList(Object[])}.
-     */
+    /// Calls [#setRow(int,List)] by using [#asList(Object[])].
     @SafeVarargs
     public final void setRow(int index, T... row) {
         setRow(index, Arrays.asList(row));
     }
 
-    /**
-     * Replaces the row at the given index with the given row.
-     *
-     * @throws IllegalArgumentException  if the given row is empty or its size is not equal to the num of columns
-     * @throws IndexOutOfBoundsException if the given index is not a valid row index
-     */
+    /// Replaces the row at the given index with the given row.
+    ///
+    /// @throws IllegalArgumentException  if the given row is empty or its size is not equal to the num of columns
+    /// @throws IndexOutOfBoundsException if the given index is not a valid row index
     public void setRow(int index, List<T> row) {
         if (row.isEmpty())
             throw new IllegalArgumentException("Row to set cannot be empty");
@@ -515,20 +447,16 @@ public class Grid<T> implements Iterable<T> {
         }
     }
 
-    /**
-     * Calls {@link #setColumn(int, List)} by using {@link Arrays#asList(Object[])}.
-     */
+    /// Calls [#setColumn(int,List)] by using [#asList(Object[])].
     @SafeVarargs
     public final void setColumn(int index, T... column) {
         setColumn(index, Arrays.asList(column));
     }
 
-    /**
-     * Replaces the column at the given index with the given column.
-     *
-     * @throws IllegalArgumentException  if the given column is empty or its size is not equal to the num of rows
-     * @throws IndexOutOfBoundsException if the given index is not a valid column index
-     */
+    /// Replaces the column at the given index with the given column.
+    ///
+    /// @throws IllegalArgumentException  if the given column is empty, or its size is not equal to the num of rows
+    /// @throws IndexOutOfBoundsException if the given index is not a valid column index
     public void setColumn(int index, List<T> column) {
         if (column.isEmpty())
             throw new IllegalArgumentException("Column to set cannot be empty");
@@ -552,30 +480,24 @@ public class Grid<T> implements Iterable<T> {
         }
     }
 
-    /**
-     * Removed the first row.
-     *
-     * @return the removed row
-     */
+    /// Removed the first row.
+    ///
+    /// @return the removed row
     public List<T> removeFirstRow() {
         return removeRow(0);
     }
 
-    /**
-     * Removes the last row.
-     *
-     * @return the removed row
-     */
+    /// Removes the last row.
+    ///
+    /// @return the removed row
     public List<T> removeLastRow() {
         return removeRow(rowsNum - 1);
     }
 
-    /**
-     * Remove the row at the given index.
-     *
-     * @return the removed row
-     * @throws IndexOutOfBoundsException if the given index is not a valid row index
-     */
+    /// Remove the row at the given index.
+    ///
+    /// @return the removed row
+    /// @throws IndexOutOfBoundsException if the given index is not a valid row index
     public List<T> removeRow(int index) {
         if (index < 0 || index >= rowsNum)
             throw new IndexOutOfBoundsException(index);
@@ -590,30 +512,24 @@ public class Grid<T> implements Iterable<T> {
         return tmp;
     }
 
-    /**
-     * Removes the first column.
-     *
-     * @return the removed column
-     */
+    /// Removes the first column.
+    ///
+    /// @return the removed column
     public List<T> removeFirstColumn() {
         return removeColumn(0);
     }
 
-    /**
-     * Removes the last column.
-     *
-     * @return the removed column
-     */
+    /// Removes the last column.
+    ///
+    /// @return the removed column
     public List<T> removeLastColumn() {
         return removeColumn(columnsNum - 1);
     }
 
-    /**
-     * Remove the column at the given index.
-     *
-     * @return the removed column
-     * @throws IndexOutOfBoundsException if the given index is not a valid column index
-     */
+    /// Remove the column at the given index.
+    ///
+    /// @return the removed column
+    /// @throws IndexOutOfBoundsException if the given index is not a valid column index
     public List<T> removeColumn(int index) {
         if (index < 0 || index >= columnsNum)
             throw new IndexOutOfBoundsException(index);
@@ -629,9 +545,7 @@ public class Grid<T> implements Iterable<T> {
         return tmp;
     }
 
-    /**
-     * Transposes this grid and returns itself.
-     */
+    /// Transposes this grid and returns itself.
     public Grid<T> transpose() {
         List<T> tmp = new ArrayList<>();
         for (int j = 0; j < columnsNum; j++) {
@@ -651,33 +565,25 @@ public class Grid<T> implements Iterable<T> {
         return this;
     }
 
-    /**
-     * Clears the grid, also sets both rowsNum and columnsNum to 0.
-     */
+    /// Clears the grid, also sets both rowsNum and columnsNum to 0.
     public void clear() {
         rowsNum = 0;
         columnsNum = 0;
         data.clear();
     }
 
-    /**
-     * @return the total size of the grid, given by {@code rowsNum * columnsNum}
-     */
+    /// @return the total size of the grid, given by `rowsNum * columnsNum`
     public int totalSize() {
         return rowsNum * columnsNum;
     }
 
-    /**
-     * @return the size of the grid as a {@link Pair}. The key is the number of rows
-     * and the value is the number of columns
-     */
+    /// @return the size of the grid as a [Pair]. The key is the number of rows,
+    /// and the value is the number of columns
     public Pair<Integer, Integer> size() {
         return new Pair<>(rowsNum, columnsNum);
     }
 
-    /**
-     * Delegate for {@link List#isEmpty()}.
-     */
+    /// Delegate for [#isEmpty()].
     public boolean isEmpty() {
         return data.isEmpty();
     }
@@ -686,25 +592,19 @@ public class Grid<T> implements Iterable<T> {
         return data.iterator();
     }
 
-    /**
-     * Delegate for {@link List#listIterator(int)}.
-     */
+    /// Delegate for [List#listIterator(int)].
     public Iterator<T> iterator(int start) {
         return data.listIterator(start);
     }
 
-    /**
-     * @return an iterator capable of iterating the grid by rows
-     * @see RowIterator
-     */
+    /// @return an iterator capable of iterating the grid by rows
+    /// @see RowIterator
     public Iterator<List<T>> rowIterator() {
         return new RowIterator<>(this);
     }
 
-    /**
-     * @return an iterator capable of iterating the grid by columns
-     * @see ColumnIterator
-     */
+    /// @return an iterator capable of iterating the grid by columns
+    /// @see ColumnIterator
     public Iterator<List<T>> columnIterator() {
         return new ColumnIterator<>(this);
     }
@@ -713,23 +613,17 @@ public class Grid<T> implements Iterable<T> {
     // Getters/Setters
     //================================================================================ù
 
-    /**
-     * @return the underlying data structure
-     */
+    /// @return the underlying data structure
     public List<T> getData() {
         return data;
     }
 
-    /**
-     * @return the grid's number of rows
-     */
+    /// @return the grid's number of rows
     public int getRowsNum() {
         return rowsNum;
     }
 
-    /**
-     * @return the grid's number of columns
-     */
+    /// @return the grid's number of columns
     public int getColumnsNum() {
         return columnsNum;
     }
@@ -737,62 +631,22 @@ public class Grid<T> implements Iterable<T> {
     //================================================================================
     // Internal Classes
     //================================================================================
-    public static class Coordinates {
-        private final int row;
-        private final int column;
+    public record Coordinates(int row, int column) {
 
-        public Coordinates(int row, int column) {
-            this.row = row;
-            this.column = column;
-        }
-
-        /**
-         * @return a new {@code Coordinate} object given the row and column indexes
-         */
+        /// @return a new `Coordinate` object given the row and column indexes
         public static Coordinates of(int row, int column) {
             return new Coordinates(row, column);
         }
 
-        /**
-         * @param index    the linear index of the item in the grid
-         * @param nColumns the grid's number of columns
-         * @return a new {@code Coordinate} object given the linear index of an item and the
-         * grid's number of columns
-         */
+        /// @param index    the linear index of the item in the grid
+        /// @param nColumns the grid's number of columns
+        /// @return a new `Coordinate` object given the linear index of an item and the
+        /// grid's number of columns
         public static Coordinates linear(int index, int nColumns) {
             return new Coordinates(
                 GridUtils.indToRow(nColumns, index),
                 GridUtils.indToCol(nColumns, index)
             );
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Coordinates that = (Coordinates) o;
-            return getRow() == that.getRow() && getColumn() == that.getColumn();
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(getRow(), getColumn());
-        }
-
-        @Override
-        public String toString() {
-            return "Coordinate{" +
-                   "row=" + row +
-                   ", column=" + column +
-                   '}';
-        }
-
-        public int getRow() {
-            return row;
-        }
-
-        public int getColumn() {
-            return column;
         }
     }
 }

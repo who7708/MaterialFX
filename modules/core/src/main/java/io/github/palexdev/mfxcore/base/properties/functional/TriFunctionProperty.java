@@ -22,14 +22,12 @@ import io.github.palexdev.mfxcore.base.TriFunction;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 
-/**
- * Simply an {@link ObjectProperty} that wraps a {@link TriFunction}.
- *
- * @param <T> the function's first argument
- * @param <U> the function's second argument
- * @param <V> the function's third argument
- * @param <R> the function's return type
- */
+/// Simply a [ObjectProperty] that wraps a [TriFunction].
+///
+/// @param <T> the function's first argument
+/// @param <U> the function's second argument
+/// @param <V> the function's third argument
+/// @param <R> the function's return type
 public class TriFunctionProperty<T, U, V, R> extends ReadOnlyObjectWrapper<TriFunction<T, U, V, R>> {
 
     //================================================================================

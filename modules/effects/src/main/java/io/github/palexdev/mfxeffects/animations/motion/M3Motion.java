@@ -23,39 +23,39 @@ import javafx.util.Duration;
 
 import static javafx.util.Duration.millis;
 
-/**
- * This class contains all the 'tokens' needed by Material 3 components regarding animations/motion, such as
- * {@link Curve}s and {@link Duration}s.
- * <p></p>
- * Durations:
- * <p> - {@link #SHORT1}: 50ms
- * <p> - {@link #SHORT2}: 100ms
- * <p> - {@link #SHORT3}: 150ms
- * <p> - {@link #SHORT4}: 200ms
- * <p></p>
- * <p> - {@link #MEDIUM1}: 250ms
- * <p> - {@link #MEDIUM2}: 300ms
- * <p> - {@link #MEDIUM3}: 350ms
- * <p> - {@link #MEDIUM4}: 400ms
- * <p></p>
- * <p> - {@link #LONG1}: 450ms
- * <p> - {@link #LONG2}: 500ms
- * <p> - {@link #LONG3}: 550ms
- * <p> - {@link #LONG4}: 600ms
- * <p></p>
- * <p> - {@link #EXTRA_LONG1}: 700ms
- * <p> - {@link #EXTRA_LONG2}: 800ms
- * <p> - {@link #EXTRA_LONG3}: 900ms
- * <p> - {@link #EXTRA_LONG4}: 1000ms
- *
- * <p>Material Expressive Update</p>
- * Quoting the official documentation:
- * <p> - Expressive is Material’s opinionated motion scheme, and should be used for most situations,
- * particularly hero moments (whatever that means) and key interactions.
- * <p> - Standard feels more functional with minimal bounce, and should be used for utilitarian products.
- *
- * @see <a href=https://m3.material.io/styles/motion/overview>Material 3 Guidelines</a>
- */
+/// This class contains all the 'tokens' needed by Material 3 components regarding animations/motion, such as
+/// [Curve]s and [Duration]s.
+///
+/// Durations:
+///  - [#SHORT1]: 50ms
+///  - [#SHORT2]: 100ms
+///  - [#SHORT3]: 150ms
+///  - [#SHORT4]: 200ms
+///
+///  - [#MEDIUM1]: 250ms
+///  - [#MEDIUM2]: 300ms
+///  - [#MEDIUM3]: 350ms
+///  - [#MEDIUM4]: 400ms
+///
+///  - [#LONG1]: 450ms
+///  - [#LONG2]: 500ms
+///  - [#LONG3]: 550ms
+///  - [#LONG4]: 600ms
+///
+///  - [#EXTRA_LONG1]: 700ms
+///  - [#EXTRA_LONG2]: 800ms
+///  - [#EXTRA_LONG3]: 900ms
+///  - [#EXTRA_LONG4]: 1000ms
+///
+/// #### Material Expressive Update
+/// Quoting the official documentation:
+///
+///  - Expressive is Material’s opinionated motion scheme, and should be used for most situations,
+/// particularly hero moments (whatever that means) and key interactions.
+///
+///  - Standard feels more functional with minimal bounce and should be used for utilitarian products.
+///
+/// @see [Material 3 Guidelines](https://m3.material.io/styles/motion/overview)
 public class M3Motion {
     //================================================================================
     // Durations

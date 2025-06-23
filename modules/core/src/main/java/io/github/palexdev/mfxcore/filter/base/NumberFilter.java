@@ -18,13 +18,11 @@
 
 package io.github.palexdev.mfxcore.filter.base;
 
-import javafx.util.StringConverter;
-
 import java.util.function.Function;
 
-/**
- * Extension of {@link AbstractFilter}, still abstract, limits the U parameter to {@link Number}s.
- */
+import javafx.util.StringConverter;
+
+/// Extension of [AbstractFilter], still abstract, limits the U parameter to [Numbers][Number].
 public abstract class NumberFilter<T, U extends Number> extends AbstractFilter<T, U> {
 
     //================================================================================

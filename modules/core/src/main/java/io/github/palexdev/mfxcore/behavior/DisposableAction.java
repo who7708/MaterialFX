@@ -18,13 +18,9 @@
 
 package io.github.palexdev.mfxcore.behavior;
 
-/**
- * Public API for every action that should be disposed once it's not needed anymore
- */
+/// Public API for every action that should be disposed once it's not necessary anymore
 public interface DisposableAction {
 
-    /**
-     * Disposes this action.
-     */
+    /// Disposes this action.
     void dispose();
 }

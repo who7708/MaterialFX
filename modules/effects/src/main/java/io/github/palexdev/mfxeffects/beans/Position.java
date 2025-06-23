@@ -18,16 +18,14 @@
 
 package io.github.palexdev.mfxeffects.beans;
 
+import java.util.Objects;
+
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 
-import java.util.Objects;
-
-/**
- * Simple bean that keeps track of two coordinates, x and y.
- * <p>
- * Both are JavaFX properties to allow dynamic uses.
- */
+/// Simple bean that keeps track of two coordinates, x and y.
+///
+/// Both are JavaFX properties to allow dynamic uses.
 public class Position {
     //================================================================================
     // Properties
@@ -53,9 +51,7 @@ public class Position {
         return new Position(x, y);
     }
 
-    /**
-     * @return a new {@code Position} object with both x and y set to 0
-     */
+    /// @return a new `Position` object with both x and y set to 0
     public static Position origin() {
         return of(0, 0);
     }
@@ -88,9 +84,7 @@ public class Position {
         return x.get();
     }
 
-    /**
-     * The x coordinate property.
-     */
+    /// The x coordinate property.
     public DoubleProperty xProperty() {
         return x;
     }
@@ -103,9 +97,7 @@ public class Position {
         return y.get();
     }
 
-    /**
-     * The y coordinate property
-     */
+    /// The y coordinate property
     public DoubleProperty yProperty() {
         return y;
     }

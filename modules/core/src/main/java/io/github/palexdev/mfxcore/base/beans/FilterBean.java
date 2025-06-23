@@ -18,25 +18,24 @@
 
 package io.github.palexdev.mfxcore.base.beans;
 
-import io.github.palexdev.mfxcore.enums.ChainMode;
-import io.github.palexdev.mfxcore.filter.base.AbstractFilter;
-
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
-/**
- * A simple bean that has all the necessary information to produce a {@link Predicate}
- * for a given T object type.
- * <p></p>
- * It wraps the following data:
- * <p> - A String which is the query
- * <p> - An object of type {@link AbstractFilter}, which is effectively responsible for producing the {@link Predicate}
- * <p> - A {@link BiPredicateBean}, which is used by {@link AbstractFilter}, see {@link AbstractFilter#predicateFor(String)} or {@link AbstractFilter#predicateFor(String, BiPredicate)}
- * <p> - A {@link ChainMode} enumeration to specify how this filter should be combined with other filters
- *
- * @param <T> the type of objects to filter
- * @param <U> the type of objects on which the {@link BiPredicate} operates
- */
+import io.github.palexdev.mfxcore.enums.ChainMode;
+import io.github.palexdev.mfxcore.filter.base.AbstractFilter;
+
+/// A simple bean that has all the necessary information to produce a [Predicate]
+/// for a given T object type.
+///
+/// It wraps the following data:
+/// - A String which is the query
+/// - An object of type [AbstractFilter], which is effectively responsible for producing the [Predicate]
+/// - A [BiPredicateBean], which is used by [AbstractFilter], see [AbstractFilter#predicateFor(String)] or
+///  [AbstractFilter#predicateFor(String,BiPredicate)]
+/// - A [ChainMode] enumeration to specify how this filter should be combined with other filters
+///
+/// @param <T> the type of objects to filter
+/// @param <U> the type of objects on which the [BiPredicate] operates
 public class FilterBean<T, U> {
     //================================================================================
     // Properties
@@ -64,58 +63,42 @@ public class FilterBean<T, U> {
     // Methods
     //================================================================================
 
-    /**
-     * Calls {@link AbstractFilter#predicateFor(String)} with the query specified by this bean.
-     */
+    /// Calls [AbstractFilter#predicateFor(String)] with the query specified by this bean.
     public Predicate<T> predicate() {
         return filter.predicateFor(query);
     }
 
-    /**
-     * @return the query, see {@link AbstractFilter} documentation for more info about the query
-     */
+    /// @return the query, see [AbstractFilter] documentation for more info about the query
     public String getQuery() {
         return query;
     }
 
-    /**
-     * @return the {@link AbstractFilter} specified by this bean
-     */
+    /// @return the [AbstractFilter] specified by this bean
     public AbstractFilter<T, U> getFilter() {
         return filter;
     }
 
-    /**
-     * Delegate for {@link AbstractFilter#name()}.
-     */
+    /// Delegate for [AbstractFilter#name()].
     public String getFilterName() {
         return filter.name();
     }
 
-    /**
-     * @return the {@link BiPredicateBean} specified by this bean
-     */
+    /// @return the [BiPredicateBean] specified by this bean
     public BiPredicateBean<U, U> getPredicateBean() {
         return predicateBean;
     }
 
-    /**
-     * Delegate for {@link BiPredicateBean#getName()}.
-     */
+    /// Delegate for [BiPredicateBean#getName()].
     public String getPredicateName() {
         return predicateBean.getName();
     }
 
-    /**
-     * @return the {@link ChainMode} enumeration that specifies how this filter should be chained with other filters.
-     */
+    /// @return the [ChainMode] enumeration that specifies how this filter should be chained with other filters.
     public ChainMode getMode() {
         return mode;
     }
 
-    /**
-     * Sets the chain mode to the specified one.
-     */
+    /// Sets the chain mode to the specified one.
     public void setMode(ChainMode mode) {
         this.mode = mode;
     }

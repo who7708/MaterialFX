@@ -20,9 +20,7 @@ package io.github.palexdev.mfxcore.base.properties;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
 
-/**
- * Simple extension of {@link ReadOnlyObjectWrapper} for {@link Character}s.
- */
+/// Simple extension of [ReadOnlyObjectWrapper] for [Characters][Character].
 public class CharProperty extends ReadOnlyObjectWrapper<Character> {
 
     //================================================================================

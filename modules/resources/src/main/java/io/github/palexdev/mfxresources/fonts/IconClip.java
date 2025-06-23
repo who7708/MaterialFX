@@ -31,12 +31,10 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 
-/**
- * Simple record to create a clip Node of the desired shape and radius.
- * <p>
- * The {@code radius} parameter can have different meaning depending on the shape. For example, for a {@link Circle}
- * it represents its size, while for a {@link Rectangle} it represents the arcs' width and height.
- */
+/// Simple record to create a clip Node of the desired shape and radius.
+///
+/// The `radius` parameter can have different meanings depending on the shape. For example, for a [Circle]
+/// it represents its size, while for a [Rectangle] it represents the arcs' width and height.
 public record IconClip(
     ClipShape shape,
     double radius
@@ -57,14 +55,10 @@ public record IconClip(
     // Inner Classes
     //================================================================================
 
-    /**
-     * Enumeration to represent the various possible shapes of a clip node.
-     */
+    /// Enumeration to represent the various possible shapes of a clip node.
     public enum ClipShape {
-        /**
-         * Creates a {@link Circle} clip which will be centered on its "parent". The radius is either the given parameter
-         * if positive, otherwise it's given by the maximum between the parent's width and height, divided by two.
-         */
+        /// Creates a [Circle] clip which will be centered on its "parent". The radius is either the given parameter
+        /// if positive; otherwise it's given by the maximum between the parent's width and height, divided by two.
         ROUNDED {
             @Override
             public Node buildClip(Region region, double radius) {
@@ -81,10 +75,8 @@ public record IconClip(
             }
         },
 
-        /**
-         * Creates a {@link Rectangle} clip which will have the same width and height of its "parent". The clip is rounded
-         * by the given radius parameter.
-         */
+        /// Creates a [Rectangle] clip which will have the same width and height of its "parent". The clip is rounded
+        /// by the given radius parameter.
         SQUARED {
             @Override
             public Node buildClip(Region region, double radius) {
@@ -97,23 +89,20 @@ public record IconClip(
             }
         };
 
-        /**
-         * Builds the clip node with the shape indicated by the constant, the given radius, for the given "parent".
-         *
-         * @param region the "parent" on which the clip will be applied, note that the clip is not set automatically
-         * @param radius the clip's radius, the actual meaning depends on the shape
-         */
+        /// Builds the clip node with the shape indicated by the constant, the given radius, for the given "parent".
+        ///
+        /// @param region the "parent" on which the clip will be applied, note that the clip is not set automatically
+        /// @param radius the clip's radius, the actual meaning depends on the shape
         public abstract Node buildClip(Region region, double radius);
     }
 
-    /**
-     * Extension of {@link StyleConverter} which allows setting a clip for a node that adds the related CSS metadata from
-     * CSS. Unfortunately, JavaFX seems to parse sequence properties in special ways internally (like -fx-font) and therefore
-     * there doesn't seem to be any way but to make this a string.
-     * <p></p>
-     * <b>Usage:</b> {@code -property: <shape> <radius>} where {@code <shape>} is the name of a constant from {@link ClipShape}
-     * (can be lowercase) and {@code <radius>} is a number (size units are supported).
-     */
+    /// Extension of [StyleConverter] which allows setting a clip for a node that adds the related CSS metadata from
+    /// CSS. Unfortunately, JavaFX seems to parse sequence properties in special ways internally (like -fx-font) and therefore
+    /// there doesn't seem to be any way but to make this a string.
+    ///
+    ///
+    /// **Usage:** `-property: <shape> <radius>` where `<shape>` is the name of a constant from [ClipShape]
+    /// (can be lowercase) and `<radius>` is a number (size units are supported).
     public static class IconClipConverter extends StyleConverter<String, IconClip> {
         private static final IconClipConverter INSTANCE = new IconClipConverter();
 

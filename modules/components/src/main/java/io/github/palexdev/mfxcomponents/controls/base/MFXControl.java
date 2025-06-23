@@ -21,7 +21,6 @@ package io.github.palexdev.mfxcomponents.controls.base;
 import io.github.palexdev.mfxcore.behavior.BehaviorBase;
 import io.github.palexdev.mfxcore.controls.Control;
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
-import io.github.palexdev.mfxcore.controls.SkinBase;
 import javafx.scene.Node;
 
 /// Extension of [Control] and base class for all `MaterialFX` components. The goal is to have a separate hierarchy of
@@ -29,8 +28,6 @@ import javafx.scene.Node;
 ///
 /// In addition to the features brought by [Control], this also implements [MFXStyleable] and makes size computation methods
 /// public.
-///
-/// **Note:** the correct way to change the skin is to call [#changeSkin(SkinBase)].
 // TODO tooltip integration
 public abstract class MFXControl<B extends BehaviorBase<? extends Node>> extends Control<B> implements MFXStyleable {
 

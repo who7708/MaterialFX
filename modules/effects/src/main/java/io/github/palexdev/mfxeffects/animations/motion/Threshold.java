@@ -20,11 +20,9 @@ package io.github.palexdev.mfxeffects.animations.motion;
 
 import io.github.palexdev.mfxeffects.animations.base.Curve;
 
-/**
- * A curve that is 0.0 until it hits the threshold, then it jumps to 1.0.
- * <p>
- * <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_threshold.mp4>Threshold</a>
- */
+/// A curve that is `0.0` until it hits the threshold, then it jumps to `1.0`.
+///
+/// [Threshold](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_threshold.mp4)
 public class Threshold extends Curve {
     private final double threshold;
 

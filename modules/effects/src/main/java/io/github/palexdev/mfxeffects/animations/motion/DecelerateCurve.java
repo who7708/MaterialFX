@@ -20,12 +20,9 @@ package io.github.palexdev.mfxeffects.animations.motion;
 
 import io.github.palexdev.mfxeffects.animations.base.Curve;
 
-/**
- * A curve where the rate of change starts out quickly and then decelerates; an
- * upside-down {@code `f(t) = t²`} parabola.
- * <p></p>
- * <a href=https://flutter.github.io/assets-for-api-docs/assets/animation/curve_decelerate.mp4>Decelerate</a>
- */
+/// A curve where the rate of change starts out quickly and then decelerates; an upside-down ``f(t) = t²`` parabola.
+///
+/// [Decelerate](https://flutter.github.io/assets-for-api-docs/assets/animation/curve_decelerate.mp4)
 public class DecelerateCurve extends Curve {
     @Override
     public double curve(double t) {

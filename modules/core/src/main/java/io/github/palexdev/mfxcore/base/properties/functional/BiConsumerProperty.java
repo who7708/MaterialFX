@@ -18,17 +18,15 @@
 
 package io.github.palexdev.mfxcore.base.properties.functional;
 
+import java.util.function.BiConsumer;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 
-import java.util.function.BiConsumer;
-
-/**
- * Simply an {@link ObjectProperty} that wraps a {@link BiConsumer}.
- *
- * @param <T> the consumer's first argument
- * @param <U> the consumer's second argument
- */
+/// Simply a [ObjectProperty] that wraps a [BiConsumer].
+///
+/// @param <T> the consumer's first argument
+/// @param <U> the consumer's second argument
 public class BiConsumerProperty<T, U> extends ReadOnlyObjectWrapper<BiConsumer<T, U>> {
 
     //================================================================================
