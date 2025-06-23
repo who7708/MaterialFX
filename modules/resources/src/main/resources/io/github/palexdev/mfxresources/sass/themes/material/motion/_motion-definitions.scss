@@ -20,8 +20,9 @@
 
 @mixin MaterialButtonsMotion() {
   // FIXME timing function is incorrect due to JavaFX limitation not accepting numbers < 0 || > 1
-  .mfx-button {
-    transition-property        : -fx-background-radius;
+  .mfx-button,
+  .mfx-icon-button {
+    transition-property : -fx-background-color, -fx-background-radius;
     transition-timing-function : cubic-bezier(0.27, 1, 0.18, 1.0);
     transition-duration        : md-duration('standard-fast-spatial');
 
@@ -64,13 +65,14 @@
   }
 
   /* I hate this framework sometimes... */
-  .mfx-button.outlined {
+  .mfx-button.outlined,
+  .mfx-icon-button.outlined {
     &.xs,
     &.s,
     &.m,
     &.l,
     &.xl {
-      transition-property        : -fx-background-radius, -fx-border-radius;
+      transition-property : -fx-background-color, -fx-background-radius, -fx-border-radius;
       transition-timing-function : cubic-bezier(0.27, 1, 0.18, 1.0);
       transition-duration        : md-duration('standard-fast-spatial');
     }
