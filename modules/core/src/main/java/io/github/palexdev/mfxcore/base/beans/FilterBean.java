@@ -88,9 +88,9 @@ public class FilterBean<T, U> {
         return predicateBean;
     }
 
-    /// Delegate for [BiPredicateBean#getName()].
+    /// Delegate for [BiPredicateBean#name()].
     public String getPredicateName() {
-        return predicateBean.getName();
+        return predicateBean.name();
     }
 
     /// @return the [ChainMode] enumeration that specifies how this filter should be chained with other filters.

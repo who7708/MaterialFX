@@ -26,32 +26,11 @@ import java.util.function.BiPredicate;
 ///
 /// @param <T> the type of the first predicate's argument
 /// @param <U> the type of the second predicate's argument
-public class BiPredicateBean<T, U> {
-    //================================================================================
-    // Properties
-    //================================================================================
-    private final String name;
-    private final BiPredicate<T, U> predicate;
+public record BiPredicateBean<T, U>(String name, BiPredicate<T, U> predicate) {
 
     //================================================================================
-    // Constructors
+    // Overridden Methods
     //================================================================================
-    public BiPredicateBean(String name, BiPredicate<T, U> predicate) {
-        this.name = name;
-        this.predicate = predicate;
-    }
-
-    //================================================================================
-    // Getters
-    //================================================================================
-    public String getName() {
-        return name;
-    }
-
-    public BiPredicate<T, U> getPredicate() {
-        return predicate;
-    }
-
     @Override
     public String toString() {
         return name;

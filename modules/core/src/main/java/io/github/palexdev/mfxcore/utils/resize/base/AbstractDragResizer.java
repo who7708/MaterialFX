@@ -148,28 +148,18 @@ public abstract class AbstractDragResizer<T extends Node> {
             false, false, false, false, true, false, false, false, false, false, null));
     }
 
-    // TODO refactor if upgrading jdk
     protected Cursor getCursorByZone(Zone zone) {
-        switch (zone) {
-            case TOP_LEFT:
-                return Cursor.NW_RESIZE;
-            case TOP_CENTER:
-                return Cursor.N_RESIZE;
-            case TOP_RIGHT:
-                return Cursor.NE_RESIZE;
-            case BOTTOM_LEFT:
-                return Cursor.SW_RESIZE;
-            case BOTTOM_RIGHT:
-                return Cursor.SE_RESIZE;
-            case BOTTOM_CENTER:
-                return Cursor.S_RESIZE;
-            case CENTER_LEFT:
-                return Cursor.W_RESIZE;
-            case CENTER_RIGHT:
-                return Cursor.E_RESIZE;
-            default:
-                return Cursor.DEFAULT;
-        }
+        return switch (zone) {
+            case TOP_LEFT -> Cursor.NW_RESIZE;
+            case TOP_CENTER -> Cursor.N_RESIZE;
+            case TOP_RIGHT -> Cursor.NE_RESIZE;
+            case BOTTOM_LEFT -> Cursor.SW_RESIZE;
+            case BOTTOM_RIGHT -> Cursor.SE_RESIZE;
+            case BOTTOM_CENTER -> Cursor.S_RESIZE;
+            case CENTER_LEFT -> Cursor.W_RESIZE;
+            case CENTER_RIGHT -> Cursor.E_RESIZE;
+            default -> Cursor.DEFAULT;
+        };
     }
 
     protected Zone getZoneByEvent(MouseEvent event) {

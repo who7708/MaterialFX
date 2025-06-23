@@ -590,10 +590,10 @@ public class Animations {
         /// Builds the KeyFrames to hide the specified node in the AnimationsData bean, by fading it out.
         public final TimelineBuilder hide(AnimationsData data) {
             add(
-                KeyFrames.of(Duration.ZERO, data.getNode().opacityProperty(), 1.0),
-                KeyFrames.of(data.getDuration(), data.getNode().opacityProperty(), 0.0)
+                KeyFrames.of(Duration.ZERO, data.node().opacityProperty(), 1.0),
+                KeyFrames.of(data.duration(), data.node().opacityProperty(), 0.0)
             );
-            setOnFinished(data.getOnFinished());
+            setOnFinished(data.onFinished());
             return this;
         }
 
@@ -631,10 +631,10 @@ public class Animations {
         /// Creates and adds a fade in animation for each given [AnimationsData].
         public final TimelineBuilder show(AnimationsData data) {
             add(
-                KeyFrames.of(Duration.ZERO, data.getNode().opacityProperty(), 0.0),
-                KeyFrames.of(data.getDuration(), data.getNode().opacityProperty(), 1.0)
+                KeyFrames.of(Duration.ZERO, data.node().opacityProperty(), 0.0),
+                KeyFrames.of(data.duration(), data.node().opacityProperty(), 1.0)
             );
-            setOnFinished(data.getOnFinished());
+            setOnFinished(data.onFinished());
             return this;
         }
 

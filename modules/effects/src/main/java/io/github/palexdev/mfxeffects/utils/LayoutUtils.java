@@ -102,30 +102,19 @@ public class LayoutUtils {
     }
 
     private static double computeXOffset(double areaWidth, double contentWidth, HPos hAlignment) {
-        switch (hAlignment) {
-            case LEFT:
-                return 0;
-            case CENTER:
-                return (areaWidth - contentWidth) / 2;
-            case RIGHT:
-                return areaWidth - contentWidth;
-            default:
-                throw new AssertionError("Unhandled hPos");
-        }
+        return switch (hAlignment) {
+            case LEFT -> 0;
+            case CENTER -> (areaWidth - contentWidth) / 2;
+            case RIGHT -> areaWidth - contentWidth;
+        };
     }
 
     private static double computeYOffset(double areaHeight, double contentHeight, VPos vAlignment) {
-        switch (vAlignment) {
-            case BASELINE:
-            case TOP:
-                return 0;
-            case CENTER:
-                return (areaHeight - contentHeight) / 2;
-            case BOTTOM:
-                return areaHeight - contentHeight;
-            default:
-                throw new AssertionError("Unhandled vPos");
-        }
+        return switch (vAlignment) {
+            case BASELINE, TOP -> 0;
+            case CENTER -> (areaHeight - contentHeight) / 2;
+            case BOTTOM -> areaHeight - contentHeight;
+        };
     }
 
     public static void resize(Region parent, Node node, double w, double h) {

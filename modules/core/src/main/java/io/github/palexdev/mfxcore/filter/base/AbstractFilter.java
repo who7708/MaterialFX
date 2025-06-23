@@ -116,7 +116,7 @@ public abstract class AbstractFilter<T, U> {
         checkIndex();
         int index = getSelectedPredicateIndex();
         U convertedInput = getValue(input);
-        return t -> predicates.get(index).getPredicate().test(extractor.apply(t), convertedInput);
+        return t -> predicates.get(index).predicate().test(extractor.apply(t), convertedInput);
     }
 
     /// Produces a [Predicate] from the given input and [BiPredicate].

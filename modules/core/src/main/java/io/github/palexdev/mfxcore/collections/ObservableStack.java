@@ -263,6 +263,7 @@ public class ObservableStack<E> extends SimpleListProperty<E> {
             return type.getChangedObj().size();
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public List<E> getRemoved() {
             return wasRemoved() ? type.getChangedObj() :
