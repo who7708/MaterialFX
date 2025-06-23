@@ -16,14 +16,35 @@
  * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'buttons' as *;
-@use 'buttons-group' as *;
-@use 'iconbuttons' as *;
-@use 'layers' as *;
+@mixin MaterialButtonsGroup() {
+  .mfx-buttons-group {
+    > .mfx-button > .surface {
+      -mfx-elevation : NONE !important;
+    }
 
-@mixin MaterialComponents() {
-  @include SurfaceRipples();
-  @include MaterialButtons();
-  @include MaterialIconButtons();
-  @include MaterialButtonsGroup();
+    &.xs {
+      -mfx-spacing : 18px;
+    }
+
+    &.s {
+      -mfx-spacing : 12px;
+    }
+
+    &.m,
+    &.l,
+    &.xl {
+      -mfx-spacing : 8px;
+    }
+
+    &.connected {
+      -mfx-spacing : 2px;
+
+      > .mfx-button.xs,
+      > .mfx-icon-button.xs,
+      > .mfx-button.s,
+      > .mfx-icon-button.s, {
+        -fx-min-width : 48px;
+      }
+    }
+  }
 }

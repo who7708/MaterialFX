@@ -809,3 +809,32 @@
 .mfx-icon-button.tonal.toggle:selected > .surface {
   -fx-background-color: -md-sys-color-on-secondary
 }
+
+.mfx-buttons-group > .mfx-button > .surface {
+  -mfx-elevation: NONE !important
+}
+
+.mfx-buttons-group.xs {
+  -mfx-spacing: 18px
+}
+
+.mfx-buttons-group.s {
+  -mfx-spacing: 12px
+}
+
+.mfx-buttons-group.l,
+.mfx-buttons-group.m,
+.mfx-buttons-group.xl {
+  -mfx-spacing: 8px
+}
+
+.mfx-buttons-group.connected {
+  -mfx-spacing: 2px
+}
+
+.mfx-buttons-group.connected > .mfx-button.s,
+.mfx-buttons-group.connected > .mfx-button.xs,
+.mfx-buttons-group.connected > .mfx-icon-button.s,
+.mfx-buttons-group.connected > .mfx-icon-button.xs {
+  -fx-min-width: 48px
+}
