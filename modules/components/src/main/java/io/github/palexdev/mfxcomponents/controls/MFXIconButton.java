@@ -19,6 +19,7 @@
 package io.github.palexdev.mfxcomponents.controls;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import io.github.palexdev.mfxcomponents.skins.MFXButtonSkin;
 import io.github.palexdev.mfxcomponents.skins.MFXIconButtonSkin;
@@ -106,15 +107,14 @@ public class MFXIconButton extends MFXButton {
     //================================================================================
     // Overridden Methods
     //================================================================================
+    @Override
+    public Supplier<SkinBase<?, ?>> defaultSkinProvider() {
+        return () -> new MFXIconButtonSkin(this);
+    }
 
     @Override
     public List<String> defaultStyleClasses() {
         return MFXStyleable.styleClasses("mfx-icon-button");
-    }
-
-    @Override
-    protected SkinBase<?, ?> buildSkin() {
-        return new MFXIconButtonSkin(this);
     }
 
     //================================================================================

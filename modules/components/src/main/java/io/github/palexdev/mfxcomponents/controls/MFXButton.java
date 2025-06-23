@@ -138,13 +138,13 @@ public class MFXButton extends MFXSelectable<MFXButtonBehavior> implements WithV
     }
 
     @Override
-    protected SkinBase<?, ?> buildSkin() {
-        return new MFXButtonSkin<>(this);
+    public Supplier<MFXButtonBehavior> defaultBehaviorProvider() {
+        return () -> new MFXButtonBehavior(this);
     }
 
     @Override
-    public Supplier<MFXButtonBehavior> defaultBehaviorProvider() {
-        return () -> new MFXButtonBehavior(this);
+    public Supplier<SkinBase<?, ?>> defaultSkinProvider() {
+        return () -> new MFXButtonSkin<>(this);
     }
 
     @Override
