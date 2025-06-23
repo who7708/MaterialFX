@@ -253,7 +253,7 @@ public class MFXSurface extends Region implements MFXStyleable {
         @Override
         protected void invalidated() {
             ElevationLevel lvl = get();
-            if (lvl == ElevationLevel.NONE) {
+            if (lvl == null || lvl == ElevationLevel.NONE) {
                 owner.setEffect(null);
                 return;
             }
