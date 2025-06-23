@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Parisi Alessandro - alessandro.parisi406@gmail.com
+ * Copyright (C) 2025 Parisi Alessandro - alessandro.parisi406@gmail.com
  * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX)
  *
  * MaterialFX is free software: you can redistribute it and/or
@@ -18,13 +18,13 @@
 
 package unit.props;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.base.beans.Size;
 import io.github.palexdev.mfxcore.base.properties.PositionProperty;
 import io.github.palexdev.mfxcore.base.properties.SizeProperty;
 import org.junit.jupiter.api.Test;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

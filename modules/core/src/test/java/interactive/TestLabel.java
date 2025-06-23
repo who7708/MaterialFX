@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Parisi Alessandro - alessandro.parisi406@gmail.com
+ * Copyright (C) 2025 Parisi Alessandro - alessandro.parisi406@gmail.com
  * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX)
  *
  * MaterialFX is free software: you can redistribute it and/or
@@ -18,6 +18,8 @@
 
 package interactive;
 
+import java.util.concurrent.TimeoutException;
+
 import io.github.palexdev.mfxcore.controls.Label;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -30,8 +32,6 @@ import org.testfx.api.FxRobot;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
-
-import java.util.concurrent.TimeoutException;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;

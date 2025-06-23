@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Parisi Alessandro - alessandro.parisi406@gmail.com
+ * Copyright (C) 2025 Parisi Alessandro - alessandro.parisi406@gmail.com
  * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX)
  *
  * MaterialFX is free software: you can redistribute it and/or
@@ -18,13 +18,13 @@
 
 package io.github.palexdev.mfxcore.builders.base;
 
-import javafx.beans.Observable;
-import javafx.beans.binding.Binding;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
+
+import javafx.beans.Observable;
+import javafx.beans.binding.Binding;
 
 public abstract class BindingBuilder<T, B extends Binding<? super T>> {
     protected List<Observable> sources = new ArrayList<>();

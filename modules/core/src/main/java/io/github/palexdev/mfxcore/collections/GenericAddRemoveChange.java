@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Parisi Alessandro - alessandro.parisi406@gmail.com
+ * Copyright (C) 2025 Parisi Alessandro - alessandro.parisi406@gmail.com
  * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX)
  *
  * MaterialFX is free software: you can redistribute it and/or
@@ -18,11 +18,11 @@
 
 package io.github.palexdev.mfxcore.collections;
 
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-
 import java.util.Collections;
 import java.util.List;
+
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 
 abstract class NonIterableChange<E> extends ListChangeListener.Change<E> {
     private final int from;

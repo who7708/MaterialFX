@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Parisi Alessandro - alessandro.parisi406@gmail.com
+ * Copyright (C) 2025 Parisi Alessandro - alessandro.parisi406@gmail.com
  * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX)
  *
  * MaterialFX is free software: you can redistribute it and/or
@@ -18,6 +18,8 @@
 
 package io.github.palexdev.mfxeffects.animations;
 
+import java.util.function.Supplier;
+
 import io.github.palexdev.mfxeffects.animations.base.ITransitionType;
 import io.github.palexdev.mfxeffects.beans.Position;
 import io.github.palexdev.mfxeffects.beans.Size;
@@ -32,8 +34,6 @@ import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
-
-import java.util.function.Supplier;
 
 public class TransitionPane extends StackPane {
     //================================================================================

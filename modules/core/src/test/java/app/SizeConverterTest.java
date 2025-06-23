@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Parisi Alessandro - alessandro.parisi406@gmail.com
+ * Copyright (C) 2025 Parisi Alessandro - alessandro.parisi406@gmail.com
  * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX)
  *
  * MaterialFX is free software: you can redistribute it and/or
@@ -18,6 +18,8 @@
 
 package app;
 
+import java.util.List;
+
 import io.github.palexdev.mfxcore.base.beans.Size;
 import io.github.palexdev.mfxcore.base.properties.styleable.StyleableSizeProperty;
 import io.github.palexdev.mfxcore.base.properties.styleable.StyleableSizeProperty.SizeConverter;
@@ -35,8 +37,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-
-import java.util.List;
 
 import static io.github.palexdev.mfxcore.utils.RandomUtils.random;
 

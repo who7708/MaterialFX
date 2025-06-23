@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Parisi Alessandro - alessandro.parisi406@gmail.com
+ * Copyright (C) 2025 Parisi Alessandro - alessandro.parisi406@gmail.com
  * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX)
  *
  * MaterialFX is free software: you can redistribute it and/or
@@ -18,6 +18,8 @@
 
 package unit.bindings;
 
+import java.util.function.Function;
+
 import io.github.palexdev.mfxcore.base.beans.Size;
 import io.github.palexdev.mfxcore.base.bindings.*;
 import io.github.palexdev.mfxcore.base.bindings.base.Updater;
@@ -26,8 +28,6 @@ import io.github.palexdev.mfxcore.enums.BindingState;
 import javafx.beans.property.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.*;
 

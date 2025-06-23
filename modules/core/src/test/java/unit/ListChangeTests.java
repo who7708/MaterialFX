@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Parisi Alessandro - alessandro.parisi406@gmail.com
+ * Copyright (C) 2025 Parisi Alessandro - alessandro.parisi406@gmail.com
  * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX)
  *
  * MaterialFX is free software: you can redistribute it and/or
@@ -18,15 +18,15 @@
 
 package unit;
 
+import java.util.*;
+import java.util.stream.IntStream;
+
 import io.github.palexdev.mfxcore.base.beans.range.IntegerRange;
 import io.github.palexdev.mfxcore.utils.fx.FXCollectors;
 import io.github.palexdev.mfxcore.utils.fx.ListChangeHelper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.junit.jupiter.api.Test;
-
-import java.util.*;
-import java.util.stream.IntStream;
 
 import static io.github.palexdev.mfxcore.utils.fx.ListChangeHelper.shiftOnAdd;
 import static io.github.palexdev.mfxcore.utils.fx.ListChangeHelper.shiftOnRemove;

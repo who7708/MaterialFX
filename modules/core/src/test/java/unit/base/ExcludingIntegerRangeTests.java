@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Parisi Alessandro - alessandro.parisi406@gmail.com
+ * Copyright (C) 2025 Parisi Alessandro - alessandro.parisi406@gmail.com
  * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX)
  *
  * MaterialFX is free software: you can redistribute it and/or
@@ -18,13 +18,13 @@
 
 package unit.base;
 
-import io.github.palexdev.mfxcore.base.beans.range.ExcludingIntegerRange;
-import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import io.github.palexdev.mfxcore.base.beans.range.ExcludingIntegerRange;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
