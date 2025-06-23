@@ -29,34 +29,28 @@ import javafx.scene.control.Skin;
 
 /**
  * Base class that can be used as a starting point to implement UI components that perfectly integrate with the new Behavior
- * API, see {@link BehaviorBase}.
- * <p>
- * Extends {@link javafx.scene.control.Control} and implements, {@link WithBehavior}.
+ * and Skin APIs, see {@link WithBehavior} and {@link MFXSkinnable}.
  * <p>
  * The integration with the new Behavior API is achieved by having a specific property, {@link #behaviorProviderProperty()},
- * which allows to change at any time the component's behavior. The property automatically handles initialization and disposal
+ * which allows changing at any time the component's behavior. The property automatically handles initialization and disposal
  * of behaviors. A reference to the current built behavior object is kept to be retrieved via {@link #getBehavior()}.
  * <p></p>
  * Enforces the use of {@link SkinBase} instances as Skin implementations and makes the {@link #createDefaultSkin()}
- * final thus denying users to override it. To set custom skins, you should override the new provided method {@link #buildSkin()}.
+ * final thus denying users to override it. Similar to the behavior, to set custom skins, you can:
+ * <p> - Use the provider property, {@link #skinProviderProperty()}
+ * <p> - Override {@link #buildSkin()} <b>(not recommended)</b>
+ * <p> - Call {@link #setSkin(Skin)} directly <b>(absolutely not recommended)</b>
  * <p>
- * I wanted to avoid adding a listener of the skin property for memory and performance reasons. Every time a skin is created,
- * it's needed to pass the current built behavior to the skin for initialization. A good hook place for this call was the
- * {@link #createDefaultSkin()} method, but this would make it harder for users to override it because then you would also
- * have to take into account the behavior initialization. Having a new method maintains the usual simplicity of setting
- * custom skins while avoiding listeners for better performance. For this reason, if you want to change the skin while still
- * making use of the behavior API, then <b>the correct way</b> to do it is to use {@link #changeSkin(SkinBase)} as it will
- * ensure the initialization of the behavior and overall the correct state of the component.
+ * The skin provider is more of a convenience to the user that does not need to inline-override the method responsible for
+ * creating the skin. The new mechanism is much more flexible and automatically integrates with the behavior API.
  * <p>
  * As a consequence, components that inherit from this do not support the "-fx-skin" CSS property. You'll have to do it in code.
- * <p>
- * Unfortunately, I cannot prevent users from still using the aforementioned method, but I can guarantee you using that
- * will cause issues and undesired behaviors. You have been warned.
  *
  * @param <B> the behavior type used by the component
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
-public abstract class Control<B extends BehaviorBase<? extends Node>> extends javafx.scene.control.Control implements WithBehavior<B> {
+public abstract class Control<B extends BehaviorBase<? extends Node>>
+    extends javafx.scene.control.Control implements WithBehavior<B>, MFXSkinnable<SkinBase<?, ?>> {
     //================================================================================
     // Properties
     //================================================================================
@@ -70,6 +64,15 @@ public abstract class Control<B extends BehaviorBase<? extends Node>> extends ja
             if (skin != null && behavior != null) skin.initBehavior(behavior);
         }
     };
+    private final SupplierProperty<SkinBase<?, ?>> skinProvider = new SupplierProperty<>() {
+        @Override
+        protected void invalidated() {
+            // Do not run if createDefaultSkin() has not been called yet.
+            // The downside of this is that if setSkin(...) is called before, then the provider is ignored
+            if (getSkin() != null)
+                setSkin(buildSkin());
+        }
+    };
 
     //================================================================================
     // Constructors
@@ -78,53 +81,40 @@ public abstract class Control<B extends BehaviorBase<? extends Node>> extends ja
 
     {
         setDefaultBehaviorProvider();
+        setDefaultSkinProvider();
     }
-
-    //================================================================================
-    // Abstract Methods
-    //================================================================================
-
-    /**
-     * Create a new instance of the default skin for this component.
-     */
-    protected abstract SkinBase<?, ?> buildSkin();
 
     //================================================================================
     // Methods
     //================================================================================
 
     /**
-     * Since this is deeply integrated with the new behavior API, and since the {@link #setSkin(Skin)} method cannot
-     * be overridden, and finally to avoid adding listeners, this is the method to use when you want to change the skin.
+     * This is the core method responsible for creating the component's skin when the {@link #skinProviderProperty()}
+     * changes. Does not allow {@code null} skins and automatically call {@link SkinBase#initBehavior(BehaviorBase)}}
+     * with the current behavior.
      * <p></p>
-     * Unfortunately, I cannot prevent users from still using the aforementioned method, but I can guarantee you using that
-     * will cause issues and undesired behaviors. You have been warned.
+     * Note that the very first skin instance is created by JavaFX with the usual {@link #createDefaultSkin()}.
      */
-    public void changeSkin(SkinBase<?, ?> skin) {
+    protected SkinBase<?, ?> buildSkin() {
+        SkinBase skin = getSkinProvider().get();
         if (skin == null)
             throw new IllegalArgumentException("The new skin cannot be null!");
-        if (behavior != null) behavior.dispose();
-        behavior = getBehaviorProvider().get();
-        ((SkinBase) skin).initBehavior(behavior);
-        setSkin(skin);
+        skin.initBehavior(behavior);
+        return skin;
     }
-
-    /**
-     * Subclasses can change the actions to perform if the component is being used in SceneBuilder
-     * by overriding this method. Typically called automatically on components' initialization.
-     */
-    protected void sceneBuilderIntegration() {}
-
 
     //================================================================================
     // Overridden Methods
     //================================================================================
 
+    /**
+     * {@inheritDoc}
+     * <p></p>
+     * Overridden to be final and to delegate to {@link #buildSkin()}}. We still need this to initialize the component.
+     */
     @Override
     protected final SkinBase<?, ?> createDefaultSkin() {
-        SkinBase skin = buildSkin();
-        if (behavior != null) skin.initBehavior(behavior);
-        return skin;
+        return buildSkin();
     }
 
     //================================================================================
@@ -136,17 +126,12 @@ public abstract class Control<B extends BehaviorBase<? extends Node>> extends ja
     }
 
     @Override
-    public Supplier<B> getBehaviorProvider() {
-        return behaviorProvider.get();
-    }
-
-    @Override
     public SupplierProperty<B> behaviorProviderProperty() {
         return behaviorProvider;
     }
 
     @Override
-    public void setBehaviorProvider(Supplier<B> behaviorProvider) {
-        this.behaviorProvider.set(behaviorProvider);
+    public SupplierProperty<SkinBase<?, ?>> skinProviderProperty() {
+        return skinProvider;
     }
 }

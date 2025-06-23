@@ -32,7 +32,7 @@ import io.github.palexdev.mfxcore.observables.When;
  * Extension of {@link javafx.scene.control.SkinBase} used by components that want a seamless integration with the new Behavior API.
  * The skin is responsible for initializing the behavior as needed.
  * <p></p>
- * This integration defines a specific and recommended to follow strategy to develop UI components. There are three main parts:
+ * This integration defines a specific and recommended strategy to develop UI components. There are three main parts:
  * <p> - the Control, which is the component, the class has all its specs
  * <p> - the View, defines the component's look/layout
  * <p> - the Behavior, defines what the component can do and how
@@ -59,9 +59,9 @@ import io.github.palexdev.mfxcore.observables.When;
  * which means it also adds the necessary listeners to monitor property changes.
  * <p></p>
  * The development flow for controls with the new Behavior and Skin API would be:
- * <p> - Have a components that extends either {@link Control}, {@link Labeled} or any of their subclasses
+ * <p> - Have a component that extends either {@link Control}, {@link Labeled} or any of their subclasses
  * <p> - Having an implementation of this base Skin, either one of the already provided or a custom one
- * <p> - Having a behavior class and set the provider on the component
+ * <p> - Having a behavior class and set the provider on the component, or using {@link BehaviorBase} if you don't need it
  * <p> - Override the {@link #initBehavior(BehaviorBase)} to initialize the behavior if needed
  * <p> - Initialization and changes to the behavior provider are automatically handled, hassle-free
  */
