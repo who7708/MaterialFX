@@ -1,0 +1,136 @@
+/*
+ * Copyright (C) 2025 Parisi Alessandro - alessandro.parisi406@gmail.com
+ * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX)
+ *
+ * MaterialFX is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * MaterialFX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package io.github.palexdev.mfxcomponents.skins;
+
+import io.github.palexdev.mfxcomponents.behaviors.MFXButtonsGroupBehavior;
+import io.github.palexdev.mfxcomponents.controls.MFXButtonsGroup;
+import io.github.palexdev.mfxcore.builders.InsetsBuilder;
+import io.github.palexdev.mfxcore.controls.SkinBase;
+import io.github.palexdev.mfxcore.utils.fx.LayoutUtils;
+import javafx.beans.binding.Bindings;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.VPos;
+import javafx.scene.Node;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
+
+import static io.github.palexdev.mfxcore.observables.When.onInvalidated;
+
+/// Default skin implementation for all [MFXButtonsGroups][MFXButtonsGroup].
+///
+/// This skin uses behaviors of type [MFXButtonsGroupBehavior].
+///
+/// The layout is simple: every button is [MFXButtonsGroup#getButtons()] is positioned in a row spaced by
+/// the [MFXButtonsGroup#spacingProperty()]'s value, just like a [HBox].
+///
+/// The peculiarity of this skin is that it also clips the component. Material 3 specs show that the first and the last
+/// buttons are fully rounded at the left and at the right respectively. Implementing this in CSS would have been a nightmare,
+/// as it would also break the animations.
+public class MFXButtonsGroupSkin extends SkinBase<MFXButtonsGroup, MFXButtonsGroupBehavior> {
+
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public MFXButtonsGroupSkin(MFXButtonsGroup group) {
+        super(group);
+        buildClip();
+        addListeners();
+    }
+
+    //================================================================================
+    // Methods
+    //================================================================================
+
+    /// Adds listeners to the following properties:
+    /// - [MFXButtonsGroup#spacingProperty()] to update the layout.
+    protected void addListeners() {
+        MFXButtonsGroup group = getSkinnable();
+        Bindings.bindContent(getChildren(), group.getButtons());
+        listeners(
+            onInvalidated(group.spacingProperty()).then(_ -> group.requestLayout())
+        );
+    }
+
+    /// Builds and sets the clip for the [MFXButtonsGroup], making the first and last buttons appear rounded.
+    protected void buildClip() {
+        Region clip = new Region();
+        clip.setBackground(new Background(new BackgroundFill(
+            Color.WHITE,
+            InsetsBuilder.uniform(999.0).toRadius(false),
+            Insets.EMPTY))
+        );
+        getSkinnable().setClip(clip);
+    }
+
+    //================================================================================
+    // Overridden Methods
+    //================================================================================
+    @Override
+    protected double computePrefWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
+        double spacing = getSkinnable().getSpacing();
+        return getChildren().stream()
+                   .mapToDouble(LayoutUtils::snappedBoundWidth)
+                   .sum() + leftInset + rightInset + (spacing * (getChildren().size() - 1));
+    }
+
+    @Override
+    protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
+        return getChildren().stream()
+                   .mapToDouble(LayoutUtils::snappedBoundHeight)
+                   .max()
+                   .orElse(0.0) + topInset + bottomInset;
+    }
+
+    @Override
+    protected double computeMaxWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
+        return getSkinnable().prefWidth(height);
+    }
+
+    @Override
+    protected double computeMaxHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
+        return getSkinnable().prefHeight(width);
+    }
+
+    @Override
+    protected void layoutChildren(double x, double y, double w, double h) {
+        MFXButtonsGroup group = getSkinnable();
+        double advance = 0.0;
+        for (Node child : getChildren()) {
+            layoutInArea(child, x + advance, y, w, h, 0.0, HPos.LEFT, VPos.CENTER);
+            advance += child.getLayoutBounds().getWidth() + group.getSpacing();
+        }
+
+        Node clip = group.getClip();
+        if (clip != null) {
+            clip.resizeRelocate(0, 0, group.getWidth(), group.getHeight());
+        }
+    }
+
+    @Override
+    public void dispose() {
+        MFXButtonsGroup group = getSkinnable();
+        Bindings.unbindContent(getChildren(), group.getButtons());
+        getChildren().clear();
+        super.dispose();
+    }
+}

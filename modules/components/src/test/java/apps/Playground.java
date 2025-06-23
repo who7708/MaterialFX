@@ -19,17 +19,13 @@
 package apps;
 
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 import io.github.palexdev.mfxcomponents.controls.MFXButton;
+import io.github.palexdev.mfxcomponents.controls.MFXButtonsGroup;
 import io.github.palexdev.mfxcomponents.controls.MFXIconButton;
 import io.github.palexdev.mfxcomponents.controls.base.MFXButtonBase;
 import io.github.palexdev.mfxcomponents.theming.PseudoClasses;
-import io.github.palexdev.mfxcomponents.variants.button.ShapeVariant;
-import io.github.palexdev.mfxcomponents.variants.button.SizeVariant;
-import io.github.palexdev.mfxcomponents.variants.button.StyleVariant;
-import io.github.palexdev.mfxcomponents.variants.button.WidthVariant;
+import io.github.palexdev.mfxcomponents.variants.button.*;
 import io.github.palexdev.mfxcore.base.TriFunction;
 import io.github.palexdev.mfxcore.builders.InsetsBuilder;
 import io.github.palexdev.mfxcore.utils.fx.CSSFragment;
@@ -53,8 +49,16 @@ public class Playground extends Application {
 
     @Override
     public void start(Stage stage) {
-        StackPane root = new StackPane(createTestGrid());
+        StackPane root = new StackPane(createTest());
         root.setPadding(InsetsBuilder.uniform(48).get());
+        CSSFragment.Builder.build()
+            .select(".root")
+            .background("-md-sys-color-background")
+            .style("-fx-background-image: url(\"dot.png\")")
+            .style("-fx-background-repeat: repeat")
+            .select(".root:dark")
+            .style("-fx-background-image: url(\"dot-on-dark.png\")")
+            .applyOn(root);
 
         Scene scene = new Scene(root, 800, 600);
         scene.getStylesheets().addAll(
@@ -68,58 +72,15 @@ public class Playground extends Application {
     }
 
     Parent createTest() {
-        boolean toggles = false;
-        StyleVariant style = StyleVariant.ELEVATED;
-        ShapeVariant shape = ShapeVariant.ROUNDED;
-
-        String[] text = new String[]{"Enabled", "Disabled", "Hovered", "Focused", "Pressed"};
-        String[] states = new String[]{"", "disabled", "hover", "focus-visible", "pressed"};
-
-        Function<Consumer<HBox>, HBox> generator = cfg -> {
-            HBox box = new HBox(20);
-            box.setAlignment(Pos.CENTER);
-            box.setPadding(InsetsBuilder.uniform(48.0).get());
-            cfg.accept(box);
-            for (int i = 0; i < 5; i++) {
-                MFXButton btn = new MFXButton(text[i], FontAwesomeSolid.random());
-                btn.setToggleable(toggles);
-                btn.setStyle(style);
-                btn.setShape(shape);
-                if (!states[i].isEmpty()) {
-                    PseudoClasses.setOn(btn, states[i].toLowerCase(), true);
-                    btn.setFocusTraversable(false);
-                    btn.setMouseTransparent(true);
-                }
-                box.getChildren().add(btn);
-            }
-            return box;
-        };
-
-        HBox top = generator.apply(box ->
-            box.setStyle("""
-                -fx-background-color: -md-sys-color-background;
-                -fx-background-radius: 24px 24px 0px 0px;
-                -fx-border-color: -md-sys-color-outline -md-sys-color-outline transparent -md-sys-color-outline;
-                -fx-border-insets: -1px;
-                -fx-border-radius: 24px 24px 0px 0px;
-                """)
-        );
-        HBox bottom = generator.apply(box -> {
-            box.setStyle("""
-                -fx-background-color: -md-sys-color-background;
-                -fx-background-radius: 0px 0px 24px 24px;
-                -fx-border-color: transparent -md-sys-color-outline -md-sys-color-outline -md-sys-color-outline;
-                -fx-border-insets: -1px;
-                -fx-border-radius: 0px 0px 24px 24px;
-                """);
-            box.getStyleClass().add("root");
-            PseudoClasses.setOn(box, "dark", true);
-        });
-
-        VBox box = new VBox(top, bottom);
-        box.setAlignment(Pos.CENTER);
-        box.setPadding(InsetsBuilder.uniform(24.0).get());
-        return box;
+        return new MFXButtonsGroup().addButtons(
+                "First", FontAwesomeSolid.random(),
+                "Second", FontAwesomeSolid.random(),
+                "Third", FontAwesomeSolid.random()
+            ).setButtonsConfig(MFXButtonsGroup.ButtonsConfig.DEFAULT
+                .withStyle(StyleVariant.FILLED)
+                .withSize(SizeVariant.S)
+                .withShape(ShapeVariant.SQUARED))
+            .setGroupType(GroupVariant.CONNECTED);
     }
 
     Parent createTestGrid() {
