@@ -18,15 +18,16 @@
 
 package io.github.palexdev.mfxcore.behavior;
 
+import java.util.function.Supplier;
+
 import io.github.palexdev.mfxcore.base.properties.functional.SupplierProperty;
 import javafx.scene.Node;
-
-import java.util.function.Supplier;
 
 /**
  * Public API for all components that want to integrate with the new Behavior API.
  *
  * @param <B> the type of behavior the component will use
+ * @see BehaviorBase
  */
 public interface WithBehavior<B extends BehaviorBase<? extends Node>> {
 
@@ -40,17 +41,21 @@ public interface WithBehavior<B extends BehaviorBase<? extends Node>> {
      */
     Supplier<B> defaultBehaviorProvider();
 
-    Supplier<B> getBehaviorProvider();
+    default Supplier<B> getBehaviorProvider() {
+        return behaviorProviderProperty().get();
+    }
 
     /**
      * Specifies the {@link Supplier} used to produce a behavior object for the component.
      */
     SupplierProperty<B> behaviorProviderProperty();
 
-    void setBehaviorProvider(Supplier<B> factory);
+    default void setBehaviorProvider(Supplier<B> factory) {
+        behaviorProviderProperty().set(factory);
+    }
 
     /**
-     * Restores the components behavior to the default one using {@link #defaultBehaviorProvider()}
+     * Restores the component's behavior to the default one using {@link #defaultBehaviorProvider()}
      * and {@link #setBehaviorProvider(Supplier)}.
      */
     default void setDefaultBehaviorProvider() {
