@@ -33,8 +33,7 @@ import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(ApplicationExtension.class)
 public class TestLabel {
@@ -56,22 +55,19 @@ public class TestLabel {
             pane.getChildren().add(label);
         });
 
-        assertTrue(label.getTextNode().isEmpty());
+        assertNull(label.getTextNode());
         assertFalse(label.isTruncated());
 
         robot.interact(() -> label.setText("This text should be long enough to test the label properly"));
-        assertTrue(label.getTextNode().isPresent());
+        assertNotNull(label.getTextNode());
         assertFalse(label.isTruncated());
 
         robot.interact(() -> label.setMaxWidth(100));
         assertTrue(label.isTruncated());
 
-        robot.interact(() -> label.setForceDisableTextEllipsis(true));
+        robot.interact(() -> label.setDisableTruncation(true));
         assertFalse(label.isTruncated());
         // assertFalse(label.isTextTruncated()); I knew it!
-
-        // Dispose
-        robot.interact(() -> label.setForceDisableTextEllipsis(false));
     }
 
     StackPane setupStage() {

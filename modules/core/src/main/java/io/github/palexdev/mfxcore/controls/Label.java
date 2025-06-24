@@ -23,18 +23,21 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
+import io.github.palexdev.mfxcore.base.properties.styleable.StyleableBooleanProperty;
 import io.github.palexdev.mfxcore.base.properties.styleable.StyleableDoubleProperty;
 import io.github.palexdev.mfxcore.base.properties.styleable.StyleableObjectProperty;
-import io.github.palexdev.mfxcore.observables.When;
 import io.github.palexdev.mfxcore.utils.fx.StyleUtils;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.css.CssMetaData;
 import javafx.css.Styleable;
 import javafx.css.StyleablePropertyFactory;
 import javafx.scene.Node;
 import javafx.scene.control.Skin;
 import javafx.scene.control.skin.LabelSkin;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.Text;
 
@@ -43,43 +46,45 @@ import javafx.scene.text.Text;
 ///
 /// For `Labels` this should be handled by setting its max width and by enabling the [#wrapTextProperty()].
 /// However, this may not lead to the desired behavior, and it's not very intuitive as well.
-/// Let me explain, by setting the max width, you are limiting the label's width regardless the state of [#wrapTextProperty()].
+/// Let me explain, by setting the max width, you are limiting the label's width regardless of the state of [#wrapTextProperty()].
 /// But there are cases in which you may want to limit the width only if the text should be wrapped.
 /// And here's when this comes in handy. The property can be set via code or CSS ('-fx-wrapping-width' property),
 /// and it's implemented by overriding the [#computeMaxWidth(double)] method.
 /// If the text should be wrapped and the specified wrapping width is greater than 0, then the latter will be used
 /// as the label's max width. Otherwise, use the default computation.
 ///
-/// This also adds a new feature/workaround. In JavaFX, Labels are composed by two nodes at max: the icon/graphic and the
-/// text. For performance reasons, probably, the text node is not added to the control until the text is not null and not empty.
+/// This also adds a new feature/workaround. In JavaFX, Labels are composed of two nodes at max: the graphic and the text.
+/// For performance reasons, probably, the text node is not added to the control until the text is not `null` and not empty.
 /// A mechanism to detect and retrieve such node has been added, allowing custom text-based components to take full control
 /// of the text node itself rather than the label as a whole.
 ///
+/// The presence of this node can be detected via the read-only property [#textNodeProperty()]. You can set an action to
+/// perform when the text node changes easily by setting a [BiConsumer] that accepts both the old and the new node (both can be `null`),
+/// see [#onSetTextNode(BiConsumer)].
+///
 /// This allows implementing three other useful tricks:
-///  1) 'Backport' the [#fontSmoothingTypeProperty()] here, allowing to set the antialiasing method directly on the label.
+///  1) A way to completely disable the text truncation by always showing the full text and removing the clip
+///     (Now much more performant than previous implementation, no listeners involved. Everything is done at layout time
+///     in a custom inline-skin.)
+///  2) 'Backport' the [#fontSmoothingTypeProperty()] here, allowing to set the antialiasing method directly on the label.
 ///  The default font smoothing type for this is set to [FontSmoothingType#LCD].
-///  2) A way to completely disable the text truncation by always showing the full text and removing the clip
 ///  3) A way to detect when the label's text is truncated, [#truncatedProperty()].
+///     _(Use this instead of the new JavaFX property!)_
 ///
-/// Note: in newer versions of JavaFX this feature has been added through the [#textTruncatedProperty()].
-///
-/// **Edit: tested, and it still returns `true` if the text is not truncated anymore! Use mine instead**
-///
-/// #### Warning
-///
-/// Remember to properly dispose of this when not needed anymore by setting [#setForceDisableTextEllipsis(boolean)] to
-/// `false`!
 public class Label extends javafx.scene.control.Label {
     //================================================================================
     // Properties
     //================================================================================
-    protected Node textNode;
-    private BiConsumer<Node, Node> onSetTextNode = (o, n) -> {};
-
-    private When<?> whenFDTE;
-    private boolean forceDisableTextEllipsis = false;
-
-    private final ReadOnlyBooleanWrapper truncated = new ReadOnlyBooleanWrapper(false);
+    private final ReadOnlyObjectWrapper<Text> textNode = new ReadOnlyObjectWrapper<>() {
+        @Override
+        public void set(Text newValue) {
+            Text oldValue = get();
+            onSetTextNode(oldValue, newValue);
+            super.set(newValue);
+        }
+    };
+    private final ReadOnlyBooleanWrapper truncated = new ReadOnlyBooleanWrapper();
+    private BiConsumer<Text, Text> onSetTextNode = (_, _) -> {};
 
     //================================================================================
     // Constructors
@@ -97,65 +102,51 @@ public class Label extends javafx.scene.control.Label {
     //================================================================================
     // Methods
     //================================================================================
-
-    /// Responsible for setting the text node instance as well as running the user-specified callback,
-    /// [#onSetTextNode(BiConsumer)], and invoking [#updateFDTE()].
-    protected void setTextNode(Node textNode) {
-        if (textNode instanceof Text tn) {
-            tn.fontSmoothingTypeProperty().bind(fontSmoothingTypeProperty());
-            onSetTextNode.accept(this.textNode, textNode);
-            updateFDTE();
-            truncated.bind(tn.textProperty().map(s -> {
-                if (forceDisableTextEllipsis) return false;
+    protected void onSetTextNode(Text oldValue, Text newValue) {
+        truncated.unbind();
+        if (newValue != null) {
+            truncated.bind(newValue.textProperty().map(s -> {
+                if (getDisableTruncation()) return false;
                 return !Objects.equals(s, getText());
             }));
-            this.textNode = textNode;
         }
-    }
-
-    /// This is responsible for completely removing the text truncation capability of the label. Runs only after the text
-    /// node has been retrieved by [#setTextNode(Node)].
-    ///
-    ///
-    /// **How does it work?**
-    ///
-    /// First things first, how the JavaFX truncation mechanism works. There are effectively two separate text properties:
-    /// one comes from the label itself, and the other is from the text node in its skin. The two are not bound. In fact,
-    /// the property that specifies what's being shown by the label is the one from the text node (yeah, the one we forcefully
-    /// retrieve here). When the text is truncated, the property from the label will return the full text, instead the one from
-    /// the text node will return the truncated text.
-    ///
-    /// Knowing this, we use a [When] construct (so a listener) on the text node's property so that every time it
-    /// changes (it is truncated) we set it back to the full string. Yes, it's a brute force approach, but as far as I know,
-    /// it's the only way; you know how it is JavaFX... private, final, immutable, boring...
-    ///
-    /// Additionally, the listener is also responsible for removing the clip applied to the text node. It appears that
-    /// the text is not only truncated but also clipped for some reason, so restoring the full text may not be enough in some
-    /// cases.
-    protected void updateFDTE() {
-        if (!forceDisableTextEllipsis) {
-            if (whenFDTE != null) {
-                whenFDTE.dispose();
-                whenFDTE = null;
-            }
-            return;
-        }
-
-        Text textNode = (Text) this.textNode;
-        if (textNode == null || whenFDTE != null) return;
-        whenFDTE = When.onChanged(textNode.textProperty())
-            .then((o, n) -> {
-                textNode.setClip(null);
-                textNode.setText(getText());
-            })
-            .invalidating(textNode.clipProperty())
-            .executeNow()
-            .listen();
+        onSetTextNode.accept(oldValue, newValue);
     }
 
     //================================================================================
     // Overridden Methods
     //================================================================================
+    @Override
+    protected Skin<?> createDefaultSkin() {
+        return new LabelSkin(this) {
+            @Override
+            protected void updateChildren() {
+                super.updateChildren();
+                for (Node child : getChildren()) {
+                    if (child instanceof Text t) {
+                        textNode.set(t);
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            protected void layoutChildren(double x, double y, double w, double h) {
+                super.layoutChildren(x, y, w, h);
+
+                if (!getDisableTruncation()) return;
+                System.out.println("Setting!");
+                Text tn = getTextNode();
+                if (tn != null) {
+                    tn.setText(getText());
+                    if (tn.getClip() instanceof Rectangle r) {
+                        r.setWidth(Double.MAX_VALUE);
+                    }
+                }
+            }
+        };
+    }
+
     @Override
     protected double computeMaxWidth(double height) {
         double maxW = super.computeMaxWidth(height);
@@ -164,26 +155,22 @@ public class Label extends javafx.scene.control.Label {
         return maxW;
     }
 
-    @Override
-    protected Skin<?> createDefaultSkin() {
-        return new LabelSkin(this) {
-            @Override
-            protected void updateChildren() {
-                super.updateChildren();
-                if (textNode != null) return;
-
-                if (getChildren().size() == 1 && getGraphic() == null) {
-                    setTextNode(getChildren().get(0));
-                } else if (getChildren().size() > 1) {
-                    setTextNode(getChildren().get(1));
-                }
-            }
-        };
-    }
-
     //================================================================================
     // Styleable Properties
     //================================================================================
+    private final StyleableBooleanProperty disableTruncation = new StyleableBooleanProperty(
+        StyleableProperties.DISABLE_TRUNCATION,
+        this,
+        "disableTruncation",
+        false
+    ) {
+        @Override
+        protected void invalidated() {
+            onSetTextNode(null, getTextNode());
+            requestLayout();
+        }
+    };
+
     private final StyleableObjectProperty<FontSmoothingType> fontSmoothingType = new StyleableObjectProperty<>(
         StyleableProperties.FONT_SMOOTHING_TYPE,
         this,
@@ -196,7 +183,27 @@ public class Label extends javafx.scene.control.Label {
         this,
         "wrappingWidth",
         USE_COMPUTED_SIZE
-    );
+    ) {
+        @Override
+        protected void invalidated() {
+            requestLayout();
+        }
+    };
+
+    public boolean getDisableTruncation() {
+        return disableTruncation.get();
+    }
+
+    /// Specifies whether to completely disable the text truncation capabilities of this label.
+    ///
+    /// Can be set from CSS via the property: '-fx-disable-truncation'.
+    public StyleableBooleanProperty disableTruncationProperty() {
+        return disableTruncation;
+    }
+
+    public void setDisableTruncation(boolean disableTruncation) {
+        this.disableTruncation.set(disableTruncation);
+    }
 
     public FontSmoothingType getFontSmoothingType() {
         return fontSmoothingType.get();
@@ -237,6 +244,13 @@ public class Label extends javafx.scene.control.Label {
         private static final StyleablePropertyFactory<Label> FACTORY = new StyleablePropertyFactory<>(javafx.scene.control.Label.getClassCssMetaData());
         private static final List<CssMetaData<? extends Styleable, ?>> cssMetaDataList;
 
+        private static final CssMetaData<Label, Boolean> DISABLE_TRUNCATION =
+            FACTORY.createBooleanCssMetaData(
+                "-fx-disable-truncation",
+                Label::disableTruncationProperty,
+                false
+            );
+
         private static final CssMetaData<Label, FontSmoothingType> FONT_SMOOTHING_TYPE =
             FACTORY.createEnumCssMetaData(
                 FontSmoothingType.class,
@@ -252,10 +266,11 @@ public class Label extends javafx.scene.control.Label {
                 USE_COMPUTED_SIZE
             );
 
+
         static {
             cssMetaDataList = StyleUtils.cssMetaDataList(
                 javafx.scene.control.Label.getClassCssMetaData(),
-                FONT_SMOOTHING_TYPE, WRAPPING_WIDTH
+                DISABLE_TRUNCATION, FONT_SMOOTHING_TYPE, WRAPPING_WIDTH
             );
         }
     }
@@ -272,36 +287,29 @@ public class Label extends javafx.scene.control.Label {
     //================================================================================
     // Getters/Setters
     //================================================================================
-
-    /// Null-safe getter for retrieving the instance of the text node for this label.
-    public Optional<Node> getTextNode() {
-        return Optional.ofNullable(textNode);
+    public Text getTextNode() {
+        return textNode.get();
     }
 
-    /// Sets the callback that executes when the text node is detected and stored.
-    public void onSetTextNode(BiConsumer<Node, Node> action) {
-        this.onSetTextNode = action;
-    }
-
-    public boolean isForceDisableTextEllipsis() {
-        return forceDisableTextEllipsis;
-    }
-
-    /// Enables/disables the listener responsible for completely removing the text truncation capabilities from the label.
-    ///
-    /// @see #updateFDTE()
-    public void setForceDisableTextEllipsis(boolean forceDisableTextEllipsis) {
-        this.forceDisableTextEllipsis = forceDisableTextEllipsis;
-        updateFDTE();
+    /// Specifies the text node of this label or `null` if the skin has not created the text node yet.
+    public ReadOnlyObjectProperty<Text> textNodeProperty() {
+        return textNode.getReadOnlyProperty();
     }
 
     public boolean isTruncated() {
         return truncated.get();
     }
 
-    /// This property allows the user to observe the text property that corresponds to the visualized string, to check
-    /// whether the full text is truncated or not
+    /// Specifies whether the text is currently truncated or not.
     public ReadOnlyBooleanProperty truncatedProperty() {
         return truncated.getReadOnlyProperty();
+    }
+
+    /// Sets the action to execute when the text node is detected and stored.
+    ///
+    /// Accepts both the old and the new node so that if you need to dispose of something on the old one, you can.
+    public void onSetTextNode(BiConsumer<Text, Text> onSetTextNode) {
+        this.onSetTextNode = Optional.ofNullable(onSetTextNode)
+            .orElse((_, _) -> {});
     }
 }
