@@ -15,14 +15,18 @@
   - [x] CSS
 
 - Icon Buttons
-  - [ ] Button and toggle modes
-  - [ ] Variants: standard, filled, tonal, outlined
-  - [ ] Preset sizes: xs, s, m, l, xl
-  - [ ] Preset widths: default, narrow, wide
-  - [ ] Preset shapes: round and square
-  - [ ] Shape morphs
-  - [ ] Focus ring
-  - [ ] CSS
+  - [x] Button and toggle modes
+  - [x] Variants: standard, filled, tonal, outlined
+  - [x] Preset sizes: xs, s, m, l, xl
+  - [x] Preset widths: default, narrow, wide
+  - [x] Preset shapes: round and square
+  - [x] Shape morphs
+  - [x] Focus ring
+  - [x] CSS
+
+- Button Groups
+  - [x] Variants: standard and connected
+  - [x] CSS
 
 #### Misc
 
