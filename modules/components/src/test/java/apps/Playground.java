@@ -22,10 +22,11 @@ import java.util.function.BiFunction;
 
 import io.github.palexdev.mfxcomponents.controls.MFXButton;
 import io.github.palexdev.mfxcomponents.controls.MFXButtonsGroup;
+import io.github.palexdev.mfxcomponents.controls.MFXButtonsGroup.ButtonsConfig;
 import io.github.palexdev.mfxcomponents.controls.MFXIconButton;
 import io.github.palexdev.mfxcomponents.controls.base.MFXButtonBase;
 import io.github.palexdev.mfxcomponents.theming.PseudoClasses;
-import io.github.palexdev.mfxcomponents.variants.button.*;
+import io.github.palexdev.mfxcomponents.variants.ButtonVariants.*;
 import io.github.palexdev.mfxcore.base.TriFunction;
 import io.github.palexdev.mfxcore.builders.InsetsBuilder;
 import io.github.palexdev.mfxcore.utils.fx.CSSFragment;
@@ -76,7 +77,7 @@ public class Playground extends Application {
                 "First", FontAwesomeSolid.random(),
                 "Second", FontAwesomeSolid.random(),
                 "Third", FontAwesomeSolid.random()
-            ).setButtonsConfig(MFXButtonsGroup.ButtonsConfig.DEFAULT
+            ).setButtonsConfig(ButtonsConfig.DEFAULT
                 .withStyle(StyleVariant.FILLED)
                 .withSize(SizeVariant.S)
                 .withShape(ShapeVariant.SQUARED))

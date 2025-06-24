@@ -16,18 +16,26 @@
  * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.palexdev.mfxcomponents.variants.button;
+package io.github.palexdev.mfxcomponents.variants.api;
 
-import io.github.palexdev.mfxcomponents.variants.Variant;
 
-public enum WidthVariant implements Variant {
-    DEFAULT,
-    NARROW,
-    WIDE,
-    ;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
-    @Override
-    public String variantStyleClass() {
-        return name().toLowerCase();
+/// A simple interface indicating that a component supports variants.
+///
+/// They are handled internally by the [VariantsHandler] class.
+public interface WithVariants {
+
+    /// @return a [Set] containing all the applied variants
+    Map<Class<?>, Variant> getAppliedVariants();
+
+    /// @return whether the given variant is contained in [#getAppliedVariants()]
+    default boolean isVariantApplied(Variant variant) {
+        return Optional.ofNullable(getAppliedVariants().get(variant.getClass()))
+            .map(v -> Objects.equals(v, variant))
+            .orElse(false);
     }
 }

@@ -16,17 +16,12 @@
  * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.palexdev.mfxcomponents.variants.button;
+package io.github.palexdev.mfxcomponents.variants.api;
 
-import io.github.palexdev.mfxcomponents.variants.Variant;
+/// Some UI components may have different styles. This interface defines how variants are implemented.
+/// A variant simply is a style class that can be applied on a component to change its appearance or behavior.
+public interface Variant {
 
-public enum GroupVariant implements Variant {
-    STANDARD,
-    CONNECTED,
-    ;
-
-    @Override
-    public String variantStyleClass() {
-        return name().toLowerCase();
-    }
+    /// @return the style class that identifies this variant
+    String variantStyleClass();
 }

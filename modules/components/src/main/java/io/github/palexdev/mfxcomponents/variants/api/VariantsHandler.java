@@ -16,7 +16,7 @@
  * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.palexdev.mfxcomponents.variants;
+package io.github.palexdev.mfxcomponents.variants.api;
 
 import java.util.LinkedHashSet;
 import java.util.Map;

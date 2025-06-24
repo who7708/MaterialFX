@@ -23,10 +23,10 @@ import java.util.function.Supplier;
 
 import io.github.palexdev.mfxcomponents.skins.MFXButtonSkin;
 import io.github.palexdev.mfxcomponents.skins.MFXIconButtonSkin;
-import io.github.palexdev.mfxcomponents.variants.button.ShapeVariant;
-import io.github.palexdev.mfxcomponents.variants.button.SizeVariant;
-import io.github.palexdev.mfxcomponents.variants.button.StyleVariant;
-import io.github.palexdev.mfxcomponents.variants.button.WidthVariant;
+import io.github.palexdev.mfxcomponents.variants.ButtonVariants.ShapeVariant;
+import io.github.palexdev.mfxcomponents.variants.ButtonVariants.SizeVariant;
+import io.github.palexdev.mfxcomponents.variants.ButtonVariants.StyleVariant;
+import io.github.palexdev.mfxcomponents.variants.ButtonVariants.WidthVariant;
 import io.github.palexdev.mfxcore.base.properties.styleable.StyleableBooleanProperty;
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.controls.SkinBase;
