@@ -47,12 +47,27 @@ public class NodeUtils {
     }
 
     /// Centers the specified node in an `AnchorPane`.
-    // FIXME I don't think so...
-    public static void centerNodeInAnchorPane(Node node, double topBottom, double leftRight) {
-        AnchorPane.setTopAnchor(node, topBottom);
-        AnchorPane.setBottomAnchor(node, topBottom);
-        AnchorPane.setLeftAnchor(node, leftRight);
-        AnchorPane.setRightAnchor(node, leftRight);
+    ///
+    /// If the `bind` parameter is `true`, then a listener will be used to keep the node centered in case the node or
+    /// the pane sizes change.
+    public static void centerNodeInAnchorPane(AnchorPane pane, Node node, boolean bind) {
+        if (bind) {
+            When.onInvalidated(node.layoutBoundsProperty())
+                .then(b -> {
+                    double top = (pane.getHeight() - b.getHeight()) / 2.0;
+                    double left = (pane.getWidth() - b.getWidth()) / 2.0;
+                    AnchorPane.setTopAnchor(node, top);
+                    AnchorPane.setLeftAnchor(node, left);
+                })
+                .invalidating(pane.layoutBoundsProperty())
+                .listen();
+        } else {
+            Bounds b = node.getLayoutBounds();
+            double top = (pane.getHeight() - b.getHeight()) / 2.0;
+            double left = (pane.getWidth() - b.getWidth()) / 2.0;
+            AnchorPane.setTopAnchor(node, top);
+            AnchorPane.setLeftAnchor(node, left);
+        }
     }
 
     /// Checks if the specified element is in the hierarchy of the specified node.

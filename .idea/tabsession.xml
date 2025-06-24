@@ -4,13 +4,16 @@
     <state version="1" />
     <sessions>
       <session name="LastSession">
-        <files focusedFile="$PROJECT_DIR$/modules/components/src/test/java/apps/Prototype.java">
-          <file>$PROJECT_DIR$/modules/components/src/main/java/io/github/palexdev/mfxcomponents/controls/MFXIconButton.java</file>
-          <file>$PROJECT_DIR$/modules/components/src/test/java/apps/Prototype.java</file>
-          <file>$PROJECT_DIR$/modules/components/src/test/java/apps/Playground.java</file>
-          <file>$PROJECT_DIR$/modules/resources/src/main/java/io/github/palexdev/mfxresources/base/properties/IconProperty.java</file>
-          <file>$PROJECT_DIR$/modules/components/src/main/java/io/github/palexdev/mfxcomponents/skins/MFXIconButtonSkin.java</file>
+        <files focusedFile="$PROJECT_DIR$/_TODO.md">
+          <file>$PROJECT_DIR$/modules/effects/src/main/java/io/github/palexdev/mfxeffects/beans/Position.java</file>
+          <file>/AIAssistantSnippet..</file>
+          <file>/AIAssistantInput-beb68fdd-801e-41ba-aa59-651406cb64c7.chatInput</file>
           <file>$PROJECT_DIR$/modules/resources/src/main/java/io/github/palexdev/mfxresources/fonts/MFXIconWrapper.java</file>
+          <file>/Dummy.txt</file>
+          <file>$PROJECT_DIR$/modules/components/src/main/java/io/github/palexdev/mfxcomponents/controls/base/MFXControl.java</file>
+          <file>$PROJECT_DIR$/modules/core/src/main/java/io/github/palexdev/mfxcore/base/beans/Size.java</file>
+          <file>$PROJECT_DIR$/modules/core/src/main/java/io/github/palexdev/mfxcore/utils/NumberUtils.java</file>
+          <file>$PROJECT_DIR$/_TODO.md</file>
         </files>
       </session>
     </sessions>

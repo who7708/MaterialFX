@@ -108,20 +108,19 @@ public class StyleUtils {
     ///
     /// In the case of both null or empty returns [CornerRadii#EMPTY].
     public static CornerRadii parseCornerRadius(Region region) {
-        CornerRadii backRadius = CornerRadii.EMPTY;
-        CornerRadii bordRadius = CornerRadii.EMPTY;
-
         Background background = region.getBackground();
         if (background != null && !background.isEmpty()) {
-            backRadius = background.getFills().get(0).getRadii();
+            CornerRadii backRadius = background.getFills().get(0).getRadii();
+            if (!CornerRadii.EMPTY.equals(backRadius)) return backRadius;
         }
 
         Border border = region.getBorder();
         if (border != null && !border.isEmpty()) {
-            bordRadius = border.getStrokes().get(0).getRadii();
+            CornerRadii bordRadius = border.getStrokes().get(0).getRadii();
+            if (!CornerRadii.EMPTY.equals(bordRadius)) return bordRadius;
         }
 
-        return !backRadius.equals(CornerRadii.EMPTY) ? backRadius : bordRadius;
+        return CornerRadii.EMPTY;
     }
 
     @SafeVarargs

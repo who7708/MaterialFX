@@ -44,7 +44,6 @@ public class CircleDragResizer extends AbstractDragResizer<Circle> {
         node.setPickOnBounds(true);
     }
 
-    // TODO refactor if upgrading jdk
     @Override
     protected void handleDragged(MouseEvent event) {
         if (draggedZone == Zone.NONE) return;
@@ -58,49 +57,41 @@ public class CircleDragResizer extends AbstractDragResizer<Circle> {
         double newY = nodeY;
 
         switch (draggedZone) {
-            case TOP_LEFT: {
+            case TOP_LEFT -> {
                 deltaRad = -deltaY / 2;
                 newX -= deltaRad;
                 newY -= deltaRad;
-                break;
             }
-            case TOP_CENTER: {
+            case TOP_CENTER -> {
                 deltaRad = -deltaY / 2;
                 newY -= deltaRad;
-                break;
             }
-            case TOP_RIGHT: {
+            case TOP_RIGHT -> {
                 deltaRad = -deltaY / 2;
                 newX += deltaRad;
                 newY -= deltaRad;
-                break;
             }
-            case CENTER_RIGHT: {
+            case CENTER_RIGHT -> {
                 deltaRad = deltaX / 2;
                 newX += deltaRad;
-                break;
             }
-            case BOTTOM_RIGHT: {
+            case BOTTOM_RIGHT -> {
                 deltaRad = deltaY / 2;
                 newX += deltaRad;
                 newY += deltaRad;
-                break;
             }
-            case BOTTOM_CENTER: {
+            case BOTTOM_CENTER -> {
                 deltaRad = deltaY / 2;
                 newY += deltaRad;
-                break;
             }
-            case BOTTOM_LEFT: {
+            case BOTTOM_LEFT -> {
                 deltaRad = deltaY / 2;
                 newX -= deltaRad;
                 newY += deltaRad;
-                break;
             }
-            case CENTER_LEFT: {
+            case CENTER_LEFT -> {
                 deltaRad = -deltaX / 2;
                 newX -= deltaRad;
-                break;
             }
         }
 

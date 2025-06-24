@@ -65,18 +65,13 @@ public abstract class AbstractDragResizer<T extends Node> {
 
     protected abstract void handleDragged(MouseEvent event);
 
-    // TODO refactor if upgrading jdk
     public static AbstractDragResizer<? extends Node> resizerFor(Node node) {
-        if (node instanceof Region) {
-            return new RegionDragResizer(((Region) node));
-        }
-        if (node instanceof Circle) {
-            return new CircleDragResizer(((Circle) node));
-        }
-        if (node instanceof Rectangle) {
-            return new RectangleDragResizer(((Rectangle) node));
-        }
-        return null;
+        return switch (node) {
+            case Region region -> new RegionDragResizer(region);
+            case Circle circle -> new CircleDragResizer(circle);
+            case Rectangle rectangle -> new RectangleDragResizer(rectangle);
+            case null, default -> null;
+        };
     }
 
     public AbstractDragResizer<T> makeResizable() {
