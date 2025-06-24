@@ -18,6 +18,8 @@
 
 package io.github.palexdev.mfxeffects.beans;
 
+import io.github.palexdev.mfxeffects.beans.properties.SizeProperty;
+
 /// Simple record to represent the size of something as <w, h>.
 ///
 /// For usage in dynamic scenarios use the related [SizeProperty].
