@@ -20,6 +20,7 @@ package io.github.palexdev.mfxcore.base.beans;
 
 import javafx.animation.Transition;
 
+//@formatter:off fuck IntelliJ I guess
 /// This is an extension of [Position] to be used with [Transitions][Transition] that start from a point `P(x, y)` and end at a point `P1(endX, endY)`.
 ///
 /// A very basic example:
@@ -33,28 +34,18 @@ import javafx.animation.Transition;
 /// double endY = startY;
 /// // The y coordinate doesn't change, so it is equal to the start one
 /// PositionTransition position = PositionTransition.of(startX, startY, endX, endY);
-/// Transition move = new Transition(){
-///
-///@Overridevoidinterpolate(doublefrac){
+/// Transition move = new Transition() {
+///   @Override
+///   void interpolate(double frac){
 ///     p.setX(x - position.deltaX() * frac);
-///}
-///}
+///   }
+/// };
 ///```
-public class PositionTransition extends Position {
-    //================================================================================
-    // Properties
-    //================================================================================
-    private final double endX;
-    private final double endY;
-
-    //================================================================================
-    // Constructors
-    //================================================================================
-    public PositionTransition(double x, double y, double endX, double endY) {
-        super(x, y);
-        this.endX = endX;
-        this.endY = endY;
-    }
+//@formatter:on
+public record PositionTransition(
+    double startX, double startY,
+    double endX, double endY
+) {
 
     //================================================================================
     // Static Methods
@@ -64,26 +55,35 @@ public class PositionTransition extends Position {
     }
 
     //================================================================================
+    // Methods
+    //================================================================================
+    public PositionTransition withStartX(double startX) {
+        return new PositionTransition(startX, startY, endX, endY);
+    }
+
+    public PositionTransition withStartY(double startY) {
+        return new PositionTransition(startX, startY, endX, endY);
+    }
+
+    public PositionTransition withEndX(double endX) {
+        return new PositionTransition(startX, startY, endX, endY);
+    }
+
+    public PositionTransition withEndY(double endY) {
+        return new PositionTransition(startX, startY, endX, endY);
+    }
+
+    //================================================================================
     // Getters/Setters
     //================================================================================
 
-    /// @return the end x coordinate
-    public double getEndX() {
-        return endX;
-    }
-
-    /// @return the end y coordinate
-    public double getEndY() {
-        return endY;
-    }
-
     /// @return the difference between the star x and end x coordinates
     public double deltaX() {
-        return getX() - getEndX();
+        return startX() - endX();
     }
 
     /// @return the difference between the start y and end y coordinates
     public double deltaY() {
-        return getY() - getEndY();
+        return startY() - endY();
     }
 }

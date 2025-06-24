@@ -49,11 +49,11 @@ public class SizeConverterTest extends Application {
 
         Rectangle rt = new Rectangle();
         rt.widthProperty().bind(Bindings.createDoubleBinding(
-            () -> pane.getSize().getWidth(),
+            () -> pane.getSize().width(),
             pane.sizeProperty()
         ));
         rt.heightProperty().bind(Bindings.createDoubleBinding(
-            () -> pane.getSize().getHeight(),
+            () -> pane.getSize().height(),
             pane.sizeProperty()
         ));
         Button button = new Button("Set Style");

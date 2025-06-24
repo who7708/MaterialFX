@@ -24,7 +24,6 @@ import io.github.palexdev.mfxcore.base.beans.Size;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 
 /// Simple extension of [ReadOnlyObjectWrapper] for [Size] objects.
-// TODO review this as well
 public class SizeProperty extends ReadOnlyObjectWrapper<Size> {
 
     //================================================================================
@@ -54,57 +53,35 @@ public class SizeProperty extends ReadOnlyObjectWrapper<Size> {
         set(Size.of(w, h));
     }
 
-    /// Convenience method to set only the width.
-    ///
-    /// Note that if the value is `null`, a new [Size] object is created with a height of 0.0.
-    /// Also, if the value was not `null`, [#invalidated()] and [#fireValueChangedEvent()] are invoked programmatically
-    /// only if the width was different from the given one, this is needed as the object will remain the same.
+    /// Convenience method to set only the width using [Size#withWidth(double)]
     public void setWidth(double w) {
-        Optional.ofNullable(get())
-            .ifPresentOrElse(
-                s -> {
-                    boolean changed = s.getWidth() != w;
-                    s.setWidth(w);
-                    if (changed) {
-                        invalidated();
-                        fireValueChangedEvent();
-                    }
-                },
-                () -> setSize(w, 0.0)
-            );
+        set(
+            Optional.ofNullable(get())
+                .map(s -> s.withWidth(w))
+                .orElseGet(() -> Size.of(w, 0.0))
+        );
     }
 
-    /// Convenience method to set only the height.
-    ///
-    /// Note that if the value is `null`, a new [Size] object is created with a width of 0.0.
-    /// Also, if the value was not `null`, [#invalidated()], [#fireValueChangedEvent()] are invoked programmatically
-    /// only if the height was different from the given one, this is needed as the object will remain the same.
+    /// Convenience method to set only the height using [Size#withHeight(double)].
     public void setHeight(double h) {
-        Optional.ofNullable(get())
-            .ifPresentOrElse(
-                s -> {
-                    boolean changed = s.getHeight() != h;
-                    s.setHeight(h);
-                    if (changed) {
-                        invalidated();
-                        fireValueChangedEvent();
-                    }
-                },
-                () -> setSize(0.0, h)
-            );
+        set(
+            Optional.ofNullable(get())
+                .map(s -> s.withHeight(h))
+                .orElseGet(() -> Size.of(0.0, h))
+        );
     }
 
-    /// Null-safe alternative to `get().getWidth()`, if the value is null returns an invalid width of -1.0.
+    /// Null-safe alternative to `get().width()`, if the value is `null` returns an invalid width of 0.0.
     public double getWidth() {
         return Optional.ofNullable(get())
-            .map(Size::getWidth)
-            .orElse(-1.0);
+            .map(Size::width)
+            .orElse(0.0);
     }
 
-    /// Null-safe alternative to `get().getHeight()`, if the value is null returns an invalid height of -1.0.
+    /// Null-safe alternative to `get().height()`, if the value is `null` returns an invalid height of 0.0.
     public double getHeight() {
         return Optional.ofNullable(get())
-            .map(Size::getHeight)
-            .orElse(-1.0);
+            .map(Size::height)
+            .orElse(0.0);
     }
 }

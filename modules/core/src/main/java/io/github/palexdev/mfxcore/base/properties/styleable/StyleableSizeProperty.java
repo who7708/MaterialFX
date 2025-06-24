@@ -18,15 +18,15 @@
 
 package io.github.palexdev.mfxcore.base.properties.styleable;
 
-import java.util.Arrays;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import io.github.palexdev.mfxcore.base.beans.Size;
 import javafx.css.*;
 import javafx.scene.text.Font;
 
-/// Convenience [StyleableObjectProperty] for [Size], settable via CSS thanks to [SizeConverter].
-// TODO add support for units
+/// Convenience [StyleableObjectProperty] for [Size], settable via CSS thanks to the [SizeConverter].
 public class StyleableSizeProperty extends StyleableObjectProperty<Size> {
 
     //================================================================================
@@ -107,20 +107,27 @@ public class StyleableSizeProperty extends StyleableObjectProperty<Size> {
 
         @Override
         public Size convert(ParsedValue<String, Size> value, Font font) {
-            try {
-                double[] sizes = Arrays.stream(value.getValue().split(" "))
-                    .mapToDouble(Double::parseDouble)
-                    .toArray();
-                return Size.of(sizes[0], sizes[1]);
-            } catch (Exception ex) {
-                System.out.println(ex.getMessage());
-                return null;
-            }
+            String sVal = value.getValue();
+            if (sVal == null || sVal.isBlank()) return Size.zero();
+
+            String[] sVals = sVal.split(" ");
+            double[] vals = convertSize(sVals);
+            return Size.of(vals[0], vals[1]);
         }
 
-        @Override
-        public String toString() {
-            return "SizeConverter";
+        private double[] convertSize(String[] sVals) {
+            double[] sizes = new double[]{0, 0};
+            Pattern pattern = Pattern.compile("([+-]?\\d*\\.?\\d+)([a-zA-Z%]+)");
+            for (int i = 0; i < Math.min(2, sVals.length); i++) {
+                Matcher matcher = pattern.matcher(sVals[i].trim());
+                if (!matcher.matches())
+                    throw new IllegalArgumentException("Invalid size format: " + sVals[i]);
+
+                double val = Double.parseDouble(matcher.group(1));
+                SizeUnits units = SizeUnits.valueOf(matcher.group(2).toUpperCase());
+                sizes[i] = new javafx.css.Size(val, units).pixels();
+            }
+            return sizes;
         }
     }
 }

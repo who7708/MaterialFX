@@ -54,7 +54,7 @@ public class BindingsTests {
         SizeProperty size = new SizeProperty();
         StringProperty toString = new SimpleStringProperty();
 
-        Function<Size, String> fn = s -> "W:%f\nH:%f".formatted(s.getWidth(), s.getHeight());
+        Function<Size, String> fn = s -> "W:%f\nH:%f".formatted(s.width(), s.height());
 
         bindings.<String>bind()
             .target(toString)
@@ -75,7 +75,7 @@ public class BindingsTests {
         SizeProperty size = new SizeProperty();
         StringProperty toString = new SimpleStringProperty();
 
-        Function<Size, String> fn = s -> "W:%f\nH:%f".formatted(s.getWidth(), s.getHeight());
+        Function<Size, String> fn = s -> "W:%f\nH:%f".formatted(s.width(), s.height());
 
         bindings.bind(toString)
             .source(new MappingSource<Size, String>(size).setTargetUpdater(
@@ -99,7 +99,7 @@ public class BindingsTests {
         StringProperty toString = new SimpleStringProperty();
         DoubleProperty scale = new SimpleDoubleProperty();
 
-        Function<Size, String> fn = s -> "W:%f\nH:%f".formatted(s.getWidth() * scale.get(), s.getHeight() * scale.get());
+        Function<Size, String> fn = s -> "W:%f\nH:%f".formatted(s.width() * scale.get(), s.height() * scale.get());
         bindings.bind(toString)
             .source(new MappingSource.Builder<Size, String>()
                 .observable(size)

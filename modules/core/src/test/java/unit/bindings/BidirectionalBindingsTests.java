@@ -100,7 +100,7 @@ public class BidirectionalBindingsTests {
                     Updater.implicit(size)
                 ))
                 .setSourceUpdater(new MappedUpdater<>(
-                    Mapper.<Size, String>of(s -> String.valueOf(s.getWidth()))
+                    Mapper.<Size, String>of(s -> String.valueOf(s.width()))
                         .orElse(() -> ""),
                     Updater.implicit(width)
                 ))
@@ -112,7 +112,7 @@ public class BidirectionalBindingsTests {
                     Updater.implicit(size)
                 ))
                 .setSourceUpdater(new MappedUpdater<>(
-                    Mapper.<Size, Number>of(Size::getHeight).orElse(() -> 0.0),
+                    Mapper.<Size, Number>of(Size::height).orElse(() -> 0.0),
                     Updater.implicit(height)
                 ))
             )
@@ -123,11 +123,11 @@ public class BidirectionalBindingsTests {
         assertEquals(20.0, height.get());
 
         width.set("55.5");
-        assertEquals(55.5, size.get().getWidth());
+        assertEquals(55.5, size.get().width());
         assertEquals(20.0, height.get());
 
         height.set(80.0);
-        assertEquals(80.0, size.get().getHeight());
+        assertEquals(80.0, size.get().height());
         assertEquals("55.5", width.get());
 
         bindings.unbindBidirectional(size);

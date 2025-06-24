@@ -110,14 +110,14 @@ public class TextMeasurementCache extends ObjectBinding<Size> {
     // Getters/Setters
     //================================================================================
 
-    /// Applies the [#getXSnappingFunction()] on the [Size#getWidth()] value of this binding.
+    /// Applies the [#getXSnappingFunction()] on the [Size#width()] value of this binding.
     public double getSnappedWidth() {
-        return xSnappingFunction.apply(getValue().getWidth());
+        return xSnappingFunction.apply(getValue().width());
     }
 
-    /// Applies the [#getYSnappingFunction()] on the [Size#getHeight()] value of this binding.
+    /// Applies the [#getYSnappingFunction()] on the [Size#height()] value of this binding.
     public double getSnappedHeight() {
-        return ySnappingFunction.apply(getValue().getHeight());
+        return ySnappingFunction.apply(getValue().height());
     }
 
     /// @return the function responsible for rounding the computed width values.
