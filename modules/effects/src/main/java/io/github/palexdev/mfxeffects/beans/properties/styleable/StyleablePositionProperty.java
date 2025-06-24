@@ -18,14 +18,15 @@
 
 package io.github.palexdev.mfxeffects.beans.properties.styleable;
 
-import java.util.Arrays;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import io.github.palexdev.mfxeffects.beans.Position;
 import javafx.css.*;
 import javafx.scene.text.Font;
 
-/// Convenience [StyleableObjectProperty] for [Position], settable via CSS thanks to [PositionConverter].
+/// Convenience [StyleableObjectProperty] for [Position], settable via CSS thanks to the[PositionConverter].
 public class StyleablePositionProperty extends SimpleStyleableObjectProperty<Position> {
 
     //================================================================================
@@ -84,7 +85,6 @@ public class StyleablePositionProperty extends SimpleStyleableObjectProperty<Pos
         return StyleOrigin.USER_AGENT;
     }
 
-
     //================================================================================
     // Internal Classes
     //================================================================================
@@ -94,7 +94,7 @@ public class StyleablePositionProperty extends SimpleStyleableObjectProperty<Pos
     ///
     /// For this to properly work, you must use a specific format. The converter expects a string value,
     /// with two double numbers which will be in order the x and the y for the new `Position`, so:
-    /// `.node{-fx-property-name: "100 30";}`
+    /// `.node{-fx-property-name: "100px 30px";}`
     public static class PositionConverter extends StyleConverter<String, Position> {
 
         // lazy, thread-safe instantiation
@@ -115,20 +115,27 @@ public class StyleablePositionProperty extends SimpleStyleableObjectProperty<Pos
 
         @Override
         public Position convert(ParsedValue<String, Position> value, Font font) {
-            try {
-                double[] sizes = Arrays.stream(value.getValue().split(" "))
-                    .mapToDouble(Double::parseDouble)
-                    .toArray();
-                return Position.of(sizes[0], sizes[1]);
-            } catch (Exception ex) {
-                System.out.println(ex.getMessage());
-                return null;
-            }
+            String sVal = value.getValue();
+            if (sVal == null || sVal.isBlank()) return Position.origin();
+
+            String[] sVals = sVal.split(" ");
+            double[] vals = convertSize(sVals);
+            return Position.of(vals[0], vals[1]);
         }
 
-        @Override
-        public String toString() {
-            return "PositionConverter";
+        private double[] convertSize(String[] sVals) {
+            double[] sizes = new double[]{0, 0};
+            Pattern pattern = Pattern.compile("([+-]?\\d*\\.?\\d+)([a-zA-Z%]+)");
+            for (int i = 0; i < Math.min(2, sVals.length); i++) {
+                Matcher matcher = pattern.matcher(sVals[i].trim());
+                if (!matcher.matches())
+                    throw new IllegalArgumentException("Invalid size format: " + sVals[i]);
+
+                double val = Double.parseDouble(matcher.group(1));
+                SizeUnits units = SizeUnits.valueOf(matcher.group(2).toUpperCase());
+                sizes[i] = new Size(val, units).pixels();
+            }
+            return sizes;
         }
     }
 }

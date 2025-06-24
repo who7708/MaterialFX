@@ -29,8 +29,7 @@ public class PositionProperty extends ReadOnlyObjectWrapper<Position> {
     //================================================================================
     // Constructors
     //================================================================================
-    public PositionProperty() {
-    }
+    public PositionProperty() {}
 
     public PositionProperty(Position initialValue) {
         super(initialValue);
@@ -54,69 +53,49 @@ public class PositionProperty extends ReadOnlyObjectWrapper<Position> {
         set(Position.of(x, y));
     }
 
-    /// Convenience method to set only the x value.
-    /// Note that if the value is `null `, a new [Position] object is created with Y = 0.0.
-    /// Also, if the value was not `null`, [#invalidated()] and [#fireValueChangedEvent()] are invoked programmatically
-    /// only if the x was different from the given one, this is needed as the object will remain the same.
+    /// Convenience method to set only the x value using [Position#withX(double)].
     public void setX(double x) {
-        Optional.ofNullable(get())
-            .ifPresentOrElse(
-                p -> {
-                    boolean changed = p.getX() != x;
-                    p.setX(x);
-                    if (changed) {
-                        invalidated();
-                        fireValueChangedEvent();
-                    }
-                },
-                () -> setPosition(x, 0)
-            );
+        set(
+            Optional.ofNullable(get())
+                .map(p -> p.withX(x))
+                .orElseGet(() -> Position.of(x, 0))
+        );
     }
 
-    /// Convenience method to set only the y value.
-    /// Note that if the value is `null `, a new [Position] object is created with  X = 0.0.
-    /// Also, if the value was not `null`, [#invalidated()] and [#fireValueChangedEvent()] are invoked programmatically
-    /// only if the y was different from the given one, this is needed as the object will remain the same.
+    /// Convenience method to set only the y value using [Position#withY(double)]
     public void setY(double y) {
-        Optional.ofNullable(get())
-            .ifPresentOrElse(
-                p -> {
-                    boolean changed = p.getY() != y;
-                    p.setY(y);
-                    if (changed) {
-                        invalidated();
-                        fireValueChangedEvent();
-                    }
-                },
-                () -> setPosition(0, y)
-            );
+        set(
+            Optional.ofNullable(get())
+                .map(p -> p.withY(y))
+                .orElseGet(() -> Position.of(0, y))
+        );
     }
 
-    /// Null-safe alternative to `get().getX()`, if the value is null returns 0.0.
+    /// Null-safe alternative to `get().x()`, if the value is `null` returns 0.0.
     public double getX() {
         return Optional.ofNullable(get())
-            .map(Position::getX)
+            .map(Position::x)
             .orElse(0.0);
     }
 
-    /// Null-safe alternative to `get().getX()`, if the value is null returns the given value.
+    /// Null-safe alternative to `get().x()`, if the value is `null` returns the given value.
     public double getX(double or) {
         return Optional.ofNullable(get())
-            .map(Position::getX)
+            .map(Position::x)
             .orElse(or);
     }
 
-    /// Null-safe alternative to `get().getY()`, if the value is null returns 0.0.
+    /// Null-safe alternative to `get().getY()`, if the value is `null` returns 0.0.
     public double getY() {
         return Optional.ofNullable(get())
-            .map(Position::getY)
+            .map(Position::y)
             .orElse(0.0);
     }
 
-    /// Null-safe alternative to `get().getY()`, if the value is null returns the given value.
+    /// Null-safe alternative to `get().getY()`, if the value is `null` returns the given value.
     public double getY(double or) {
         return Optional.ofNullable(get())
-            .map(Position::getY)
+            .map(Position::y)
             .orElse(or);
     }
 }

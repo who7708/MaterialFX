@@ -57,10 +57,10 @@ public interface RippleGenerator {
     /// This is optional, implementations can also rely on a single phase.
     void release();
 
-    /// Shortcut for `generate(pos.getX(), pos.getY())`, although if the given position is `null` does not generate.
+    /// Shortcut for `generate(pos.x(), pos.y())`, although if the given position is `null` does not generate.
     default void generate(Position pos) {
         if (pos != null)
-            generate(pos.getX(), pos.getY());
+            generate(pos.x(), pos.y());
     }
 
     /// Implementation can specify the actions needed for the generator's disposal.

@@ -18,27 +18,10 @@
 
 package io.github.palexdev.mfxeffects.beans;
 
-import java.util.Objects;
-
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-
-/// This bean contains two [DoubleProperty] to keep track/specify the sizes of something
-/// in terms of width and height.
-public class Size {
-    //================================================================================
-    // Properties
-    //================================================================================
-    private final DoubleProperty width = new SimpleDoubleProperty(0.0);
-    private final DoubleProperty height = new SimpleDoubleProperty(0.0);
-
-    //================================================================================
-    // Constructor
-    //================================================================================
-    public Size(double width, double height) {
-        setWidth(width);
-        setHeight(height);
-    }
+/// Simple record to represent the size of something as <w, h>.
+///
+/// For usage in dynamic scenarios use the related [SizeProperty].
+public record Size(double width, double height) {
 
     //================================================================================
     // Static Methods
@@ -48,7 +31,7 @@ public class Size {
     }
 
     /// @return a new `Size` object with both width and height set to 0
-    public static Size empty() {
+    public static Size zero() {
         return of(0, 0);
     }
 
@@ -58,50 +41,13 @@ public class Size {
     }
 
     //================================================================================
-    // Overridden Methods
+    // Methods
     //================================================================================
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Size size = (Size) o;
-        return getWidth() == (size.getWidth()) && getHeight() == (size.getHeight());
+    public Size withWidth(double width) {
+        return new Size(width, height);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getWidth(), getHeight());
-    }
-
-    @Override
-    public String toString() {
-        return "W x H (" + getWidth() + " x " + getHeight() + ")";
-    }
-
-    //================================================================================
-    // Getters/Setters
-    //================================================================================
-    public double getWidth() {
-        return width.get();
-    }
-
-    public DoubleProperty widthProperty() {
-        return width;
-    }
-
-    public void setWidth(double width) {
-        this.width.set(width);
-    }
-
-    public double getHeight() {
-        return height.get();
-    }
-
-    public DoubleProperty heightProperty() {
-        return height;
-    }
-
-    public void setHeight(double height) {
-        this.height.set(height);
+    public Size withHeight(double height) {
+        return new Size(width, height);
     }
 }

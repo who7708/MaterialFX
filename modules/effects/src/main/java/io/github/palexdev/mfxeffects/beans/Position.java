@@ -18,31 +18,12 @@
 
 package io.github.palexdev.mfxeffects.beans;
 
-import java.util.Objects;
+import io.github.palexdev.mfxeffects.beans.properties.PositionProperty;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-
-/// Simple bean that keeps track of two coordinates, x and y.
+/// Simple record to represent a position as <x, y>.
 ///
-/// Both are JavaFX properties to allow dynamic uses.
-public class Position {
-    //================================================================================
-    // Properties
-    //================================================================================
-    private final DoubleProperty x = new SimpleDoubleProperty(0);
-    private final DoubleProperty y = new SimpleDoubleProperty(0);
-
-    //================================================================================
-    // Constructors
-    //================================================================================
-    public Position() {
-    }
-
-    public Position(double x, double y) {
-        setX(x);
-        setY(y);
-    }
+/// For usage in dynamic scenarios use the related [PositionProperty].
+public record Position(double x, double y) {
 
     //================================================================================
     // Static Methods
@@ -57,53 +38,13 @@ public class Position {
     }
 
     //================================================================================
-    // Overridden Methods
-    //================================================================================
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Position that = (Position) o;
-        return getX() == (that.getX()) && getY() == (that.getY());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getX(), getY());
-    }
-
-    @Override
-    public String toString() {
-        return "X|Y (" + getX() + "; " + getY() + ")";
-    }
-
-    //================================================================================
     // Methods
     //================================================================================
-    public double getX() {
-        return x.get();
+    public Position withX(double x) {
+        return new Position(x, y);
     }
 
-    /// The x coordinate property.
-    public DoubleProperty xProperty() {
-        return x;
-    }
-
-    public void setX(double xPosition) {
-        this.x.set(xPosition);
-    }
-
-    public double getY() {
-        return y.get();
-    }
-
-    /// The y coordinate property
-    public DoubleProperty yProperty() {
-        return y;
-    }
-
-    public void setY(double yPosition) {
-        this.y.set(yPosition);
+    public Position withY(double y) {
+        return new Position(x, y);
     }
 }
-
