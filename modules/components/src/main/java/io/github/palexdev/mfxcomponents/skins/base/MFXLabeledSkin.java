@@ -76,6 +76,7 @@ public abstract class MFXLabeledSkin<L extends MFXLabeled<B>, B extends Behavior
         tmCache.dispose();
         tmCache = null;
         label.getTextNode().ifPresent(n -> n.opacityProperty().unbind());
+        label.setForceDisableTextEllipsis(false);
         super.dispose();
     }
 

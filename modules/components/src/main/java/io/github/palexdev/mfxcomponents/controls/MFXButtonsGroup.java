@@ -114,7 +114,7 @@ public class MFXButtonsGroup extends MFXControl<MFXButtonsGroupBehavior> impleme
     //================================================================================
 
     /// Adds the given button to the group and sets [MFXButton#toggleableProperty()] to `true`.
-    /// <p></p>
+    ///
     /// #### Workaround!
     /// Material 3 Expressive specs show that in standard groups the buttons slightly grow when pressed. The easiest way
     /// to implement this was to scale them along the x-axis. Unfortunately, when applying the scale, all its children
