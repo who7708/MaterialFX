@@ -68,6 +68,10 @@ public class TestLabel {
 
         robot.interact(() -> label.setForceDisableTextEllipsis(true));
         assertFalse(label.isTruncated());
+        // assertFalse(label.isTextTruncated()); I knew it!
+
+        // Dispose
+        robot.interact(() -> label.setForceDisableTextEllipsis(false));
     }
 
     StackPane setupStage() {

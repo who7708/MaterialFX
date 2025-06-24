@@ -61,9 +61,14 @@ import javafx.scene.text.Text;
 ///  2) A way to completely disable the text truncation by always showing the full text and removing the clip
 ///  3) A way to detect when the label's text is truncated, [#truncatedProperty()].
 ///
-/// Note: in newer version of JavaFX this feature has been added through the [#textTruncatedProperty()], but I didn't
-/// test it with the clip removal feature. Since I'm not sure if it works properly, I'll keep my custom property for now.
-/// // TODO test this
+/// Note: in newer versions of JavaFX this feature has been added through the [#textTruncatedProperty()].
+///
+/// **Edit: tested, and it still returns `true` if the text is not truncated anymore! Use mine instead**
+///
+/// #### Warning
+///
+/// Remember to properly dispose of this when not needed anymore by setting [#setForceDisableTextEllipsis(boolean)] to
+/// `false`!
 public class Label extends javafx.scene.control.Label {
     //================================================================================
     // Properties
