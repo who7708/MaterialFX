@@ -25,6 +25,7 @@ import io.github.palexdev.mfxcore.behavior.BehaviorBase;
 import io.github.palexdev.mfxcore.controls.BoundLabel;
 import io.github.palexdev.mfxcore.controls.SkinBase;
 import io.github.palexdev.mfxcore.utils.fx.TextMeasurementCache;
+import javafx.scene.text.Text;
 
 public abstract class MFXLabeledSkin<L extends MFXLabeled<B>, B extends BehaviorBase<L>> extends SkinBase<L, B> {
     //================================================================================
@@ -75,8 +76,8 @@ public abstract class MFXLabeledSkin<L extends MFXLabeled<B>, B extends Behavior
     public void dispose() {
         tmCache.dispose();
         tmCache = null;
-        label.getTextNode().ifPresent(n -> n.opacityProperty().unbind());
-        label.setForceDisableTextEllipsis(false);
+        Text ltn = label.getTextNode();
+        if (ltn != null) ltn.opacityProperty().unbind();
         super.dispose();
     }
 
