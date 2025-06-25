@@ -21,12 +21,15 @@ package apps;
 import java.util.function.BiFunction;
 
 import io.github.palexdev.mfxcomponents.controls.MFXButton;
-import io.github.palexdev.mfxcomponents.controls.MFXButtonsGroup;
-import io.github.palexdev.mfxcomponents.controls.MFXButtonsGroup.ButtonsConfig;
+import io.github.palexdev.mfxcomponents.controls.MFXFab;
 import io.github.palexdev.mfxcomponents.controls.MFXIconButton;
 import io.github.palexdev.mfxcomponents.controls.base.MFXButtonBase;
 import io.github.palexdev.mfxcomponents.theming.PseudoClasses;
-import io.github.palexdev.mfxcomponents.variants.ButtonVariants.*;
+import io.github.palexdev.mfxcomponents.variants.ButtonVariants.ShapeVariant;
+import io.github.palexdev.mfxcomponents.variants.ButtonVariants.SizeVariant;
+import io.github.palexdev.mfxcomponents.variants.ButtonVariants.StyleVariant;
+import io.github.palexdev.mfxcomponents.variants.ButtonVariants.WidthVariant;
+import io.github.palexdev.mfxcomponents.variants.FABVariants;
 import io.github.palexdev.mfxcore.base.TriFunction;
 import io.github.palexdev.mfxcore.builders.InsetsBuilder;
 import io.github.palexdev.mfxcore.utils.fx.CSSFragment;
@@ -39,6 +42,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
@@ -73,15 +77,17 @@ public class Playground extends Application {
     }
 
     Parent createTest() {
-        return new MFXButtonsGroup().addButtons(
-                "First", FontAwesomeSolid.random(),
-                "Second", FontAwesomeSolid.random(),
-                "Third", FontAwesomeSolid.random()
-            ).setButtonsConfig(ButtonsConfig.DEFAULT
-                .withStyle(StyleVariant.FILLED)
-                .withSize(SizeVariant.S)
-                .withShape(ShapeVariant.SQUARED))
-            .setGroupType(GroupVariant.CONNECTED);
+        MFXFab fab = new MFXFab("Hello there!")
+            .setSize(FABVariants.SizeVariant.S)
+            .setStyle(FABVariants.StyleVariant.TERTIARY);
+        fab.setOnMouseClicked(e -> {
+            if (e.getButton() == MouseButton.SECONDARY) {
+                fab.setIcon(FontAwesomeSolid.random());
+                if (e.isShiftDown())
+                    fab.setExtended(!fab.isExtended());
+            }
+        });
+        return fab;
     }
 
     Parent createTestGrid() {
