@@ -28,8 +28,17 @@
   - [x] Variants: standard and connected
   - [x] CSS
 
+- FABs
+  - [x] Variants: primary, secondary, tertiary (and relative containers/tonal)
+  - [x] Preset sizes: small/standard, medium, large
+  - [x] Animations (expand/collapse, icon change)
+  - [x] Focus ring
+  - [x] CSS
+
 #### Misc
 
+- Popups facade over JavaFX complicated mess:
+  I also probably want to backport "Node" dialogs and Stage dialogs from legacy MaterialFX
 - [ ] Theme API
 - [x] Variants API
 - [x] Spring motions
