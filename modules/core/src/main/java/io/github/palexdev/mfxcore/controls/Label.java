@@ -104,11 +104,13 @@ public class Label extends javafx.scene.control.Label {
     //================================================================================
     protected void onSetTextNode(Text oldValue, Text newValue) {
         truncated.unbind();
+        if (oldValue != null) oldValue.fontSmoothingTypeProperty().unbind();
         if (newValue != null) {
             truncated.bind(newValue.textProperty().map(s -> {
-                if (getDisableTruncation()) return false;
+                if (isDisableTruncation()) return false;
                 return !Objects.equals(s, getText());
             }));
+            newValue.fontSmoothingTypeProperty().bind(fontSmoothingTypeProperty());
         }
         onSetTextNode.accept(oldValue, newValue);
     }
@@ -123,8 +125,8 @@ public class Label extends javafx.scene.control.Label {
             protected void updateChildren() {
                 super.updateChildren();
                 for (Node child : getChildren()) {
-                    if (child instanceof Text t) {
-                        textNode.set(t);
+                    if ("LabeledText".equals(child.getClass().getSimpleName())) {
+                        textNode.set((Text) child);
                         break;
                     }
                 }
@@ -134,8 +136,7 @@ public class Label extends javafx.scene.control.Label {
             protected void layoutChildren(double x, double y, double w, double h) {
                 super.layoutChildren(x, y, w, h);
 
-                if (!getDisableTruncation()) return;
-                System.out.println("Setting!");
+                if (!isDisableTruncation()) return;
                 Text tn = getTextNode();
                 if (tn != null) {
                     tn.setText(getText());
@@ -190,7 +191,7 @@ public class Label extends javafx.scene.control.Label {
         }
     };
 
-    public boolean getDisableTruncation() {
+    public boolean isDisableTruncation() {
         return disableTruncation.get();
     }
 
