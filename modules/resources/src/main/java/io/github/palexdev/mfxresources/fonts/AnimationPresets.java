@@ -25,7 +25,7 @@ import io.github.palexdev.mfxresources.fonts.IconClip.ClipShape;
 import javafx.scene.CacheHint;
 
 public enum AnimationPresets {
-    FADE {
+    FADING {
         @Override
         public IconAnimation animate(MFXIconWrapper wrapper, MFXFontIcon oldIcon, MFXFontIcon newIcon) {
             newIcon.setOpacity(0.0);
