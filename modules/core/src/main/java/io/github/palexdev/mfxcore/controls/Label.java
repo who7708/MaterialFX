@@ -70,7 +70,6 @@ import javafx.scene.text.Text;
 ///  The default font smoothing type for this is set to [FontSmoothingType#LCD].
 ///  3) A way to detect when the label's text is truncated, [#truncatedProperty()].
 ///     _(Use this instead of the new JavaFX property!)_
-///
 public class Label extends javafx.scene.control.Label {
     //================================================================================
     // Properties

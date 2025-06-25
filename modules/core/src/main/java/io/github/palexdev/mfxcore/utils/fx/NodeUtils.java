@@ -189,7 +189,7 @@ public class NodeUtils {
     /// @param action               the action to perform when the skin is not `null`
     /// @param addListenerIfNotNull to specify if the listener should be added anyway even if the scene is not `null`
     /// @param isOneShot            to specify if the listener added to the skin property
-    ///                                                         should be removed after it is not `null` anymore
+    ///                                                                                     should be removed after it is not `null` anymore
     public static void waitForSkin(Control control, Runnable action, boolean addListenerIfNotNull, boolean isOneShot) {
         if (control.getSkin() != null) {
             action.run();
@@ -214,7 +214,7 @@ public class NodeUtils {
     /// @param action               the action to perform when the scene is not `null`
     /// @param addListenerIfNotNull to specify if the listener should be added anyway even if the scene is not `null`
     /// @param isOneShot            to specify if the listener added to the scene property
-    ///                             should be removed after it is not `null` anymore
+    ///                                                         should be removed after it is not `null` anymore
     public static void waitForScene(Node node, Runnable action, boolean addListenerIfNotNull, boolean isOneShot) {
         if (node.getScene() != null) {
             action.run();
