@@ -63,7 +63,7 @@ public abstract class MFXLabeledSkin<L extends MFXLabeled<B>, B extends Behavior
         bl.setMouseTransparent(true);
         bl.onSetTextNode((o, n) -> {
             if (o != null) o.opacityProperty().unbind();
-            n.opacityProperty().bind(labeled.textOpacityProperty());
+            if (n != null) n.opacityProperty().bind(labeled.textOpacityProperty());
         });
         return bl;
     }
