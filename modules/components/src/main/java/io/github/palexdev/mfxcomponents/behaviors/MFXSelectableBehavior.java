@@ -70,10 +70,11 @@ public class MFXSelectableBehavior<S extends MFXSelectable<?>> extends MFXButton
         if (callback != null) callback.accept(e);
     }
 
-    /// Calls [#handleSelection()] if the pressed key was [KeyCode#ENTER].
+    /// Calls [#handleSelection()] if the pressed key was [KeyCode#ENTER] or [KeyCode#SPACE].
     @Override
     public void keyPressed(KeyEvent e, Consumer<KeyEvent> callback) {
-        if (e.getCode() == KeyCode.ENTER || e.getCode() == KeyCode.SPACE) handleSelection();
+        if (e.getCode() == KeyCode.ENTER || e.getCode() == KeyCode.SPACE)
+            handleSelection();
         if (callback != null) callback.accept(e);
     }
 }

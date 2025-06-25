@@ -55,10 +55,11 @@ public class MFXButtonBehaviorBase<B extends MFXButtonBase<?>> extends BehaviorB
         super.mouseClicked(e, callback);
     }
 
-    /// Responsible for calling [MFXButtonBase#trigger()] if the pressed key was [KeyCode#ENTER].
+    /// Responsible for calling [MFXButtonBase#trigger()] if the pressed key was [KeyCode#ENTER] or [KeyCode#SPACE].
     @Override
     public void keyPressed(KeyEvent e, Consumer<KeyEvent> callback) {
-        if (e.getCode() == KeyCode.ENTER) getNode().trigger();
+        if (e.getCode() == KeyCode.ENTER || e.getCode() == KeyCode.SPACE)
+            getNode().trigger();
         super.keyPressed(e, callback);
     }
 }
