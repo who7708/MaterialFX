@@ -167,8 +167,11 @@ public class Label extends javafx.scene.control.Label {
     ) {
         @Override
         protected void invalidated() {
-            onSetTextNode(null, getTextNode());
-            requestLayout();
+            Text tn = getTextNode();
+            if (tn != null) {
+                onSetTextNode(null, tn);
+                requestLayout();
+            }
         }
     };
 
