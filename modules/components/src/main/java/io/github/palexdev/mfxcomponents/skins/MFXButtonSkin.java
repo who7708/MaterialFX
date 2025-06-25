@@ -23,6 +23,7 @@ import io.github.palexdev.mfxcomponents.controls.MFXSurface;
 import io.github.palexdev.mfxcomponents.controls.base.MFXButtonBase;
 import io.github.palexdev.mfxcomponents.skins.base.MFXLabeledSkin;
 import io.github.palexdev.mfxcore.utils.fx.LayoutUtils;
+import io.github.palexdev.mfxeffects.beans.Position;
 import io.github.palexdev.mfxeffects.ripple.MFXRippleGenerator;
 import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
@@ -30,6 +31,7 @@ import javafx.scene.Node;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
 import static io.github.palexdev.mfxcore.events.WhenEvent.intercept;
@@ -58,6 +60,9 @@ public class MFXButtonSkin<C extends MFXButtonBase<B>, B extends MFXButtonBehavi
         surface = new MFXSurface(button);
         rg = new MFXRippleGenerator(button);
         rg.getStyleClass().add("surface-ripple");
+        rg.setMeToPosConverter(me ->
+            (me.getButton() == MouseButton.PRIMARY) ? Position.of(me.getX(), me.getY()) : null
+        );
         rg.enable();
 
         // Finalize
