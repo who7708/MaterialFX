@@ -16,16 +16,14 @@
  * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'buttons' as *;
-@use 'buttons-group' as *;
-@use 'fabs' as *;
-@use 'iconbuttons' as *;
-@use 'layers' as *;
+@use 'fabs/base' as *;
+@use 'fabs/primary' as *;
+@use 'fabs/secondary' as *;
+@use 'fabs/tertiary' as *;
 
-@mixin MaterialComponents() {
-  @include SurfaceRipples();
-  @include MaterialButtons();
-  @include MaterialButtonsGroup();
-  @include MaterialFloatingActionButtons();
-  @include MaterialIconButtons();
+@mixin MaterialFloatingActionButtons() {
+  @include MaterialFloatingActionButtonsBase();
+  @include MaterialFloatingActionButtonsPrimary();
+  @include MaterialFloatingActionButtonsSecondary();
+  @include MaterialFloatingActionButtonsTertiary();
 }

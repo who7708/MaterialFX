@@ -1,0 +1,112 @@
+/*
+ * Copyright (C) 2025 Parisi Alessandro - alessandro.parisi406@gmail.com
+ * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX)
+ *
+ * MaterialFX is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * MaterialFX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use '../../base/typography' as *;
+@use '../../base/vars' as *;
+@use '../layers' as *;
+
+/*
+ * According to the specs, the non-extended FABs do not have padding
+ * However, for the expand animation to play properly it is needed
+ */
+
+@mixin MaterialFloatingActionButtonsBase() {
+  .mfx-fab {
+    .mfx-icon-wrapper {
+      -mfx-animation : SCALE;
+    }
+
+    &.s {
+      @include TitleMedium();
+      -fx-background-radius : shape('large');
+      -fx-border-radius     : shape('large');
+      -fx-padding           : 0px 16px 0px 16px;
+      -mfx-min-size         : "56px 56px";
+
+      > .label > .mfx-icon-wrapper > .mfx-font-icon {
+        -mfx-size : 24px
+      }
+
+      > .surface {
+        -fx-background-radius : shape('large');
+      }
+
+      &:extended {
+        -fx-graphic-text-gap : 8px;
+      }
+    }
+
+    &.m {
+      @include TitleLarge();
+      -fx-background-radius : shape('large-increased');
+      -fx-border-radius     : shape('large-increased');
+      -fx-padding           : 0px 26px 0px 26px;
+      -mfx-min-size         : "80px 80px";
+
+      > .label > .mfx-icon-wrapper > .mfx-font-icon {
+        -mfx-size : 28px
+      }
+
+      > .surface {
+        -fx-background-radius : shape('large-increased');
+      }
+
+      &:extended {
+        -fx-graphic-text-gap : 12px;
+      }
+    }
+
+    &.l {
+      @include HeadlineSmall();
+      -fx-background-radius : shape('extra-large');
+      -fx-border-radius     : shape('extra-large');
+      -fx-padding           : 0px 28px 0px 28px;
+      -mfx-min-size         : "96px 96px";
+
+      > .label > .mfx-icon-wrapper > .mfx-font-icon {
+        -mfx-size : 36px
+      }
+
+      > .surface {
+        -fx-background-radius : shape('extra-large');
+      }
+
+      &:extended {
+        -fx-graphic-text-gap : 16px;
+      }
+    }
+
+    > .surface {
+      -mfx-elevation : LEVEL3;
+    }
+
+    &:hover {
+      > .surface {
+        -mfx-elevation : LEVEL4;
+      }
+    }
+
+    &:pressed {
+      > .surface {
+        -mfx-elevation : LEVEL3;
+      }
+    }
+
+    @include FocusRing();
+  }
+}
