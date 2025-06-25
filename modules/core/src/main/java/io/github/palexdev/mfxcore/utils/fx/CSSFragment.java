@@ -217,13 +217,24 @@ public class CSSFragment {
             return select(chain.toString());
         }
 
+        /// Appends the given pseudo-states to the currently open selector.
+        ///
+        /// @throws IllegalStateException if no selector is open
+        public Builder states(String... states) {
+            if (states.length == 0) return this;
+            if (!isSelectorOpen) throw new IllegalStateException("No selector was opened!");
+            for (String state : states) {
+                sb.append(":").append(state.trim());
+            }
+            return this;
+        }
+
         /// This method can be used to group multiple selectors since [#select(String)] automatically closes the
         /// previous one. An example of grouped selectors:
         /// <pre>
         ///
         /// `.my-selector-one,.my-selector-two{-common-style: common-value;}`
         /// </pre>
-        ///
         ///
         /// If no selector was open before, fallbacks to [#select(String)].
         public Builder and(String selector) {
