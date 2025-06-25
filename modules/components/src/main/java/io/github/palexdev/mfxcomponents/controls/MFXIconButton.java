@@ -34,10 +34,21 @@ import io.github.palexdev.mfxcore.utils.fx.StyleUtils;
 import io.github.palexdev.mfxresources.base.properties.IconProperty;
 import io.github.palexdev.mfxresources.fonts.IconDescriptor;
 import io.github.palexdev.mfxresources.fonts.MFXFontIcon;
+import io.github.palexdev.mfxresources.fonts.MFXIconWrapper;
 import javafx.css.CssMetaData;
 import javafx.css.Styleable;
 import javafx.css.StyleablePropertyFactory;
 
+/// Extension of [MFXButton] which can show only a [MFXFontIcon] (enforced by [#iconProperty()] and [MFXIconButtonSkin]).
+/// The style class is overridden to `.mfx-icon-button`.
+///
+/// In addition to the variants inherited by [MFXButton], there's also the [WidthVariant] which defines the button's width,
+/// and can be set through [#setWidth(WidthVariant)].
+///
+/// See also [#setStyle(StyleVariant)] because the behavior is slightly different.
+///
+/// Can optionally play an animation when switching icons if [#animatedProperty()] is active. The animation type can be
+/// set by either overriding the skin or using CSS, see [MFXIconWrapper#animationPresetProperty()].
 public class MFXIconButton extends MFXButton {
     //================================================================================
     // Properties
@@ -67,6 +78,8 @@ public class MFXIconButton extends MFXButton {
         return this;
     }
 
+    /// Overridden because icon buttons do not support [StyleVariant#ELEVATED] and [StyleVariant#TEXT].
+    /// When any of these is given as the argument, the variant is unset and the button falls back to the standard style.
     @Override
     public MFXIconButton setStyle(StyleVariant style) {
         if (style == StyleVariant.ELEVATED || style == StyleVariant.TEXT) {
@@ -89,6 +102,8 @@ public class MFXIconButton extends MFXButton {
         return this;
     }
 
+    /// Note: similar to the standard style (for which no style class is added), [WidthVariant#DEFAULT] will simply
+    /// unset the variant (there's no `.default` style class).
     public MFXIconButton setWidth(WidthVariant width) {
         if (width == WidthVariant.DEFAULT) {
             variantsHandler.unsetVariant(WidthVariant.class);
@@ -97,6 +112,10 @@ public class MFXIconButton extends MFXButton {
         }
         return this;
     }
+
+    /// Applies the default variants to the button:
+    /// - [SizeVariant#S]
+    /// - [ShapeVariant#ROUNDED]
 
     @Override
     public MFXIconButton defaultVariants() {
