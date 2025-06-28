@@ -31,6 +31,7 @@ import javafx.stage.Window;
 ///
 /// Scrims are temporary treatments that can be applied to Material surfaces to make content on a surface less prominent.
 /// They help direct user attention to other parts of the screen, away from the surface receiving a scrim.
+@Deprecated(forRemoval = true, since = "v24.0.1")
 public class MFXScrimEffect {
     //================================================================================
     // Properties
