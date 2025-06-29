@@ -190,35 +190,38 @@ public class AnchorHandlers {
     public interface AnchorHandler {
         Position compute(Bounds referenceBounds, Node content, PositionMode mode);
 
-        // Add parameter to below methods!
+        /// Delegates to [#compute(Bounds, Node, PositionMode)] after modifying the given bounds to take into account the
+        /// given offset.
         default Position compute(Bounds referenceBounds, Node content, PositionMode mode, Insets offset) {
-            Bounds newBounds = new BoundingBox(
-                referenceBounds.getMinX() + offset.getLeft(),
-                referenceBounds.getMinY() + offset.getTop(),
-                referenceBounds.getWidth() - offset.getLeft() - offset.getRight(),
-                referenceBounds.getHeight() - offset.getTop() - offset.getBottom()
+            double dx = offset.getLeft() - offset.getRight();
+            double dy = offset.getTop() - offset.getBottom();
+            Bounds shiftedBounds = new BoundingBox(
+                referenceBounds.getMinX() + dx,
+                referenceBounds.getMinY() + dy,
+                referenceBounds.getWidth(),
+                referenceBounds.getHeight()
             );
-            return compute(newBounds, content, mode);
+            return compute(shiftedBounds, content, mode);
         }
 
-        /// Delegates to [#compute(Bounds, Node, PositionMode)] after building a [BoundingBox] with the position and size
+        /// Delegates to [#compute(Bounds, Node, PositionMode, Insets)] after building a [BoundingBox] with the position and size
         /// of the given owner [Window].
         ///
         /// Uses [PositionMode#INSIDE].
-        default Position compute(Window owner, Node content) {
+        default Position compute(Window owner, Node content, Insets offset) {
             Bounds owBounds = new BoundingBox(
                 owner.getX(), owner.getY(),
                 owner.getWidth(), owner.getHeight()
             );
-            return compute(owBounds, content, PositionMode.INSIDE);
+            return compute(owBounds, content, PositionMode.INSIDE, offset);
         }
 
-        /// Delegates to [#compute(Bounds, Node, PositionMode)] after converting the owner's bounds to screen coordinates.
+        /// Delegates to [#compute(Bounds, Node, PositionMode, Insets)] after converting the owner's bounds to screen coordinates.
         ///
         /// Uses [PositionMode#ADJACENT].
-        default Position compute(Node owner, Node content) {
+        default Position compute(Node owner, Node content, Insets offset) {
             Bounds onBounds = owner.localToScreen(owner.getLayoutBounds());
-            return compute(onBounds, content, PositionMode.ADJACENT);
+            return compute(onBounds, content, PositionMode.ADJACENT, offset);
         }
     }
 }

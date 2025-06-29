@@ -22,6 +22,7 @@ import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.base.properties.NodeProperty;
 import io.github.palexdev.mfxcore.base.properties.PositionProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Dialog;
@@ -159,6 +160,12 @@ public interface MFXPopup<O> {
     default void setPosition(Position position) {
         positionProperty().set(position);
     }
+
+    /// @return the [Insets] object that will be used to offset the popup's window according to its anchor position
+    Insets getOffset();
+
+    /// Sets the [Insets] object that will be used to offset the popup's window according to its anchor position
+    void setOffset(Insets offset);
 
     /// Convenience method to check if the [#stateProperty()] is either [PopupState#SHOWING] or [PopupState#SHOWN].
     default boolean isShowing() {

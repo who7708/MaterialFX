@@ -26,6 +26,7 @@ import io.github.palexdev.mfxcore.observables.When;
 import io.github.palexdev.mfxcore.popups.MFXPopover.PopupPeer;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers;
 import javafx.css.Styleable;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -134,7 +135,7 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
     @Override
     protected Position computePosition(Node owner, Pos anchor) {
         if (anchor == null) return Position.origin();
-        return AnchorHandlers.handler(anchor).compute(owner, getContent());
+        return AnchorHandlers.handler(anchor).compute(owner, getContent(), getOffset());
     }
 
     @Override
@@ -257,6 +258,7 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
     // Config
 
     public record PopoverConfig(
+        Insets offset,
         Node styleableParent,
         boolean autoFix,
         boolean autoHide,
@@ -264,6 +266,7 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
         boolean consumeAutoHideEvents
     ) implements Config<MFXPopover> {
         public static final PopoverConfig DEFAULT = new PopoverConfig(
+            Insets.EMPTY,
             null,
             true,
             true,
@@ -273,6 +276,7 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
 
         @Override
         public void apply(MFXPopover popup) {
+            popup.offset = offset;
             popup.styleableParent = styleableParent;
             popup.peer.setAutoFix(autoFix);
             popup.peer.setAutoHide(autoHide);
@@ -285,11 +289,17 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
         }
 
         public static class Builder {
+            private Insets offset = Insets.EMPTY;
             private Node styleableParent;
-            private boolean autoFix;
-            private boolean autoHide;
-            private boolean hideOnEscape;
-            private boolean consumeAutoHideEvents;
+            private boolean autoFix = true;
+            private boolean autoHide = true;
+            private boolean hideOnEscape = true;
+            private boolean consumeAutoHideEvents = false;
+
+            public Builder offset(Insets offset) {
+                this.offset = offset;
+                return this;
+            }
 
             public Builder styleableParent(Node styleableParent) {
                 this.styleableParent = styleableParent;
@@ -318,6 +328,7 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
 
             public PopoverConfig build() {
                 return new PopoverConfig(
+                    offset,
                     styleableParent,
                     autoFix,
                     autoHide,

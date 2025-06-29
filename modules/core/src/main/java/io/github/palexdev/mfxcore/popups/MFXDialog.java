@@ -28,10 +28,7 @@ import io.github.palexdev.mfxcore.events.WhenEvent;
 import io.github.palexdev.mfxcore.popups.MFXDialog.WindowPeer;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers;
 import io.github.palexdev.mfxcore.utils.fx.MFXBackdrop;
-import javafx.geometry.BoundingBox;
-import javafx.geometry.Bounds;
-import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
+import javafx.geometry.*;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
@@ -122,7 +119,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
     protected Position computePosition(Window owner, Pos anchor) {
         if (anchor == null) return Position.origin();
         AnchorHandlers.AnchorHandler handler = AnchorHandlers.handler(anchor);
-        if (owner != null) return handler.compute(owner, getContent());
+        if (owner != null) return handler.compute(owner, getContent(), getOffset());
 
         Screen screen = Optional.ofNullable(fallbackScreen).orElse(Screen.getPrimary());
         Rectangle2D vb = screen.getVisualBounds();
@@ -130,7 +127,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
             vb.getMinX(), vb.getMinY(),
             vb.getWidth(), vb.getHeight()
         );
-        return handler.compute(screenBounds, getContent(), AnchorHandlers.PositionMode.INSIDE);
+        return handler.compute(screenBounds, getContent(), AnchorHandlers.PositionMode.INSIDE, getOffset());
     }
 
     @Override
@@ -191,6 +188,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
     // Config
 
     public record DialogConfig(
+        Insets offset,
         Screen fallbackScreen,
         Modality modality,
         boolean useBackdrop,
@@ -199,6 +197,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
 
         @Override
         public void apply(MFXDialog popup) {
+            popup.offset = offset;
             popup.fallbackScreen = fallbackScreen;
             popup.peer.initModality(modality);
             if (useBackdrop) {
@@ -214,10 +213,16 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
         }
 
         public static final class Builder {
+            private Insets offset = Insets.EMPTY;
             private Screen fallbackScreen;
-            private Modality modality;
-            private boolean useBackdrop;
+            private Modality modality = Modality.NONE;
+            private boolean useBackdrop = false;
             private String[] backdropStyleClass = new String[]{};
+
+            public Builder offset(Insets offset) {
+                this.offset = offset;
+                return this;
+            }
 
             public Builder fallbackScreen(Screen fallbackScreen) {
                 this.fallbackScreen = fallbackScreen;
@@ -241,6 +246,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
 
             public DialogConfig build() {
                 return new DialogConfig(
+                    offset,
                     fallbackScreen,
                     modality,
                     useBackdrop,

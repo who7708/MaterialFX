@@ -36,6 +36,7 @@ import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
@@ -206,6 +207,16 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
     }
 
     @Override
+    public Insets getOffset() {
+        return peer.getOffset();
+    }
+
+    @Override
+    public void setOffset(Insets offset) {
+        peer.setOffset(offset);
+    }
+
+    @Override
     public ReadOnlyObjectProperty<PopupState> stateProperty() {
         return peer.stateProperty();
     }
@@ -251,12 +262,14 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
     // Config
 
     public record TooltipConfig(
+        Insets offset,
         Pos anchor,
         Duration inDelay,
         Duration outDelay
     ) implements Config<MFXTooltip> {
 
         public static final TooltipConfig DEFAULT = new TooltipConfig(
+            Insets.EMPTY,
             Pos.BOTTOM_CENTER,
             Duration.millis(500),
             Duration.millis(500)
@@ -264,6 +277,7 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
 
         @Override
         public void apply(MFXTooltip tooltip) {
+            tooltip.peer.offset = offset;
             tooltip.anchor = anchor;
             tooltip.inDelay = inDelay;
             tooltip.outDelay = outDelay;
@@ -274,9 +288,15 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
         }
 
         public static final class Builder {
+            private Insets offset;
             private Pos anchor;
             private Duration inDelay;
             private Duration outDelay;
+
+            public Builder offset(Insets offset) {
+                this.offset = offset;
+                return this;
+            }
 
             public Builder anchor(Pos anchor) {
                 this.anchor = anchor;
@@ -303,6 +323,7 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
 
             public TooltipConfig build() {
                 return new TooltipConfig(
+                    offset,
                     anchor,
                     inDelay != null ? inDelay : TooltipConfig.DEFAULT.inDelay(),
                     outDelay != null ? outDelay : TooltipConfig.DEFAULT.outDelay()

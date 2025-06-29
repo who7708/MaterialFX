@@ -18,10 +18,13 @@
 
 package io.github.palexdev.mfxcore.popups;
 
+import java.util.Optional;
+
 import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.base.properties.NodeProperty;
 import io.github.palexdev.mfxcore.base.properties.PositionProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.stage.Window;
 
@@ -36,6 +39,7 @@ public abstract class MFXPopupBase<P extends Window, O> implements MFXPopup<O> {
     protected P peer;
     protected O owner;
     protected Pos anchor;
+    protected Insets offset = Insets.EMPTY;
 
     private final NodeProperty content = new NodeProperty() {
         @Override
@@ -75,6 +79,8 @@ public abstract class MFXPopupBase<P extends Window, O> implements MFXPopup<O> {
 
     /// This is responsible for computing the popup's window position relative to the given owner and according to the
     /// given anchor position.
+    ///
+    /// Implementations should take into account the offset returned by [#getOffset()].
     protected abstract Position computePosition(O owner, Pos anchor);
 
     //================================================================================
@@ -135,6 +141,16 @@ public abstract class MFXPopupBase<P extends Window, O> implements MFXPopup<O> {
     @Override
     public PositionProperty positionProperty() {
         return position;
+    }
+
+    @Override
+    public Insets getOffset() {
+        return Optional.ofNullable(offset).orElse(Insets.EMPTY);
+    }
+
+    @Override
+    public void setOffset(Insets offset) {
+        this.offset = offset;
     }
 
     @Override
