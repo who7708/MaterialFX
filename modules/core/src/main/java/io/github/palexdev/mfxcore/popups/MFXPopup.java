@@ -18,9 +18,12 @@
 
 package io.github.palexdev.mfxcore.popups;
 
+import java.util.function.BiConsumer;
+
 import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.base.properties.NodeProperty;
 import io.github.palexdev.mfxcore.base.properties.PositionProperty;
+import io.github.palexdev.mfxcore.observables.When;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -178,6 +181,17 @@ public interface MFXPopup<O> {
 
     /// Specifies the popup's visibility state.
     ReadOnlyObjectProperty<PopupState> stateProperty();
+
+    /// Adds and returns a listener on the [#stateProperty()] which executes the given action when the given state is `null`
+    /// or is the same as the popup's.
+    ///
+    /// @see When
+    default When<?> onState(PopupState state, BiConsumer<MFXPopup<O>, PopupState> action) {
+        return When.onInvalidated(stateProperty())
+            .condition(s -> state == null || s == state)
+            .then(s -> action.accept(this, s))
+            .listen();
+    }
 
     /// As explained by [#contentProperty()], the popup's root may not necessarily be the content. This method can be used
     /// to set the style-classes of the root node.
