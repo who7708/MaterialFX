@@ -24,6 +24,7 @@ import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.popups.MFXPopup;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.stage.Window;
@@ -189,8 +190,21 @@ public class AnchorHandlers {
     public interface AnchorHandler {
         Position compute(Bounds referenceBounds, Node content, PositionMode mode);
 
+        // Add parameter to below methods!
+        default Position compute(Bounds referenceBounds, Node content, PositionMode mode, Insets offset) {
+            Bounds newBounds = new BoundingBox(
+                referenceBounds.getMinX() + offset.getLeft(),
+                referenceBounds.getMinY() + offset.getTop(),
+                referenceBounds.getWidth() - offset.getLeft() - offset.getRight(),
+                referenceBounds.getHeight() - offset.getTop() - offset.getBottom()
+            );
+            return compute(newBounds, content, mode);
+        }
+
         /// Delegates to [#compute(Bounds, Node, PositionMode)] after building a [BoundingBox] with the position and size
         /// of the given owner [Window].
+        ///
+        /// Uses [PositionMode#INSIDE].
         default Position compute(Window owner, Node content) {
             Bounds owBounds = new BoundingBox(
                 owner.getX(), owner.getY(),
@@ -200,6 +214,8 @@ public class AnchorHandlers {
         }
 
         /// Delegates to [#compute(Bounds, Node, PositionMode)] after converting the owner's bounds to screen coordinates.
+        ///
+        /// Uses [PositionMode#ADJACENT].
         default Position compute(Node owner, Node content) {
             Bounds onBounds = owner.localToScreen(owner.getLayoutBounds());
             return compute(onBounds, content, PositionMode.ADJACENT);
