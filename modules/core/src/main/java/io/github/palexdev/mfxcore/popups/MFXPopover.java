@@ -22,7 +22,6 @@ import java.util.*;
 
 import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
-import io.github.palexdev.mfxcore.observables.When;
 import io.github.palexdev.mfxcore.popups.MFXPopover.PopupPeer;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers;
 import javafx.css.Styleable;
@@ -35,6 +34,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.PopupWindow;
+import javafx.stage.Window;
 
 /// Custom implementation of popovers based on the [MFXPopup] API. It also implements [MFXStyleable], the default CSS
 /// style-class is set to: '.root' and '.mfx-popup.'. This mimics JavaFX popups which also have the '.root' style class
@@ -64,10 +64,9 @@ import javafx.stage.PopupWindow;
 /// and the actual window position may end up being desynchronized. If you want to get the true window position,
 /// use [#getPeerPosition()]
 /// 2) Auto hide changes the visibility state internally to the peer. Because we have a custom way to represent the
-/// popup's state ([#stateProperty()], and [PopupState]), it could cause a disastrous desynchronization. For this reason,
-/// the [PopupState#HIDDEN] state is not only set by the [#hide()] method, but also by a listener added on the peer's
-/// [PopupPeer#showingProperty()] (we could also just use the lister, but hide() is implemented in the super class and
-/// honestly there's no need to override it).
+/// popup's state ([#stateProperty()], and [PopupState]), it could cause a disastrous desynchronization. The good thing
+/// is that such feature still hides the window by calling [Window#hide()]; therefore, we can override the logic in our
+/// peer to redirect auto-hide requests to our method instead, as simple as adding a boolean flag.
 public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyleable {
     //================================================================================
     // Properties
@@ -108,12 +107,6 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
     @Override
     protected void doShow(Node owner, double x, double y) {
         this.owner = owner;
-        When.onInvalidated(peer.showingProperty())
-            .condition(s -> !s)
-            .then(_ -> setState(PopupState.HIDDEN))
-            .oneShot()
-            .listen();
-
         Node content = getContent();
         content.setVisible(false);
 
@@ -130,6 +123,12 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
         }
         content.setVisible(true);
         setState(PopupState.SHOWN);
+    }
+
+    @Override
+    public void hide() {
+        peer.indirectHide = true;
+        super.hide();
     }
 
     @Override
@@ -209,7 +208,7 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
     /// 3) Note that for convenience we accept a generic [Node] as the `styleable parent`, but for this mechanism to work
     /// we need a [Parent]. Casting is automatically handled in a safe way, so if it's not a [Parent] it will fail silently
     /// (by not fetching any stylesheet).
-    protected static class PopupPeer extends PopupWindow {
+    protected class PopupPeer extends PopupWindow {
         private final StackPane root = new StackPane() {
             @Override
             public Styleable getStyleableParent() {
@@ -217,6 +216,7 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
             }
         };
         private Node styleableParent;
+        private boolean indirectHide = false;
 
         {
             root.setBackground(Background.fill(Color.TRANSPARENT));
@@ -252,6 +252,17 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
                 parent = parent.getParent();
             }
             return set;
+        }
+
+        @Override
+        public void hide() {
+            // Redirect auto-hide handling to popover hide logic!
+            if (!indirectHide) {
+                MFXPopover.this.hide();
+                return;
+            }
+            indirectHide = false;
+            super.hide();
         }
     }
 
