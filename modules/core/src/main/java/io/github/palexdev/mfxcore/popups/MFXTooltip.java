@@ -310,6 +310,14 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
             return new Builder();
         }
 
+        public static Builder builder(TooltipConfig config) {
+            return new Builder()
+                .offset(config.offset)
+                .anchor(config.anchor)
+                .inDelay(config.inDelay)
+                .outDelay(config.outDelay);
+        }
+
         public static final class Builder {
             private Insets offset;
             private Pos anchor;

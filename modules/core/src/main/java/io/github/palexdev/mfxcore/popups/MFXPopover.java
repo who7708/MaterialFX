@@ -318,6 +318,16 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
             return new Builder();
         }
 
+        public static Builder builder(PopoverConfig config) {
+            return new Builder()
+                .offset(config.offset)
+                .styleableParent(config.styleableParent)
+                .autoFix(config.autoFix)
+                .autoHide(config.autoHide)
+                .hideOnEscape(config.hideOnEscape)
+                .consumeAutoHideEvents(config.consumeAutoHideEvents);
+        }
+
         public static class Builder {
             private Insets offset = Insets.EMPTY;
             private Node styleableParent;

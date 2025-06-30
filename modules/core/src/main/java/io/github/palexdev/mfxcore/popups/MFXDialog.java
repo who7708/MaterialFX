@@ -269,6 +269,17 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
             return new Builder();
         }
 
+        public static Builder builder(DialogConfig config) {
+            return new Builder()
+                .offset(config.offset)
+                .fallbackScreen(config.fallbackScreen)
+                .modality(config.modality)
+                .useBackdrop(config.useBackdrop)
+                .backdropStyleClass(config.backdropStyleClass)
+                .alwaysOnTop(config.alwaysOnTop)
+                .lockInPlace(config.lockInPlace);
+        }
+
         public static final class Builder {
             private Insets offset = Insets.EMPTY;
             private Screen fallbackScreen;
