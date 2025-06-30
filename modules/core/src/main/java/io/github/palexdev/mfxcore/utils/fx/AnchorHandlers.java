@@ -19,6 +19,7 @@
 package io.github.palexdev.mfxcore.utils.fx;
 
 import java.util.Map;
+import java.util.Optional;
 
 import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.popups.MFXPopup;
@@ -27,6 +28,7 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.stage.Window;
 
 
@@ -204,15 +206,24 @@ public class AnchorHandlers {
             return compute(shiftedBounds, content, mode);
         }
 
-        /// Delegates to [#compute(Bounds, Node, PositionMode, Insets)] after building a [BoundingBox] with the position and size
-        /// of the given owner [Window].
+        /// Delegates to [#compute(Bounds, Node, PositionMode, Insets)] after building a [BoundingBox] with the position
+        /// and size of the given owner [Window].
+        ///
+        /// This method prioritizes using the scene root's bounds converted to screen coordinates to get the actual
+        /// content area of the window (excluding decorations like title bar and borders).
+        /// If the scene or root is unavailable, it falls back to the raw window bounds.
         ///
         /// Uses [PositionMode#INSIDE].
         default Position compute(Window owner, Node content, Insets offset) {
-            Bounds owBounds = new BoundingBox(
-                owner.getX(), owner.getY(),
-                owner.getWidth(), owner.getHeight()
-            );
+            Bounds owBounds = Optional.ofNullable(owner.getScene())
+                .map(Scene::getRoot)
+                .map(n -> n.localToScreen(n.getLayoutBounds()))
+                .orElseGet(() ->
+                    new BoundingBox(
+                        owner.getX(), owner.getY(),
+                        owner.getWidth(), owner.getHeight()
+                    )
+                );
             return compute(owBounds, content, PositionMode.INSIDE, offset);
         }
 
