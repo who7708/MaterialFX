@@ -214,7 +214,8 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
         Screen fallbackScreen,
         Modality modality,
         boolean useBackdrop,
-        String... backdropStyleClass
+        String[] backdropStyleClass,
+        boolean alwaysOnTop
     ) implements Config<MFXDialog> {
 
         @Override
@@ -228,6 +229,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
             } else {
                 popup.backdrop = null;
             }
+            popup.peer.setAlwaysOnTop(alwaysOnTop);
         }
 
         public static Builder builder() {
@@ -240,6 +242,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
             private Modality modality = Modality.NONE;
             private boolean useBackdrop = false;
             private String[] backdropStyleClass = new String[]{};
+            private boolean alwaysOnTop = false;
 
             public Builder offset(Insets offset) {
                 this.offset = offset;
@@ -266,13 +269,19 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
                 return this;
             }
 
+            public Builder alwaysOnTop(boolean alwaysOnTop) {
+                this.alwaysOnTop = alwaysOnTop;
+                return this;
+            }
+
             public DialogConfig build() {
                 return new DialogConfig(
                     offset,
                     fallbackScreen,
                     modality,
                     useBackdrop,
-                    backdropStyleClass
+                    backdropStyleClass,
+                    alwaysOnTop
                 );
             }
         }
