@@ -120,6 +120,24 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
     }
 
     @Override
+    public void show(Window owner, double x, double y) {
+        if (isShowing()) {
+            peer.toFront();
+            return;
+        }
+        super.show(owner, x, y);
+    }
+
+    @Override
+    public void show(Window owner, Pos anchor) {
+        if (isShowing()) {
+            peer.toFront();
+            return;
+        }
+        super.show(owner, anchor);
+    }
+
+    @Override
     protected Position computePosition(Window owner, Pos anchor) {
         if (anchor == null) return Position.origin();
         AnchorHandlers.AnchorHandler handler = AnchorHandlers.handler(anchor);
