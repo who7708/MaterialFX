@@ -200,7 +200,7 @@ public class Grid<T> implements Iterable<T> {
     /// Clears the grid and uses the given rows num and columns num to fill it with values provided by the given [BiFunction].
     ///
     /// @param valFunction the function accepts the row index and column index of the loop and is expected
-    ///                                                                             to return a T value to add into the grid
+    ///                                                                                                to return a T value to add into the grid
     /// @throws IllegalStateException if the rows num or columns num are 0
     public Grid<T> init(int rows, int columns, BiFunction<Integer, Integer, T> valFunction) {
         if (rows == 0 || columns == 0)
@@ -258,9 +258,9 @@ public class Grid<T> implements Iterable<T> {
     /// Replaces the diagonal of the grid with the given one.
     ///
     /// @throws IllegalStateException    if this grid is not a square matrix. In other words, if the
-    ///                                                                                                                                     rows num and the columns num are not the same
+    ///                                                                                                                                                                      rows num and the columns num are not the same
     /// @throws IllegalArgumentException if the given diagonal is empty, or if its size is not N
-    ///                                                                                                                                     (where N is both the number of rows and columns)
+    ///                                                                                                                                                                      (where N is both the number of rows and columns)
     public void setDiagonal(List<T> diag) {
         if (rowsNum != columnsNum)
             throw new IllegalStateException("Rows num and columns num are not the same, expecting square matrix");

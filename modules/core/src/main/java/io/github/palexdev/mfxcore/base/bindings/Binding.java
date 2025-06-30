@@ -118,7 +118,7 @@ public class Binding<T> extends AbstractBinding<T> {
     /// Then activates the source with [AbstractSource#listen()], registers the binding in [MFXBindings] and sets the state to [BindingState#BOUND].
     ///
     /// @throws IllegalStateException if the binding has been disposed before OR the target is null
-    ///                                                                                           OR the source is null
+    ///                                                                                                                         OR the source is null
     @Override
     public Binding<T> get() {
         if (isDisposed())

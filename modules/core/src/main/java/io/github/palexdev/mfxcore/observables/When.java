@@ -147,7 +147,7 @@ public abstract class When<T> implements DisposableAction {
     /// [#executeNow()] is called. Sometimes, a user may want the construct to be 'one-shot' even for that method.
     ///
     /// @param affectsExecuteNow specifies whether the 'one-shot' construct should be disposed even if the action is
-    ///                                                                            executed by the [#executeNow()] method
+    ///                                                                                                     executed by the [#executeNow()] method
     public When<T> oneShot(boolean affectsExecuteNow) {
         this.execNowOneShot = affectsExecuteNow;
         this.oneShot = true;
