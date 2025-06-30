@@ -224,7 +224,7 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
     /// 3) Note that for convenience we accept a generic [Node] as the `styleable parent`, but for this mechanism to work
     /// we need a [Parent]. Casting is automatically handled in a safe way, so if it's not a [Parent] it will fail silently
     /// (by not fetching any stylesheet).
-    protected class PopupPeer extends PopupWindow {
+    protected class PopupPeer extends PopupWindow implements Peer {
         private final StackPane root = new StackPane() {
             @Override
             public Styleable getStyleableParent() {
@@ -239,18 +239,10 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
             getScene().setRoot(root);
         }
 
-        protected void setContent(Node content) {
-            root.getChildren().setAll(content);
-        }
-
         protected void setStyleableParent(Node styleableParent) {
             boolean reFetch = this.styleableParent != styleableParent;
             this.styleableParent = styleableParent;
             if (reFetch) updateStylesheets();
-        }
-
-        protected void setStyleClass(String... styleClass) {
-            root.getStyleClass().setAll(styleClass);
         }
 
         protected void updateStylesheets() {
@@ -279,6 +271,11 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
             }
             indirectHide = false;
             super.hide();
+        }
+
+        @Override
+        public StackPane getRoot() {
+            return root;
         }
     }
 

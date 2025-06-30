@@ -216,7 +216,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
     /// Sets the root node to a [StackPane], the style to [StageStyle#TRANSPARENT] and the scene's fill to transparent.
     ///
     /// Offers a bunch of convenience methods.
-    protected static class WindowPeer extends Stage {
+    protected static class WindowPeer extends Stage implements Peer {
         private final StackPane root = new StackPane();
 
         {
@@ -226,12 +226,9 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
             setScene(scene);
         }
 
-        protected void setContent(Node content) {
-            root.getChildren().setAll(content);
-        }
-
-        protected void setStyleClass(String... styleClass) {
-            root.getStyleClass().setAll(styleClass);
+        @Override
+        public StackPane getRoot() {
+            return root;
         }
     }
 

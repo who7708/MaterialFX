@@ -23,17 +23,19 @@ import java.util.Optional;
 import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.base.properties.NodeProperty;
 import io.github.palexdev.mfxcore.base.properties.PositionProperty;
+import io.github.palexdev.mfxcore.popups.MFXPopup.Peer;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.layout.Pane;
 import javafx.stage.Window;
 
 /// Abstract implementation of [MFXPopup] to contain properties and behaviors that are common to all kinds of popups.
 ///
 /// @param <O> the popup's owner type
 /// @param <P> the popup's peer type, which is some kind of [Window]
-public abstract class MFXPopupBase<P extends Window, O> implements MFXPopup<O> {
+public abstract class MFXPopupBase<P extends Window & Peer, O> implements MFXPopup<O> {
     //================================================================================
     // Properties
     //================================================================================
@@ -158,6 +160,11 @@ public abstract class MFXPopupBase<P extends Window, O> implements MFXPopup<O> {
     @Override
     public O getOwner() {
         return owner;
+    }
+
+    /// Convenience delegation for [Peer#getRoot()].
+    protected Pane getRoot() {
+        return peer.getRoot();
     }
 
     @Override

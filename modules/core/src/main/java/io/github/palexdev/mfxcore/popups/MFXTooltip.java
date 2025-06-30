@@ -292,7 +292,7 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
 
         @Override
         public void apply(MFXTooltip tooltip) {
-            tooltip.peer.offset = offset;
+            tooltip.setOffset(offset);
             tooltip.anchor = anchor;
             tooltip.inDelay = inDelay;
             tooltip.outDelay = outDelay;

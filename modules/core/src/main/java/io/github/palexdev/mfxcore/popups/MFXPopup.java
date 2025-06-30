@@ -30,6 +30,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.PopupControl;
+import javafx.scene.layout.Pane;
 import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -207,6 +208,26 @@ public interface MFXPopup<O> {
 
     /// Sets the [PopupAnimation] function responsible for animating both on show and hide
     void setAnimation(PopupAnimation animation);
+
+    //================================================================================
+    // Inner Classes
+    //================================================================================
+
+    /// This interface defines the bare minimum API any popup's peer should expose.
+    interface Peer {
+
+        /// @return the popup window's root node. By design, this is always a [Pane] or any subclass because the actual
+        /// popup's content is wrapped in it. This vastly simplifies the implementation.
+        Pane getRoot();
+
+        default void setContent(Node content) {
+            getRoot().getChildren().setAll(content);
+        }
+
+        default void setStyleClass(String... stylecClass) {
+            getRoot().getStyleClass().setAll(stylecClass);
+        }
+    }
 
     /// Interface for popups-specific configurations.
     @FunctionalInterface
