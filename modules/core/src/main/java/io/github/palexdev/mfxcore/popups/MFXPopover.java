@@ -78,7 +78,7 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
     // Constructors
     //================================================================================
     public MFXPopover() {
-        defaultStyleClasses(peer.root);
+        defaultStyleClasses(getRoot());
         PopoverConfig.DEFAULT.apply(this);
     }
 
@@ -150,7 +150,7 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
     @Override
     protected Position computePosition(Node owner, Pos anchor) {
         if (anchor == null) return Position.origin();
-        return AnchorHandlers.handler(anchor).compute(owner, getContent(), getOffset());
+        return AnchorHandlers.handler(anchor).compute(owner, getRoot(), getOffset());
     }
 
     @Override

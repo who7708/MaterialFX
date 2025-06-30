@@ -75,7 +75,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
     // Constructors
     //================================================================================
     public MFXDialog() {
-        defaultStyleClasses(peer.root);
+        defaultStyleClasses(getRoot());
     }
 
     public MFXDialog(String... styleClass) {
@@ -169,7 +169,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
     protected Position computePosition(Window owner, Pos anchor) {
         if (anchor == null) return Position.origin();
         AnchorHandlers.AnchorHandler handler = AnchorHandlers.handler(anchor);
-        if (owner != null) return handler.compute(owner, getContent(), getOffset());
+        if (owner != null) return handler.compute(owner, getRoot(), getOffset());
 
         Screen screen = Optional.ofNullable(fallbackScreen).orElse(Screen.getPrimary());
         Rectangle2D vb = screen.getVisualBounds();
@@ -177,7 +177,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
             vb.getMinX(), vb.getMinY(),
             vb.getWidth(), vb.getHeight()
         );
-        return handler.compute(screenBounds, getContent(), AnchorHandlers.PositionMode.INSIDE, getOffset());
+        return handler.compute(screenBounds, getRoot(), AnchorHandlers.PositionMode.INSIDE, getOffset());
     }
 
     @Override
