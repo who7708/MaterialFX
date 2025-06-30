@@ -176,6 +176,11 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
     }
 
     @Override
+    public PopoverConfig getConfig() {
+        return ((PopoverConfig) config);
+    }
+
+    @Override
     public List<String> defaultStyleClasses() {
         return MFXStyleable.styleClasses("root", "mfx-popup");
     }
@@ -306,6 +311,7 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
             popup.peer.setAutoHide(autoHide);
             popup.peer.setHideOnEscape(hideOnEscape);
             popup.peer.setConsumeAutoHidingEvents(consumeAutoHideEvents);
+            popup.config = this;
         }
 
         public static Builder builder() {

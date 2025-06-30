@@ -209,6 +209,9 @@ public interface MFXPopup<O> {
     /// Sets the [PopupAnimation] function responsible for animating both on show and hide
     void setAnimation(PopupAnimation animation);
 
+    /// @return the currently applied confing on this popup
+    Config<? extends MFXPopup<O>> getConfig();
+
     //================================================================================
     // Inner Classes
     //================================================================================

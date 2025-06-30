@@ -60,6 +60,8 @@ public abstract class MFXPopupBase<P extends Window & Peer, O> implements MFXPop
     };
     private final ReadOnlyObjectWrapper<PopupState> state = new ReadOnlyObjectWrapper<>(PopupState.HIDDEN);
 
+    protected Config<? extends MFXPopup<O>> config;
+
     //================================================================================
     // Constructors
     //================================================================================

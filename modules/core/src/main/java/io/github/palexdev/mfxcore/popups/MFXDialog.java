@@ -207,6 +207,11 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
         peer.setStyleClass(styleClass);
     }
 
+    @Override
+    public DialogConfig getConfig() {
+        return ((DialogConfig) config);
+    }
+
     //================================================================================
     // Inner Classes
     //================================================================================
@@ -257,6 +262,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
             }
             popup.peer.setAlwaysOnTop(alwaysOnTop);
             popup.lockInPlace = lockInPlace;
+            popup.config = this;
         }
 
         public static Builder builder() {

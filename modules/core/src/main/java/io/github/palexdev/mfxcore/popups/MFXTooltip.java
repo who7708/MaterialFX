@@ -116,6 +116,8 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
     private Duration inDelay;
     private Duration outDelay;
 
+    protected TooltipConfig config;
+
     //================================================================================
     // Constructors
     //================================================================================
@@ -247,6 +249,11 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
     }
 
     @Override
+    public TooltipConfig getConfig() {
+        return config;
+    }
+
+    @Override
     public List<String> defaultStyleClasses() {
         return peer.defaultStyleClasses();
     }
@@ -296,6 +303,7 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
             tooltip.anchor = anchor;
             tooltip.inDelay = inDelay;
             tooltip.outDelay = outDelay;
+            tooltip.config = this;
         }
 
         public static Builder builder() {
