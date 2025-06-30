@@ -22,6 +22,7 @@ import java.util.*;
 
 import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
+import io.github.palexdev.mfxcore.observables.When;
 import io.github.palexdev.mfxcore.popups.MFXPopover.PopupPeer;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers;
 import javafx.css.Styleable;
@@ -107,6 +108,14 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
     @Override
     protected void doShow(Node owner, double x, double y) {
         if (animation != null) animation.stop();
+
+        // We need this as a workaround because for some reason when showing/hiding the popover at a very fast rate,
+        // it causes the state property to no update, leaving the popover unable to show anymore
+        When.onInvalidated(peer.showingProperty())
+            .condition(s -> !s)
+            .then(_ -> setState(PopupState.HIDDEN))
+            .oneShot()
+            .listen();
 
         this.owner = owner;
         Node content = getContent();
