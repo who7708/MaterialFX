@@ -106,6 +106,8 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
 
     @Override
     protected void doShow(Node owner, double x, double y) {
+        if (animation != null) animation.stop();
+
         this.owner = owner;
         Node content = getContent();
         content.setVisible(false);
@@ -121,6 +123,8 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
             Position pos = computePosition(owner, anchor);
             setPosition(pos);
         }
+
+        if (animation != null) animation.playIn();
         content.setVisible(true);
         setState(PopupState.SHOWN);
     }

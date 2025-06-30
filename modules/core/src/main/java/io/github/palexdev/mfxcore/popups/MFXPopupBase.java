@@ -40,6 +40,7 @@ public abstract class MFXPopupBase<P extends Window, O> implements MFXPopup<O> {
     protected O owner;
     protected Pos anchor;
     protected Insets offset = Insets.EMPTY;
+    protected PopupAnimation animation = new PopupAnimation(PopupAnimationFunction.FADE);
 
     private final NodeProperty content = new NodeProperty() {
         @Override
@@ -61,6 +62,7 @@ public abstract class MFXPopupBase<P extends Window, O> implements MFXPopup<O> {
     //================================================================================
     protected MFXPopupBase() {
         this.peer = buildPeer();
+        if (animation != null) animation.init(this, peer.getScene().getRoot());
     }
 
     //================================================================================
@@ -121,9 +123,22 @@ public abstract class MFXPopupBase<P extends Window, O> implements MFXPopup<O> {
     @Override
     public void hide() {
         if (!isShowing()) return;
+        if (animation != null) {
+            animation.stop();
+        }
         setState(PopupState.HIDING);
         anchor = null;
         owner = null;
+
+        if (animation != null) {
+            animation.playOut(_ -> {
+                    peer.hide();
+                    setState(PopupState.HIDDEN);
+                }
+            );
+            return;
+        }
+
         peer.hide();
         setState(PopupState.HIDDEN);
     }
@@ -160,5 +175,22 @@ public abstract class MFXPopupBase<P extends Window, O> implements MFXPopup<O> {
 
     protected void setState(PopupState state) {
         this.state.set(state);
+    }
+
+    @Override
+    public PopupAnimation getAnimation() {
+        return animation;
+    }
+
+    @Override
+    public void setAnimation(PopupAnimation animation) {
+        if (this.animation != null) {
+            this.animation.stop();
+            this.animation.reset(peer.getScene().getRoot());
+        }
+        this.animation = animation;
+        if (this.animation != null) {
+            this.animation.init(this, peer.getScene().getRoot());
+        }
     }
 }

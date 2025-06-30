@@ -197,6 +197,12 @@ public interface MFXPopup<O> {
     /// to set the style-classes of the root node.
     void setStyleClass(String... styleClass);
 
+    /// @return the [PopupAnimation] function responsible for animating both on show and hide
+    PopupAnimation getAnimation();
+
+    /// Sets the [PopupAnimation] function responsible for animating both on show and hide
+    void setAnimation(PopupAnimation animation);
+
     /// Interface for popups-specific configurations.
     @FunctionalInterface
     interface Config<P extends MFXPopup<?>> {

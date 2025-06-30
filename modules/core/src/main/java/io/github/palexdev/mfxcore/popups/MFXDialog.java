@@ -90,6 +90,8 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
     @SuppressWarnings("DataFlowIssue")
     @Override
     protected void doShow(Window owner, double x, double y) {
+        if (animation != null) animation.stop();
+
         this.owner = owner;
         if (owner != null) {
             WhenEvent.intercept(owner, WindowEvent.WINDOW_CLOSE_REQUEST)
@@ -111,6 +113,8 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
             setPosition(pos);
         }
         if (backdrop != null) backdrop.show(owner.getScene().getRoot());
+
+        if (animation != null) animation.playIn();
         content.setVisible(true);
         setState(PopupState.SHOWN);
     }
