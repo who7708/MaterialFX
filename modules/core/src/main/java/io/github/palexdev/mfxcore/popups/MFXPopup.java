@@ -129,6 +129,11 @@ public interface MFXPopup<O> {
     /// Hides the popup.
     void hide();
 
+    /// Repositions the popup's window if possible.
+    ///
+    /// See [MFXPopupBase#reposition()].
+    void reposition();
+
     /// @return the owner's for which the popup is shown. Depending on the implementations, this may return `null` if the
     /// popup is hidden.
     O getOwner();

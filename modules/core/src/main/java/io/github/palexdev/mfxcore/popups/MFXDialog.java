@@ -25,6 +25,7 @@ import java.util.Optional;
 import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.events.WhenEvent;
+import io.github.palexdev.mfxcore.observables.When;
 import io.github.palexdev.mfxcore.popups.MFXDialog.WindowPeer;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers;
 import io.github.palexdev.mfxcore.utils.fx.MFXBackdrop;
@@ -67,6 +68,9 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
     private Screen fallbackScreen;
     private MFXBackdrop backdrop;
 
+    private boolean lockInPlace;
+    private When<?> lockWhen;
+
     //================================================================================
     // Constructors
     //================================================================================
@@ -99,6 +103,15 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
                 .asFilter()
                 .oneShot()
                 .register();
+
+            if (lockInPlace) {
+                lockWhen = When.onInvalidated(owner.xProperty())
+                    .then(_ -> reposition())
+                    .invalidating(owner.yProperty())
+                    .invalidating(owner.widthProperty())
+                    .invalidating(owner.heightProperty())
+                    .listen();
+            }
         }
 
         Node content = getContent();
@@ -137,6 +150,21 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
         super.show(owner, anchor);
     }
 
+    @Override
+    public void hide() {
+        if (lockWhen != null) {
+            lockWhen.dispose();
+            lockWhen = null;
+        }
+        super.hide();
+    }
+
+    /// If the given anchor is `null` returns a position of `<0, 0>`.
+    ///
+    /// If the owner is `null`, the position is computed relative to the screen. The [Screen] used is the primary by
+    /// default or the fallback one specified through the [DialogConfig].
+    ///
+    /// In any case, the computation is delegated to the handlers in [AnchorHandlers].
     @Override
     protected Position computePosition(Window owner, Pos anchor) {
         if (anchor == null) return Position.origin();
@@ -215,7 +243,8 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
         Modality modality,
         boolean useBackdrop,
         String[] backdropStyleClass,
-        boolean alwaysOnTop
+        boolean alwaysOnTop,
+        boolean lockInPlace
     ) implements Config<MFXDialog> {
 
         @Override
@@ -230,6 +259,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
                 popup.backdrop = null;
             }
             popup.peer.setAlwaysOnTop(alwaysOnTop);
+            popup.lockInPlace = lockInPlace;
         }
 
         public static Builder builder() {
@@ -243,6 +273,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
             private boolean useBackdrop = false;
             private String[] backdropStyleClass = new String[]{};
             private boolean alwaysOnTop = false;
+            private boolean lockInPlace = false;
 
             public Builder offset(Insets offset) {
                 this.offset = offset;
@@ -274,6 +305,11 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
                 return this;
             }
 
+            public Builder lockInPlace(boolean lockInPlace) {
+                this.lockInPlace = lockInPlace;
+                return this;
+            }
+
             public DialogConfig build() {
                 return new DialogConfig(
                     offset,
@@ -281,7 +317,8 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
                     modality,
                     useBackdrop,
                     backdropStyleClass,
-                    alwaysOnTop
+                    alwaysOnTop,
+                    lockInPlace
                 );
             }
         }

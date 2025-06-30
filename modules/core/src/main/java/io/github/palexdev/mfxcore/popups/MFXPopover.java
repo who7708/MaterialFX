@@ -144,6 +144,9 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
         super.hide();
     }
 
+    /// If the given anchor is `null` returns a position of `<0, 0>`.
+    ///
+    /// Otherwise, the computation is delegated to the handlers in [AnchorHandlers].
     @Override
     protected Position computePosition(Node owner, Pos anchor) {
         if (anchor == null) return Position.origin();

@@ -192,6 +192,11 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
     }
 
     @Override
+    public void reposition() {
+        peer.reposition();
+    }
+
+    @Override
     public Node getOwner() {
         return owner;
     }

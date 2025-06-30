@@ -26,6 +26,7 @@ import io.github.palexdev.mfxcore.base.properties.PositionProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.stage.Window;
 
 /// Abstract implementation of [MFXPopup] to contain properties and behaviors that are common to all kinds of popups.
@@ -141,6 +142,17 @@ public abstract class MFXPopupBase<P extends Window, O> implements MFXPopup<O> {
 
         peer.hide();
         setState(PopupState.HIDDEN);
+    }
+
+    /// Simply calls [#computePosition(Object, Pos)] to re-compute the position and then sets the [#positionProperty()].
+    ///
+    /// Note that this will work only if the popup was shown with an anchor using [#show(Object, Pos)]. Technically, it
+    /// depends on the implementation of [#computePosition(Object, Pos)], so make sure to read both
+    /// [MFXDialog#computePosition(Window, Pos)] and [MFXPopover#computePosition(Node, Pos)].
+    @Override
+    public void reposition() {
+        Position pos = computePosition(owner, anchor);
+        setPosition(pos);
     }
 
     @Override
