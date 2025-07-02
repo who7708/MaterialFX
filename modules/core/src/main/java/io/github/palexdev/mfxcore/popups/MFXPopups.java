@@ -18,6 +18,7 @@
 
 package io.github.palexdev.mfxcore.popups;
 
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import javafx.geometry.Insets;
@@ -100,6 +101,11 @@ public class MFXPopups {
             return this;
         }
 
+        public Builder<O, P> onState(PopupState state, BiConsumer<MFXPopup<O>, PopupState> action) {
+            popup.onState(state, action);
+            return this;
+        }
+
         /// Note: for tooltips this will call [MFXTooltip#install(Node)]!
         public P show(O owner, double x, double y) {
             if (popup instanceof MFXTooltip t) {
@@ -121,6 +127,10 @@ public class MFXPopups {
                 return popup;
             }
             popup.show(owner, anchor);
+            return popup;
+        }
+
+        public P get() {
             return popup;
         }
     }
