@@ -24,6 +24,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+import javafx.collections.ObservableMap;
+
 /// A simple interface indicating that a component supports variants.
 ///
 /// They are handled internally by the [VariantsHandler] class.
@@ -31,6 +33,7 @@ public interface WithVariants {
 
     /// @return a [Set] containing all the applied variants
     Map<Class<?>, Variant> getAppliedVariants();
+    ObservableMap<Class<?>, Variant> getAppliedVariants();
 
     /// @return whether the given variant is contained in [#getAppliedVariants()]
     default boolean isVariantApplied(Variant variant) {

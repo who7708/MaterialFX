@@ -19,7 +19,6 @@
 package io.github.palexdev.mfxcomponents.variants.api;
 
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
 
 import javafx.collections.FXCollections;
@@ -82,8 +81,11 @@ public class VariantsHandler<S extends Styleable & WithVariants> {
         variantsMap.clear();
     }
 
-    public Map<Class<?>, Variant> getAppliedVariants() {
+    public ObservableMap<Class<?>, Variant> getAppliedVariants() {
         return variantsMap;
+    }
 
+    public ObservableMap<Class<?>, Variant> getAppliedVariantsUnmodifiable() {
+        return FXCollections.unmodifiableObservableMap(variantsMap);
     }
 }
