@@ -33,7 +33,7 @@ public interface SynchronizedProperty<T> extends Property<T> {
     /// @param value      the new value of the property
     /// @param observable the observable to wait for
     /// @throws IllegalArgumentException if the given observable is the property itself, or if the passed observable
-    ///                                                                                                                                                                      is another SynchronizedProperty, and it is already waiting for some other observable
+    ///                                                                   is another SynchronizedProperty, and it is already waiting for some other observable
     /// @throws IllegalStateException    if this property is already waiting for another observable
     void setAndWait(T value, ObservableValue<?> observable);
 
@@ -59,9 +59,9 @@ public interface SynchronizedProperty<T> extends Property<T> {
         /// @param observable the observable to wait for
         /// @return whether the check failed
         /// @throws IllegalArgumentException if the given observable is the property itself, or if the passed observable
-        ///                                                                                                                                     is another SynchronizedProperty, and it is already waiting for some other observable
+        ///                                  is another SynchronizedProperty, and it is already waiting for some other observable
         /// @throws IllegalStateException    if the property is bound unidirectionally, or
-        ///                                                                                                                                     if this property is already waiting for another observable
+        ///                                  if this property is already waiting for another observable
         public static <T> boolean check(SynchronizedProperty<T> property, T value, ObservableValue<?> observable) {
             if (observable == property) {
                 throw new IllegalArgumentException("The passed property cannot be the same as this!" +

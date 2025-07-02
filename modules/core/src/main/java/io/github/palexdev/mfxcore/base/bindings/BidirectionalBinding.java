@@ -94,8 +94,7 @@ public class BidirectionalBinding<T> extends AbstractBinding<T> {
     /// Then activates all the sources with [AbstractSource#listen(Target)], registers the binding in [MFXBindings]
     /// and sets the state to [BindingState#BOUND].
     ///
-    /// @throws IllegalStateException if the binding has been disposed before OR the target is null
-    ///                                                                                                                                                       OR there are no sources
+    /// @throws IllegalStateException if the binding has been disposed before OR the target is null OR there are no sources
     @Override
     public BidirectionalBinding<T> get() {
         if (isDisposed())

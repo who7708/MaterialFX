@@ -81,7 +81,7 @@ public class ObservableStack<E> extends SimpleListProperty<E> {
     ///
     /// @param i the index to remove from
     /// @return The element that was removed
-    /// @throws IllegalArgumentException if i is not 0. The stack can only access the top element
+    /// @throws IllegalArgumentException if it is not 0. The stack can only access the top element
     /// @see #pop()
     @Override
     public E remove(int i) throws IllegalArgumentException {
@@ -105,7 +105,7 @@ public class ObservableStack<E> extends SimpleListProperty<E> {
     /// @param i       the index to add the element at
     /// @param element the element to add to the stack
     /// @throws IllegalArgumentException if the index specified is not 0. Only the top of the stack
-    ///                                                                                                                                                                      is accessible
+    ///                                  is accessible
     /// @see #push(Object)
     @Override
     public void add(int i, E element) throws IllegalArgumentException {
@@ -147,8 +147,7 @@ public class ObservableStack<E> extends SimpleListProperty<E> {
     ///
     /// @param obj The object to remove
     /// @return Nothing
-    /// @throws UnsupportedOperationException Removing an arbitrary object is not permitted Use
-    ///                                                                                                                                                         [#pop()]
+    /// @throws UnsupportedOperationException Removing an arbitrary object is not permitted Use [#pop()]
     @Override
     public boolean remove(Object obj) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Operation not allowed, use pop");

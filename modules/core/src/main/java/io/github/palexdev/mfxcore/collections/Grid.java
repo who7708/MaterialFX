@@ -200,7 +200,7 @@ public class Grid<T> implements Iterable<T> {
     /// Clears the grid and uses the given rows num and columns num to fill it with values provided by the given [BiFunction].
     ///
     /// @param valFunction the function accepts the row index and column index of the loop and is expected
-    ///                                                                                                                   to return a T value to add into the grid
+    ///                    to return a T value to add into the grid
     /// @throws IllegalStateException if the rows num or columns num are 0
     public Grid<T> init(int rows, int columns, BiFunction<Integer, Integer, T> valFunction) {
         if (rows == 0 || columns == 0)

@@ -50,8 +50,7 @@ public class SwingFXUtils {
     /// converted into.
     ///
     /// @param bimg the `BufferedImage` object to be converted
-    /// @param wimg an optional `WritableImage` object that can be
-    ///                                                             used to store the returned pixel data
+    /// @param wimg an optional `WritableImage` object that can be used to store the returned pixel data
     /// @return an `Image` object representing a snapshot of the
     /// current pixels in the `BufferedImage`.
     /// @since JavaFX 2.2
@@ -114,8 +113,7 @@ public class SwingFXUtils {
     /// as a potential default storage space if it is not null and is compatible.
     ///
     /// @param fxFormat the PixelFormat of the source FX Image
-    /// @param bimg     an optional existing `BufferedImage` to be used
-    ///                                                                 for storage if it is compatible, or null
+    /// @param bimg     an optional existing `BufferedImage` to be used for storage if it is compatible, or null
     static int
     getBestBufferedImageType(PixelFormat<?> fxFormat, BufferedImage bimg,
                              boolean isOpaque) {
@@ -149,8 +147,7 @@ public class SwingFXUtils {
     /// Determine the appropriate [WritablePixelFormat] type that can
     /// be used to transfer data into the indicated BufferedImage.
     ///
-    /// @param bimg the BufferedImage that will be used as a destination for
-    ///                                                 a `PixelReader<IntBuffer>#getPixels()` operation.
+    /// @param bimg the BufferedImage that will be used as a destination for a `PixelReader<IntBuffer>#getPixels()` operation.
     private static WritablePixelFormat<IntBuffer>
     getAssociatedPixelFormat(BufferedImage bimg) {
         // Should not happen...
@@ -198,8 +195,7 @@ public class SwingFXUtils {
     /// be easily converted into.
     ///
     /// @param img  the JavaFX `Image` to be converted
-    /// @param bimg an optional `BufferedImage` object that may be
-    ///                                                 used to store the returned pixel data
+    /// @param bimg an optional `BufferedImage` object that may be used to store the returned pixel data
     /// @return a `BufferedImage` containing a snapshot of the JavaFX
     /// `Image`, or null if the `Image` is not readable.
     /// @since JavaFX 2.2
