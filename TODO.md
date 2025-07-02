@@ -35,6 +35,13 @@
   - [x] Focus ring
   - [x] CSS
 
+- FABs Menu
+  - [x] Variants: primary, secondary, tertiary
+  - [x] Animations (open/close)
+  - [x] Automatic close (I may have missed something)
+  - [x] Focus ring and proper focus traversal
+  - [x] CSS
+
 #### Misc
 
 - Popups facade over JavaFX complicated mess:
