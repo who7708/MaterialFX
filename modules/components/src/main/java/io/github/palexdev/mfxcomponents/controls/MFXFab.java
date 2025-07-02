@@ -18,9 +18,7 @@
 
 package io.github.palexdev.mfxcomponents.controls;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
 import io.github.palexdev.mfxcomponents.behaviors.MFXButtonBehaviorBase;
@@ -43,6 +41,7 @@ import io.github.palexdev.mfxcore.controls.SkinBase;
 import io.github.palexdev.mfxcore.utils.fx.StyleUtils;
 import io.github.palexdev.mfxresources.base.properties.IconProperty;
 import io.github.palexdev.mfxresources.fonts.MFXFontIcon;
+import javafx.collections.ObservableMap;
 import javafx.css.CssMetaData;
 import javafx.css.Styleable;
 import javafx.css.StyleablePropertyFactory;
@@ -142,8 +141,8 @@ public class MFXFab extends MFXButtonBase<MFXButtonBehaviorBase<MFXFab>> impleme
     }
 
     @Override
-    public Map<Class<?>, Variant> getAppliedVariants() {
-        return Collections.unmodifiableMap(variantsHandler.getAppliedVariants());
+    public ObservableMap<Class<?>, Variant> getAppliedVariants() {
+        return variantsHandler.getAppliedVariantsUnmodifiable();
     }
 
     //================================================================================

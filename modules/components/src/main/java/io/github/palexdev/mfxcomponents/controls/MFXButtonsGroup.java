@@ -18,9 +18,7 @@
 
 package io.github.palexdev.mfxcomponents.controls;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -47,6 +45,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.css.CssMetaData;
 import javafx.css.Styleable;
 import javafx.css.StyleablePropertyFactory;
@@ -223,8 +222,8 @@ public class MFXButtonsGroup extends MFXControl<MFXButtonsGroupBehavior> impleme
     }
 
     @Override
-    public Map<Class<?>, Variant> getAppliedVariants() {
-        return Collections.unmodifiableMap(variantsHandler.getAppliedVariants());
+    public ObservableMap<Class<?>, Variant> getAppliedVariants() {
+        return variantsHandler.getAppliedVariants();
     }
 
     //================================================================================

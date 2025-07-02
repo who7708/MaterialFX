@@ -18,9 +18,7 @@
 
 package io.github.palexdev.mfxcomponents.controls;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
 import io.github.palexdev.mfxcomponents.behaviors.MFXButtonBehavior;
@@ -37,6 +35,7 @@ import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.controls.SkinBase;
 import io.github.palexdev.mfxcore.selection.SelectionGroup;
 import io.github.palexdev.mfxcore.utils.fx.StyleUtils;
+import javafx.collections.ObservableMap;
 import javafx.css.CssMetaData;
 import javafx.css.Styleable;
 import javafx.css.StyleablePropertyFactory;
@@ -130,7 +129,7 @@ public class MFXButton extends MFXSelectable<MFXButtonBehavior> implements WithV
 
     /// {@inheritDoc}
     ///
-    /// Overridden to activate the the [#toggleableProperty()] if the given state is `true`.
+    /// Overridden to activate the [#toggleableProperty()] if the given state is `true`.
     @Override
     protected void onSelectionChanged(boolean state) {
         if (state && !isToggleable()) setToggleable(true);
@@ -153,8 +152,8 @@ public class MFXButton extends MFXSelectable<MFXButtonBehavior> implements WithV
     }
 
     @Override
-    public Map<Class<?>, Variant> getAppliedVariants() {
-        return Collections.unmodifiableMap(variantsHandler.getAppliedVariants());
+    public ObservableMap<Class<?>, Variant> getAppliedVariants() {
+        return variantsHandler.getAppliedVariantsUnmodifiable();
     }
 
     //================================================================================
