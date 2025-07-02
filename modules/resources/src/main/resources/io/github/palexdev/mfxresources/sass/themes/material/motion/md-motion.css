@@ -133,3 +133,9 @@
 .mfx-buttons-group.standard > .mfx-icon-button:pressed:hover {
   -fx-scale-x: 115%
 }
+
+.mfx-fab-menu > .entry {
+  transition-property: -fx-background-radius, -fx-scale-x, -fx-scale-y;
+  transition-timing-function: cubic-bezier(0.27, 1, 0.18, 1);
+  transition-duration: 350ms
+}

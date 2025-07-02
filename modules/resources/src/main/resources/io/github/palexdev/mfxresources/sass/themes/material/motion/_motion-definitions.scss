@@ -114,3 +114,11 @@
     }
   }
 }
+
+@mixin MaterialFloatingActionButtonsMenuMotion() {
+  .mfx-fab-menu > .entry {
+    transition-property        : -fx-background-radius, -fx-scale-x, -fx-scale-y;
+    transition-timing-function : cubic-bezier(0.27, 1, 0.18, 1.0);
+    transition-duration        : md-duration('standard-fast-spatial');
+  }
+}

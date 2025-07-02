@@ -16,18 +16,30 @@
  * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'buttons' as *;
-@use 'buttons-group' as *;
-@use 'fabs' as *;
-@use 'fabs-menu' as *;
-@use 'iconbuttons' as *;
-@use 'layers' as *;
+@mixin MaterialFloatingActionButtonsMenu() {
+  .mfx-fab-menu {
+    > .entry > .label > .mfx-icon-wrapper {
+      -mfx-icon : 'fas-plus'
+    }
 
-@mixin MaterialComponents() {
-  @include SurfaceRipples();
-  @include MaterialButtons();
-  @include MaterialButtonsGroup();
-  @include MaterialFloatingActionButtons();
-  @include MaterialFloatingActionButtonsMenu();
-  @include MaterialIconButtons();
+    > .item > .surface {
+      -mfx-elevation : NONE;
+    }
+
+    // Open state
+    &:open > .entry {
+      /*
+       * It should be 0.9, but becasue there is technically a double scale applied to the FAB, we tone this value down a bit
+       * The reason for the double scale is explained in the skin documentation
+       */
+      -fx-background-radius : 28px; // Half of 56px (small FAB)
+      -fx-border-radius     : 28px;
+      -fx-scale-x           : 95%;
+      -fx-scale-y           : 95%;
+
+      > .label > .mfx-icon-wrapper {
+        -mfx-icon : 'fas-xmark'
+      }
+    }
+  }
 }

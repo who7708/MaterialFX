@@ -43,7 +43,7 @@ public class IconWrapperTest extends Application {
         // Expect the effect behind the icon
         MFXIconWrapper icon = new MFXIconWrapper(FontAwesomeSolid.random(64.0), 128)
             .setAnimated(true)
-            .setAnimationProvider(AnimationPresets.FADE)
+            .setAnimationProvider(AnimationPresets.FADING)
             .enableRipple(true)
             .setIconClip(IconClip.of(IconClip.ClipShape.ROUNDED, -1.0));
         icon.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {

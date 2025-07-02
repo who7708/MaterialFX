@@ -662,6 +662,25 @@
   -mfx-ripple-color: -md-sys-color-on-tertiary-container
 }
 
+.mfx-fab-menu > .entry > .label > .mfx-icon-wrapper {
+  -mfx-icon: "fas-plus"
+}
+
+.mfx-fab-menu > .item > .surface {
+  -mfx-elevation: NONE
+}
+
+.mfx-fab-menu:open > .entry {
+  -fx-background-radius: 28px;
+  -fx-border-radius: 28px;
+  -fx-scale-x: 95%;
+  -fx-scale-y: 95%
+}
+
+.mfx-fab-menu:open > .entry > .label > .mfx-icon-wrapper {
+  -mfx-icon: "fas-xmark"
+}
+
 .mfx-icon-button {
   -fx-background-color: transparent
 }
