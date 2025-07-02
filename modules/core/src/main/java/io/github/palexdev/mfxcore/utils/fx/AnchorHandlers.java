@@ -66,100 +66,86 @@ public class AnchorHandlers {
         return HANDLERS.getOrDefault(pos, AnchorHandlers::center);
     }
 
-    public static Position topLeft(Bounds referenceBounds, Node content, PositionMode mode) {
+    public static Position topLeft(Bounds rb, Node content, PositionMode mode) {
+        Bounds b = content.getLayoutBounds();
         return switch (mode) {
-            case INSIDE -> Position.of(referenceBounds.getMinX(), referenceBounds.getMinY());
-            case ADJACENT -> {
-                Bounds b = content.getLayoutBounds();
-                yield Position.of(referenceBounds.getMinX() - b.getWidth(), referenceBounds.getMinY() - b.getHeight());
-            }
+            case INSIDE -> Position.of(rb.getMinX(), rb.getMinY());
+            case ADJACENT -> Position.of(rb.getMinX() - b.getWidth(), rb.getMinY() - b.getHeight());
+            case ADJACENT_INWARDS -> Position.of(rb.getMinX(), rb.getMinY() - b.getHeight());
         };
     }
 
-    public static Position topCenter(Bounds referenceBounds, Node content, PositionMode mode) {
+    public static Position topCenter(Bounds rb, Node content, PositionMode mode) {
         Bounds b = content.getLayoutBounds();
-        double centerX = referenceBounds.getMinX() + (referenceBounds.getWidth() - b.getWidth()) / 2.0;
-
+        double centerX = rb.getMinX() + (rb.getWidth() - b.getWidth()) / 2.0;
         return switch (mode) {
-            case INSIDE -> Position.of(centerX, referenceBounds.getMinY());
-            case ADJACENT -> Position.of(centerX, referenceBounds.getMinY() - b.getHeight());
+            case INSIDE -> Position.of(centerX, rb.getMinY());
+            case ADJACENT -> Position.of(centerX, rb.getMinY() - b.getHeight());
+            case ADJACENT_INWARDS -> Position.of(centerX, rb.getMinY() - b.getHeight());
         };
     }
 
-    public static Position topRight(Bounds referenceBounds, Node content, PositionMode mode) {
+    public static Position topRight(Bounds rb, Node content, PositionMode mode) {
         Bounds b = content.getLayoutBounds();
         return switch (mode) {
-            case INSIDE -> {
-                double rightX = referenceBounds.getMaxX() - b.getWidth();
-                yield Position.of(rightX, referenceBounds.getMinY());
-            }
-            case ADJACENT -> Position.of(referenceBounds.getMaxX(), referenceBounds.getMinY() - b.getHeight());
+            case INSIDE -> Position.of(rb.getMaxX() - b.getWidth(), rb.getMinY());
+            case ADJACENT -> Position.of(rb.getMaxX(), rb.getMinY() - b.getHeight());
+            case ADJACENT_INWARDS -> Position.of(rb.getMaxX() - b.getWidth(), rb.getMinY() - b.getHeight());
         };
     }
 
-    public static Position centerLeft(Bounds referenceBounds, Node content, PositionMode mode) {
+    public static Position centerLeft(Bounds rb, Node content, PositionMode mode) {
         Bounds b = content.getLayoutBounds();
-        double centerY = referenceBounds.getMinY() + (referenceBounds.getHeight() - b.getHeight()) / 2.0;
-
+        double centerY = rb.getMinY() + (rb.getHeight() - b.getHeight()) / 2.0;
         return switch (mode) {
-            case INSIDE -> Position.of(referenceBounds.getMinX(), centerY);
-            case ADJACENT -> Position.of(referenceBounds.getMinX() - b.getWidth(), centerY);
+            case INSIDE -> Position.of(rb.getMinX(), centerY);
+            case ADJACENT -> Position.of(rb.getMinX() - b.getWidth(), centerY);
+            case ADJACENT_INWARDS -> Position.of(rb.getMinX() - b.getWidth(), centerY);
         };
     }
 
-    public static Position center(Bounds referenceBounds, Node content, PositionMode mode) {
+    public static Position center(Bounds rb, Node content, PositionMode mode) {
         Bounds b = content.getLayoutBounds();
-        double centerX = referenceBounds.getMinX() + (referenceBounds.getWidth() - b.getWidth()) / 2.0;
-        double centerY = referenceBounds.getMinY() + (referenceBounds.getHeight() - b.getHeight()) / 2.0;
+        double centerX = rb.getMinX() + (rb.getWidth() - b.getWidth()) / 2.0;
+        double centerY = rb.getMinY() + (rb.getHeight() - b.getHeight()) / 2.0;
         return Position.of(centerX, centerY);
     }
 
-    public static Position centerRight(Bounds referenceBounds, Node content, PositionMode mode) {
+    public static Position centerRight(Bounds rb, Node content, PositionMode mode) {
         Bounds b = content.getLayoutBounds();
-        double centerY = referenceBounds.getMinY() + (referenceBounds.getHeight() - b.getHeight()) / 2.0;
-
+        double centerY = rb.getMinY() + (rb.getHeight() - b.getHeight()) / 2.0;
         return switch (mode) {
-            case INSIDE -> {
-                double rightX = referenceBounds.getMaxX() - b.getWidth();
-                yield Position.of(rightX, centerY);
-            }
-            case ADJACENT -> Position.of(referenceBounds.getMaxX(), centerY);
+            case INSIDE -> Position.of(rb.getMaxX() - b.getWidth(), centerY);
+            case ADJACENT -> Position.of(rb.getMaxX(), centerY);
+            case ADJACENT_INWARDS -> Position.of(rb.getMaxX() - b.getWidth(), centerY);
         };
     }
 
-    public static Position bottomLeft(Bounds referenceBounds, Node content, PositionMode mode) {
+    public static Position bottomLeft(Bounds rb, Node content, PositionMode mode) {
         Bounds b = content.getLayoutBounds();
         return switch (mode) {
-            case INSIDE -> {
-                double bottomY = referenceBounds.getMaxY() - b.getHeight();
-                yield Position.of(referenceBounds.getMinX(), bottomY);
-            }
-            case ADJACENT -> Position.of(referenceBounds.getMinX(), referenceBounds.getMaxY());
+            case INSIDE -> Position.of(rb.getMinX(), rb.getMaxY() - b.getHeight());
+            case ADJACENT -> Position.of(rb.getMinX(), rb.getMaxY());
+            case ADJACENT_INWARDS -> Position.of(rb.getMinX(), rb.getMaxY() - b.getHeight());
         };
     }
 
-    public static Position bottomCenter(Bounds referenceBounds, Node content, PositionMode mode) {
+    public static Position bottomCenter(Bounds rb, Node content, PositionMode mode) {
         Bounds b = content.getLayoutBounds();
-        double centerX = referenceBounds.getMinX() + (referenceBounds.getWidth() - b.getWidth()) / 2.0;
-
+        double centerX = rb.getMinX() + (rb.getWidth() - b.getWidth()) / 2.0;
         return switch (mode) {
-            case INSIDE -> {
-                double bottomY = referenceBounds.getMaxY() - b.getHeight();
-                yield Position.of(centerX, bottomY);
-            }
-            case ADJACENT -> Position.of(centerX, referenceBounds.getMaxY());
+            case INSIDE -> Position.of(centerX, rb.getMaxY() - b.getHeight());
+            case ADJACENT -> Position.of(centerX, rb.getMaxY());
+            case ADJACENT_INWARDS -> Position.of(centerX, rb.getMaxY() - b.getHeight());
         };
     }
 
-    public static Position bottomRight(Bounds referenceBounds, Node content, PositionMode mode) {
+    public static Position bottomRight(Bounds rb, Node content, PositionMode mode) {
         Bounds b = content.getLayoutBounds();
         return switch (mode) {
-            case INSIDE -> {
-                double rightX = referenceBounds.getMaxX() - b.getWidth();
-                double bottomY = referenceBounds.getMaxY() - b.getHeight();
-                yield Position.of(rightX, bottomY);
-            }
-            case ADJACENT -> Position.of(referenceBounds.getMaxX(), referenceBounds.getMaxY());
+            case INSIDE -> Position.of(rb.getMaxX() - b.getWidth(), rb.getMaxY() - b.getHeight());
+            case ADJACENT -> Position.of(rb.getMaxX(), rb.getMaxY());
+            case ADJACENT_INWARDS -> Position.of(rb.getMaxX() - b.getWidth(), rb.getMaxY() - b.getHeight());
         };
     }
 
@@ -182,7 +168,10 @@ public class AnchorHandlers {
         INSIDE,
 
         /// Position target adjacent to the owner bounds (e.g., popovers/tooltips)
-        ADJACENT
+        ADJACENT,
+
+        /// Position target adjacent to the owner, but facing inward
+        ADJACENT_INWARDS
     }
 
 
@@ -195,6 +184,7 @@ public class AnchorHandlers {
         /// Delegates to [#compute(Bounds, Node, PositionMode)] after modifying the given bounds to take into account the
         /// given offset.
         default Position compute(Bounds referenceBounds, Node content, PositionMode mode, Insets offset) {
+            if (Insets.EMPTY.equals(offset)) return compute(referenceBounds, content, mode);
             double dx = offset.getLeft() - offset.getRight();
             double dy = offset.getTop() - offset.getBottom();
             Bounds shiftedBounds = new BoundingBox(
@@ -229,10 +219,10 @@ public class AnchorHandlers {
 
         /// Delegates to [#compute(Bounds, Node, PositionMode, Insets)] after converting the owner's bounds to screen coordinates.
         ///
-        /// Uses [PositionMode#ADJACENT].
+        /// Uses [PositionMode#ADJACENT_INWARDS].
         default Position compute(Node owner, Node content, Insets offset) {
             Bounds onBounds = owner.localToScreen(owner.getLayoutBounds());
-            return compute(onBounds, content, PositionMode.ADJACENT, offset);
+            return compute(onBounds, content, PositionMode.ADJACENT_INWARDS, offset);
         }
     }
 }
