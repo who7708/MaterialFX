@@ -95,7 +95,7 @@ public class BidirectionalBinding<T> extends AbstractBinding<T> {
     /// and sets the state to [BindingState#BOUND].
     ///
     /// @throws IllegalStateException if the binding has been disposed before OR the target is null
-    ///                                                                                                                         OR there are no sources
+    ///                                                                                                                                                       OR there are no sources
     @Override
     public BidirectionalBinding<T> get() {
         if (isDisposed())
