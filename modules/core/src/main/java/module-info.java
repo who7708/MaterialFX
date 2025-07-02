@@ -51,6 +51,9 @@ module mfx.core {
     // Observables
     exports io.github.palexdev.mfxcore.observables;
 
+    // Popups
+    exports io.github.palexdev.mfxcore.popups;
+
     // Selection
     exports io.github.palexdev.mfxcore.selection;
 

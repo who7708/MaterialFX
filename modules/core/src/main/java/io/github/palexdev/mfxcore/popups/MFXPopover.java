@@ -31,9 +31,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.PopupControl;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.stage.PopupWindow;
 import javafx.stage.Window;
 
@@ -240,7 +238,10 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
         private boolean indirectHide = false;
 
         {
-            root.setBackground(Background.fill(Color.TRANSPARENT));
+            root.setStyle(
+                "-fx-background-color: transparent;\n" +
+                "-fx-padding: 0px;"
+            );
             getScene().setRoot(root);
         }
 
