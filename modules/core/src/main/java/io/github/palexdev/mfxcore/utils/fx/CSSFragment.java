@@ -217,6 +217,15 @@ public class CSSFragment {
             return select(chain.toString());
         }
 
+        /// Appends the given selector without closing the currently opne one.
+        ///
+        /// If one is not open, then delegates to [#select(String)].
+        public Builder appendSelector(String selector) {
+            if (!isSelectorOpen) return select(selector);
+            sb.append(" ").append(selector);
+            return this;
+        }
+
         /// Appends the given pseudo-states to the currently open selector.
         ///
         /// @throws IllegalStateException if no selector is open
