@@ -225,7 +225,7 @@ public class MFXFabSkin extends MFXLabeledSkin<MFXFab, MFXButtonBehaviorBase<MFX
     protected void clip() {
         MFXFab fab = getSkinnable();
         Rectangle r = new Rectangle();
-        r.widthProperty().bind(fab.widthProperty().subtract(snappedLeftInset() + snappedRightInset()));
+        r.widthProperty().bind(fab.widthProperty());
         r.heightProperty().bind(fab.heightProperty());
         label.setClip(r);
     }
