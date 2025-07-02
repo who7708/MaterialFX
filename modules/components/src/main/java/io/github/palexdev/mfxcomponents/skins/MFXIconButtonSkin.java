@@ -90,7 +90,7 @@ public class MFXIconButtonSkin extends SkinBase<MFXButton, MFXButtonBehavior> {
         };
         icon.enableRipple(true);
         icon.animatedProperty().bind(button.animatedProperty());
-        icon.iconProperty().bind(button.iconProperty());
+        icon.iconProperty().bindBidirectional(button.iconProperty());
         icon.setManaged(false);
 
         surface = new MFXSurface(button);

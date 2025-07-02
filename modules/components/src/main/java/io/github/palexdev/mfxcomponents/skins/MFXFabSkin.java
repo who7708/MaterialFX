@@ -86,7 +86,7 @@ public class MFXFabSkin extends MFXLabeledSkin<MFXFab, MFXButtonBehaviorBase<MFX
 
         // Init
         iconWrapper = new MFXIconWrapper(fab.getIcon());
-        iconWrapper.iconProperty().bind(fab.iconProperty());
+        iconWrapper.iconProperty().bindBidirectional(fab.iconProperty());
         iconWrapper.animatedProperty().bind(fab.extendedProperty().not());
         label.setGraphic(iconWrapper);
 
