@@ -19,7 +19,6 @@
 package io.github.palexdev.mfxcomponents.variants.api;
 
 
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -32,8 +31,12 @@ import javafx.collections.ObservableMap;
 public interface WithVariants {
 
     /// @return a [Set] containing all the applied variants
-    Map<Class<?>, Variant> getAppliedVariants();
     ObservableMap<Class<?>, Variant> getAppliedVariants();
+
+    /// @return an applied [Variant] for the given enum class, or `null` if the variant is not applied.
+    default <E extends Enum<?> & Variant> E getAppliedVariant(Class<E> klass) {
+        return klass.cast(getAppliedVariants().get(klass));
+    }
 
     /// @return whether the given variant is contained in [#getAppliedVariants()]
     default boolean isVariantApplied(Variant variant) {
