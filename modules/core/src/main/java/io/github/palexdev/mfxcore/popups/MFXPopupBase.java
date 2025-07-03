@@ -25,7 +25,6 @@ import io.github.palexdev.mfxcore.base.properties.NodeProperty;
 import io.github.palexdev.mfxcore.base.properties.PositionProperty;
 import io.github.palexdev.mfxcore.popups.MFXPopup.Peer;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
@@ -42,7 +41,7 @@ public abstract class MFXPopupBase<P extends Window & Peer, O> implements MFXPop
     protected P peer;
     protected O owner;
     protected Pos anchor;
-    protected Insets offset = Insets.EMPTY;
+    protected Position offset = Position.origin();
     protected PopupAnimation animation = new PopupAnimation(PopupAnimationFunction.FADE);
 
     private final NodeProperty content = new NodeProperty() {
@@ -180,12 +179,12 @@ public abstract class MFXPopupBase<P extends Window & Peer, O> implements MFXPop
     }
 
     @Override
-    public Insets getOffset() {
-        return Optional.ofNullable(offset).orElse(Insets.EMPTY);
+    public Position getOffset() {
+        return Optional.ofNullable(offset).orElse(Position.origin());
     }
 
     @Override
-    public void setOffset(Insets offset) {
+    public void setOffset(Position offset) {
         this.offset = offset;
     }
 

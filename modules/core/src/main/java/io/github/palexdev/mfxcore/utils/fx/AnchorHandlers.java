@@ -25,7 +25,6 @@ import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.popups.MFXPopup;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -183,20 +182,18 @@ public class AnchorHandlers {
 
         /// Delegates to [#compute(Bounds, Node, PositionMode)] after modifying the given bounds to take into account the
         /// given offset.
-        default Position compute(Bounds referenceBounds, Node content, PositionMode mode, Insets offset) {
-            if (Insets.EMPTY.equals(offset)) return compute(referenceBounds, content, mode);
-            double dx = offset.getLeft() - offset.getRight();
-            double dy = offset.getTop() - offset.getBottom();
+        default Position compute(Bounds referenceBounds, Node content, PositionMode mode, Position offset) {
+            if (Position.origin().equals(offset)) return compute(referenceBounds, content, mode);
             Bounds shiftedBounds = new BoundingBox(
-                referenceBounds.getMinX() + dx,
-                referenceBounds.getMinY() + dy,
+                referenceBounds.getMinX() + offset.x(),
+                referenceBounds.getMinY() + offset.y(),
                 referenceBounds.getWidth(),
                 referenceBounds.getHeight()
             );
             return compute(shiftedBounds, content, mode);
         }
 
-        /// Delegates to [#compute(Bounds, Node, PositionMode, Insets)] after building a [BoundingBox] with the position
+        /// Delegates to [#compute(Bounds, Node, PositionMode, Position)] after building a [BoundingBox] with the position
         /// and size of the given owner [Window].
         ///
         /// This method prioritizes using the scene root's bounds converted to screen coordinates to get the actual
@@ -204,7 +201,7 @@ public class AnchorHandlers {
         /// If the scene or root is unavailable, it falls back to the raw window bounds.
         ///
         /// Uses [PositionMode#INSIDE].
-        default Position compute(Window owner, Node content, Insets offset) {
+        default Position compute(Window owner, Node content, Position offset) {
             Bounds owBounds = Optional.ofNullable(owner.getScene())
                 .map(Scene::getRoot)
                 .map(n -> n.localToScreen(n.getLayoutBounds()))
@@ -217,10 +214,10 @@ public class AnchorHandlers {
             return compute(owBounds, content, PositionMode.INSIDE, offset);
         }
 
-        /// Delegates to [#compute(Bounds, Node, PositionMode, Insets)] after converting the owner's bounds to screen coordinates.
+        /// Delegates to [#compute(Bounds, Node, PositionMode, Position)] after converting the owner's bounds to screen coordinates.
         ///
         /// Uses [PositionMode#ADJACENT_INWARDS].
-        default Position compute(Node owner, Node content, Insets offset) {
+        default Position compute(Node owner, Node content, Position offset) {
             Bounds onBounds = owner.localToScreen(owner.getLayoutBounds());
             return compute(onBounds, content, PositionMode.ADJACENT_INWARDS, offset);
         }

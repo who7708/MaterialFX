@@ -29,7 +29,10 @@ import io.github.palexdev.mfxcore.observables.When;
 import io.github.palexdev.mfxcore.popups.MFXDialog.WindowPeer;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers;
 import io.github.palexdev.mfxcore.utils.fx.MFXBackdrop;
-import javafx.geometry.*;
+import javafx.geometry.BoundingBox;
+import javafx.geometry.Bounds;
+import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
@@ -240,7 +243,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
     // Config
 
     public record DialogConfig(
-        Insets offset,
+        Position offset,
         Screen fallbackScreen,
         Modality modality,
         boolean useBackdrop,
@@ -281,7 +284,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
         }
 
         public static final class Builder {
-            private Insets offset = Insets.EMPTY;
+            private Position offset = Position.origin();
             private Screen fallbackScreen;
             private Modality modality = Modality.NONE;
             private boolean useBackdrop = false;
@@ -289,7 +292,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
             private boolean alwaysOnTop = false;
             private boolean lockInPlace = false;
 
-            public Builder offset(Insets offset) {
+            public Builder offset(Position offset) {
                 this.offset = offset;
                 return this;
             }

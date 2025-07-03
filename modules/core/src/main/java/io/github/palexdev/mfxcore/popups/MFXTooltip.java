@@ -36,7 +36,6 @@ import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
@@ -214,12 +213,12 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
     }
 
     @Override
-    public Insets getOffset() {
+    public Position getOffset() {
         return peer.getOffset();
     }
 
     @Override
-    public void setOffset(Insets offset) {
+    public void setOffset(Position offset) {
         peer.setOffset(offset);
     }
 
@@ -284,14 +283,14 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
     // Config
 
     public record TooltipConfig(
-        Insets offset,
+        Position offset,
         Pos anchor,
         Duration inDelay,
         Duration outDelay
     ) implements Config<MFXTooltip> {
 
         public static final TooltipConfig DEFAULT = new TooltipConfig(
-            Insets.EMPTY,
+            Position.origin(),
             Pos.BOTTOM_CENTER,
             Duration.millis(500),
             Duration.millis(500)
@@ -319,12 +318,12 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
         }
 
         public static final class Builder {
-            private Insets offset;
+            private Position offset;
             private Pos anchor;
             private Duration inDelay;
             private Duration outDelay;
 
-            public Builder offset(Insets offset) {
+            public Builder offset(Position offset) {
                 this.offset = offset;
                 return this;
             }

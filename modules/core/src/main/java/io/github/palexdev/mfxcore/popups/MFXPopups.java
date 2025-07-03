@@ -21,7 +21,7 @@ package io.github.palexdev.mfxcore.popups;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import javafx.geometry.Insets;
+import io.github.palexdev.mfxcore.base.beans.Position;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.stage.Window;
@@ -86,7 +86,7 @@ public class MFXPopups {
             return this;
         }
 
-        public Builder<O, P> setOffset(Insets offset) {
+        public Builder<O, P> setOffset(Position offset) {
             popup.setOffset(offset);
             return this;
         }

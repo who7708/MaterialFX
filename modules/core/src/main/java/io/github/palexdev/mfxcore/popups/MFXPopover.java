@@ -27,7 +27,6 @@ import io.github.palexdev.mfxcore.popups.MFXPopover.PopupPeer;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers;
 import io.github.palexdev.mfxcore.utils.fx.CSSFragment;
 import javafx.css.Styleable;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -294,7 +293,7 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
     // Config
 
     public record PopoverConfig(
-        Insets offset,
+        Position offset,
         Node styleableParent,
         boolean autoFix,
         boolean autoHide,
@@ -302,7 +301,7 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
         boolean consumeAutoHideEvents
     ) implements Config<MFXPopover> {
         public static final PopoverConfig DEFAULT = new PopoverConfig(
-            Insets.EMPTY,
+            Position.origin(),
             null,
             true,
             true,
@@ -336,14 +335,14 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
         }
 
         public static class Builder {
-            private Insets offset = Insets.EMPTY;
+            private Position offset = Position.origin();
             private Node styleableParent;
             private boolean autoFix = true;
             private boolean autoHide = true;
             private boolean hideOnEscape = true;
             private boolean consumeAutoHideEvents = false;
 
-            public Builder offset(Insets offset) {
+            public Builder offset(Position offset) {
                 this.offset = offset;
                 return this;
             }
