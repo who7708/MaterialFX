@@ -8,12 +8,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Set up JDK
+        uses: actions/setup-java@v4
         with:
-          python-version: '3.13'
+          distribution: 'zulu'
+          java-version: '24'
+
+      - name: Give permissions to script
+        run: chmod +x scripts/UpdateChangelogs
 
       - name: Run script
-        run: python scripts/update_changelogs.py
+        run: ./scripts/UpdateChangelogs
 
 

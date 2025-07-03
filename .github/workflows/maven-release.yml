@@ -24,13 +24,11 @@ jobs:
           distribution: 'zulu'
           java-version: '24'
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
-
       - name: Give permissions to Gradle
         run: chmod +x gradlew
 
+      - name: Give permissions to script
+        run: chmod +x scripts/Release
+
       - name: Release
-        run: python scripts/release.py
+        run: ./scripts/Release
