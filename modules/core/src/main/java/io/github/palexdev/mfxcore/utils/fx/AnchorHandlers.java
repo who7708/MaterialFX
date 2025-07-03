@@ -126,7 +126,7 @@ public class AnchorHandlers {
         return switch (mode) {
             case INSIDE -> Position.of(rb.getMinX(), rb.getMaxY() - b.getHeight());
             case ADJACENT -> Position.of(rb.getMinX(), rb.getMaxY());
-            case ADJACENT_INWARDS -> Position.of(rb.getMinX(), rb.getMaxY() - b.getHeight());
+            case ADJACENT_INWARDS -> Position.of(rb.getMinX(), rb.getMaxY());
         };
     }
 
@@ -136,7 +136,7 @@ public class AnchorHandlers {
         return switch (mode) {
             case INSIDE -> Position.of(centerX, rb.getMaxY() - b.getHeight());
             case ADJACENT -> Position.of(centerX, rb.getMaxY());
-            case ADJACENT_INWARDS -> Position.of(centerX, rb.getMaxY() - b.getHeight());
+            case ADJACENT_INWARDS -> Position.of(centerX, rb.getMaxY());
         };
     }
 
@@ -145,7 +145,7 @@ public class AnchorHandlers {
         return switch (mode) {
             case INSIDE -> Position.of(rb.getMaxX() - b.getWidth(), rb.getMaxY() - b.getHeight());
             case ADJACENT -> Position.of(rb.getMaxX(), rb.getMaxY());
-            case ADJACENT_INWARDS -> Position.of(rb.getMaxX() - b.getWidth(), rb.getMaxY() - b.getHeight());
+            case ADJACENT_INWARDS -> Position.of(rb.getMaxX() - b.getWidth(), rb.getMaxY());
         };
     }
 
@@ -170,7 +170,7 @@ public class AnchorHandlers {
         /// Position target adjacent to the owner bounds (e.g., popovers/tooltips)
         ADJACENT,
 
-        /// Position target adjacent to the owner, but facing inward
+        /// Position target adjacent to the owner, but facing inward (this affects only the x position)
         ADJACENT_INWARDS
     }
 
