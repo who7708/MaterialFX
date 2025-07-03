@@ -113,7 +113,7 @@ public class SwingFXUtils {
     /// as a potential default storage space if it is not null and is compatible.
     ///
     /// @param fxFormat the PixelFormat of the source FX Image
-    /// @param bimg     an optional existing `BufferedImage` to be used for storage if it is compatible, or null
+    /// @param bimg an optional existing `BufferedImage` to be used for storage if it is compatible, or null
     static int
     getBestBufferedImageType(PixelFormat<?> fxFormat, BufferedImage bimg,
                              boolean isOpaque) {
@@ -194,7 +194,7 @@ public class SwingFXUtils {
     /// is null, is too small or of a type which the image pixels cannot
     /// be easily converted into.
     ///
-    /// @param img  the JavaFX `Image` to be converted
+    /// @param img the JavaFX `Image` to be converted
     /// @param bimg an optional `BufferedImage` object that may be used to store the returned pixel data
     /// @return a `BufferedImage` containing a snapshot of the JavaFX
     /// `Image`, or null if the `Image` is not readable.

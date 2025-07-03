@@ -73,8 +73,8 @@ public class StringUtils {
 
     /// Replaces the last occurrence of the given string with a new string.
     ///
-    /// @param string      The string to modify
-    /// @param substring   The last occurrence to find
+    /// @param string The string to modify
+    /// @param substring The last occurrence to find
     /// @param replacement The replacement
     /// @return The modified string
     public static String replaceLast(String string, String substring, String replacement) {

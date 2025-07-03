@@ -81,9 +81,9 @@ public class Animations {
 
     /// Sets the text of the given [Labeled] with a fade out/fade in transition.
     ///
-    /// @param labeled  the labeled control to change the text to
+    /// @param labeled the labeled control to change the text to
     /// @param duration the fade in and fade out speed
-    /// @param nexText  the new text to set
+    /// @param nexText the new text to set
     /// @return an instance of [AbstractBuilder]
     public static AbstractBuilder transitionText(Labeled labeled, Duration duration, String nexText) {
         return SequentialBuilder.build()
@@ -99,9 +99,9 @@ public class Animations {
 
     /// Sets the text of the given [Text] with a fade out/fade in transition.
     ///
-    /// @param text     the text control to change the text to
+    /// @param text the text control to change the text to
     /// @param duration the fade in and fade out speed
-    /// @param nexText  the new text to set
+    /// @param nexText the new text to set
     /// @return an instance of [AbstractBuilder]
     public static AbstractBuilder transitionText(Text text, Duration duration, String nexText) {
         return SequentialBuilder.build()
@@ -744,8 +744,8 @@ public class Animations {
         /// So you have a [PauseTransition] that runs every tot unit of time and stops only when the given expression is `true`.
         ///
         /// @param booleanExpression the expression to check at a fixed time rate
-        /// @param retryAction       the action to perform when the expression is `false`
-        /// @param onSuccessAction   the action to perform when the expression is `true`
+        /// @param retryAction the action to perform when the expression is `false`
+        /// @param onSuccessAction the action to perform when the expression is `true`
         public void runWhile(BooleanExpression booleanExpression, Runnable retryAction, Runnable onSuccessAction) {
             setOnFinished(event -> {
                 if (!booleanExpression.get()) {

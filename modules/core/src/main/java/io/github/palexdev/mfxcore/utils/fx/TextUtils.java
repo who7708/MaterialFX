@@ -49,7 +49,7 @@ public class TextUtils {
     /// is truncated and updates the specified boolean property accordingly.
     ///
     /// @param isTruncated The boolean property to change
-    /// @param label       The specified label
+    /// @param label The specified label
     public static void registerTruncatedLabelListener(BooleanProperty isTruncated, Label label) {
         label.needsLayoutProperty().addListener((observable, oldValue, newValue) -> {
             String originalString = label.getText();

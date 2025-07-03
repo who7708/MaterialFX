@@ -45,7 +45,7 @@ public interface TriFunction<T, U, V, R> {
     /// If evaluation of either function throws an exception, it is relayed to
     /// the caller of the composed function.
     ///
-    /// @param <X>   the type of output of the `after` function and of the composed function
+    /// @param <X> the type of output of the `after` function and of the composed function
     /// @param after the function to apply after this function is applied
     /// @return a composed function that first applies this function and then
     /// applies the `after` function

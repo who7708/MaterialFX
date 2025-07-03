@@ -83,7 +83,7 @@ public class ObservableGrid<T> extends Grid<T> implements ObservableValue<Observ
     /// Given a list of items and the number of columns the grid will have, generates a new `Grid`.
     /// Every `columnsNum` the list is "sliced" in rows.
     ///
-    /// @param list       the data to generate the grid
+    /// @param list the data to generate the grid
     /// @param columnsNum the number of columns for the grid, also used to "slice" the given list in rows
     public static <T> ObservableGrid<T> fromList(List<T> list, int columnsNum) {
         if (list.isEmpty()) {
@@ -100,7 +100,7 @@ public class ObservableGrid<T> extends Grid<T> implements ObservableValue<Observ
     /// Given an array of items and the number of columns the grid will have, generates a new `Grid`.
     /// Every `columnsNum` the array is "sliced" in rows.
     ///
-    /// @param arr        the data to generate the grid
+    /// @param arr the data to generate the grid
     /// @param columnsNum the number of columns for the grid, also used to "slice" the given array in rows
     public static <T> ObservableGrid<T> fromArray(T[] arr, int columnsNum) {
         return fromList(List.of(arr), columnsNum);

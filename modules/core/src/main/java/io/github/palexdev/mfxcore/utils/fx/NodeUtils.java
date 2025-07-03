@@ -185,10 +185,10 @@ public class NodeUtils {
     ///
     /// The listener is added only if the skin is `null` or the `addListenerIfNotNull` parameter is true.
     ///
-    /// @param control              the control to check for skin initialization
-    /// @param action               the action to perform when the skin is not `null`
+    /// @param control the control to check for skin initialization
+    /// @param action the action to perform when the skin is not `null`
     /// @param addListenerIfNotNull to specify if the listener should be added anyway even if the scene is not `null`
-    /// @param isOneShot            to specify if the listener added to the skin property
+    /// @param isOneShot to specify if the listener added to the skin property
     ///                                                         should be removed after it is not `null` anymore
     public static void waitForSkin(Control control, Runnable action, boolean addListenerIfNotNull, boolean isOneShot) {
         if (control.getSkin() != null) {
@@ -210,10 +210,10 @@ public class NodeUtils {
     ///
     /// The listener is added only if the scene is `null` or the `addListenerIfNotNull` parameter is true.
     ///
-    /// @param node                 the node to check for scene initialization
-    /// @param action               the action to perform when the scene is not `null`
+    /// @param node the node to check for scene initialization
+    /// @param action the action to perform when the scene is not `null`
     /// @param addListenerIfNotNull to specify if the listener should be added anyway even if the scene is not `null`
-    /// @param isOneShot            to specify if the listener added to the scene property
+    /// @param isOneShot to specify if the listener added to the scene property
     ///                             should be removed after it is not `null` anymore
     public static void waitForScene(Node node, Runnable action, boolean addListenerIfNotNull, boolean isOneShot) {
         if (node.getScene() != null) {

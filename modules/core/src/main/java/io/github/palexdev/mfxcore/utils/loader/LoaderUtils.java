@@ -95,7 +95,7 @@ public class LoaderUtils {
 
     /// Sets the location and the controller factory for the given [FXMLLoader] and loads the fxml file.
     ///
-    /// @param fxmlURL           the fxml file to load
+    /// @param fxmlURL the fxml file to load
     /// @param controllerFactory the controller object to set
     /// @return the loaded object hierarchy from the fxml
     private static Parent fxmlLoad(FXMLLoader fxmlLoader, URL fxmlURL, Callback<Class<?>, Object> controllerFactory) throws IOException {

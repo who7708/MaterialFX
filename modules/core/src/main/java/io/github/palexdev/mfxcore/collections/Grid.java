@@ -108,7 +108,7 @@ public class Grid<T> implements Iterable<T> {
     /// Given a list of items and the number of columns the grid will have, generates a new `Grid`.
     /// Every `columnsNum` the list is "sliced" in rows.
     ///
-    /// @param list       the data to generate the grid
+    /// @param list the data to generate the grid
     /// @param columnsNum the number of columns for the grid, also used to "slice" the given list in rows
     public static <T> Grid<T> fromList(List<T> list, int columnsNum) {
         if (list.isEmpty()) {
@@ -125,7 +125,7 @@ public class Grid<T> implements Iterable<T> {
     /// Given an array of items and the number of columns the grid will have, generates a new `Grid`.
     /// Every `columnsNum` the array is "sliced" in rows.
     ///
-    /// @param arr        the data to generate the grid
+    /// @param arr the data to generate the grid
     /// @param columnsNum the number of columns for the grid, also used to "slice" the given array in rows
     public static <T> Grid<T> fromArray(T[] arr, int columnsNum) {
         return fromList(List.of(arr), columnsNum);
@@ -257,7 +257,7 @@ public class Grid<T> implements Iterable<T> {
 
     /// Replaces the diagonal of the grid with the given one.
     ///
-    /// @throws IllegalStateException    if this grid is not a square matrix. In other words, if the
+    /// @throws IllegalStateException if this grid is not a square matrix. In other words, if the
     ///                                                                                                                                                                                                       rows num and the columns num are not the same
     /// @throws IllegalArgumentException if the given diagonal is empty, or if its size is not N
     ///                                                                                                                                                                                                       (where N is both the number of rows and columns)
@@ -341,7 +341,7 @@ public class Grid<T> implements Iterable<T> {
 
     /// Adds the given row at the given index.
     ///
-    /// @throws IllegalArgumentException  if the given row is empty or if its size is not equal to the num of columns
+    /// @throws IllegalArgumentException if the given row is empty or if its size is not equal to the num of columns
     /// @throws IndexOutOfBoundsException if the given index is not a valid row index
     public void addRow(int index, List<T> row) {
         if (row.isEmpty())
@@ -386,7 +386,7 @@ public class Grid<T> implements Iterable<T> {
 
     /// Adds the given column at the given index.
     ///
-    /// @throws IllegalArgumentException  if the given column is empty, or if its size is not equal to the num of rows
+    /// @throws IllegalArgumentException if the given column is empty, or if its size is not equal to the num of rows
     /// @throws IndexOutOfBoundsException if the given index is not a valid column index
     public void addColumn(int index, List<T> column) {
         if (column.isEmpty())
@@ -422,7 +422,7 @@ public class Grid<T> implements Iterable<T> {
 
     /// Replaces the row at the given index with the given row.
     ///
-    /// @throws IllegalArgumentException  if the given row is empty or its size is not equal to the num of columns
+    /// @throws IllegalArgumentException if the given row is empty or its size is not equal to the num of columns
     /// @throws IndexOutOfBoundsException if the given index is not a valid row index
     public void setRow(int index, List<T> row) {
         if (row.isEmpty())
@@ -455,7 +455,7 @@ public class Grid<T> implements Iterable<T> {
 
     /// Replaces the column at the given index with the given column.
     ///
-    /// @throws IllegalArgumentException  if the given column is empty, or its size is not equal to the num of rows
+    /// @throws IllegalArgumentException if the given column is empty, or its size is not equal to the num of rows
     /// @throws IndexOutOfBoundsException if the given index is not a valid column index
     public void setColumn(int index, List<T> column) {
         if (column.isEmpty())
@@ -638,7 +638,7 @@ public class Grid<T> implements Iterable<T> {
             return new Coordinates(row, column);
         }
 
-        /// @param index    the linear index of the item in the grid
+        /// @param index the linear index of the item in the grid
         /// @param nColumns the grid's number of columns
         /// @return a new `Coordinate` object given the linear index of an item and the
         /// grid's number of columns

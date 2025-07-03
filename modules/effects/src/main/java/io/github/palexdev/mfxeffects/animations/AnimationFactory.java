@@ -209,9 +209,9 @@ public enum AnimationFactory {
 
     /// Each enum constant will produce a [Timeline] with the given parameters.
     ///
-    /// @param node   the [Node] on which perform the animation
+    /// @param node the [Node] on which perform the animation
     /// @param millis the duration of the animation in milliseconds
-    /// @param i      the [Interpolator] used by the animations
+    /// @param i the [Interpolator] used by the animations
     public Timeline build(Node node, double millis, Interpolator i) {
         return TimelineBuilder.build().add(keyFrames(node, millis, i)).getAnimation();
     }

@@ -52,7 +52,7 @@ public interface Validated {
 
     /// Convenience method to update the ":invalid" PseudoClass offered by this interface.
     ///
-    /// @param node    the node on which to apply/remove the ":invalid" PseudoClass
+    /// @param node the node on which to apply/remove the ":invalid" PseudoClass
     /// @param invalid the PseudoClass state
     default void updateInvalid(Node node, boolean invalid) {
         node.pseudoClassStateChanged(INVALID_PSEUDO_CLASS, invalid);

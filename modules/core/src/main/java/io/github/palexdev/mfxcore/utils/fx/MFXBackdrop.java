@@ -102,7 +102,7 @@ public class MFXBackdrop extends Region {
     ///
     /// @throws IllegalArgumentException if the owner is null
     /// @throws IllegalArgumentException if the owner is not a [Pane]
-    /// @throws IllegalStateException    if the backdrop is already shown
+    /// @throws IllegalStateException if the backdrop is already shown
     protected Pane preShowCheck(Node owner) {
         if (owner == null)
             throw new IllegalArgumentException("The owner must not be null");

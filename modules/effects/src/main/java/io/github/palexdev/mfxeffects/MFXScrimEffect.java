@@ -51,7 +51,7 @@ public class MFXScrimEffect {
 
     /// Adds a scrim effect to the specified pane with specified opacity.
     ///
-    /// @param pane    The pane to which add the effect
+    /// @param pane The pane to which add the effect
     /// @param opacity The effect opacity/strength
     public void scrim(Pane pane, double opacity) {
         scrim.widthProperty().bind(pane.widthProperty());
@@ -65,7 +65,7 @@ public class MFXScrimEffect {
     /// Same as [#scrim(Pane,double)] but the effect is placed at
     /// the end of the children list, covering all the pane's nodes
     ///
-    /// @param pane    The pane to which add the effect
+    /// @param pane The pane to which add the effect
     /// @param opacity The effect opacity/strength
     public void modalScrim(Pane pane, double opacity) {
         scrim.widthProperty().bind(pane.widthProperty());
@@ -80,8 +80,8 @@ public class MFXScrimEffect {
     /// It also simulates the modal behavior of `Stages`, leaving only the specified
     /// `Node` interactive.
     ///
-    /// @param parent  The pane to which add the effect
-    /// @param child   The node to leave interactive
+    /// @param parent The pane to which add the effect
+    /// @param child The node to leave interactive
     /// @param opacity The effect opacity/strength
     public void modalScrim(Pane parent, Node child, double opacity) {
         scrim.widthProperty().bind(parent.widthProperty());
@@ -115,7 +115,7 @@ public class MFXScrimEffect {
 
     /// Adds a scrim effect to the specified `Window`'s root pane with the specified opacity.
     ///
-    /// @param window  The desired window
+    /// @param window The desired window
     /// @param opacity The desired opacity
     public void scrimWindow(Window window, double opacity) {
         Parent root = window.getScene().getRoot();

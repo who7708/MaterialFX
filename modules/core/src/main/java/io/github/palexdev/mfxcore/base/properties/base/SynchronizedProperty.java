@@ -30,11 +30,11 @@ public interface SynchronizedProperty<T> extends Property<T> {
     ///
     /// Just like JavaFX properties, if the new value is the same as the current value, the method returns and does nothing.
     ///
-    /// @param value      the new value of the property
+    /// @param value the new value of the property
     /// @param observable the observable to wait for
     /// @throws IllegalArgumentException if the given observable is the property itself, or if the passed observable
     ///                                                                   is another SynchronizedProperty, and it is already waiting for some other observable
-    /// @throws IllegalStateException    if this property is already waiting for another observable
+    /// @throws IllegalStateException if this property is already waiting for another observable
     void setAndWait(T value, ObservableValue<?> observable);
 
     /// @return whether this property is in waiting state
@@ -55,12 +55,12 @@ public interface SynchronizedProperty<T> extends Property<T> {
 
         /// Check some parameters before proceeding with the set and wait method
         ///
-        /// @param value      the new value of the property
+        /// @param value the new value of the property
         /// @param observable the observable to wait for
         /// @return whether the check failed
         /// @throws IllegalArgumentException if the given observable is the property itself, or if the passed observable
         ///                                  is another SynchronizedProperty, and it is already waiting for some other observable
-        /// @throws IllegalStateException    if the property is bound unidirectionally, or
+        /// @throws IllegalStateException if the property is bound unidirectionally, or
         ///                                  if this property is already waiting for another observable
         public static <T> boolean check(SynchronizedProperty<T> property, T value, ObservableValue<?> observable) {
             if (observable == property) {

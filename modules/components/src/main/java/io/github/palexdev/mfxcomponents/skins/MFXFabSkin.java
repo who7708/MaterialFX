@@ -147,7 +147,7 @@ public class MFXFabSkin extends MFXLabeledSkin<MFXFab, MFXButtonBehaviorBase<MFX
     /// - The text's opacity, `1.0` is extended, `0.0` otherwise. Note! I said the text opacity, not the label!
     ///   See [MFXLabeled]
     ///
-    /// @param extend   specified whether to extend or collapse
+    /// @param extend specified whether to extend or collapse
     /// @param animated specifies whether to extend/collapse with an animation or not
     protected void extend(boolean extend, boolean animated) {
         MFXFab fab = getSkinnable();

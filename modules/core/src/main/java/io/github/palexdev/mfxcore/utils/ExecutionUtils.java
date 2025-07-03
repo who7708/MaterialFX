@@ -40,7 +40,7 @@ public class ExecutionUtils {
     ///
     /// @param run The Runnable that has to be called on the JFX thread.
     /// @throws InterruptedException If the execution is interrupted.
-    /// @throws ExecutionException   If an exception is occurred in the run method of the Runnable
+    /// @throws ExecutionException If an exception is occurred in the run method of the Runnable
     public static void runAndWaitEx(final Runnable run)
         throws InterruptedException, ExecutionException {
         if (Platform.isFxApplicationThread()) {

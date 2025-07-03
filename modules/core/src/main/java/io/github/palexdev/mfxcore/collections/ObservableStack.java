@@ -102,7 +102,7 @@ public class ObservableStack<E> extends SimpleListProperty<E> {
 
     /// Adds an element to the given index.
     ///
-    /// @param i       the index to add the element at
+    /// @param i the index to add the element at
     /// @param element the element to add to the stack
     /// @throws IllegalArgumentException if the index specified is not 0. Only the top of the stack
     ///                                  is accessible
@@ -156,7 +156,7 @@ public class ObservableStack<E> extends SimpleListProperty<E> {
     /// Attempt to remove a range of objects from the stack, this is also not permitted.
     ///
     /// @param from Start removing from here
-    /// @param to   To here
+    /// @param to To here
     /// @throws UnsupportedOperationException [#remove(Object)]
     @Override
     public void remove(int from, int to) throws UnsupportedOperationException {

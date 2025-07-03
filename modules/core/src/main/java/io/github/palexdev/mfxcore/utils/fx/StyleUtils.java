@@ -37,7 +37,7 @@ public class StyleUtils {
     /// Changes the background color of a `Region` to the desired one.
     ///
     /// @param region The region to change the background color to
-    /// @param fill   The desired color
+    /// @param fill The desired color
     public static void updateBackground(Region region, Paint fill) {
         final Background background = region.getBackground();
         if (background == null || background.getFills().isEmpty()) {
@@ -54,8 +54,8 @@ public class StyleUtils {
 
     /// Changes the background color of a `Region` to the desired one and lets specify the background insets.
     ///
-    /// @param region           The region to change the background color to
-    /// @param fill             The desired color
+    /// @param region The region to change the background color to
+    /// @param fill The desired color
     /// @param backgroundInsets The background insets to use
     public static void updateBackground(Region region, Paint fill, Insets backgroundInsets) {
         final Background background = region.getBackground();
