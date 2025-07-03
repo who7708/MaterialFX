@@ -1,1 +1,32 @@
-## Project - 8b6053aa
+## Project - cc69b56a
+
+- 03-07-2025 <9d98c269> Update release config
+- 03-07-2025 <83b4088d> Fetch all commits when cloning repo, needed by the scripts
+- 03-07-2025 <8a64b59b> JDK is installed on a different path on GitHub actions
+- 03-07-2025 <52f59178> Checkout repo to execute scripts
+- 03-07-2025 <f507de3d> UpdateChangelogs script commit and push after update
+- 03-07-2025 <b570a244> Update CI/CD for the new scripts
+- 03-07-2025 <8016d59f> Migrate scripts from Python to Java
+- 03-07-2025 <1d03d97a> Update scripts
+- 02-07-2025 <8ba07064> Update TODO.md
+- 25-06-2025 <444bc33c> Update TODO.md
+- 24-06-2025 <663f0716> Update TODO.md
+- 24-06-2025 <1ba60dae> Address some minor TODOs
+- 23-06-2025 <e0a9a36b> Address some language level migration warnings
+- 23-06-2025 <16af71c9> Update copyright
+- 23-06-2025 <b463b141> Convert Javadocs to Markdown
+- 19-06-2025 <9cde2196> Rename Styleable to MFXStyleable to avoid conflicts and verbosity
+- 19-06-2025 <f236dc4a> Update TODO
+- 19-06-2025 <be017fb1> Replace init methods with initialization blocks
+- 17-06-2025 <602fab41> Update Idea configs
+- 17-06-2025 <3402581c> Do not import transitive dependencies from VirtualizedFX
+- 17-06-2025 <65c7772e> Update processCSS and re-enable task
+- 17-06-2025 <2946a55b> Make TestFX stfu
+- 03-06-2025 <cc25f792> Temporarily disable processCSS task and other minor tweaks
+- 02-06-2025 <a7080cf7> Reset TODO
+- 01-06-2025 <b150dd74> Rework CI/CD pipeline and changelogs management
+- 01-06-2025 <98c86b64> Nuke changelog system in favor of automatic CI/CD
+- 01-06-2025 <97904ca7> Rename release module to aio
+- 01-06-2025 <20817020> Address task deprecation
+- 01-06-2025 <7ac45f5a> Major project-wise upgrade
+- 01-06-2025 <c1982f4d> Update Gradle to v8.14
