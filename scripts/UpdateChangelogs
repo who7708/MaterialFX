@@ -1,0 +1,352 @@
+#!/usr/local/bin/java --source 21
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.time.Instant;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class UpdateChangelogs {
+    static final Path CHANGELOGS_PATH = Paths.get("changelogs");
+    static final List<Category> CATEGORIES = List.of(
+        new Category("Features", ":sparkles:", ":boom:"),
+        new Category("Bug Fixes", ":bug:"),
+        new Category("Refactoring", ":recycle:"),
+        new Category("Documentation", ":memo:", ":books:"),
+        new Category("Performance", ":zap:"),
+        new Category("Style", ":art:", ":lipstick:"),
+        new Category("Tests", ":white_check_mark:", ":rotating_light:"),
+        new Category("Misc")
+    );
+
+    public static void main(String[] args) {
+        new UpdateChangelogs().run();
+    }
+
+    void run() {
+        updateProjectChangelog();
+        updateModulesChangelogs();
+    }
+
+    void updateProjectChangelog() {
+        try {
+            // Project commits are handled differently since the project per-se is not released and not versioned
+            // Get both hashes of the latest commit and from the project changelog file
+            String hashFromGit = exec("git", "log", "HEAD^..HEAD", "--pretty=format:%h").out().trim();
+            String hashFromFile = getReleaseHashInFile("project");
+            // If the hash from file is null, we cannot continue
+            // If the hashes are equal, no changes made to the project, skip
+            if (hashFromFile == null) {
+                throw new RuntimeException("Last hash not found in project changelog file!");
+            } else if (hashFromGit.equals(hashFromFile)) {
+                System.out.println("No changes found for project, skipping...");
+                return;
+            }
+
+            System.out.println("Updating project changelog...");
+
+            // Get all the commits between the two hashes for the project "module"
+            List<Commit> commits = getCommitsBetween("project", hashFromFile, hashFromGit);
+
+            // We can't append at the top of the file, so we read its content in a list
+            // A secondary toAppend list helps out keeping things simple and clean
+            Path changelogPath = CHANGELOGS_PATH.resolve("project.md");
+            List<String> content = new LinkedList<>(Files.readAllLines(changelogPath, StandardCharsets.UTF_8));
+            content = content.subList(1, content.size()); // Strip the header because it will be updated down
+            List<String> toAppend = new ArrayList<>();
+
+            // Append new header
+            toAppend.add("## Project - %s%n".formatted(hashFromGit));
+
+            for (Commit commit : commits) {
+                String message = commit.header()
+                    .replaceFirst(":\\w*:", "")
+                    .replace("[project]", "")
+                    .trim();
+                toAppend.add("- %s <%s> %s".formatted(commit.date(), commit.hash(), message));
+            }
+
+            // Append two extra newlines at the end to space out different releases
+            // Add the toAppend list at the start of the content list
+            // Re-combine the file's content with String.join
+            // Finally write to file replacing existing content
+            content.addAll(0, toAppend);
+            String out = String.join("\n", content);
+            Files.writeString(changelogPath, out, StandardOpenOption.TRUNCATE_EXISTING);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    void updateModulesChangelogs() {
+        try {
+            // Get release commits (:bookmark:) and parse released modules from last release commit
+            List<Commit> releaseCommits = getReleaseCommits();
+            List<ModuleRelease> releases = parseReleases(releaseCommits.getFirst());
+
+            for (ModuleRelease release : releases) {
+                // Get both hashes of the release commit and from the module changelog file
+                String module = release.module();
+                String hashFromGit = release.commit().hash();
+                String hashFromFile = getReleaseHashInFile(module);
+                // If the hash from file is null, we write to the changelog for the first time
+                // If the hashes are equal, no changes made to the module, skip
+                if (hashFromFile == null) {
+                    System.err.println("Warn: last hash not found in file!");
+                } else if (hashFromGit.equals(hashFromFile)) {
+                    System.out.printf("No changes found for module %s, skipping...%n", module);
+                    continue;
+                }
+
+                System.out.printf("Updating %s module changelog...%n".formatted(module));
+
+                // Get the hash of the previous release commit that contains the module
+                // Then get all the commits between that one and the current release commit, filtering for the module
+                String prevReleaseHash = findPrevRelease(module, releaseCommits, releaseCommits.getFirst());
+                List<Commit> commits = getCommitsBetween(module, prevReleaseHash, releaseCommits.getFirst().hash());
+
+                // We can't append at the top of the file, so we read its content in a list
+                // A secondary toAppend list helps out keeping things simple and clean
+                Path changelogPath = CHANGELOGS_PATH.resolve(module + ".md");
+                List<String> content = new LinkedList<>(Files.readAllLines(changelogPath, StandardCharsets.UTF_8));
+                List<String> toAppend = new ArrayList<>();
+
+                // Append the header for this release: <version> - <date> - <release commit hash>
+                toAppend.add("## %s - %s - %s".formatted(release.version(), currentDate(), release.commit().hash()));
+
+                // Categorize the commits
+                // For each category, in the order defined in CATEGORIES:
+                // - Append the category name
+                // - Append the header of each commit that records changes in the module as:
+                //   - <<hash>> <header message>
+                Map<Category, List<Commit>> categorized = categorizeCommits(commits);
+                for (Category category : CATEGORIES) {
+                    List<Commit> catCommits = categorized.get(category);
+                    if (catCommits == null || catCommits.isEmpty()) continue;
+                    toAppend.add("\n### " + category.name() + "\n");
+                    for (Commit commit : catCommits) {
+                        String message = commit.header()
+                            .replaceFirst(":\\w*:", "")
+                            .replace("[%s]".formatted(module), "")
+                            .trim();
+                        toAppend.add("- <%s> %s".formatted(commit.hash(), message));
+                    }
+                }
+
+                // Append two extra newlines at the end to space out different releases
+                // Add the toAppend list at the start of the content list
+                // Re-combine the file's content with String.join
+                // Finally write to file replacing existing content
+                toAppend.add("\n\n");
+                content.addAll(0, toAppend);
+                String out = String.join("\n", content);
+                Files.writeString(changelogPath, out, StandardOpenOption.TRUNCATE_EXISTING);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    List<Commit> getReleaseCommits() throws Exception {
+        ProcRet ret = exec("git", "log", "--grep=:bookmark:", "--pretty=format:%at%n%h%n%B%n---COMMIT_END---");
+        return Commit.parseFull(ret.out());
+    }
+
+    List<Commit> getCommitsBetween(String module, String from, String to) throws Exception {
+        if (from == null ||
+            to == null
+        ) {
+            System.err.println("Prev hash: " + from);
+            System.err.println("Curr hash: " + to);
+            throw new IllegalArgumentException("Cannot get commits between!");
+        }
+
+        String rangeStr = from + ".." + to;
+        ProcRet ret = exec("git", "log", rangeStr, "--pretty=format:%at%n%h%n%s");
+        return Commit.parsePartial(ret.out()).stream()
+            .filter(c -> c.header().startsWith("[%s]".formatted(module)))
+            .toList();
+    }
+
+    String findPrevRelease(String module, List<Commit> releaseCommits, Commit currCommit) {
+        boolean found = false;
+        for (Commit rc : releaseCommits) {
+            if (rc.hash().equals(currCommit.hash())) {
+                found = true;
+                continue;
+            }
+            if (!found) continue;
+
+            if (rc.message().contains(module))
+                return rc.hash();
+        }
+        return null;
+    }
+
+    List<ModuleRelease> parseReleases(Commit releaseCommit) {
+        List<ModuleRelease> releases = new ArrayList<>();
+        // New format is: :bookmark:... Modules: <module, ...>
+        String[] modules = releaseCommit.header()
+            .substring(releaseCommit.header().indexOf("Modules:") + "Modules:".length())
+            .split(",");
+
+        Pattern pt = Pattern.compile("\\d+(\\.\\d+)+");
+        String[] lines = releaseCommit.message().split("\n");
+        for (String line : lines) {
+            for (String module : modules) {
+                if (!line.contains(module.trim())) continue;
+                Matcher matcher = pt.matcher(line);
+                if (!matcher.find())
+                    throw new RuntimeException("Could not extract version for module: " + module);
+                String ver = matcher.group(0);
+                releases.add(new ModuleRelease(module.trim(), ver.trim(), releaseCommit));
+
+            }
+        }
+        return releases;
+    }
+
+    Map<Category, List<Commit>> categorizeCommits(List<Commit> commits) {
+        Map<Category, List<Commit>> categorized = new HashMap<>();
+        outer:
+        for (Commit commit : commits) {
+            for (Category category : CATEGORIES) {
+                for (String emoji : category.emojis()) {
+                    if (commit.header().contains(emoji)) {
+                        List<Commit> l = categorized.computeIfAbsent(category, c -> new ArrayList<>());
+                        l.add(commit);
+                        continue outer;
+                    }
+                }
+            }
+        }
+        return categorized;
+    }
+
+    String getReleaseHashInFile(String module) throws IOException {
+        Path changelog = CHANGELOGS_PATH.resolve(module + ".md");
+        List<String> lines = Files.readAllLines(changelog, StandardCharsets.UTF_8);
+        for (String line : lines) {
+            if (!line.startsWith("## ")) continue;
+            String[] infos = line.split(" - ");
+            if (infos.length == 2) {
+                return infos[1];
+            } else if (infos.length == 3) {
+                return infos[2].trim();
+            }
+        }
+        return null;
+    }
+
+    //================================================================================
+    // Model
+    //================================================================================
+
+    record ProcRet(
+        int state, String out
+    ) {}
+
+    record Commit(
+        long timestamp,
+        String hash,
+        String header,
+        String message
+    ) {
+        public String date() {
+            Date date = Date.from(Instant.ofEpochSecond(timestamp));
+            return String.format("%1$td-%1$tm-%1$tY", date);
+        }
+
+        public static List<Commit> parseFull(String out) {
+            List<Commit> commits = new ArrayList<>();
+            String[] sCommits = out.split("---COMMIT_END---");
+            for (String sCommit : sCommits) {
+                String[] lines = Arrays.stream(sCommit.split("\n"))
+                    .filter(s -> !s.isBlank())
+                    .toArray(String[]::new);
+                if (lines.length == 0) continue;
+
+                long timestamp = Long.parseLong(lines[0]);
+                String hash = lines[1];
+                String header = lines[2];
+                StringBuilder message = new StringBuilder();
+                for (int i = 3; i < lines.length; i++) {
+                    String line = lines[i];
+                    if (line.startsWith(":"))
+                        message.append(line).append("\n");
+                }
+                commits.add(new Commit(timestamp, hash, header, message.toString()));
+            }
+            return commits;
+        }
+
+        public static List<Commit> parsePartial(String out) {
+            List<Commit> commits = new ArrayList<>();
+            String[] lines = out.split("\n");
+            for (int i = 0; i < lines.length - 2; i += 3) {
+                long timestamp = Long.parseLong(lines[i]);
+                String hash = lines[i + 1];
+                String header = lines[i + 2];
+                commits.add(new Commit(timestamp, hash, header, null));
+            }
+            return commits;
+        }
+    }
+
+    record ModuleRelease(
+        String module,
+        String version,
+        Commit commit
+    ) {}
+
+    record Category(
+        String name,
+        Set<String> emojis
+    ) {
+        Category(String name, String... emojis) {
+            this(name, Set.of(emojis));
+        }
+    }
+
+    //================================================================================
+    // Utilities
+    //================================================================================
+
+    ProcRet exec(String... command) throws Exception {
+        Process proc = new ProcessBuilder()
+            .command(command)
+            .redirectErrorStream(true)
+            .start();
+
+        // Consume the output stream in a separate thread
+        StringBuilder sb = new StringBuilder();
+        Thread outputThread = new Thread(() -> {
+            try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(proc.getInputStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line).append("\n");
+                }
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
+            }
+        });
+        outputThread.start();
+
+        int ret = proc.waitFor();
+        outputThread.join();
+        return new ProcRet(ret, sb.toString());
+    }
+
+    String currentDate() {
+        Date date = Date.from(Instant.now());
+        return String.format("%1$td-%1$tm-%1$tY", date);
+    }
+}
