@@ -25,6 +25,7 @@ import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.observables.When;
 import io.github.palexdev.mfxcore.popups.MFXPopover.PopupPeer;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers;
+import io.github.palexdev.mfxcore.utils.fx.CSSFragment;
 import javafx.css.Styleable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -228,6 +229,13 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
     /// we need a [Parent]. Casting is automatically handled in a safe way, so if it's not a [Parent] it will fail silently
     /// (by not fetching any stylesheet).
     protected class PopupPeer extends PopupWindow implements Peer {
+        private static final String RESET_CSS = CSSFragment.Builder.build()
+            .select(".mfx-popup")
+            .background("transparent")
+            .padding("0px")
+            .toFragment()
+            .toDataUri();
+
         private final StackPane root = new StackPane() {
             @Override
             public Styleable getStyleableParent() {
@@ -238,10 +246,6 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
         private boolean indirectHide = false;
 
         {
-            root.setStyle(
-                "-fx-background-color: transparent;\n" +
-                "-fx-padding: 0px;"
-            );
             getScene().setRoot(root);
         }
 
@@ -257,10 +261,12 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
         }
 
         protected Collection<String> fetchStylesheets() {
-            if (!(styleableParent instanceof Parent parent))
-                return Collections.emptySet();
-
             SequencedSet<String> set = new LinkedHashSet<>();
+            set.addFirst(RESET_CSS);
+
+            if (!(styleableParent instanceof Parent parent))
+                return set;
+
             while (parent != null) {
                 set.addAll(parent.getStylesheets());
                 parent = parent.getParent();
