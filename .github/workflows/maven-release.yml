@@ -31,4 +31,4 @@ jobs:
         run: chmod +x scripts/Release
 
       - name: Release
-        run: ./scripts/Release
+        run: java --source 21 ./scripts/Release
