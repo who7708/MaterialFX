@@ -14,6 +14,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class UpdateChangelogs {
+    static final String COMMIT_USER = "GitHub";
+    static final String COMMIT_MAIL = "noreply@github.com";
+    static final String COMMIT_AUTHOR = "github-actions[bot] <github-actions[bot]@users.noreply.github.com>";
+
     static final Path CHANGELOGS_PATH = Paths.get("changelogs");
     static final List<Category> CATEGORIES = List.of(
         new Category("Features", ":sparkles:", ":boom:"),
@@ -33,6 +37,29 @@ public class UpdateChangelogs {
     void run() {
         updateProjectChangelog();
         updateModulesChangelogs();
+        commit();
+    }
+
+    void commit() {
+        try {
+            String[] changed = exec("git", "status", "--short").out().split("\n");
+            if (changed.length == 0) {
+                System.out.println("No changes found, skipping commit...");
+                return;
+            }
+
+            exec("git", "config", "user.name", COMMIT_USER);
+            exec("git", "config", "user.email", COMMIT_MAIL);
+            exec("git", "add", ".");
+            ProcRet ret = exec(
+                "git", "commit", "--all", "-m", "[project] :memo: Updated changelogs!",
+                "--author=%s".formatted(COMMIT_AUTHOR)
+            );
+            if (ret.state() != 0) throw new RuntimeException(ret.out());
+            exec("git", "push");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     void updateProjectChangelog() {
@@ -66,6 +93,7 @@ public class UpdateChangelogs {
             toAppend.add("## Project - %s%n".formatted(hashFromGit));
 
             for (Commit commit : commits) {
+                if (commit.header().contains("Updated changelogs")) continue;
                 String message = commit.header()
                     .replaceFirst(":\\w*:", "")
                     .replace("[project]", "")
