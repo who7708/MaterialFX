@@ -17,8 +17,8 @@ public class UpdateChangelogs {
     // Settings
     static boolean DRY_RUN = false;
 
-    static final String COMMIT_USER = "GitHub";
-    static final String COMMIT_MAIL = "noreply@github.com";
+    static final String COMMIT_USER = "palexdev";
+    static final String COMMIT_MAIL = "alessandro.parisi406@gmail.com";
     static final String COMMIT_AUTHOR = "github-actions[bot] <github-actions[bot]@users.noreply.github.com>";
 
     static final Path CHANGELOGS_PATH = Paths.get("changelogs");
