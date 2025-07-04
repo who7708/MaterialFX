@@ -1,5 +1,6 @@
-## Project - 6f27b3e1
+## Project - 65803435
 
+- 04-07-2025 <9a551c33> Add help message and dry run option to Release script too
 - 04-07-2025 <19d89568> UpdateChangelogs: do not override Git name and email config (otherwise it is pulled and messes up next commits)
 - 04-07-2025 <02bb607f> Add help message and dry run option to UpdateChangelogs
 - 03-07-2025 <9d98c269> Update release config
