@@ -5,12 +5,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Release {
+    // Settings
+    static boolean DRY_RUN = false;
+
     static final Path GRADLEW;
 
     static {
@@ -22,7 +24,27 @@ public class Release {
     }
 
     public static void main(String[] args) {
+        Set<String> argSet = new LinkedHashSet<>(Arrays.asList(args));
+        if (argSet.contains("--help") || argSet.contains("-h")) {
+            printHelp();
+            return;
+        }
+        if (argSet.contains("--dry-run")) DRY_RUN = true;
         new Release().run();
+    }
+
+    static void printHelp() {
+        String message = """
+            This script is responsible for publishing modules on Maven.
+            Fetches the last commit (which is expected to be a release commit, marked by the :bookmark: gitmoji), parses
+            the released modules list from the header, and then for each runs:
+                <gralew> :<module>:publishAndReleaseToMavenCentral
+            
+            ** Arguments **
+              • --help, -h: Prints this help message.
+              • --dry-run : Prints the modules that would be released, but does not actually run the release process.
+            """;
+        System.out.println(message);
     }
 
     void run() {
@@ -35,8 +57,20 @@ public class Release {
                 return;
             }
 
-            modules.forEach(this::release);
-            System.out.println("🎉 Release process completed.");
+            if (!DRY_RUN) {
+                modules.forEach(this::release);
+                System.out.println("🎉 Release process completed.");
+            } else {
+                StringBuilder sb = new StringBuilder("{\n");
+                modules.forEach(m ->
+                    sb.append("  [name=").append(m.module())
+                        .append(", ")
+                        .append("version=").append(m.version())
+                        .append("],\n")
+                );
+                sb.append("}\n");
+                System.out.println("Modules to release: " + sb);
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }

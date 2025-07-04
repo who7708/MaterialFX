@@ -1,5 +1,7 @@
-## Project - cc69b56a
+## Project - 6f27b3e1
 
+- 04-07-2025 <19d89568> UpdateChangelogs: do not override Git name and email config (otherwise it is pulled and messes up next commits)
+- 04-07-2025 <02bb607f> Add help message and dry run option to UpdateChangelogs
 - 03-07-2025 <9d98c269> Update release config
 - 03-07-2025 <83b4088d> Fetch all commits when cloning repo, needed by the scripts
 - 03-07-2025 <8a64b59b> JDK is installed on a different path on GitHub actions
