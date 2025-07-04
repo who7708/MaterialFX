@@ -14,6 +14,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class UpdateChangelogs {
+    // Settings
+    static boolean DRY_RUN = false;
+
     static final String COMMIT_USER = "GitHub";
     static final String COMMIT_MAIL = "noreply@github.com";
     static final String COMMIT_AUTHOR = "github-actions[bot] <github-actions[bot]@users.noreply.github.com>";
@@ -31,13 +34,45 @@ public class UpdateChangelogs {
     );
 
     public static void main(String[] args) {
+        Set<String> argSet = new LinkedHashSet<>(Arrays.asList(args));
+        if (argSet.contains("--help") || argSet.contains("-h")) {
+            printHelp();
+            return;
+        }
+        if (argSet.contains("--dry-run")) DRY_RUN = true;
         new UpdateChangelogs().run();
+    }
+
+    static void printHelp() {
+        String message = """
+            This script is responsible for updating the changelogs of the project and its modules.
+            It fetches all the commits between the current release and the previous release. Then, for each module in
+            the current release, takes the related commits, categorizes them and appends their header to the changelog.
+            
+            ** Conventions & Standards**
+            - Release commits are identified by the :bookmark: gitmoji
+            - To indicate to which module the commit belongs to, it should start with [<module>]
+            - The gitmoji in the commit tells to which category the changes belong to. If the gitmoji is not present
+              or not recognized, it falls back to the Misc category.
+            - Modules changelogs have this format:
+              ## <release version> - <release date> - <release commit hash>
+              - <commit hash> <header message>
+            - Project changelog has this format:
+              ## Project - <release commit hash>
+              - <commit date> <commit hash> <header message>
+            - Dates are in the format of my country, sorry americans: dd-MM-yyyy
+            
+            ** Arguments **
+              • --help, -h: Prints this help message.
+              • --dry-run : Updates the changelogs but doesn't commit and push. Ideal for local testing.
+            """;
+        System.out.println(message);
     }
 
     void run() {
         updateProjectChangelog();
         updateModulesChangelogs();
-        commit();
+        if (!DRY_RUN) commit();
     }
 
     void commit() {
@@ -73,7 +108,7 @@ public class UpdateChangelogs {
             if (hashFromFile == null) {
                 throw new RuntimeException("Last hash not found in project changelog file!");
             } else if (hashFromGit.equals(hashFromFile)) {
-                System.out.println("No changes found for project, skipping...");
+                System.out.println("No new changes found for project, skipping...");
                 return;
             }
 
@@ -81,12 +116,16 @@ public class UpdateChangelogs {
 
             // Get all the commits between the two hashes for the project "module"
             List<Commit> commits = getCommitsBetween("project", hashFromFile, hashFromGit);
+            if (commits.isEmpty()) {
+                System.out.println("No changes found for project, skipping...");
+                return;
+            }
 
             // We can't append at the top of the file, so we read its content in a list
             // A secondary toAppend list helps out keeping things simple and clean
             Path changelogPath = CHANGELOGS_PATH.resolve("project.md");
             List<String> content = new LinkedList<>(Files.readAllLines(changelogPath, StandardCharsets.UTF_8));
-            content = content.subList(1, content.size()); // Strip the header because it will be updated down
+            content = content.subList(2, content.size()); // Strip the header and the newline because it will be updated down
             List<String> toAppend = new ArrayList<>();
 
             // Append new header
@@ -101,7 +140,6 @@ public class UpdateChangelogs {
                 toAppend.add("- %s <%s> %s".formatted(commit.date(), commit.hash(), message));
             }
 
-            // Append two extra newlines at the end to space out different releases
             // Add the toAppend list at the start of the content list
             // Re-combine the file's content with String.join
             // Finally write to file replacing existing content
@@ -129,7 +167,7 @@ public class UpdateChangelogs {
                 if (hashFromFile == null) {
                     System.err.println("Warn: last hash not found in file!");
                 } else if (hashFromGit.equals(hashFromFile)) {
-                    System.out.printf("No changes found for module %s, skipping...%n", module);
+                    System.out.printf("No new changes found for module %s, skipping...%n", module);
                     continue;
                 }
 
@@ -139,6 +177,10 @@ public class UpdateChangelogs {
                 // Then get all the commits between that one and the current release commit, filtering for the module
                 String prevReleaseHash = findPrevRelease(module, releaseCommits, releaseCommits.getFirst());
                 List<Commit> commits = getCommitsBetween(module, prevReleaseHash, releaseCommits.getFirst().hash());
+                if (commits.isEmpty()) {
+                    System.out.printf("No changes found for module %s, skipping...%n", module);
+                    return;
+                }
 
                 // We can't append at the top of the file, so we read its content in a list
                 // A secondary toAppend list helps out keeping things simple and clean
