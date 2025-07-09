@@ -19,10 +19,12 @@
 package io.github.palexdev.mfxcore.popups;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.observables.When;
+import io.github.palexdev.mfxcore.popups.MFXPopover.PopoverConfig.Builder;
 import io.github.palexdev.mfxcore.popups.MFXPopover.PopupPeer;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
@@ -89,6 +91,13 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
     //================================================================================
     // Methods
     //================================================================================
+
+    /// Convenience method to change the configuration of this popover. The provided builder starts with the values from
+    /// the current config.
+    public MFXPopover configure(Consumer<Builder> cfg) {
+        cfg.accept(PopoverConfig.builder(getConfig()));
+        return this;
+    }
 
     /// Invokes [PopupPeer#updateStylesheets()]. Check [PopupPeer]'s documentation to understand when to use this!
     public void updateStylesheets() {

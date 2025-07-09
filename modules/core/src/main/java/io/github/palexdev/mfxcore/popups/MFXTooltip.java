@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.base.properties.NodeProperty;
@@ -32,6 +33,7 @@ import io.github.palexdev.mfxcore.behavior.DisposableAction;
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.events.WhenEvent;
 import io.github.palexdev.mfxcore.observables.When;
+import io.github.palexdev.mfxcore.popups.MFXTooltip.TooltipConfig.Builder;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.HAlign;
@@ -180,9 +182,17 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
         timer.playFromStart();
     }
 
+    /// Convenience method to change the configuration of this tooltip. The provided builder starts with the values from
+    /// the current config.
+    public MFXTooltip configure(Consumer<Builder> cfg) {
+        cfg.accept(TooltipConfig.builder(getConfig()));
+        return this;
+    }
+
     //================================================================================
     // Overridden Methods
     //================================================================================
+
     @Override
     public void show(Node owner, double x, double y) {
         throw new UnsupportedOperationException("Tooltips cannot be shown directly, but need to be installed on a 'owner' Node");

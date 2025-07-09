@@ -20,11 +20,13 @@ package io.github.palexdev.mfxcore.popups;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.events.WhenEvent;
 import io.github.palexdev.mfxcore.observables.When;
+import io.github.palexdev.mfxcore.popups.MFXDialog.DialogConfig.Builder;
 import io.github.palexdev.mfxcore.popups.MFXDialog.WindowPeer;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
@@ -84,6 +86,17 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
 
     public MFXDialog(String... styleClass) {
         setStyleClass(styleClass);
+    }
+
+    //================================================================================
+    // Methods
+    //================================================================================
+
+    /// Convenience method to change the configuration of this dialog. The provided builder starts with the values from
+    /// the current config.
+    public MFXDialog configure(Consumer<Builder> cfg) {
+        cfg.accept(DialogConfig.builder(getConfig()));
+        return this;
     }
 
     //================================================================================
