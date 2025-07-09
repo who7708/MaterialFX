@@ -194,7 +194,12 @@ public class WhenEvent<T extends Event> implements DisposableAction {
 
     /// Sets a flag that will make the built [EventHandler] be registered as a filter.
     public WhenEvent<T> asFilter() {
-        this.asFilter = true;
+        return asFilter(true);
+    }
+
+    /// Sets a flag that will make the built [EventHandler] be registered as a filter, to the given value.
+    public WhenEvent<T> asFilter(boolean asFilter) {
+        this.asFilter = asFilter;
         return this;
     }
 
