@@ -24,6 +24,7 @@ import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.base.properties.NodeProperty;
 import io.github.palexdev.mfxcore.base.properties.PositionProperty;
 import io.github.palexdev.mfxcore.observables.When;
+import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -121,10 +122,10 @@ public interface MFXPopup<O> {
     /// The owner handling may differ depending on the implementation.
     void show(O owner, double x, double y);
 
-    /// Shows this popup for the given owner at the specified position.
+    /// Shows this popup for the given owner, at the specified anchor with the given alignment, all relative to the owner.
     ///
     /// The coordinates computation may differ depending on the implementation.
-    void show(O owner, Pos anchor);
+    void show(O owner, Pos anchor, Align alignment);
 
     /// Hides the popup.
     void hide();

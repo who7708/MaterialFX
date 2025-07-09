@@ -32,6 +32,10 @@ import io.github.palexdev.mfxcore.behavior.DisposableAction;
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.events.WhenEvent;
 import io.github.palexdev.mfxcore.observables.When;
+import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers;
+import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
+import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.HAlign;
+import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.VAlign;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -86,6 +90,7 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
     //================================================================================
     private Node owner;
     private Pos anchor;
+    private Align alignment;
     private final MFXPopover peer = new MFXPopover() {
         @Override
         protected void doShow(Node owner, double x, double y) {
@@ -94,12 +99,12 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
         }
 
         @Override
-        public void show(Node owner, Pos anchor) {
+        public void show(Node owner, Pos anchor, Align alignment) {
             if (timer.getStatus() == Animation.Status.RUNNING)
                 timer.stop();
 
             timer.setDuration(inDelay);
-            timer.setOnFinished(_ -> super.show(owner, anchor));
+            timer.setOnFinished(_ -> super.show(owner, anchor, alignment));
             timer.playFromStart();
         }
 
@@ -139,7 +144,7 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
     protected void initTooltip(Node owner) {
         Collections.addAll(handlers,
             WhenEvent.intercept(owner, MouseEvent.MOUSE_ENTERED)
-                .process(_ -> peer.show(owner, anchor))
+                .process(_ -> peer.show(owner, anchor, alignment))
                 .asFilter()
                 .register(),
             WhenEvent.intercept(owner, MouseEvent.MOUSE_EXITED)
@@ -179,7 +184,7 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
     }
 
     @Override
-    public void show(Node owner, Pos anchor) {
+    public void show(Node owner, Pos anchor, Align alignment) {
         throw new UnsupportedOperationException("Tooltips cannot be shown directly, but need to be installed on a 'owner' Node");
     }
 
@@ -283,23 +288,26 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
     // Config
 
     public record TooltipConfig(
-        Position offset,
         Pos anchor,
+        Align alignment,
+        Position offset,
         Duration inDelay,
         Duration outDelay
     ) implements Config<MFXTooltip> {
 
         public static final TooltipConfig DEFAULT = new TooltipConfig(
-            Position.origin(),
             Pos.BOTTOM_CENTER,
+            Align.of(HAlign.CENTER, VAlign.BELOW),
+            Position.origin(),
             Duration.millis(500),
             Duration.millis(500)
         );
 
         @Override
         public void apply(MFXTooltip tooltip) {
-            tooltip.setOffset(offset);
             tooltip.anchor = anchor;
+            tooltip.alignment = alignment;
+            tooltip.setOffset(offset);
             tooltip.inDelay = inDelay;
             tooltip.outDelay = outDelay;
             tooltip.config = this;
@@ -318,18 +326,24 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
         }
 
         public static final class Builder {
-            private Position offset;
-            private Pos anchor;
-            private Duration inDelay;
-            private Duration outDelay;
-
-            public Builder offset(Position offset) {
-                this.offset = offset;
-                return this;
-            }
+            private Pos anchor = Pos.BOTTOM_CENTER;
+            private Align alignment = AnchorHandlers.Align.of(HAlign.CENTER, VAlign.BELOW);
+            private Position offset = Position.origin();
+            private Duration inDelay = Duration.millis(500);
+            private Duration outDelay = Duration.millis(500);
 
             public Builder anchor(Pos anchor) {
                 this.anchor = anchor;
+                return this;
+            }
+
+            public Builder alignment(Align alignment) {
+                this.alignment = alignment;
+                return this;
+            }
+
+            public Builder offset(Position offset) {
+                this.offset = offset;
                 return this;
             }
 
@@ -353,10 +367,11 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
 
             public TooltipConfig build() {
                 return new TooltipConfig(
-                    offset,
                     anchor,
-                    inDelay != null ? inDelay : TooltipConfig.DEFAULT.inDelay(),
-                    outDelay != null ? outDelay : TooltipConfig.DEFAULT.outDelay()
+                    alignment,
+                    offset,
+                    inDelay,
+                    outDelay
                 );
             }
         }

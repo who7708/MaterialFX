@@ -22,6 +22,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import io.github.palexdev.mfxcore.base.beans.Position;
+import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.stage.Window;
@@ -29,6 +30,7 @@ import javafx.stage.Window;
 /// A nice, convenient facade over the [MFXPopups][MFXPopup] API.
 ///
 /// You can easily build, configure and show any kind of [MFXPopup] in a type-safe and declarative way.
+@SuppressWarnings("BuilderMissingRequiredFields")
 public class MFXPopups {
 
     //================================================================================
@@ -116,17 +118,19 @@ public class MFXPopups {
             return popup;
         }
 
-        /// Note: for tooltips this will call [MFXTooltip#install(Node)] and override the set anchor with the given one!
-        public P show(O owner, Pos anchor) {
+        /// Note: for tooltips this will call [MFXTooltip#install(Node)] and override the set anchor and alignment with
+        /// the given ones!
+        public P show(O owner, Pos anchor, Align alignment) {
             if (popup instanceof MFXTooltip t) {
                 t.install(((Node) owner));
                 MFXTooltip.TooltipConfig.builder(t.getConfig())
                     .anchor(anchor)
+                    .alignment(alignment)
                     .build()
                     .apply(t);
                 return popup;
             }
-            popup.show(owner, anchor);
+            popup.show(owner, anchor, alignment);
             return popup;
         }
 

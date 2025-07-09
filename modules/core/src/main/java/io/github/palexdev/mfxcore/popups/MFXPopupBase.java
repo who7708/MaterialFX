@@ -24,6 +24,7 @@ import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.base.properties.NodeProperty;
 import io.github.palexdev.mfxcore.base.properties.PositionProperty;
 import io.github.palexdev.mfxcore.popups.MFXPopup.Peer;
+import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -41,6 +42,7 @@ public abstract class MFXPopupBase<P extends Window & Peer, O> implements MFXPop
     protected P peer;
     protected O owner;
     protected Pos anchor;
+    protected Align alignment;
     protected Position offset = Position.origin();
     protected PopupAnimation animation = new PopupAnimation(PopupAnimationFunction.FADE);
 
@@ -84,10 +86,10 @@ public abstract class MFXPopupBase<P extends Window & Peer, O> implements MFXPop
     protected abstract void doShow(O owner, double x, double y);
 
     /// This is responsible for computing the popup's window position relative to the given owner and according to the
-    /// given anchor position.
+    /// given anchor and alignment.
     ///
     /// Implementations should take into account the offset returned by [#getOffset()].
-    protected abstract Position computePosition(O owner, Pos anchor);
+    protected abstract Position computePosition(O owner, Pos anchor, Align alignment);
 
     //================================================================================
     // Methods
@@ -115,12 +117,13 @@ public abstract class MFXPopupBase<P extends Window & Peer, O> implements MFXPop
     }
 
     @Override
-    public void show(O owner, Pos anchor) {
+    public void show(O owner, Pos anchor, Align alignment) {
         if (isShowing()) return;
         preShowCheck(owner);
         setState(PopupState.SHOWING);
         this.anchor = anchor;
-        Position p = computePosition(owner, anchor);
+        this.alignment = alignment;
+        Position p = computePosition(owner, anchor, alignment);
         doShow(owner, p.x(), p.y());
     }
 
@@ -147,14 +150,14 @@ public abstract class MFXPopupBase<P extends Window & Peer, O> implements MFXPop
         setState(PopupState.HIDDEN);
     }
 
-    /// Simply calls [#computePosition(Object, Pos)] to re-compute the position and then sets the [#positionProperty()].
+    /// Simply calls [#computePosition(Object, Pos, Align)] to re-compute the position and then sets the [#positionProperty()].
     ///
-    /// Note that this will work only if the popup was shown with an anchor using [#show(Object, Pos)]. Technically, it
-    /// depends on the implementation of [#computePosition(Object, Pos)], so make sure to read both
-    /// [MFXDialog#computePosition(Window, Pos)] and [MFXPopover#computePosition(Node, Pos)].
+    /// Note that this will work only if the popup was shown with an anchor using [#show(Object, Pos, Align)].
+    /// Technically, it depends on the implementation of [#computePosition(Object, Pos, Align)], so make sure to read both
+    /// [MFXDialog#computePosition(Window, Pos ,Align)] and [MFXPopover#computePosition(Node, Pos, Align)].
     @Override
     public void reposition() {
-        Position pos = computePosition(owner, anchor);
+        Position pos = computePosition(owner, anchor, alignment);
         setPosition(pos);
     }
 

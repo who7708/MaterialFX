@@ -19,7 +19,6 @@
 package io.github.palexdev.mfxcore.popups;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import io.github.palexdev.mfxcore.base.beans.Position;
@@ -28,6 +27,7 @@ import io.github.palexdev.mfxcore.events.WhenEvent;
 import io.github.palexdev.mfxcore.observables.When;
 import io.github.palexdev.mfxcore.popups.MFXDialog.WindowPeer;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers;
+import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
 import io.github.palexdev.mfxcore.utils.fx.MFXBackdrop;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
@@ -63,7 +63,8 @@ import javafx.stage.*;
 /// Note that if no owner is specified, there won't be automatic dismissal. When an owner is set, this listens for
 /// [WindowEvent#WINDOW_CLOSE_REQUEST] events on the owner and automatically closes itself!
 ///
-/// @see AnchorHandlers.PositionMode
+/// @see AnchorHandlers
+/// @see Align
 public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXStyleable {
     //================================================================================
     // Properties
@@ -125,7 +126,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
 
         if (anchor != null) {
             // Re-compute position because the content's bounds are reliable now
-            Position pos = computePosition(owner, anchor);
+            Position pos = computePosition(owner, anchor, alignment);
             setPosition(pos);
         }
         if (backdrop != null) backdrop.show(owner.getScene().getRoot());
@@ -145,12 +146,12 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
     }
 
     @Override
-    public void show(Window owner, Pos anchor) {
+    public void show(Window owner, Pos anchor, Align alignment) {
         if (isShowing()) {
             peer.toFront();
             return;
         }
-        super.show(owner, anchor);
+        super.show(owner, anchor, alignment);
     }
 
     @Override
@@ -169,10 +170,10 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
     ///
     /// In any case, the computation is delegated to the handlers in [AnchorHandlers].
     @Override
-    protected Position computePosition(Window owner, Pos anchor) {
+    protected Position computePosition(Window owner, Pos anchor, Align alignment) {
         if (anchor == null) return Position.origin();
         AnchorHandlers.AnchorHandler handler = AnchorHandlers.handler(anchor);
-        if (owner != null) return handler.compute(owner, getRoot(), getOffset());
+        if (owner != null) return handler.compute(owner, getRoot(), alignment, getOffset());
 
         Screen screen = Optional.ofNullable(fallbackScreen).orElse(Screen.getPrimary());
         Rectangle2D vb = screen.getVisualBounds();
@@ -180,7 +181,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
             vb.getMinX(), vb.getMinY(),
             vb.getWidth(), vb.getHeight()
         );
-        return handler.compute(screenBounds, getRoot(), AnchorHandlers.PositionMode.INSIDE, getOffset());
+        return handler.compute(screenBounds, getRoot(), alignment, getOffset());
     }
 
     @Override
@@ -303,7 +304,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
             }
 
             public Builder modality(Modality modality) {
-                this.modality = Objects.requireNonNull(modality, "Null modality");
+                this.modality = modality;
                 return this;
             }
 
