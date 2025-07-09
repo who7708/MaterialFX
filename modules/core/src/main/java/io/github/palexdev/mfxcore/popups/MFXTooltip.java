@@ -99,6 +99,12 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
         }
 
         @Override
+        public void hide() {
+            tracker.set((WeakReference<MFXTooltip>) null);
+            super.hide();
+        }
+
+        @Override
         public void show(Node owner, Pos anchor, Align alignment) {
             if (timer.getStatus() == Animation.Status.RUNNING)
                 timer.stop();
@@ -192,8 +198,6 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
     public void hide() {
         if (timer.getStatus() == Animation.Status.RUNNING)
             timer.stop();
-
-        tracker.set((WeakReference<MFXTooltip>) null);
         peer.hide();
     }
 
