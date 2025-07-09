@@ -88,9 +88,6 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
     //================================================================================
     // Properties
     //================================================================================
-    private Node owner;
-    private Pos anchor;
-    private Align alignment;
     private final MFXPopover peer = new MFXPopover() {
         @Override
         protected void doShow(Node owner, double x, double y) {
@@ -120,13 +117,15 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
         }
     };
 
+    private Node owner;
+    private Pos anchor;
+    private Align alignment;
+
     private final PauseTransition timer = new PauseTransition();
     private final List<DisposableAction> handlers = new ArrayList<>();
 
     private Duration inDelay;
     private Duration outDelay;
-
-    protected TooltipConfig config;
 
     //================================================================================
     // Constructors
@@ -258,7 +257,7 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
 
     @Override
     public TooltipConfig getConfig() {
-        return config;
+        return (TooltipConfig) peer.config;
     }
 
     @Override
@@ -314,7 +313,7 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
             tooltip.setOffset(offset);
             tooltip.inDelay = inDelay;
             tooltip.outDelay = outDelay;
-            tooltip.config = this;
+            tooltip.peer.config = this;
         }
 
         public static Builder builder() {
@@ -323,8 +322,9 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
 
         public static Builder builder(TooltipConfig config) {
             return new Builder()
-                .offset(config.offset)
                 .anchor(config.anchor)
+                .alignment(config.alignment)
+                .offset(config.offset)
                 .inDelay(config.inDelay)
                 .outDelay(config.outDelay);
         }
