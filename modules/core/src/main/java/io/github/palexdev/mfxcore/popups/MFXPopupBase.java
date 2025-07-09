@@ -113,7 +113,8 @@ public abstract class MFXPopupBase<P extends Window & Peer, O> implements MFXPop
         if (isShowing()) return;
         preShowCheck(owner);
         setState(PopupState.SHOWING);
-        doShow(owner, x, y);
+        Position offset = getOffset();
+        doShow(owner, x + offset.x(), y + offset.y());
     }
 
     @Override
