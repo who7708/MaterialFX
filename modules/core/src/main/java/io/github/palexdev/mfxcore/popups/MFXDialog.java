@@ -95,7 +95,9 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
     /// Convenience method to change the configuration of this dialog. The provided builder starts with the values from
     /// the current config.
     public MFXDialog configure(Consumer<Builder> cfg) {
-        cfg.accept(DialogConfig.builder(getConfig()));
+        Builder builder = DialogConfig.builder(getConfig());
+        cfg.accept(builder);
+        builder.build().apply(this);
         return this;
     }
 
@@ -270,7 +272,10 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
         public void apply(MFXDialog popup) {
             popup.offset = offset;
             popup.fallbackScreen = fallbackScreen;
-            popup.peer.initModality(modality);
+            try {
+                // Nice shit JavaFX
+                popup.peer.initModality(modality);
+            } catch (Exception ignored) {}
             if (useBackdrop) {
                 popup.backdrop = new MFXBackdrop();
                 popup.backdrop.getStyleClass().addAll(backdropStyleClass);

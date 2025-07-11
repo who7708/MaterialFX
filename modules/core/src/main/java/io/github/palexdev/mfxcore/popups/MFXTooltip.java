@@ -185,7 +185,9 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
     /// Convenience method to change the configuration of this tooltip. The provided builder starts with the values from
     /// the current config.
     public MFXTooltip configure(Consumer<Builder> cfg) {
-        cfg.accept(TooltipConfig.builder(getConfig()));
+        Builder builder = TooltipConfig.builder(getConfig());
+        cfg.accept(builder);
+        builder.build().apply(this);
         return this;
     }
 

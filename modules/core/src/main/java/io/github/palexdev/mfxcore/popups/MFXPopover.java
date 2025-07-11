@@ -95,7 +95,9 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
     /// Convenience method to change the configuration of this popover. The provided builder starts with the values from
     /// the current config.
     public MFXPopover configure(Consumer<Builder> cfg) {
-        cfg.accept(PopoverConfig.builder(getConfig()));
+        Builder builder = PopoverConfig.builder(getConfig());
+        cfg.accept(builder);
+        builder.build().apply(this);
         return this;
     }
 
