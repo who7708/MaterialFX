@@ -1,0 +1,83 @@
+/*
+ * Copyright (C) 2025 Parisi Alessandro - alessandro.parisi406@gmail.com
+ * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX)
+ *
+ * MaterialFX is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * MaterialFX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package io.github.palexdev.mfxcore.input;
+
+import io.github.palexdev.mfxcore.enums.OS;
+import io.github.palexdev.mfxcore.utils.OSUtils;
+import javafx.scene.input.KeyCode;
+
+/// Enumeration to represent the four most important modifiers on any keyboard:
+/// - `ALT`
+/// - `CONTROL`
+/// - `META`, which is either the Win key or Cmd key on Mac
+/// - `SHIFT`
+///
+/// Each modifier is associated with a [KeyCode] from JavaFX.
+public enum KeyModifier {
+    ALT(KeyCode.ALT),
+    CONTROL(KeyCode.CONTROL) {
+        @Override
+        public String toString() {
+            return "Ctrl";
+        }
+    },
+    META(KeyCode.META) {
+        @Override
+        public String toString() {
+            return switch (OSUtils.os()) {
+                case Mac -> "Cmd";
+                case Windows -> "Win";
+                default -> "Meta";
+            };
+        }
+    },
+    SHIFT(KeyCode.SHIFT),
+    ;
+
+    final KeyCode keyCode;
+
+    KeyModifier(KeyCode keyCode) {
+        this.keyCode = keyCode;
+    }
+
+    public KeyCode keyCode() {
+        return keyCode;
+    }
+
+    /// @return a [KeyModifier] parsed from the given string, or `null` if the input is invalid
+    public static KeyModifier fromString(String s) {
+        if ("win".equalsIgnoreCase(s) || "cmd".equalsIgnoreCase(s)) return META;
+        if ("ctrl".equalsIgnoreCase(s)) return CONTROL;
+        try {
+            return valueOf(s.toUpperCase());
+        } catch (IllegalArgumentException ex) {
+            return null;
+        }
+    }
+
+    /// Converts the modifier enum constant to a "display" string, the first letter is capital, the others lower case.
+    ///
+    /// Exceptions to this rule are:
+    /// - [#CONTROL] which displays the short form "Ctrl"
+    /// - [#META] which returns "Win", "Cmd", "Meta" depending on the [OS]
+    @Override
+    public String toString() {
+        return name().charAt(0) + name().substring(1);
+    }
+}

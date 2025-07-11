@@ -48,6 +48,9 @@ module mfx.core {
     exports io.github.palexdev.mfxcore.filter;
     exports io.github.palexdev.mfxcore.filter.base;
 
+    // Input
+    exports io.github.palexdev.mfxcore.input;
+
     // Observables
     exports io.github.palexdev.mfxcore.observables;
 
