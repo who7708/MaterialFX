@@ -430,7 +430,6 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
         boolean anchorBasedPositioning,
         Supplier<PopupAnimation> animationProvider
     ) implements Config<MFXMenu> {
-        // TODO make other configs like this!
         public static final MenuConfig DEFAULT = builder().build();
 
         @Override

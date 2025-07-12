@@ -155,7 +155,7 @@ public abstract class MFXPopupBase<P extends Window & Peer, O> implements MFXPop
     ///
     /// Note that this will work only if the popup was shown with an anchor using [#show(Object, Pos, Align)].
     /// Technically, it depends on the implementation of [#computePosition(Object, Pos, Align)], so make sure to read both
-    /// [MFXDialog#computePosition(Window, Pos ,Align)] and [MFXPopover#computePosition(Node, Pos, Align)].
+    /// [MFXDialog#computePosition(Window, Pos,Align)] and [MFXPopover#computePosition(Node , Pos, Align)].
     @Override
     public void reposition() {
         Position pos = computePosition(owner, anchor, alignment);
@@ -167,6 +167,7 @@ public abstract class MFXPopupBase<P extends Window & Peer, O> implements MFXPop
         return owner;
     }
 
+    // TODO this should be exposed but with a more generic type, like Parent
     /// Convenience delegation for [Peer#getRoot()].
     protected Pane getRoot() {
         return peer.getRoot();

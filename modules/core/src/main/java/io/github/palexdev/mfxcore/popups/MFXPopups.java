@@ -30,7 +30,6 @@ import javafx.stage.Window;
 /// A nice, convenient facade over the [MFXPopups][MFXPopup] API.
 ///
 /// You can easily build, configure and show any kind of [MFXPopup] in a type-safe and declarative way.
-@SuppressWarnings("BuilderMissingRequiredFields")
 public class MFXPopups {
 
     //================================================================================

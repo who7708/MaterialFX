@@ -312,14 +312,7 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
         boolean hideOnEscape,
         boolean consumeAutoHideEvents
     ) implements Config<MFXPopover> {
-        public static final PopoverConfig DEFAULT = new PopoverConfig(
-            Position.origin(),
-            null,
-            true,
-            true,
-            true,
-            false
-        );
+        public static final PopoverConfig DEFAULT = builder().build();
 
         @Override
         public void apply(MFXPopover popup) {

@@ -312,14 +312,7 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
         Duration inDelay,
         Duration outDelay
     ) implements Config<MFXTooltip> {
-
-        public static final TooltipConfig DEFAULT = new TooltipConfig(
-            Pos.BOTTOM_CENTER,
-            Align.of(HAlign.CENTER, VAlign.BELOW),
-            Position.origin(),
-            Duration.millis(500),
-            Duration.millis(500)
-        );
+        public static final TooltipConfig DEFAULT = builder().build();
 
         @Override
         public void apply(MFXTooltip tooltip) {
