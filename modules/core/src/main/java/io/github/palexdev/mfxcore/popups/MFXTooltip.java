@@ -140,6 +140,8 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
     // Methods
     //================================================================================
     public void install(Node owner) {
+        if (isInstalled())
+            throw new IllegalStateException("Tooltip is already installed on a node!");
         this.owner = owner;
         initTooltip(owner);
     }
