@@ -47,7 +47,7 @@ public interface PopupAnimationFunction {
         @Override
         public Animation animation(MFXPopup<?> popup, Node content, boolean show) {
             double targetOpacity = show ? 1.0 : 0.0;
-            Interpolator curve = new CubicCurve(0.31, 0.94, 0.34, 1.0);
+            Interpolator curve = new CubicCurve(0.25, 0.1, 0.25, 1.0); // EASE
             KeyFrame kf = new KeyFrame(millis(150.0), new KeyValue(content.opacityProperty(), targetOpacity, curve));
             return new Timeline(kf);
         }
@@ -65,10 +65,10 @@ public interface PopupAnimationFunction {
         public Animation animation(MFXPopup<?> popup, Node content, boolean show) {
             double target = show ? 1.0 : 0.0;
             Interpolator oCurve = new CubicCurve(0.34, 0.80, 0.34, 1.0);
-            KeyFrame okf = new KeyFrame(millis(200.0), new KeyValue(content.opacityProperty(), 1.0, oCurve));
+            KeyFrame okf = new KeyFrame(millis(150.0), new KeyValue(content.opacityProperty(), target, oCurve));
 
             Interpolator sCurve = new CubicCurve(0.27, 1.06, 0.18, 1.0);
-            KeyFrame skf = new KeyFrame(millis(200.0),
+            KeyFrame skf = new KeyFrame(millis(300.0),
                 new KeyValue(content.scaleXProperty(), target, sCurve),
                 new KeyValue(content.scaleYProperty(), target, sCurve)
             );
