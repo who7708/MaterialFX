@@ -56,6 +56,7 @@ module mfx.core {
 
     // Popups
     exports io.github.palexdev.mfxcore.popups;
+    exports io.github.palexdev.mfxcore.popups.menu;
 
     // Selection
     exports io.github.palexdev.mfxcore.selection;

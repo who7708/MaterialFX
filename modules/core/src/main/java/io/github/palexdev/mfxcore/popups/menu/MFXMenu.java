@@ -1,0 +1,510 @@
+/*
+ * Copyright (C) 2025 Parisi Alessandro - alessandro.parisi406@gmail.com
+ * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX)
+ *
+ * MaterialFX is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * MaterialFX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package io.github.palexdev.mfxcore.popups.menu;
+
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import io.github.palexdev.mfxcore.base.beans.Position;
+import io.github.palexdev.mfxcore.base.properties.NodeProperty;
+import io.github.palexdev.mfxcore.base.properties.PositionProperty;
+import io.github.palexdev.mfxcore.controls.MFXStyleable;
+import io.github.palexdev.mfxcore.events.WhenEvent;
+import io.github.palexdev.mfxcore.popups.*;
+import io.github.palexdev.mfxcore.popups.menu.MFXMenu.MenuConfig.Builder;
+import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
+import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.HAlign;
+import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.VAlign;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+
+/// Custom implementation of menus based on the [MFXPopup] API. It also implements [MFXStyleable], the default CSS
+/// style-class is set to '.root' and '.mfx-menu.'. This mimics JavaFX popups which also have the '.root' style class
+/// applied. It's recommended to keep it so that if your theme defines some lookup color on the '.root' selector, it gets
+/// propagated to the menus too.
+///
+/// ### Definition, Usage and Features
+///
+/// Menus, like tooltips, fall in the popovers group. They appear close to a specific UI element, usually triggered by
+/// tapping/clicking on it. They present a set of options in a compact form.
+///
+/// Menus are non-modal, do not use a backdrop and have _light dismiss_
+///
+/// ### Implementation Details
+///
+/// Because menus are just popovers with a specific purpose, and therefore a bunch of extra features, [MFXMenu] does not
+/// use any JavaFX class as the peer, rather it uses [MFXPopover] with composition over inheritance.
+///
+/// Because of this, the implementation becomes much easier, as all the basic stuff such as show/hide, positioning,
+/// etc., is handled by the popover. Also, menus share some similarities with tooltips. Here are the key details:
+/// 1) Just like tooltips, as a good practice, there should be at max one menu visible at a time. We use a static property
+/// to keep track of the currently open menu, see [MenuTracker]. However, the difference with tooltips is that menus can
+/// "contain" submenus! So, when we say at "max one menu open", we mean a `root menu`.
+/// 2) By design, menus are tightly coupled with a specific UI element. Therefore, [#show(Node, double, double)] and
+/// [#show(Node, Pos)] methods are overridden to throw an [UnsupportedOperationException].
+/// Like tooltips, menus must be _installed_ onto a node, use [#install(Node)] or [#uninstall()] to disable the menu.
+/// However, there's a difference here too. If you think about the context menu of a text field, it is shown at the
+/// screen coordinates where the right mouse click occurs. So, unlike tooltips, menus can have both anchor-base positioning
+/// and absolute positioning. For simplicity and design consistency, we unified the behavior in the _install mechanism_.
+/// When the menu is installed, a [EventHandler] is added on the node to listen for [MouseEvent#MOUSE_CLICKED] events.
+/// The [MenuConfig] allows you to specify which mouse button to use (Context menus usually use the right mouse button,
+/// whereas menus in a toolbar usually use the primary) and the positioning strategy to use.
+/// 3) The [#contentProperty()] is locked, bound to the peer's content, and even unbinding it won't change the menu's content.
+/// This was a straightforward design decision. The content for this kind of popover is already known and preset, see [MFXMenuContent].
+/// 4) To add entries to the menu, use the [#getItems()] list.
+/// 5) Animations are disabled by default. The design convention for menus is that they should open and close instantly.
+///
+/// ### SubMenus
+///
+/// Submenus are conceptually easy but very hard to implement. I tried to replicate the native menu's behavior.
+/// [MFXMenu] has three extra properties for this specific functionality:
+/// 1) The `parent` property: this allows distinguishing between `root` menus and submenus. This is used, for example,
+/// by the [MenuTracker] property to track only the first type.
+/// 2) The `hoveredItem` property: this specifies the currently hovered entry in the menu. This piece of information is
+/// crucial to the close behavior. When the property's value becomes `null`, any open submenu is closed, and this causes
+/// all other submenus in the cascade (if any) to close too.
+/// 3) When it comes to show/hide, submenus are an exception to the rule. They do not need to be installed on an owner,
+/// as they typically appear on hover. So, a protected extra method [#showSub(Node, Pos, Align)] allows this behavior
+/// internally. (this may be changed in the future, or at least made configurable)
+///
+/// @see MenuConfig
+public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
+    //================================================================================
+    // Static Properties
+    //================================================================================
+    private static final MenuTracker tracker = new MenuTracker();
+
+    //================================================================================
+    // Properties
+    //================================================================================
+    private final MFXPopover peer = new MFXPopover() {
+        @Override
+        protected void doShow(Node owner, double x, double y) {
+            MFXMenu.tracker.set(MFXMenu.this);
+            super.doShow(owner, x, y);
+        }
+
+        @Override
+        public void hide() {
+            tracker.set((WeakReference<MFXMenu>) null);
+            // Also reset the hovered item!
+            hoveredItem.set(null);
+            super.hide();
+        }
+
+        @Override
+        public List<String> defaultStyleClasses() {
+            return MFXStyleable.styleClasses("mfx-menu", "root");
+        }
+    };
+
+    private Node owner;
+    private Pos anchor;
+    private Align alignment;
+    private MouseButton triggerButton;
+    private boolean anchorBasedPositioning;
+    private MenuConfig config;
+    private final ObservableList<MFXMenuItem> items;
+
+    private final NodeProperty content = new NodeProperty();
+    private WhenEvent<?> trigger;
+
+    // SubMenus Specific
+    private Supplier<PopupAnimation> animationProvider;
+    private final ReadOnlyObjectWrapper<MFXMenu> parent = new ReadOnlyObjectWrapper<>(null);
+    private final ReadOnlyObjectWrapper<Node> hoveredItem = new ReadOnlyObjectWrapper<>();
+
+    //================================================================================
+    // Constructors
+    //================================================================================
+    public MFXMenu() {
+        this(FXCollections.observableArrayList());
+    }
+
+    public MFXMenu(MFXMenuItem... items) {
+        this(FXCollections.observableArrayList(items));
+    }
+
+    public MFXMenu(ObservableList<MFXMenuItem> items) {
+        MenuConfig.DEFAULT.apply(this);
+        this.items = items;
+        content.bind(peer.contentProperty());
+        peer.setContent(new MFXMenuContent(this));
+
+        // By design, menus open and close immediately
+        setAnimation(null);
+    }
+
+    protected MFXMenu(MFXMenu parent, ObservableList<MFXMenuItem> items) {
+        MenuConfig.DEFAULT.apply(this);
+        this.items = items;
+
+        /*
+         * We need to duplicate the constructor logic to set any properties for the subs here, before the content is changed
+         * otherwise they don't propagate properly
+         */
+        this.animationProvider = parent.animationProvider;
+        setParent(parent);
+        setAnimation(parent.animationProvider.get());
+
+        content.bind(peer.contentProperty());
+        peer.setContent(new MFXMenuContent(this));
+    }
+
+    //================================================================================
+    // Methods
+    //================================================================================
+    public void install(Node owner) {
+        if (isInstalled())
+            throw new IllegalStateException("Menu is already installed on a node!");
+        this.owner = owner;
+        initMenu(owner);
+    }
+
+    public boolean isInstalled() {
+        return owner != null;
+    }
+
+    protected void initMenu(Node owner) {
+        trigger = WhenEvent.intercept(owner, MouseEvent.MOUSE_CLICKED)
+            .condition(e -> e.getButton() == triggerButton)
+            .process(e -> {
+                if (anchorBasedPositioning) {
+                    peer.show(owner, anchor, alignment);
+                    return;
+                }
+
+                // TODO do we need to do this for anchor-based positioning too? probably not
+                if (isShowing()) {
+                    setPosition(Position.of(e.getScreenX(), e.getScreenY()));
+                    if (getAnimation() != null) getAnimation().playIn();
+                } else {
+                    peer.show(owner, e.getScreenX(), e.getScreenY());
+                }
+            })
+            .otherwise((_, _) -> hide())
+            .register();
+
+        // This effectively works for root menus only
+        // Submenus are handled by the cells
+        if (getContent() == null)
+            peer.setContent(new MFXMenuContent(this));
+    }
+
+    public void uninstall() {
+        if (trigger != null) {
+            trigger.dispose();
+            trigger = null;
+        }
+        ((MFXMenuContent) getContent()).dispose();
+        owner = null;
+    }
+
+    /// This should be used by submenus to appear on the screen, next to the element that owns the submenu. This is
+    /// typically one of the entries of the parent menu.
+    protected void showSub(Node owner, Pos anchor, Align alignment) {
+        this.anchor = anchor;
+        this.alignment = alignment;
+        peer.show(owner, anchor, alignment);
+    }
+
+    /// Convenience method to change the configuration of this menu. The provided builder starts with the values from
+    /// the current config.
+    public MFXMenu configure(Consumer<Builder> cfg) {
+        Builder builder = MenuConfig.builder(getConfig());
+        cfg.accept(builder);
+        builder.build().apply(this);
+        return this;
+    }
+
+    //================================================================================
+    // Overridden Methods
+    //================================================================================
+    @Override
+    public void show(Node owner, double x, double y) {
+        throw new UnsupportedOperationException("Menus cannot be shown directly, but need to be installed on a 'owner' Node");
+    }
+
+    @Override
+    public void show(Node owner, Pos anchor, Align alignment) {
+        throw new UnsupportedOperationException("Menus cannot be shown directly, but need to be installed on a 'owner' Node");
+    }
+
+    @Override
+    public void hide() {
+        peer.hide();
+    }
+
+    @Override
+    public void reposition() {
+        peer.reposition();
+    }
+
+    @Override
+    public Node getOwner() {
+        return owner;
+    }
+
+    @Override
+    public void setContent(Node content) {
+        throw new UnsupportedOperationException("Menus content cannot be overridden!");
+    }
+
+    @Override
+    public NodeProperty contentProperty() {
+        return content;
+    }
+
+    @Override
+    public PositionProperty positionProperty() {
+        return peer.positionProperty();
+    }
+
+    @Override
+    public Position getOffset() {
+        return peer.getOffset();
+    }
+
+    @Override
+    public void setOffset(Position offset) {
+        peer.setOffset(offset);
+    }
+
+    @Override
+    public ReadOnlyObjectProperty<PopupState> stateProperty() {
+        return peer.stateProperty();
+    }
+
+    @Override
+    public Position getPeerPosition() {
+        return peer.getPeerPosition();
+    }
+
+    @Override
+    public void setStyleClass(String... styleClass) {
+        peer.setStyleClass(styleClass);
+    }
+
+    @Override
+    public PopupAnimation getAnimation() {
+        return peer.getAnimation();
+    }
+
+    @Override
+    public void setAnimation(PopupAnimation animation) {
+        peer.setAnimation(animation);
+    }
+
+    @Override
+    public MenuConfig getConfig() {
+        return config;
+    }
+
+    @Override
+    public List<String> defaultStyleClasses() {
+        return peer.defaultStyleClasses();
+    }
+
+    //================================================================================
+    // Getters/Setters
+    //================================================================================
+
+    /// @return the list containing the menu's entries.
+    public ObservableList<MFXMenuItem> getItems() {
+        return items;
+    }
+
+    /// @return whether the [#parentProperty()]'s value is `null`.
+    public boolean isRoot() {
+        return getParent() == null;
+    }
+
+    /// @return the `root` menu by climbing up the [#getParent()] chain.
+    public MFXMenu getRoot() {
+        MFXMenu root = this;
+        while (root.getParent() != null)
+            root = root.getParent();
+        return root;
+    }
+
+    public MFXMenu getParent() {
+        return parent.get();
+    }
+
+    /// Specifies the parent of this menu. If it is `null`, then this is a `root` menu.
+    public ReadOnlyObjectProperty<MFXMenu> parentProperty() {
+        return parent.getReadOnlyProperty();
+    }
+
+    protected void setParent(MFXMenu parent) {
+        this.parent.set(parent);
+    }
+
+    public Node getHoveredItem() {
+        return hoveredItem.get();
+    }
+
+    /// Specifies the currently hovered entry in the menu. When this changes, submenus react appropriately
+    /// (by either hiding the cascade or showing themselves).
+    public ReadOnlyObjectProperty<Node> hoveredItemProperty() {
+        return hoveredItem.getReadOnlyProperty();
+    }
+
+    protected void setHoveredItem(Node item) {
+        hoveredItem.set(item);
+    }
+
+    //================================================================================
+    // Inner Classes
+    //================================================================================
+
+    /// Custom extension of a [SimpleObjectProperty] to keep track of the currently open [MFXMenu] wrapped in a
+    /// [WeakReference]. The [#set(WeakReference)] method is overridden to accept only `root` menus ([MFXMenu#isRoot()]
+    /// returns `true`). When the value effectively changes (so a new root menu is about to be shown), if both the
+    /// new and the old values are not `null`, it calls [MFXMenu#hide()] on the old value.
+    static class MenuTracker extends SimpleObjectProperty<WeakReference<MFXMenu>> {
+        public void set(MFXMenu menu) {
+            set(new WeakReference<>(menu));
+        }
+
+        @Override
+        public void set(WeakReference<MFXMenu> newValue) {
+            // Keep track ONLY of root menus
+            boolean isRoot = Optional.ofNullable(newValue)
+                .map(Reference::get)
+                .map(MFXMenu::isRoot)
+                .orElse(false);
+            if (!isRoot) return;
+
+            Optional.ofNullable(get())
+                .map(Reference::get)
+                .filter(old -> old != newValue.get() && old.isShowing())
+                .ifPresent(MFXMenu::hide);
+            super.set(newValue);
+        }
+    }
+
+    // Config
+
+    /// A few notes on some peculiar configs:
+    /// - The `anchorBasedPositioning` determines how the menu is going to be positioned on the screen. If `true`, the
+    /// position is computed by [MFXPopupBase#computePosition(Object, Pos, Align)]. Otherwise, it uses the mouse coordinates
+    /// from the event that triggered the menu. Example: context menus (like the ones for text fields) use the mouse
+    /// coordinates, while menus from toolbars are anchored to a button.
+    /// - The `animationProvider` parameter allows you to set the animation for both `root` menus and all the submenus
+    /// in the cascade. This is needed because submenus are built internally by [MFXMenuCells][MFXMenuCell].
+    /// If you use [MFXPopup#setAnimation(PopupAnimation)] on the `root` menu, the animation type won't propagate!
+    public record MenuConfig(
+        Pos anchor,
+        Align alignment,
+        Position offset,
+        MouseButton triggerButton,
+        boolean anchorBasedPositioning,
+        Supplier<PopupAnimation> animationProvider
+    ) implements Config<MFXMenu> {
+        // TODO make other configs like this!
+        public static final MenuConfig DEFAULT = builder().build();
+
+        @Override
+        public void apply(MFXMenu menu) {
+            menu.anchor = anchor;
+            menu.alignment = alignment;
+            menu.setOffset(offset);
+            menu.triggerButton = triggerButton;
+            menu.anchorBasedPositioning = anchorBasedPositioning;
+            menu.config = this;
+            menu.animationProvider = animationProvider;
+            menu.setAnimation(animationProvider.get());
+        }
+
+        public static Builder builder() {
+            return new Builder();
+        }
+
+        public static Builder builder(MenuConfig config) {
+            return new Builder()
+                .anchor(config.anchor)
+                .alignment(config.alignment)
+                .offset(config.offset)
+                .triggerButton(config.triggerButton);
+        }
+
+        public static final class Builder {
+            private Pos anchor = Pos.BOTTOM_LEFT;
+            private Align alignment = Align.of(HAlign.AFTER, VAlign.BELOW);
+            private Position offset = Position.origin();
+            private MouseButton triggerButton = MouseButton.SECONDARY;
+            private boolean anchorBasedPositioning = true;
+            private Supplier<PopupAnimation> animationProvider = () -> null;
+
+            public Builder anchor(Pos anchor) {
+                this.anchor = anchor;
+                return this;
+            }
+
+            public Builder alignment(Align alignment) {
+                this.alignment = alignment;
+                return this;
+            }
+
+            public Builder offset(Position offset) {
+                this.offset = offset;
+                return this;
+            }
+
+            public Builder triggerButton(MouseButton triggerButton) {
+                this.triggerButton = triggerButton;
+                return this;
+            }
+
+            public Builder anchorBasedPositioning(boolean anchorBasedPositioning) {
+                this.anchorBasedPositioning = anchorBasedPositioning;
+                return this;
+            }
+
+            public Builder animationProvider(Supplier<PopupAnimation> animationProvider) {
+                this.animationProvider = animationProvider;
+                return this;
+            }
+
+            public MenuConfig build() {
+                return new MenuConfig(
+                    anchor,
+                    alignment,
+                    offset,
+                    triggerButton,
+                    anchorBasedPositioning,
+                    animationProvider
+                );
+            }
+        }
+    }
+}
