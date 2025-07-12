@@ -72,7 +72,7 @@ import javafx.util.Duration;
 /// Here are the key details:
 /// 1) As a good practice, there should be at max one tooltip visible at any time. We use a static property to keep track
 /// of the currently open tooltip. See [TooltipTracker]
-/// 2) By design tooltips are highly coupled with a specific UI element. Therefore, [#show(Node, double, double)] and
+/// 2) By design tooltips are tightly coupled with a specific UI element. Therefore, [#show(Node, double, double)] and
 /// [#show(Node, Pos)] methods are overridden to throw an [UnsupportedOperationException].
 /// Typically, tooltips are _installed_ onto a node. So, to use a tooltip, you can call [#install(Node)] or [#uninstall()]
 /// to disable it.
@@ -296,6 +296,7 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
             if (newValue != null) {
                 Optional.ofNullable(get())
                     .map(Reference::get)
+                    .filter(old -> old != newValue.get() && old.isShowing())
                     .ifPresent(MFXTooltip::hide);
             }
             super.set(newValue);
