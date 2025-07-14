@@ -23,9 +23,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.github.palexdev.mfxcore.events.WhenEvent;
 import javafx.beans.InvalidationListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.TraversalDirection;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
@@ -45,6 +49,8 @@ public class MFXMenuContent extends VBox {
     private Map<MFXMenuItem, MFXMenuCell> itemNodes = new HashMap<>();
     private InvalidationListener itemsListener = _ -> build();
 
+    private WhenEvent<?> focusWhen;
+
     //================================================================================
     // Constructors
     //================================================================================
@@ -53,6 +59,18 @@ public class MFXMenuContent extends VBox {
         build();
         menu.getItems().addListener(itemsListener);
         getStyleClass().add("content");
+
+        /*
+         * For some reason the JavaFX focus API transfers focus to the second item in the menu.
+         *
+         * The solution is a bit intricate, but it works. When MFXPopupContent is shown, it requests the focus.
+         * The advantage of this is that any item previously focused is reset, and thanks to this handler, the focus
+         * is transferred to the first item.
+         */
+        focusWhen = WhenEvent.intercept(this, KeyEvent.KEY_PRESSED)
+            .condition(e -> e.getCode() == KeyCode.DOWN && isFocused())
+            .process(_ -> requestFocusTraversal(TraversalDirection.NEXT))
+            .register();
     }
 
     //================================================================================
@@ -109,6 +127,8 @@ public class MFXMenuContent extends VBox {
         itemsListener = null;
         itemNodes.clear();
         getChildren().clear();
+        focusWhen.dispose();
+        focusWhen = null;
         menu = null;
     }
 }

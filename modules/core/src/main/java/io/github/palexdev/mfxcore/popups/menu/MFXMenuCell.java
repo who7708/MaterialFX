@@ -36,6 +36,9 @@ import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
+import javafx.scene.TraversalDirection;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
@@ -72,6 +75,7 @@ public class MFXMenuCell extends Region implements MFXStyleable {
         this.menu = menu;
         this.item = item;
         defaultStyleClasses(this);
+        setFocusTraversable(true);
 
         // Build UI
         leading = new Label();
@@ -119,6 +123,34 @@ public class MFXMenuCell extends Region implements MFXStyleable {
                     menu.getRootMenu().hide();
                     item.action().run();
                 })
+                .register(),
+            WhenEvent.intercept(this, KeyEvent.KEY_PRESSED)
+                .process(e -> {
+                    KeyCode code = e.getCode();
+                    // Consume focus traversal events so that parent menus do not transfer focus when a submenu is open
+                    if (code.isArrowKey()) e.consume();
+                    switch (e.getCode()) {
+                        case SPACE, ENTER -> {
+                            item.action().run();
+                            menu.hide();
+                        }
+                        case UP -> requestFocusTraversal(TraversalDirection.UP);
+                        case DOWN -> requestFocusTraversal(TraversalDirection.DOWN);
+                        case RIGHT -> {
+                            if (subMenuHandler != null) {
+                                subMenuHandler.show();
+                                subMenuHandler.focus();
+                            }
+                        }
+                        case LEFT -> {
+                            // Hide THIS submenu
+                            if (!menu.isRootMenu()) {
+                                menu.hide();
+                            }
+                        }
+                    }
+                })
+                .asFilter()
                 .register()
         );
 
@@ -219,6 +251,12 @@ public class MFXMenuCell extends Region implements MFXStyleable {
             if (hc != MFXMenuCell.this) {
                 subMenu.hide();
             }
+        }
+
+        /// When a submenu is shown by a [KeyEvent], transfer focus from its content to its first item.
+        public void focus() {
+            Node content = subMenu.getContent();
+            content.requestFocusTraversal(TraversalDirection.NEXT);
         }
 
         public void dispose() {

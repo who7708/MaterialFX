@@ -110,6 +110,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
         @Override
         protected void doShow(Node owner, double x, double y) {
             MFXMenu.tracker.set(MFXMenu.this);
+            getContent().requestFocus(); // Focus the content causing any previously focused item to reset
             super.doShow(owner, x, y);
         }
 
