@@ -43,6 +43,7 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
@@ -163,6 +164,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
         setAnimation(null);
     }
 
+    /// This constructor is specifically for creating submenus.
     protected MFXMenu(MFXMenu parent, ObservableList<MFXMenuItem> items) {
         MenuConfig.DEFAULT.apply(this);
         this.items = items;
@@ -172,7 +174,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
          * otherwise they don't propagate properly
          */
         this.animationProvider = parent.animationProvider;
-        setParent(parent);
+        setParentMenu(parent);
         setAnimation(parent.animationProvider.get());
 
         content.bind(peer.contentProperty());
@@ -274,6 +276,11 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
     }
 
     @Override
+    public Parent getRoot() {
+        return peer.getRoot();
+    }
+
+    @Override
     public void setContent(Node content) {
         throw new UnsupportedOperationException("Menus content cannot be overridden!");
     }
@@ -342,29 +349,29 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
         return items;
     }
 
-    /// @return whether the [#parentProperty()]'s value is `null`.
-    public boolean isRoot() {
-        return getParent() == null;
+    /// @return whether the [#parentMenuProperty()]'s value is `null`.
+    public boolean isRootMenu() {
+        return getParentMenu() == null;
     }
 
-    /// @return the `root` menu by climbing up the [#getParent()] chain.
-    public MFXMenu getRoot() {
+    /// @return the `root` menu by climbing up the [#getParentMenu()] chain.
+    public MFXMenu getRootMenu() {
         MFXMenu root = this;
-        while (root.getParent() != null)
-            root = root.getParent();
+        while (root.getParentMenu() != null)
+            root = root.getParentMenu();
         return root;
     }
 
-    public MFXMenu getParent() {
+    public MFXMenu getParentMenu() {
         return parent.get();
     }
 
     /// Specifies the parent of this menu. If it is `null`, then this is a `root` menu.
-    public ReadOnlyObjectProperty<MFXMenu> parentProperty() {
+    public ReadOnlyObjectProperty<MFXMenu> parentMenuProperty() {
         return parent.getReadOnlyProperty();
     }
 
-    protected void setParent(MFXMenu parent) {
+    protected void setParentMenu(MFXMenu parent) {
         this.parent.set(parent);
     }
 
@@ -387,7 +394,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
     //================================================================================
 
     /// Custom extension of a [SimpleObjectProperty] to keep track of the currently open [MFXMenu] wrapped in a
-    /// [WeakReference]. The [#set(WeakReference)] method is overridden to accept only `root` menus ([MFXMenu#isRoot()]
+    /// [WeakReference]. The [#set(WeakReference)] method is overridden to accept only `root` menus ([MFXMenu#isRootMenu()]
     /// returns `true`). When the value effectively changes (so a new root menu is about to be shown), if both the
     /// new and the old values are not `null`, it calls [MFXMenu#hide()] on the old value.
     static class MenuTracker extends SimpleObjectProperty<WeakReference<MFXMenu>> {
@@ -400,7 +407,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
             // Keep track ONLY of root menus
             boolean isRoot = Optional.ofNullable(newValue)
                 .map(Reference::get)
-                .map(MFXMenu::isRoot)
+                .map(MFXMenu::isRootMenu)
                 .orElse(false);
             if (!isRoot) return;
 

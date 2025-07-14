@@ -44,6 +44,7 @@ import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 
@@ -222,6 +223,11 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
     @Override
     public Node getOwner() {
         return owner;
+    }
+
+    @Override
+    public Parent getRoot() {
+        return peer.getRoot();
     }
 
     @Override

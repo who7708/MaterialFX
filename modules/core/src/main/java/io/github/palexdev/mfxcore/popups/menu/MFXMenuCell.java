@@ -116,7 +116,7 @@ public class MFXMenuCell extends Region implements MFXStyleable {
             WhenEvent.intercept(this, MouseEvent.MOUSE_CLICKED)
                 .condition(e -> e.getButton() == MouseButton.PRIMARY && item.action() != null)
                 .process(_ -> {
-                    menu.getRoot().hide();
+                    menu.getRootMenu().hide();
                     item.action().run();
                 })
                 .register()

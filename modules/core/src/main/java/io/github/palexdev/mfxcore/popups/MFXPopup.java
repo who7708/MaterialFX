@@ -28,6 +28,7 @@ import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.PopupControl;
 import javafx.scene.layout.Pane;
@@ -138,6 +139,9 @@ public interface MFXPopup<O> {
     /// @return the owner's for which the popup is shown. Depending on the implementations, this may return `null` if the
     /// popup is hidden.
     O getOwner();
+
+    /// @return the parent node which contains the popup's content, or in other words, the popup scene's root
+    Parent getRoot();
 
     default Node getContent() {
         return contentProperty().get();

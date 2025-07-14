@@ -28,7 +28,7 @@ import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.layout.Pane;
+import javafx.scene.Parent;
 import javafx.stage.Window;
 
 /// Abstract implementation of [MFXPopup] to contain properties and behaviors that are common to all kinds of popups.
@@ -167,9 +167,10 @@ public abstract class MFXPopupBase<P extends Window & Peer, O> implements MFXPop
         return owner;
     }
 
-    // TODO this should be exposed but with a more generic type, like Parent
-    /// Convenience delegation for [Peer#getRoot()].
-    protected Pane getRoot() {
+    /// {@inheritDoc}
+    ///
+    /// Delegates to [Peer#getRoot()].
+    public Parent getRoot() {
         return peer.getRoot();
     }
 
