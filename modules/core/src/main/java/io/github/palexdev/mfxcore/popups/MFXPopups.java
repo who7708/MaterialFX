@@ -22,6 +22,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import io.github.palexdev.mfxcore.base.beans.Position;
+import io.github.palexdev.mfxcore.popups.menu.MFXMenu;
+import io.github.palexdev.mfxcore.popups.menu.MFXMenuItem;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -71,6 +73,16 @@ public class MFXPopups {
         return new Builder<>(new MFXTooltip(), builder.build());
     }
 
+    public static Builder<Node, MFXMenu> menu() {
+        return new Builder<>(new MFXMenu(), null);
+    }
+
+    public static Builder<Node, MFXMenu> menu(Consumer<MFXMenu.MenuConfig.Builder> config) {
+        MFXMenu.MenuConfig.Builder builder = MFXMenu.MenuConfig.builder();
+        config.accept(builder);
+        return new Builder<>(new MFXMenu(), builder.build());
+    }
+
     //================================================================================
     // Builder
     //================================================================================
@@ -82,7 +94,9 @@ public class MFXPopups {
             if (config != null) config.apply(popup);
         }
 
+        /// Note: does nothing for [MFXMenus][MFXMenu].
         public Builder<O, P> setContent(Node content) {
+            if (popup instanceof MFXMenu) return this;
             popup.setContent(content);
             return this;
         }
@@ -107,18 +121,31 @@ public class MFXPopups {
             return this;
         }
 
-        /// Note: for tooltips this will call [MFXTooltip#install(Node)]!
+        /// Node: works only for [MFXMenus][MFXMenu].
+        public Builder<O, P> addMenuItems(MFXMenuItem... items) {
+            if (popup instanceof MFXMenu m) {
+                m.getItems().addAll(items);
+            }
+            return this;
+        }
+
+        /// Note: for tooltips and menus this will call [MFXTooltip#install(Node)] and [MFXMenu#install(Node)]
+        /// respectively!
         public P show(O owner, double x, double y) {
             if (popup instanceof MFXTooltip t) {
                 t.install(((Node) owner));
+                return popup;
+            }
+            if (popup instanceof MFXMenu m) {
+                m.install(((Node) owner));
                 return popup;
             }
             popup.show(owner, x, y);
             return popup;
         }
 
-        /// Note: for tooltips this will call [MFXTooltip#install(Node)] and override the set anchor and alignment with
-        /// the given ones!
+        /// Note: for tooltips and menus this will call [MFXTooltip#install(Node)] and [MFXMenu#install(Node)]
+        /// respectively. The anchor and alignment are overridden the given ones!
         public P show(O owner, Pos anchor, Align alignment) {
             if (popup instanceof MFXTooltip t) {
                 t.install(((Node) owner));
@@ -127,6 +154,15 @@ public class MFXPopups {
                     .alignment(alignment)
                     .build()
                     .apply(t);
+                return popup;
+            }
+            if (popup instanceof MFXMenu m) {
+                m.install(((Node) owner));
+                MFXMenu.MenuConfig.builder(m.getConfig())
+                    .anchor(anchor)
+                    .alignment(alignment)
+                    .build()
+                    .apply(m);
                 return popup;
             }
             popup.show(owner, anchor, alignment);
