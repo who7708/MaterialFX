@@ -108,6 +108,7 @@ public class MFXMenuCell extends Region implements MFXStyleable {
             When.onInvalidated(hoverProperty())
                 .then(h -> {
                     menu.setHoveredItem(this);
+                    requestFocus(); // Reset focus acquired by key navigation
                     if (subMenuHandler == null) return;
                     if (h) {
                         subMenuHandler.show();
@@ -127,12 +128,17 @@ public class MFXMenuCell extends Region implements MFXStyleable {
             WhenEvent.intercept(this, KeyEvent.KEY_PRESSED)
                 .process(e -> {
                     KeyCode code = e.getCode();
-                    // Consume focus traversal events so that parent menus do not transfer focus when a submenu is open
-                    if (code.isArrowKey()) e.consume();
-                    switch (e.getCode()) {
+                    switch (code) {
                         case SPACE, ENTER -> {
-                            item.action().run();
-                            menu.hide();
+                            if (subMenuHandler != null) {
+                                if (!subMenuHandler.isShowing()) {
+                                    subMenuHandler.show();
+                                    subMenuHandler.focus();
+                                }
+                            } else {
+                                item.action().run();
+                                menu.getRootMenu().hide();
+                            }
                         }
                         case UP -> requestFocusTraversal(TraversalDirection.UP);
                         case DOWN -> requestFocusTraversal(TraversalDirection.DOWN);
@@ -143,12 +149,13 @@ public class MFXMenuCell extends Region implements MFXStyleable {
                             }
                         }
                         case LEFT -> {
-                            // Hide THIS submenu
                             if (!menu.isRootMenu()) {
                                 menu.hide();
                             }
                         }
+                        case ESCAPE -> menu.hide();
                     }
+                    e.consume();
                 })
                 .asFilter()
                 .register()
@@ -257,6 +264,11 @@ public class MFXMenuCell extends Region implements MFXStyleable {
         public void focus() {
             Node content = subMenu.getContent();
             content.requestFocusTraversal(TraversalDirection.NEXT);
+        }
+
+        /// Delegate to [MFXMenu#isShowing()].
+        public boolean isShowing() {
+            return subMenu.isShowing();
         }
 
         public void dispose() {
