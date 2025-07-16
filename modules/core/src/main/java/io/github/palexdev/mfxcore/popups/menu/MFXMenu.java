@@ -123,6 +123,16 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
         }
 
         @Override
+        protected void onContentChanged() {
+            Node content = getContent();
+            if (content == null || content instanceof MFXMenuContent) {
+                super.onContentChanged();
+            } else {
+                throw new IllegalStateException("Content must be of type MFXMenuContent! Got: " + content.getClass());
+            }
+        }
+
+        @Override
         public List<String> defaultStyleClasses() {
             return MFXStyleable.extend(super.defaultStyleClasses(), "mfx-menu");
         }
@@ -136,7 +146,6 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
     private MenuConfig config;
     private final ObservableList<MFXMenuItem> items;
 
-    private final NodeProperty content = new NodeProperty();
     private WhenEvent<?> trigger;
 
     // SubMenus Specific
@@ -158,8 +167,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
     public MFXMenu(ObservableList<MFXMenuItem> items) {
         MenuConfig.DEFAULT.apply(this);
         this.items = items;
-        content.bind(peer.contentProperty());
-        peer.setContent(new MFXMenuContent(this));
+        setContent(new MFXMenuContent(this));
 
         // By design, menus open and close immediately
         setAnimation(null);
@@ -178,8 +186,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
         setParentMenu(parent);
         setAnimation(parent.animationProvider.get());
 
-        content.bind(peer.contentProperty());
-        peer.setContent(new MFXMenuContent(this));
+        setContent(new MFXMenuContent(this));
     }
 
     //================================================================================
@@ -227,7 +234,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
             trigger.dispose();
             trigger = null;
         }
-        ((MFXMenuContent) getContent()).dispose();
+        setContent(null);
         owner = null;
     }
 
@@ -282,13 +289,8 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
     }
 
     @Override
-    public void setContent(Node content) {
-        throw new UnsupportedOperationException("Menus content cannot be overridden!");
-    }
-
-    @Override
     public NodeProperty contentProperty() {
-        return content;
+        return peer.contentProperty();
     }
 
     @Override

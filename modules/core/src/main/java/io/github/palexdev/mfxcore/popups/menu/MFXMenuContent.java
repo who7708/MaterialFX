@@ -18,117 +18,55 @@
 
 package io.github.palexdev.mfxcore.popups.menu;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.function.Supplier;
 
-import io.github.palexdev.mfxcore.events.WhenEvent;
-import javafx.beans.InvalidationListener;
-import javafx.collections.ObservableList;
-import javafx.scene.Node;
-import javafx.scene.TraversalDirection;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import io.github.palexdev.mfxcore.controls.Control;
+import io.github.palexdev.mfxcore.controls.MFXStyleable;
+import io.github.palexdev.mfxcore.controls.SkinBase;
 
-/// This is the predefined content of every [MFXMenu]. Simply builds the UI entries of the menu from the [MFXMenuItems][MFXMenuItem]
-/// specified in [MFXMenu#getItems()].
-///
-/// To avoid rebuilding the entire menu when the items change, this stores them in a [Map] as they are built. On every
-/// [#build()], it reuses as many already built components as possible. Remaining items that may have been removed from
-/// the menu are disposed and removed from here too.
-///
-/// The menu content produces two types of components depending on the [MFXMenuItem], either [#separator()] or [#cell(MFXMenuItem)].
-public class MFXMenuContent extends VBox {
+/// This class represents the base and preset type of content for any [MFXMenu]. Extends [Control], and has [MFXMenuContentBehavior]
+/// and [MFXMenuContentSkin] as its default behavior and skin implementations. It also implements [MFXStyleable], the
+/// default style class to select this from CSS is: `.menu-content` (**Note:** the style class is actually not applied on
+/// the control itself but on a container in the default skin. This design choice was made to make CSS styling more straightforward.
+/// See [MFXMenuContentSkin]!)
+public class MFXMenuContent extends Control<MFXMenuContentBehavior> implements MFXStyleable {
     //================================================================================
     // Properties
     //================================================================================
-    private MFXMenu menu;
-    private Map<MFXMenuItem, MFXMenuEntry> itemNodes = new HashMap<>();
-    private InvalidationListener itemsListener = _ -> build();
-
-    private WhenEvent<?> focusWhen;
+    private final MFXMenu menu;
 
     //================================================================================
     // Constructors
     //================================================================================
     public MFXMenuContent(MFXMenu menu) {
         this.menu = menu;
-        build();
-        menu.getItems().addListener(itemsListener);
-        getStyleClass().add("content");
-
-        /*
-         * For some reason the JavaFX focus API transfers focus to the second item in the menu.
-         *
-         * The solution is a bit intricate, but it works. When MFXPopupContent is shown, it requests the focus.
-         * The advantage of this is that any item previously focused is reset, and thanks to this handler, the focus
-         * is transferred to the first item.
-         */
-        focusWhen = WhenEvent.intercept(this, KeyEvent.KEY_PRESSED)
-            .condition(e -> e.getCode() == KeyCode.DOWN && isFocused())
-            .process(_ -> requestFocusTraversal(TraversalDirection.NEXT))
-            .register();
     }
 
     //================================================================================
-    // Methods
+    // Overridden Methods
     //================================================================================
-    protected void build() {
-        ObservableList<MFXMenuItem> items = menu.getItems();
-        if (items.isEmpty()) {
-            getChildren().clear();
-            itemNodes.values().forEach(MFXMenuEntry::dispose);
-            itemNodes.clear();
-            return;
-        }
-
-        List<Node> children = new ArrayList<>();
-        Map<MFXMenuItem, MFXMenuEntry> alreadyBuilt = itemNodes;
-        itemNodes = new HashMap<>();
-        for (MFXMenuItem item : items) {
-            // Separators are special
-            if (MFXMenuItem.SEPARATOR == item) {
-                children.add(separator());
-                continue;
-            }
-
-            MFXMenuEntry node;
-            if ((node = alreadyBuilt.remove(item)) == null) {
-                node = cell(item);
-            }
-            itemNodes.put(item, node);
-            children.add(node);
-        }
-
-        // Clear and dispose remaining cells
-        alreadyBuilt.values().forEach(MFXMenuEntry::dispose);
-        alreadyBuilt.clear();
-
-        getChildren().setAll(children);
+    @Override
+    public Supplier<MFXMenuContentBehavior> defaultBehaviorProvider() {
+        return () -> new MFXMenuContentBehavior(this);
     }
 
-    /// Creates the [MFXMenuEntry] responsible for displaying the given item.
-    protected MFXMenuEntry cell(MFXMenuItem item) {
-        return new MFXMenuEntry(menu, item);
+    @Override
+    public Supplier<SkinBase<?, ?>> defaultSkinProvider() {
+        return () -> new MFXMenuContentSkin(this);
     }
 
-    /// Creates a separating [Region] with the style class: `.separator`.
-    protected Node separator() {
-        Region separator = new Region();
-        separator.getStyleClass().add("separator");
-        return separator;
+    @Override
+    public List<String> defaultStyleClasses() {
+        return MFXStyleable.styleClasses("menu-content");
     }
 
-    public void dispose() {
-        menu.getItems().removeListener(itemsListener);
-        itemsListener = null;
-        itemNodes.clear();
-        getChildren().clear();
-        focusWhen.dispose();
-        focusWhen = null;
-        menu = null;
+    //================================================================================
+    // Getters
+    //================================================================================
+
+    /// @return the [MFXMenu] instance to which this content is associated to.
+    public MFXMenu getMenu() {
+        return menu;
     }
 }

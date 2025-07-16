@@ -274,7 +274,7 @@ public class MFXMenuEntry extends Region implements MFXStyleable {
         public void dispose() {
             hideListener.dispose();
             hideListener = null;
-            ((MFXMenuContent) subMenu.getContent()).dispose();
+            subMenu.setContent(null);
             subMenu = null;
         }
     }
