@@ -201,7 +201,7 @@ public class MFXMenuCell extends Region implements MFXStyleable {
     }
 
     @Override
-    protected double computeMinWidth(double height) {
+    protected double computePrefWidth(double height) {
         return snappedLeftInset() +
                LayoutUtils.snappedBoundWidth(leading) +
                LayoutUtils.snappedBoundWidth(trailing) +
@@ -209,7 +209,7 @@ public class MFXMenuCell extends Region implements MFXStyleable {
     }
 
     @Override
-    protected double computeMinHeight(double width) {
+    protected double computePrefHeight(double width) {
         double lH = LayoutUtils.snappedBoundHeight(leading);
         double tH = LayoutUtils.snappedBoundHeight(trailing);
         return snappedTopInset() +
