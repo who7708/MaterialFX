@@ -116,7 +116,7 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
 
         @Override
         public List<String> defaultStyleClasses() {
-            return MFXStyleable.styleClasses("root", "mfx-tooltip");
+            return MFXStyleable.extend(super.defaultStyleClasses(), "mfx-tooltip");
         }
     };
 

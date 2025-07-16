@@ -124,7 +124,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
 
         @Override
         public List<String> defaultStyleClasses() {
-            return MFXStyleable.styleClasses("mfx-menu", "root");
+            return MFXStyleable.extend(super.defaultStyleClasses(), "mfx-menu");
         }
     };
 

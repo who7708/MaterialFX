@@ -192,7 +192,7 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
 
     @Override
     public List<String> defaultStyleClasses() {
-        return MFXStyleable.styleClasses("root", "mfx-popup");
+        return MFXStyleable.styleClasses("root", "mfx-popover");
     }
 
     //================================================================================
@@ -241,7 +241,7 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
     /// (by not fetching any stylesheet).
     protected class PopupPeer extends PopupWindow implements Peer {
         private static final String RESET_CSS = CSSFragment.Builder.build()
-            .select(".mfx-popup")
+            .select(".mfx-popover")
             .background("transparent")
             .padding("0px")
             .toFragment()
