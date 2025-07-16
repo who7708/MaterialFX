@@ -46,7 +46,7 @@ public class MFXMenuContent extends VBox {
     // Properties
     //================================================================================
     private MFXMenu menu;
-    private Map<MFXMenuItem, MFXMenuCell> itemNodes = new HashMap<>();
+    private Map<MFXMenuItem, MFXMenuEntry> itemNodes = new HashMap<>();
     private InvalidationListener itemsListener = _ -> build();
 
     private WhenEvent<?> focusWhen;
@@ -80,13 +80,13 @@ public class MFXMenuContent extends VBox {
         ObservableList<MFXMenuItem> items = menu.getItems();
         if (items.isEmpty()) {
             getChildren().clear();
-            itemNodes.values().forEach(MFXMenuCell::dispose);
+            itemNodes.values().forEach(MFXMenuEntry::dispose);
             itemNodes.clear();
             return;
         }
 
         List<Node> children = new ArrayList<>();
-        Map<MFXMenuItem, MFXMenuCell> alreadyBuilt = itemNodes;
+        Map<MFXMenuItem, MFXMenuEntry> alreadyBuilt = itemNodes;
         itemNodes = new HashMap<>();
         for (MFXMenuItem item : items) {
             // Separators are special
@@ -95,7 +95,7 @@ public class MFXMenuContent extends VBox {
                 continue;
             }
 
-            MFXMenuCell node;
+            MFXMenuEntry node;
             if ((node = alreadyBuilt.remove(item)) == null) {
                 node = cell(item);
             }
@@ -104,15 +104,15 @@ public class MFXMenuContent extends VBox {
         }
 
         // Clear and dispose remaining cells
-        alreadyBuilt.values().forEach(MFXMenuCell::dispose);
+        alreadyBuilt.values().forEach(MFXMenuEntry::dispose);
         alreadyBuilt.clear();
 
         getChildren().setAll(children);
     }
 
-    /// Creates the [MFXMenuCell] responsible for displaying the given item.
-    protected MFXMenuCell cell(MFXMenuItem item) {
-        return new MFXMenuCell(menu, item);
+    /// Creates the [MFXMenuEntry] responsible for displaying the given item.
+    protected MFXMenuEntry cell(MFXMenuItem item) {
+        return new MFXMenuEntry(menu, item);
     }
 
     /// Creates a separating [Region] with the style class: `.separator`.

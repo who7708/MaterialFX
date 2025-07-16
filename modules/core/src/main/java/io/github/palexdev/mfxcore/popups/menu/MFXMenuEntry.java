@@ -43,18 +43,16 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 
-/// Despite the name, [MFXMenu] does not use virtualization for its entries' list, but the concept is similar.
-///
-/// Each cell is associated and responsible for displaying a certain [MFXMenuItem]. The layout is simple, there are just
+/// Each entry is associated and responsible for displaying a certain [MFXMenuItem]. The layout is simple, there are just
 /// two labels:
 /// - The 'leading' label displays the icon and the text specified by the item. Can be selected in CSS with `.leading`.
 /// - The 'trailing' label displays the shortcut text or an arrow if the item is the entry for a submenu. Can be selected
 /// in CSS with `.leading`. If it opens a submenu, the style class `.sub` is also added.
 ///
-/// Any cell has also a dependency on the menu that owns it. This is necessary to properly handle the cascade of submenus.
+/// Any entry has also a dependency on the menu that owns it. This is necessary to properly handle the cascade of submenus.
 ///
-/// [MFXMenuCell] also implements [MFXStyleable], the default CSS style class is set to `.menu-cell`.
-public class MFXMenuCell extends Region implements MFXStyleable {
+/// [MFXMenuEntry] also implements [MFXStyleable], the default CSS style class is set to `.menu-entry`.
+public class MFXMenuEntry extends Region implements MFXStyleable {
     //================================================================================
     // Properties
     //================================================================================
@@ -71,7 +69,7 @@ public class MFXMenuCell extends Region implements MFXStyleable {
     //================================================================================
     // Constructors
     //================================================================================
-    public MFXMenuCell(MFXMenu menu, MFXMenuItem item) {
+    public MFXMenuEntry(MFXMenu menu, MFXMenuItem item) {
         this.menu = menu;
         this.item = item;
         defaultStyleClasses(this);
@@ -99,9 +97,11 @@ public class MFXMenuCell extends Region implements MFXStyleable {
     //================================================================================
 
     /// Adds the following listeners/handlers:
-    /// - A listener on the cell's [#hoverProperty()] to show/hide the submenu if present. This also sets the parent menu's
-    /// [MFXMenu#hoveredItemProperty()] to this cell.
-    /// - A mouse click handler to run the action specified by the cell's item and close the menu from the root.
+    /// - A listener on the entry's [#hoverProperty()] to show/hide the submenu if present. This also sets the parent menu's
+    /// [MFXMenu#hoveredItemProperty()] to this entry.
+    /// - A mouse click handler to run the action specified by the entry's item and close the menu from the root.
+    /// - A key handler on the entry to manage actions such as key navigation (including showing and closing submenus)
+    /// and trigger
     /// - A listener on the [MFXMenuItem#subMenuItems()] list to build/dispose the submenu as needed.
     protected void addListeners() {
         Collections.addAll(disposables,
@@ -197,7 +197,7 @@ public class MFXMenuCell extends Region implements MFXStyleable {
     //================================================================================
     @Override
     public List<String> defaultStyleClasses() {
-        return MFXStyleable.styleClasses("menu-cell");
+        return MFXStyleable.styleClasses("menu-entry");
     }
 
     @Override
@@ -249,13 +249,13 @@ public class MFXMenuCell extends Region implements MFXStyleable {
         /// Also resets the submenu's hovered item to `null`.
         public void show() {
             subMenu.setHoveredItem(null);
-            subMenu.showSub(MFXMenuCell.this, Pos.TOP_RIGHT, Align.of(HAlign.AFTER, VAlign.BELOW));
+            subMenu.showSub(MFXMenuEntry.this, Pos.TOP_RIGHT, Align.of(HAlign.AFTER, VAlign.BELOW));
         }
 
-        /// Hides the submenu only if its parent's [MFXMenu#hoveredItemProperty()] is not this cell.
+        /// Hides the submenu only if its parent's [MFXMenu#hoveredItemProperty()] is not this entry.
         public void hide() {
             Node hc = menu.getHoveredItem();
-            if (hc != MFXMenuCell.this) {
+            if (hc != MFXMenuEntry.this) {
                 subMenu.hide();
             }
         }
