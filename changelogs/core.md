@@ -1,3 +1,39 @@
+## 24.2.0 - 17-07-2025 - 535406ed
+
+### Features
+
+- <a009b2f3> MFXMenu: implement navigation with arrow keys
+- <142e9946> Implement my own menus API
+- <60784802> Implement my own Key input API
+- <28259c10> Backport OSUtils from another project of mine
+- <a84470fa> Add convenience configuration methods to MFXPopups
+- <1dd748df> Remade AnchorHandlers for maximum flexibility
+
+### Bug Fixes
+
+- <8ab203d8> Apply reset stylesheet to all popovers
+- <4604213b> MFXTooltip: do not call hide from the TooltipTracker property if the new value is the same as the old one
+- <40404c53> MFXTooltip: reset the tracker in the peer's hide method to catch auto-hide calls
+- <eb28a340> AnchorHandlers: fix ADJACENT_INWARDS positioning mode for BOTTOM anchors
+- <a51d82f0> MFXPopover: resetting styles on root inline prevents the values from being overridden. Apply a CSSFragment (stylesheet) instead
+
+### Refactoring
+
+- <201e8001> Make MFXMenuContent a Control to allow custom implementations (will implement virtualized menu content in components module)
+- <65d4c1da> MFXMenuCell: override pref sizes rather than min
+- <d7036b72> Add MFXMenu to MFXPopups builder
+- <e9bd5b15> MFXMenu: improve key, navigation and focus handling
+- <541a29e6> MFXPopup: expose the root as a generic Parent node
+- <a28c4d18> MFXPopups: make config builders build the default config
+- <75205521> MFXTooltip: throw error if tooltip is already installed
+- <2a15a253> MFXPopups: fix configure(...) methods
+- <a1301782> MFXTooltip: reorder some properties and remove local config as not necessary
+- <42a02009> WhenEvent: add asFilter(boolean) convenience method
+- <4a00dd60> Adapt popups to AnchorHandlers changes and add Alignment parameter to anchor-based positioning
+- <1fce5d8a> MFXPopups: use Position for offsetting rather than Insets because it's more intuitive and easy to use
+
+
+
 ## 24.1.0 - 03-07-2025 - cc69b56a
 
 ### Features
@@ -56,5 +92,4 @@
 ### Documentation
 
 - <bf8f94c3> Label: update documentation
-
 
