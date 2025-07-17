@@ -27,6 +27,7 @@ import io.github.palexdev.mfxcore.behavior.DisposableAction;
 import io.github.palexdev.mfxcore.behavior.WithBehavior;
 import io.github.palexdev.mfxcore.events.WhenEvent;
 import io.github.palexdev.mfxcore.observables.When;
+import javafx.scene.Node;
 
 /// Extension of [javafx.scene.control.SkinBase] used by components that want a seamless integration with the new Behavior API.
 /// The skin is responsible for initializing the behavior as needed.
@@ -64,7 +65,7 @@ import io.github.palexdev.mfxcore.observables.When;
 ///  - Having a behavior class and set the provider on the component, or using [BehaviorBase] if you don't need it
 ///  - Override the [#initBehavior(BehaviorBase)] to initialize the behavior if needed
 ///  - Initialization and changes to the behavior provider are automatically handled, hassle-free
-public abstract class SkinBase<C extends javafx.scene.control.Control & WithBehavior<B>, B extends BehaviorBase<C>> extends javafx.scene.control.SkinBase<C> {
+public abstract class SkinBase<C extends javafx.scene.control.Control & WithBehavior<B>, B extends BehaviorBase<? extends Node>> extends javafx.scene.control.SkinBase<C> {
     //================================================================================
     // Properties
     //================================================================================

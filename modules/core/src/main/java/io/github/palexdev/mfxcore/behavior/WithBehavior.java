@@ -21,13 +21,12 @@ package io.github.palexdev.mfxcore.behavior;
 import java.util.function.Supplier;
 
 import io.github.palexdev.mfxcore.base.properties.functional.SupplierProperty;
-import javafx.scene.Node;
 
 /// Public API for all components that want to integrate with the new Behavior API.
 ///
 /// @param <B> the type of behavior the component will use
 /// @see BehaviorBase
-public interface WithBehavior<B extends BehaviorBase<? extends Node>> {
+public interface WithBehavior<B extends BehaviorBase<?>> {
 
     /// @return the instance of the current behavior object
     B getBehavior();
