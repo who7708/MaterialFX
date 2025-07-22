@@ -1,5 +1,7 @@
-## Project - 535406ed
+## Project - 91ae528e
 
+- 22-07-2025 <64b9ea1c> Make format action not fail if the changelogs are updated
+- 17-07-2025 <5d8a8e86> Work on the latest commit
 - 04-07-2025 <9a551c33> Add help message and dry run option to Release script too
 - 04-07-2025 <19d89568> UpdateChangelogs: do not override Git name and email config (otherwise it is pulled and messes up next commits)
 - 04-07-2025 <02bb607f> Add help message and dry run option to UpdateChangelogs

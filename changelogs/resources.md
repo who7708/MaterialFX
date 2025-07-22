@@ -1,3 +1,11 @@
+## 24.2.0 - 22-07-2025 - 91ae528e
+
+### Features
+
+- <e3712b7a> Completely review font icons system
+
+
+
 ## 24.1.0 - 03-07-2025 - cc69b56a
 
 ### Features
@@ -23,5 +31,4 @@
 - <5d825ac8> Add 'large-increased' to shapes vars
 - <44f8ec16> Update assets
 - <1f0c9625> Replace Comfortaa and OpenSans fonts with MontSerrat
-
 
