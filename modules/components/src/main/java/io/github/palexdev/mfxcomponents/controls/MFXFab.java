@@ -39,8 +39,8 @@ import io.github.palexdev.mfxcore.controls.Label;
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.controls.SkinBase;
 import io.github.palexdev.mfxcore.utils.fx.StyleUtils;
-import io.github.palexdev.mfxresources.base.properties.IconProperty;
-import io.github.palexdev.mfxresources.fonts.MFXFontIcon;
+import io.github.palexdev.mfxresources.icon.IconProperty;
+import io.github.palexdev.mfxresources.icon.MFXFontIcon;
 import javafx.collections.ObservableMap;
 import javafx.css.CssMetaData;
 import javafx.css.Styleable;
@@ -255,5 +255,9 @@ public class MFXFab extends MFXButtonBase<MFXButtonBehaviorBase<MFXFab>> impleme
 
     public void setIcon(MFXFontIcon icon) {
         this.icon.set(icon);
+    }
+
+    public void setIcon(String name) {
+        this.icon.setIcon(name);
     }
 }

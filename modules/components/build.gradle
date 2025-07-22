@@ -22,7 +22,13 @@ java {
 
 tasks.register('testRun', JavaExec) {
     classpath = sourceSets.test.runtimeClasspath
-    mainClass = 'app.ComponentsLauncher'
+    mainClass.set(provider {
+        if (project.hasProperty("mainClass")) {
+            return "apps." + project.getProperty("mainClass")
+        } else {
+            throw new GradleException("Cannot run task without mainClass argument")
+        }
+    })
 }
 
 mavenPublishing {

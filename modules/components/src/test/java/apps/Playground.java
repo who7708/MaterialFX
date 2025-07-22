@@ -34,8 +34,6 @@ import io.github.palexdev.mfxcore.base.TriFunction;
 import io.github.palexdev.mfxcore.builders.InsetsBuilder;
 import io.github.palexdev.mfxcore.utils.fx.CSSFragment;
 import io.github.palexdev.mfxresources.MFXResources;
-import io.github.palexdev.mfxresources.fonts.MFXFontIcon;
-import io.github.palexdev.mfxresources.fonts.fontawesome.FontAwesomeSolid;
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
@@ -45,6 +43,8 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+
+import static io.github.palexdev.mfxresources.utils.IconUtils.randomIcon;
 
 public class Playground extends Application {
 
@@ -82,7 +82,7 @@ public class Playground extends Application {
             .setStyle(FABVariants.StyleVariant.TERTIARY);
         fab.setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.SECONDARY) {
-                fab.setIcon(FontAwesomeSolid.random());
+                fab.setIcon(randomIcon("fas"));
                 if (e.isShiftDown())
                     fab.setExtended(!fab.isExtended());
             }
@@ -97,7 +97,7 @@ public class Playground extends Application {
         String[] text = new String[]{"Enabled", "Disabled", "Hovered", "Focused", "Pressed"};
         String[] states = new String[]{"", "disabled", "hover", "focus-visible", "pressed"};
         TriFunction<String, String, StyleVariant, MFXButtonBase<?>> builder = (t, s, v) -> {
-            MFXButton btn = new MFXIconButton(FontAwesomeSolid.random());
+            MFXButton btn = new MFXIconButton(randomIcon("fas"));
             btn.setToggleable(toggles);
             btn.setStyle(v);
             btn.setShape(shape);
@@ -143,7 +143,7 @@ public class Playground extends Application {
         boolean toggles = false;
         ShapeVariant shape = ShapeVariant.SQUARED;
         BiFunction<SizeVariant, WidthVariant, MFXIconButton> builder = (s, w) -> {
-            MFXIconButton btn = new MFXIconButton(new MFXFontIcon(FontAwesomeSolid.PENCIL));
+            MFXIconButton btn = new MFXIconButton(randomIcon("fas"));
             btn.setToggleable(toggles);
             btn.setShape(shape);
             btn.setSize(s);

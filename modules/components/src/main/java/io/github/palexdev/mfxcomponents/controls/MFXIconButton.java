@@ -31,10 +31,9 @@ import io.github.palexdev.mfxcore.base.properties.styleable.StyleableBooleanProp
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.controls.SkinBase;
 import io.github.palexdev.mfxcore.utils.fx.StyleUtils;
-import io.github.palexdev.mfxresources.base.properties.IconProperty;
-import io.github.palexdev.mfxresources.fonts.IconDescriptor;
-import io.github.palexdev.mfxresources.fonts.MFXFontIcon;
-import io.github.palexdev.mfxresources.fonts.MFXIconWrapper;
+import io.github.palexdev.mfxresources.icon.IconProperty;
+import io.github.palexdev.mfxresources.icon.MFXFontIcon;
+import io.github.palexdev.mfxresources.icon.MFXIconWrapper;
 import javafx.css.CssMetaData;
 import javafx.css.Styleable;
 import javafx.css.StyleablePropertyFactory;
@@ -204,11 +203,7 @@ public class MFXIconButton extends MFXButton {
         this.icon.set(icon);
     }
 
-    public void setIcon(String code) {
-        icon.setDescription(code);
-    }
-
-    public void setIcon(IconDescriptor description) {
-        icon.setDescription(description);
+    public IconProperty setIcon(String name) {
+        return icon.setIcon(name);
     }
 }
