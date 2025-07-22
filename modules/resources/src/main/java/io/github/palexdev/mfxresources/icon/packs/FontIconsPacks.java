@@ -52,31 +52,42 @@ import javafx.scene.text.Font;
 /// improving performance in later calls.
 ///
 /// ### Third Party Packs
-///
+/// [//@formatter:off]
 /// ```java
 /// // Here's an example of how to register a third party icons pack, say from Ikonli.
 /// FontIconsPacks.register(
 ///     "win10-",
 ///     Font.loadFont(new Win10IkonHandler().getFontResourceAsStream(), size),
 ///     name -> String.valueOf((char) Win10.findByDescription(name).getCode())
-///);
+/// );
 /// // Or even better...
-/// FontIconsPacks.register("win10-", new FontIconsPack(){
+/// FontIconsPacks.register("win10-", new FontIconsPack() {
+///     @Override
+///     public String name() {
+///         return "Ikonli Win10 Icons";
+///     }
 ///
-///@OverridepublicStringname(){return"IkonliWin10Icons";
-///}
-///@OverridepublicString[]iconNames(){returnArrays.stream(Win10.values())
-///.map(Win10::getDescription)
+///     @Override
+///     public String[] iconNames() {
+///         return Arrays.stream(Win10.values())
+///             .map(Win10::getDescription)
 ///             .toArray(String[]:new);
-///}
-///@OverridepublicStringicon(Stringname){returnString.valueOf((char)Win10.findByDescription(name).getCde());
-///}
-///@OverridepublicFontfont(){returnFont.loadFont(newWin10IkonHandler().getFontResourceAsStream(),size);
-///}
-///});
+///     }
+///
+///     @Override
+///     public String icon(String name) {
+///        return String.valueOf((char) Win10.findByDescription(name).getCde());
+///     }
+///
+///     @Override
+///     public Font font() {
+///         return Font.loadFont(new Win10IkonHandler().getFontResourceAsStream(), size);
+///     }
+/// });
 /// // The latter compared to the first one includes the pack name and the available icons names, which is mandatory for
 /// // random capabilities offered by the IconUtils class.
-///```
+/// ```
+// @formatter:on
 public class FontIconsPacks {
     //================================================================================
     // Static Properties
@@ -137,8 +148,7 @@ public class FontIconsPacks {
     /// Otherwise, returns `null`.
     public static FontIconsPack pack(String name) {
         String prefix = PACKS.floorKey(name);
-        if (prefix != null && name.startsWith(prefix))
-            return PACKS.get(prefix);
+        if (prefix != null && name.startsWith(prefix)) return PACKS.get(prefix);
         return null;
     }
 
