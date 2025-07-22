@@ -8,7 +8,8 @@ jobs:
   formatting:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Clone repo
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -17,6 +18,11 @@ jobs:
         with:
           path: /home/runner/work/_temp/_github_workflow/idea-cache
           key: ${{ runner.os }}-idea-cache-v2
+
+      # This is needed because the update changelogs script pushes a new commit therefore making this fail
+      - name: Pull latest changes
+        run: git pull origin ${{ github.ref_name }}
+
       - uses: notdevcody/intellij-format-action@main
         with:
           include-glob: '*.java'
