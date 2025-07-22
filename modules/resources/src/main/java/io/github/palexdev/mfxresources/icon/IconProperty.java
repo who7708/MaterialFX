@@ -16,21 +16,18 @@
  * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.palexdev.mfxresources.base.properties;
+package io.github.palexdev.mfxresources.icon;
 
-import io.github.palexdev.mfxresources.fonts.IconDescriptor;
-import io.github.palexdev.mfxresources.fonts.MFXFontIcon;
-import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.paint.Color;
 
-/// Simple extension of [ReadOnlyObjectWrapper] to be used for [MFXFontIcon] objects,
-/// also offers a series of convenient methods to manipulate the icon with fluent API.
-public class IconProperty extends ReadOnlyObjectWrapper<MFXFontIcon> {
+/// Simple extension of [SimpleObjectProperty] to be used for [MFXFontIcon] objects.
+public class IconProperty extends SimpleObjectProperty<MFXFontIcon> {
 
     //================================================================================
     // Constructors
     //================================================================================
-    public IconProperty() {
-    }
+    public IconProperty() {}
 
     public IconProperty(MFXFontIcon initialValue) {
         super(initialValue);
@@ -47,16 +44,18 @@ public class IconProperty extends ReadOnlyObjectWrapper<MFXFontIcon> {
     //================================================================================
     // Setters
     //================================================================================
-
-    /// Creates and sets a new [MFXFontIcon] with the given icon description.
-    public IconProperty setDescription(String description) {
-        set(new MFXFontIcon(description));
+    public IconProperty setIcon(String name) {
+        set(new MFXFontIcon(name));
         return this;
     }
 
-    /// Creates and sets a new [MFXFontIcon] with the given icon description.
-    public IconProperty setDescription(IconDescriptor description) {
-        set(new MFXFontIcon(description));
+    public IconProperty setSize(double size) {
+        get().setSize(size);
+        return this;
+    }
+
+    public IconProperty setColor(Color color) {
+        get().setColor(color);
         return this;
     }
 }

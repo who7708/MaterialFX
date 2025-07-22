@@ -16,12 +16,12 @@
  * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.palexdev.mfxresources.fonts;
+package io.github.palexdev.mfxresources.icon;
 
 import io.github.palexdev.mfxeffects.animations.AnimationFactory;
 import io.github.palexdev.mfxeffects.animations.Animations;
 import io.github.palexdev.mfxeffects.animations.motion.M3Motion;
-import io.github.palexdev.mfxresources.fonts.IconClip.ClipShape;
+import io.github.palexdev.mfxresources.icon.IconClip.ClipShape;
 import javafx.scene.CacheHint;
 
 public enum AnimationPresets {

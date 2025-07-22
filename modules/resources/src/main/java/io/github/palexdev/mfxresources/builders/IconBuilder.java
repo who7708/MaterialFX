@@ -18,11 +18,8 @@
 
 package io.github.palexdev.mfxresources.builders;
 
-import java.util.function.Function;
-
-import io.github.palexdev.mfxresources.fonts.IconDescriptor;
-import io.github.palexdev.mfxresources.fonts.IconProvider;
-import io.github.palexdev.mfxresources.fonts.MFXFontIcon;
+import io.github.palexdev.mfxresources.icon.MFXFontIcon;
+import io.github.palexdev.mfxresources.icon.MFXIconWrapper;
 import javafx.css.PseudoClass;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -52,9 +49,6 @@ public class IconBuilder {
         this.icon = icon;
     }
 
-    //================================================================================
-    // Static Methods
-    //================================================================================
     public static IconBuilder build() {
         return new IconBuilder();
     }
@@ -64,20 +58,15 @@ public class IconBuilder {
     }
 
     //================================================================================
-    // Delegate Methods
+    // Methods
     //================================================================================
     public IconBuilder setColor(Color color) {
         icon.setColor(color);
         return this;
     }
 
-    public IconBuilder setDescription(String code) {
-        icon.setDescription(code);
-        return this;
-    }
-
-    public IconBuilder setDescription(IconDescriptor description) {
-        icon.setDescription(description);
+    public IconBuilder setIconName(String name) {
+        icon.setIconName(name);
         return this;
     }
 
@@ -86,21 +75,13 @@ public class IconBuilder {
         return this;
     }
 
-    public IconBuilder setIconsProvider(IconProvider provider) {
-        icon.setIconsProvider(provider);
-        return this;
+    public MFXIconWrapper wrap() {
+        return new MFXIconWrapper(icon);
     }
 
-    public IconBuilder setDescriptionConverter(Function<String, Character> descriptionConverter) {
-        icon.setDescriptionConverter(descriptionConverter);
-        return this;
+    public IconWrapperBuilder wrapperBuilder() {
+        return new IconWrapperBuilder().setIcon(icon);
     }
-
-    public IconWrapperBuilder wrap() {
-        return new IconWrapperBuilder(icon.wrap());
-    }
-
-    public IconWrapperBuilder wrapperBuilder() {return icon.wrapperBuilder();}
 
     //================================================================================
     // Node Delegate Methods

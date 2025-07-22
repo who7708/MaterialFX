@@ -6,15 +6,12 @@ module mfx.resources {
     // Root
     exports io.github.palexdev.mfxresources;
 
-    // Base
-    exports io.github.palexdev.mfxresources.base.properties;
-
     // Builders
     exports io.github.palexdev.mfxresources.builders;
 
-    // Fonts
-    exports io.github.palexdev.mfxresources.fonts;
-    exports io.github.palexdev.mfxresources.fonts.fontawesome;
+    // Icons
+    exports io.github.palexdev.mfxresources.icon;
+    exports io.github.palexdev.mfxresources.icon.packs;
 
     // Utils
     exports io.github.palexdev.mfxresources.utils;

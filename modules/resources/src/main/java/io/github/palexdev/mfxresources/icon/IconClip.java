@@ -16,7 +16,7 @@
  * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.palexdev.mfxresources.fonts;
+package io.github.palexdev.mfxresources.icon;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

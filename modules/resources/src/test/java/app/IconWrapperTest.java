@@ -18,12 +18,15 @@
 
 package app;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import io.github.palexdev.mfxeffects.ripple.MFXRippleGenerator;
-import io.github.palexdev.mfxresources.fonts.*;
-import io.github.palexdev.mfxresources.fonts.fontawesome.FontAwesomeBrands;
-import io.github.palexdev.mfxresources.fonts.fontawesome.FontAwesomeRegular;
-import io.github.palexdev.mfxresources.fonts.fontawesome.FontAwesomeSolid;
-import io.github.palexdev.mfxresources.utils.EnumUtils;
+import io.github.palexdev.mfxresources.icon.AnimationPresets;
+import io.github.palexdev.mfxresources.icon.IconClip;
+import io.github.palexdev.mfxresources.icon.MFXFontIcon;
+import io.github.palexdev.mfxresources.icon.MFXIconWrapper;
+import io.github.palexdev.mfxresources.icon.packs.FontIconsPack;
+import io.github.palexdev.mfxresources.utils.IconUtils;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -41,22 +44,17 @@ public class IconWrapperTest extends Application {
         // Set up like this, the ripple is in front of icon
         // But the set view order should fix it
         // Expect the effect behind the icon
-        MFXIconWrapper icon = new MFXIconWrapper(FontAwesomeSolid.random(64.0), 128)
+        MFXIconWrapper icon = new MFXIconWrapper(IconUtils.randomIcon("fas-", 64.0, FontIconsPack.DEFAULT_COLOR), 128)
             .setAnimated(true)
             .setAnimationProvider(AnimationPresets.FADING)
             .enableRipple(true)
             .setIconClip(IconClip.of(IconClip.ClipShape.ROUNDED, -1.0));
         icon.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            IconsProviders provider = EnumUtils.randomEnum(IconsProviders.class);
-            Object desc = switch (provider) {
-                case FONTAWESOME_BRANDS -> FontAwesomeBrands.class;
-                case FONTAWESOME_SOLID -> FontAwesomeSolid.class;
-                case FONTAWESOME_REGULAR -> FontAwesomeRegular.class;
-            };
-            Enum val = EnumUtils.randomEnum(((Class<Enum>) desc));
-            IconDescriptor toDesc = (IconDescriptor) val;
+            String[] packs = {"fas-", "fab-", "far-"};
+            String prefix = packs[ThreadLocalRandom.current().nextInt(0, packs.length)];
+            String name = IconUtils.randomIconName(prefix).getValue();
             // This is to also test icon switch with CSS
-            icon.setStyle("-mfx-icon: " + toDesc.getDescription());
+            icon.setStyle("-mfx-icon: " + name);
         });
         icon.iconProperty().addListener(i -> icon.getIcon().setSize(64.0));
 

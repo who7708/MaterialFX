@@ -21,7 +21,10 @@ package io.github.palexdev.mfxresources.builders;
 import java.util.function.Function;
 
 import io.github.palexdev.mfxeffects.beans.Position;
-import io.github.palexdev.mfxresources.fonts.*;
+import io.github.palexdev.mfxresources.icon.AnimationPresets;
+import io.github.palexdev.mfxresources.icon.IconClip;
+import io.github.palexdev.mfxresources.icon.MFXFontIcon;
+import io.github.palexdev.mfxresources.icon.MFXIconWrapper;
 import javafx.css.PseudoClass;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -51,9 +54,6 @@ public class IconWrapperBuilder {
         this.wrapper = wrapper;
     }
 
-    //================================================================================
-    // Static Methods
-    //================================================================================
     public static IconWrapperBuilder build() {
         return new IconWrapperBuilder();
     }
@@ -63,7 +63,7 @@ public class IconWrapperBuilder {
     }
 
     //================================================================================
-    // Delegate Methods
+    // Methods
     //================================================================================
     public IconWrapperBuilder enableRippleGenerator(boolean enable) {
         wrapper.enableRipple(enable);
@@ -90,17 +90,13 @@ public class IconWrapperBuilder {
         return this;
     }
 
-    public IconWrapperBuilder setIcon(String desc) {
-        wrapper.setIcon(desc);
+    public IconWrapperBuilder setIcon(String iconName) {
+        wrapper.setIcon(iconName);
         return this;
     }
 
     public MFXIconWrapper setAnimated(boolean animated) {
         return wrapper.setAnimated(animated);
-    }
-
-    public MFXIconWrapper setIcon(IconDescriptor descriptor) {
-        return wrapper.setIcon(descriptor);
     }
 
     public MFXIconWrapper setAnimationProvider(AnimationPresets preset) {

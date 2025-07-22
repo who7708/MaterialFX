@@ -16,7 +16,7 @@
  * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.palexdev.mfxresources.fonts;
+package io.github.palexdev.mfxresources.icon;
 
 import java.util.List;
 import java.util.function.BiFunction;
@@ -27,8 +27,7 @@ import io.github.palexdev.mfxeffects.ripple.MFXRippleGenerator;
 import io.github.palexdev.mfxeffects.ripple.base.RippleGenerator;
 import io.github.palexdev.mfxeffects.utils.LayoutUtils;
 import io.github.palexdev.mfxeffects.utils.StyleUtils;
-import io.github.palexdev.mfxresources.base.properties.IconProperty;
-import io.github.palexdev.mfxresources.fonts.IconClip.IconClipConverter;
+import io.github.palexdev.mfxresources.icon.IconClip.IconClipConverter;
 import javafx.collections.ObservableList;
 import javafx.css.*;
 import javafx.geometry.HPos;
@@ -83,7 +82,7 @@ import javafx.scene.layout.Region;
 ///
 /// For example, the [#animationPresetProperty()] is a bridge that calls [#setAnimationProvider(BiFunction)].
 ///
-/// Other properties that follow the same logic are: [#iconDescriptionProperty()], [#enableRippleProperty()],
+/// Other properties that follow the same logic are: [#iconNameProperty()], [#enableRippleProperty()],
 /// [#iconClipProperty()].
 ///
 /// If you use both the bridge and the "standard" method, the CSS properties end up being "desynchronized".
@@ -110,7 +109,6 @@ public class MFXIconWrapper extends Region {
     // Animation
     private IconAnimation animation;
     private BiFunction<MFXFontIcon, MFXFontIcon, IconAnimation> animationProvider;
-
 
     // Ripple
     private MFXRippleGenerator rg;
@@ -327,10 +325,10 @@ public class MFXIconWrapper extends Region {
         }
     };
 
-    private final StyleableStringProperty iconDescription = new SimpleStyleableStringProperty(
-        StyleableProperties.ICON_DESCRIPTION,
+    private final StyleableStringProperty iconName = new SimpleStyleableStringProperty(
+        StyleableProperties.ICON_NAME,
         this,
-        "iconDescription",
+        "iconName",
         ""
     ) {
         @Override
@@ -426,18 +424,18 @@ public class MFXIconWrapper extends Region {
         return this;
     }
 
-    public String getIconDescription() {
-        return iconDescription.get();
+    public String getIconName() {
+        return iconName.get();
     }
 
     /// A convenient bridge that allows to change the wrapper's icon from CSS and trigger the animation if possible, via the property:
     /// '-mfx-icon'.
-    public StyleableStringProperty iconDescriptionProperty() {
-        return iconDescription;
+    public StyleableStringProperty iconNameProperty() {
+        return iconName;
     }
 
-    public MFXIconWrapper setIconDescription(String iconDescription) {
-        this.iconDescription.set(iconDescription);
+    public MFXIconWrapper setIconName(String iconName) {
+        this.iconName.set(iconName);
         return this;
     }
 
@@ -500,10 +498,10 @@ public class MFXIconWrapper extends Region {
                 -1.0
             );
 
-        private static final CssMetaData<MFXIconWrapper, String> ICON_DESCRIPTION =
+        private static final CssMetaData<MFXIconWrapper, String> ICON_NAME =
             FACTORY.createStringCssMetaData(
                 "-mfx-icon",
-                MFXIconWrapper::iconDescriptionProperty,
+                MFXIconWrapper::iconNameProperty,
                 ""
             );
 
@@ -531,7 +529,7 @@ public class MFXIconWrapper extends Region {
         static {
             cssMetaDataList = StyleUtils.cssMetaDataList(
                 Region.getClassCssMetaData(),
-                ANIMATED, ANIMATION_PRESET, SIZE, ICON_DESCRIPTION, ENABLE_RIPPLE, ICON_CLIP
+                ANIMATED, ANIMATION_PRESET, SIZE, ICON_NAME, ENABLE_RIPPLE, ICON_CLIP
             );
         }
     }
@@ -563,16 +561,9 @@ public class MFXIconWrapper extends Region {
         return this;
     }
 
-    /// Convenience method to set the [#iconProperty()] to a new [MFXFontIcon] instance given an icon
-    /// description/name.
-    public MFXIconWrapper setIcon(String description) {
-        icon.setDescription(description);
-        return this;
-    }
-
-    /// Convenience method to set the [#iconProperty()] to a new [MFXFontIcon] instance given an [IconDescriptor].
-    public MFXIconWrapper setIcon(IconDescriptor description) {
-        icon.setDescription(description);
+    /// Convenience method to set the [#iconProperty()] to a new [MFXFontIcon] instance given a font icon name.
+    public MFXIconWrapper setIcon(String iconName) {
+        icon.setIcon(iconName);
         return this;
     }
 

@@ -20,10 +20,9 @@ package app;
 
 import java.util.Base64;
 
-import io.github.palexdev.mfxresources.fonts.AnimationPresets;
-import io.github.palexdev.mfxresources.fonts.MFXFontIcon;
-import io.github.palexdev.mfxresources.fonts.MFXIconWrapper;
-import io.github.palexdev.mfxresources.fonts.fontawesome.FontAwesomeSolid;
+import io.github.palexdev.mfxresources.icon.AnimationPresets;
+import io.github.palexdev.mfxresources.icon.MFXFontIcon;
+import io.github.palexdev.mfxresources.icon.MFXIconWrapper;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -46,7 +45,7 @@ public class IconAnimation extends Application {
         pane.setAlignment(Pos.TOP_CENTER);
         pane.setPadding(new Insets(20));
 
-        MFXFontIcon startIcon = new MFXFontIcon(FontAwesomeSolid.CHECK);
+        MFXFontIcon startIcon = new MFXFontIcon("fas-check");
         MFXIconWrapper wrapper = new MFXIconWrapper(startIcon, 64)
             .setAnimated(true)
             .setAnimationProvider(AnimationPresets.SCALE)
@@ -73,11 +72,11 @@ public class IconAnimation extends Application {
         wrapper.getStylesheets().add(data);
 
         Button b1 = new Button("To Check");
-        b1.setOnAction(e -> wrapper.setIcon(FontAwesomeSolid.CHECK));
+        b1.setOnAction(e -> wrapper.setIcon("fas-check"));
         Button b2 = new Button("To Minus");
-        b2.setOnAction(e -> wrapper.setIcon(FontAwesomeSolid.MINUS));
+        b2.setOnAction(e -> wrapper.setIcon("fas-minus"));
         Button b3 = new Button("To X");
-        b3.setOnAction(e -> wrapper.setIcon(FontAwesomeSolid.XMARK));
+        b3.setOnAction(e -> wrapper.setIcon("fas-xmark"));
         HBox box = new HBox(30, b1, b2, b3);
         box.setAlignment(Pos.CENTER);
 

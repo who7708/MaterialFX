@@ -18,12 +18,14 @@
 
 package app;
 
-import java.util.Optional;
+import java.util.Arrays;
 
-import io.github.palexdev.mfxresources.fonts.IconsProviders;
-import io.github.palexdev.mfxresources.fonts.MFXFontIcon;
-import io.github.palexdev.mfxresources.fonts.fontawesome.FontAwesomeSolid;
-import io.github.palexdev.mfxresources.utils.EnumUtils;
+import io.github.palexdev.mfxeffects.animations.Animations.KeyFrames;
+import io.github.palexdev.mfxeffects.animations.Animations.TimelineBuilder;
+import io.github.palexdev.mfxresources.icon.MFXFontIcon;
+import io.github.palexdev.mfxresources.icon.packs.FontIconsPack;
+import io.github.palexdev.mfxresources.icon.packs.FontIconsPacks;
+import io.github.palexdev.mfxresources.utils.IconUtils;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -46,31 +48,55 @@ public class IconsApp extends Application {
         HBox box = new HBox(30);
         box.setPadding(new Insets(10));
 
-        IconsProviders.registerProvider(
-            "win10-",
-            Font.loadFont(new Win10IkonHandler().getFontResourceAsStream(), 64.0),
-            s -> Optional.ofNullable(Win10.findByDescription(s)).map(w -> ((char) w.getCode())).orElse('\0')
-        );
-        IconsProviders.registerProvider(
-            "fltral-",
-            Font.loadFont(new FluentUiRegularALIkonHandler().getFontResourceAsStream(), 64.0),
-            s -> Optional.ofNullable(FluentUiRegularAL.findByDescription(s)).map(w -> ((char) w.getCode())).orElse('\0')
-        );
+        FontIconsPacks.register("win10-", new FontIconsPack() {
+            @Override
+            public String[] iconNames() {
+                return Arrays.stream(Win10.values())
+                    .map(Win10::getDescription)
+                    .toArray(String[]::new);
+            }
 
-        Color color = Color.web("#6750a4");
+            @Override
+            public String icon(String name) {
+                return String.valueOf((char) Win10.findByDescription(name).getCode());
+            }
+
+            @Override
+            public Font font() {
+                return Font.loadFont(new Win10IkonHandler().getFontResourceAsStream(), 64.0);
+            }
+        });
+
+        FontIconsPacks.register("fltral-", new FontIconsPack() {
+            @Override
+            public String[] iconNames() {
+                return Arrays.stream(FluentUiRegularAL.values())
+                    .map(FluentUiRegularAL::getDescription)
+                    .toArray(String[]::new);
+            }
+
+            @Override
+            public String icon(String name) {
+                return String.valueOf((char) FluentUiRegularAL.findByDescription(name).getCode());
+            }
+
+            @Override
+            public Font font() {
+                return Font.loadFont(new FluentUiRegularALIkonHandler().getFontResourceAsStream(), 64.0);
+            }
+        });
+
         IconContainer i0 = new IconContainer(
             "FontAwesomeSolid (new default for MaterialFX)",
-            new MFXFontIcon(EnumUtils.randomEnum(FontAwesomeSolid.class).getDescription(), 64.0, color)
+            "fas-"
         );
         IconContainer i1 = new IconContainer(
             "Ikonli Windows 10 Pack (external dependency)",
-            new MFXFontIcon("", 64.0, color)
-                .setDescription(EnumUtils.randomEnum(Win10.class).getDescription())
+            "win10-"
         );
         IconContainer i2 = new IconContainer(
             "Ikonli FluentUI Pack (external dependency)",
-            new MFXFontIcon("", 64.0, color)
-                .setDescription(EnumUtils.randomEnum(FluentUiRegularAL.class).getDescription())
+            "fltral-"
         );
 
         box.getChildren().addAll(i0, i1, i2);
@@ -82,12 +108,22 @@ public class IconsApp extends Application {
 
     private static class IconContainer extends VBox {
 
-        public IconContainer(String title, MFXFontIcon icon) {
+        public IconContainer(String title, String iconPack) {
             Label header = new Label(title);
+            MFXFontIcon icon = new MFXFontIcon("", 64.0, Color.web("#6750a4"));
             getChildren().setAll(header, icon);
             setAlignment(Pos.CENTER);
             setSpacing(30);
             setPadding(new Insets(10));
+
+            TimelineBuilder.build()
+                .add(KeyFrames.of(500.0, _ -> {
+                    String name = IconUtils.randomIconName(iconPack).getValue();
+                    icon.setIconName(name);
+                }))
+                .setCycleCount(-1)
+                .getAnimation()
+                .play();
         }
     }
 }

@@ -18,18 +18,21 @@
 
 package interactive;
 
-import java.util.Optional;
+import java.util.Arrays;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.palexdev.mfxeffects.enums.RippleState;
 import io.github.palexdev.mfxeffects.ripple.MFXRippleGenerator;
 import io.github.palexdev.mfxeffects.ripple.base.RippleGenerator;
+import io.github.palexdev.mfxresources.builders.IconBuilder;
 import io.github.palexdev.mfxresources.builders.IconWrapperBuilder;
-import io.github.palexdev.mfxresources.fonts.*;
-import io.github.palexdev.mfxresources.fonts.fontawesome.FontAwesomeBrands;
-import io.github.palexdev.mfxresources.fonts.fontawesome.FontAwesomeRegular;
-import io.github.palexdev.mfxresources.fonts.fontawesome.FontAwesomeSolid;
+import io.github.palexdev.mfxresources.icon.IconClip;
+import io.github.palexdev.mfxresources.icon.MFXFontIcon;
+import io.github.palexdev.mfxresources.icon.MFXIconWrapper;
+import io.github.palexdev.mfxresources.icon.packs.FontIconsPack;
+import io.github.palexdev.mfxresources.icon.packs.FontIconsPacks;
 import io.github.palexdev.mfxresources.utils.EnumUtils;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -37,6 +40,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.kordamp.ikonli.fluentui.FluentUiRegularAL;
@@ -48,6 +52,8 @@ import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 
+import static io.github.palexdev.mfxresources.utils.IconUtils.randomIcon;
+import static io.github.palexdev.mfxresources.utils.IconUtils.randomIconName;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(ApplicationExtension.class)
@@ -56,16 +62,48 @@ public class IconsTests {
     private static Stage stage;
 
     static {
-        IconsProviders.registerProvider(
-            "win10-",
-            Font.loadFont(new Win10IkonHandler().getFontResourceAsStream(), 64.0),
-            s -> Optional.ofNullable(Win10.findByDescription(s)).map(w -> ((char) w.getCode())).orElse('\0')
-        );
-        IconsProviders.registerProvider(
-            "fltral-",
-            Font.loadFont(new FluentUiRegularALIkonHandler().getFontResourceAsStream(), 64.0),
-            s -> Optional.ofNullable(FluentUiRegularAL.findByDescription(s)).map(w -> ((char) w.getCode())).orElse('\0')
-        );
+        FontIconsPacks.register("win10-", new FontIconsPack() {
+            @Override
+            public String name() {
+                return FontIconsPack.super.name();
+            }
+
+            @Override
+            public String[] iconNames() {
+                return Arrays.stream(Win10.values())
+                    .map(Win10::getDescription)
+                    .toArray(String[]::new);
+            }
+
+            @Override
+            public String icon(String name) {
+                return String.valueOf((char) Win10.findByDescription(name).getCode());
+            }
+
+            @Override
+            public Font font() {
+                return Font.loadFont(new Win10IkonHandler().getFontResourceAsStream(), 64.0);
+            }
+        });
+
+        FontIconsPacks.register("fltral-", new FontIconsPack() {
+            @Override
+            public String[] iconNames() {
+                return Arrays.stream(FluentUiRegularAL.values())
+                    .map(FluentUiRegularAL::getDescription)
+                    .toArray(String[]::new);
+            }
+
+            @Override
+            public String icon(String name) {
+                return String.valueOf((char) FluentUiRegularAL.findByDescription(name).getCode());
+            }
+
+            @Override
+            public Font font() {
+                return Font.loadFont(new FluentUiRegularALIkonHandler().getFontResourceAsStream(), 64.0);
+            }
+        });
     }
 
     @Start
@@ -79,6 +117,11 @@ public class IconsTests {
         StackPane root = setupStage();
         final AtomicReference<MFXFontIcon> icon = new AtomicReference<>(new MFXFontIcon());
         robot.interact(() -> root.getChildren().setAll(icon.get()));
+        assertTrue(icon.get().getText().isBlank());
+
+        icon.set(new MFXFontIcon(null, 32.0, Color.RED));
+        robot.interact(() -> root.getChildren().setAll(icon.get()));
+        assertNull(icon.get().getIconsPack());
         assertTrue(icon.get().getText().isBlank());
 
         icon.set(new MFXFontIcon(""));
@@ -103,13 +146,13 @@ public class IconsTests {
         assertEquals(64.0, icon.get().getSize());
         Thread.sleep(sleep);
 
-        icon.set(FontAwesomeSolid.random(Color.RED, 64.0));
+        icon.set(randomIcon("fas-", 64.0, Color.RED));
         robot.interact(() -> root.getChildren().setAll(icon.get()));
         assertEquals(64.0, icon.get().getFont().getSize());
         assertEquals(64.0, icon.get().getSize());
         Thread.sleep(sleep);
 
-        icon.set(FontAwesomeSolid.random(Color.RED, 64.0));
+        icon.set(randomIcon("fas-", 64.0, Color.RED));
         robot.interact(() -> root.getChildren().setAll(icon.get()));
         assertEquals(64.0, icon.get().getFont().getSize());
         assertEquals(64.0, icon.get().getSize());
@@ -117,12 +160,11 @@ public class IconsTests {
     }
 
     @Test
-    void testProviders(FxRobot robot) throws InterruptedException {
+    void testPacks(FxRobot robot) throws InterruptedException {
         StackPane root = setupStage();
         final AtomicReference<MFXFontIcon> icon = new AtomicReference<>();
         icon.set(new MFXFontIcon()
-            .setIconsProvider(IconsProviders.FONTAWESOME_BRANDS)
-            .setDescription("fab-google")
+            .setIconName("fab-google")
             .setSize(64.0));
         robot.interact(() -> root.getChildren().setAll(icon.get()));
         assertEquals(64.0, icon.get().getFont().getSize());
@@ -130,8 +172,7 @@ public class IconsTests {
         Thread.sleep(sleep);
 
         icon.set(new MFXFontIcon()
-            .setIconsProvider(IconsProviders.FONTAWESOME_REGULAR)
-            .setDescription("far-compass")
+            .setIconName("far-compass")
             .setSize(64.0));
         robot.interact(() -> root.getChildren().setAll(icon.get()));
         assertEquals(64.0, icon.get().getFont().getSize());
@@ -139,11 +180,12 @@ public class IconsTests {
         Thread.sleep(sleep);
 
         AtomicReference<Exception> exRef = new AtomicReference<>();
-        icon.set(new MFXFontIcon("fas-circle", 64.0) {
+        icon.set(new MFXFontIcon("null", 64.0) {
             @Override
-            protected void update(String description) {
+            protected void update() {
                 try {
-                    super.update(description);
+                    super.update();
+                    exRef.set(null);
                 } catch (Exception ex) {
                     exRef.set(ex);
                     ex.printStackTrace();
@@ -151,44 +193,46 @@ public class IconsTests {
             }
         });
         robot.interact(() -> root.getChildren().setAll(icon.get()));
+        assertNotNull(exRef.get());
+        assertSame(IllegalStateException.class, exRef.get().getClass());
+
         Thread.sleep(sleep);
-        icon.get().setIconsProvider(IconsProviders.FONTAWESOME_BRANDS);
-        icon.get().setDescription("fab-google");
-        assertNull(exRef.get());
+        icon.get().setIconName("fab-google");
         assertEquals(64.0, icon.get().getFont().getSize());
         assertEquals(64.0, icon.get().getSize());
+        assertNull(exRef.get());
         Thread.sleep(sleep);
     }
 
     @Test
-    void testCustomProviders(FxRobot robot) throws InterruptedException {
+    void testCustomPacks(FxRobot robot) throws InterruptedException {
         StackPane root = setupStage();
         final AtomicReference<MFXFontIcon> icon = new AtomicReference<>(new MFXFontIcon());
         icon.get().setSize(64.0);
         robot.interact(() -> root.getChildren().setAll(icon.get()));
 
-        robot.interact(() -> icon.get().setDescription(EnumUtils.randomEnum(Win10.class).getDescription()));
+        robot.interact(() -> icon.get().setIconName(EnumUtils.randomEnum(Win10.class).getDescription()));
         assertEquals(64.0, icon.get().getFont().getSize());
         assertEquals(64.0, icon.get().getSize());
-        assertNotEquals("\0", icon.get().symbolToCode());
+        assertNotEquals("\0", FontIconsPack.textToUnicode(icon.get().getText()));
         Thread.sleep(sleep);
 
-        robot.interact(() -> icon.get().setDescription(EnumUtils.randomEnum(FluentUiRegularAL.class).getDescription()));
+        robot.interact(() -> icon.get().setIconName(EnumUtils.randomEnum(FluentUiRegularAL.class).getDescription()));
         assertEquals(64.0, icon.get().getFont().getSize());
         assertEquals(64.0, icon.get().getSize());
-        assertNotEquals("\0", icon.get().symbolToCode());
+        assertNotEquals("\0", FontIconsPack.textToUnicode(icon.get().getText()));
         Thread.sleep(sleep);
 
-        robot.interact(() -> icon.get().setDescription(EnumUtils.randomEnum(FontAwesomeSolid.class).getDescription()));
+        robot.interact(() -> icon.get().setIconName(randomIconName("fas-").getValue()));
         assertEquals(64.0, icon.get().getFont().getSize());
         assertEquals(64.0, icon.get().getSize());
-        assertNotEquals("\0", icon.get().symbolToCode());
+        assertNotEquals("\0", FontIconsPack.textToUnicode(icon.get().getText()));
     }
 
     @Test
     void testWrap(FxRobot robot) throws InterruptedException {
         StackPane root = setupStage();
-        MFXIconWrapper wrapper = new MFXFontIcon(FontAwesomeSolid.CIRCLE.getDescription(), 64.0).wrap();
+        MFXIconWrapper wrapper = IconBuilder.build(new MFXFontIcon("fas-circle", 64.0)).wrap();
         robot.interact(() -> root.getChildren().setAll(wrapper));
         assertEquals(-1.0, wrapper.getSize());
         assertEquals(64.0, wrapper.getWidth());
@@ -196,16 +240,14 @@ public class IconsTests {
         Thread.sleep(sleep);
 
         wrapper.getIcon()
-            .setIconsProvider(IconsProviders.FONTAWESOME_BRANDS)
-            .setDescription(EnumUtils.randomEnum(FontAwesomeBrands.class).getDescription());
+            .setIconName(randomIconName("fab-").getValue());
         Thread.sleep(sleep);
 
-        robot.interact(() -> wrapper.setIcon(FontAwesomeSolid.random(Color.web("#454545"), 64.0)));
+        robot.interact(() -> wrapper.setIcon(randomIcon("fas-", 64.0, Color.web("#454545"))));
         Thread.sleep(sleep);
 
         robot.interact(() -> {
-            wrapper.getIcon().setIconsProvider(IconsProviders.FONTAWESOME_REGULAR);
-            wrapper.getIcon().setDescription(FontAwesomeRegular.SQUARE.getDescription());
+            wrapper.getIcon().setIconName("far-square");
             wrapper.setStyle("-mfx-enable-ripple: true;\n-mfx-clip: \"rounded\";");
         });
         assertNotNull(wrapper.getClip());
@@ -213,7 +255,7 @@ public class IconsTests {
         robot.clickOn(wrapper);
         Thread.sleep(1000);
         assertEquals(RippleState.INACTIVE, wrapper.getRippleGenerator().getRippleState());
-        assertTrue(wrapper.getRippleGenerator().getChildrenUnmodifiable().get(0).getOpacity() < 1.0);
+        assertTrue(wrapper.getRippleGenerator().getChildrenUnmodifiable().getFirst().getOpacity() < 1.0);
 
         robot.interact(() -> wrapper.setStyle(null));
         assertNull(wrapper.getClip());
@@ -258,7 +300,7 @@ public class IconsTests {
         }
 
         robot.interact(() -> icon.enableRipple(false));
-        assertTrue(icon.getChildrenUnmodifiable().size() == 1 && !(icon.getChildrenUnmodifiable().get(0) instanceof MFXRippleGenerator));
+        assertTrue(icon.getChildrenUnmodifiable().size() == 1 && !(icon.getChildrenUnmodifiable().getFirst() instanceof MFXRippleGenerator));
     }
 
     @Test
@@ -284,7 +326,7 @@ public class IconsTests {
     }
 
     @Test
-    void testRapidChangeWithDifferentProviders(FxRobot robot) {
+    void testRapidChangeWithDifferentPacks(FxRobot robot) {
         StackPane root = setupStage();
         MFXIconWrapper icon = new MFXIconWrapper()
             .setIcon("fas-circle")
@@ -292,17 +334,13 @@ public class IconsTests {
             .setSize(32);
         robot.interact(() -> root.getChildren().setAll(icon));
 
+        String[] packs = {"fas-", "fab-", "far-", "fltral-", "win10-"};
+
         for (int i = 0; i < 100; i++) {
-            IconsProviders provider = EnumUtils.randomEnum(IconsProviders.class);
-            Object desc = switch (provider) {
-                case FONTAWESOME_BRANDS -> FontAwesomeBrands.class;
-                case FONTAWESOME_SOLID -> FontAwesomeSolid.class;
-                case FONTAWESOME_REGULAR -> FontAwesomeRegular.class;
-            };
-            Enum val = EnumUtils.randomEnum(((Class<Enum>) desc));
-            IconDescriptor toDesc = (IconDescriptor) val;
-            robot.interact(() -> icon.setIcon(toDesc));
-            assertNotNull(toDesc.findByDescription(icon.getIcon().getDescription()));
+            String prefix = packs[ThreadLocalRandom.current().nextInt(0, packs.length)];
+            Pair<FontIconsPack, String> pair = randomIconName(prefix);
+            robot.interact(() -> icon.setIcon(pair.getValue()));
+            assertNotNull(pair.getKey().icon(icon.getIcon().getIconName()));
         }
     }
 }
