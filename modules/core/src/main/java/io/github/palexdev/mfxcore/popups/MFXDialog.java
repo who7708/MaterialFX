@@ -58,7 +58,7 @@ import javafx.stage.*;
 /// Which means that unfortunately, we inherit all the inconveniences of it like: not being able to create the dialog
 /// outside the JavaFX Application Thread, not being able to change the modality or owner after it is shown, etc.
 ///
-/// Unlike other kinds of popups, this is not necessarily tied to an owner. The [#computePosition(Window, Pos)] is
+/// Unlike other kinds of popups, this is not necessarily tied to an owner. The [#computePosition(Window, Pos, Align)] is
 /// overridden to take this into account and use the [Screen] bounds instead. Which screen to use can be set via the
 /// configuration [DialogConfig], otherwise it defaults to the primary.
 ///

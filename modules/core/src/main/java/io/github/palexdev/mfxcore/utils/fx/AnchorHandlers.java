@@ -259,7 +259,7 @@ public class AnchorHandlers {
     public interface AnchorHandler {
         Position compute(Bounds refBounds, Bounds subjectBounds, Align alignment);
 
-        /// Delegates to [#compute(Bounds, Node, Align)] after modifying the given bounds to take into account the
+        /// Delegates to [#compute(Bounds, Bounds, Align)] after modifying the given bounds to take into account the
         /// given offset.
         default Position compute(Bounds refBounds, Node node, Align alignment, Position offset) {
             if (!Position.origin().equals(offset)) {

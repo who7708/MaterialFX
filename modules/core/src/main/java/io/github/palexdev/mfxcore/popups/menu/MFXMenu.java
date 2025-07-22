@@ -70,7 +70,7 @@ import javafx.scene.input.MouseEvent;
 /// to keep track of the currently open menu, see [MenuTracker]. However, the difference with tooltips is that menus can
 /// "contain" submenus! So, when we say at "max one menu open", we mean a `root menu`.
 /// 2) By design, menus are tightly coupled with a specific UI element. Therefore, [#show(Node, double, double)] and
-/// [#show(Node, Pos)] methods are overridden to throw an [UnsupportedOperationException].
+/// [#show(Node, Pos, Align)] methods are overridden to throw an [UnsupportedOperationException].
 /// Like tooltips, menus must be _installed_ onto a node, use [#install(Node)] or [#uninstall()] to disable the menu.
 /// However, there's a difference here too. If you think about the context menu of a text field, it is shown at the
 /// screen coordinates where the right mouse click occurs. So, unlike tooltips, menus can have both anchor-base positioning
