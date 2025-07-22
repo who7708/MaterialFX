@@ -54,32 +54,28 @@ import javafx.scene.text.Font;
 /// ### Third Party Packs
 ///
 /// ```java
-///// Here's an example of how to register a third party icons pack, say from Ikonli.
+/// // Here's an example of how to register a third party icons pack, say from Ikonli.
 /// FontIconsPacks.register(
 ///     "win10-",
 ///     Font.loadFont(new Win10IkonHandler().getFontResourceAsStream(), size),
 ///     name -> String.valueOf((char) Win10.findByDescription(name).getCode())
 ///);
-///// Or even better...
+/// // Or even better...
 /// FontIconsPacks.register("win10-", new FontIconsPack(){
 ///
-///@OverridepublicStringname(){
-///         return "Ikonli Win10 Icons";
+///@OverridepublicStringname(){return"IkonliWin10Icons";
 ///}
-///@OverridepublicString[]iconNames(){
-///         return Arrays.stream(Win10.values())
-///             .map(Win10::getDescription)
+///@OverridepublicString[]iconNames(){returnArrays.stream(Win10.values())
+///.map(Win10::getDescription)
 ///             .toArray(String[]:new);
 ///}
-///@OverridepublicStringicon(Stringname){
-///        return String.valueOf((char) Win10.findByDescription(name).getCde());
+///@OverridepublicStringicon(Stringname){returnString.valueOf((char)Win10.findByDescription(name).getCde());
 ///}
-///@OverridepublicFontfont(){
-///         return Font.loadFont(new Win10IkonHandler().getFontResourceAsStream(), size);
+///@OverridepublicFontfont(){returnFont.loadFont(newWin10IkonHandler().getFontResourceAsStream(),size);
 ///}
 ///});
-///// The latter compared to the first one includes the pack name and the available icons names, which is mandatory for
-///// random capabilities offered by the IconUtils class.
+/// // The latter compared to the first one includes the pack name and the available icons names, which is mandatory for
+/// // random capabilities offered by the IconUtils class.
 ///```
 public class FontIconsPacks {
     //================================================================================
