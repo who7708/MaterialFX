@@ -1,0 +1,94 @@
+/*
+ * Copyright (C) 2025 Parisi Alessandro - alessandro.parisi406@gmail.com
+ * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX)
+ *
+ * MaterialFX is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * MaterialFX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package io.github.palexdev.mfxcore.popups.menu;
+
+import java.util.function.Function;
+
+import io.github.palexdev.mfxcore.observables.When;
+import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.TraversalDirection;
+import javafx.scene.input.KeyEvent;
+
+/// Utility class to make the submenu's handling easier and cleaner.
+public class SubMenuHandler {
+    private Node owner;
+    private MFXMenu subMenu;
+    private When<?> hideListener;
+
+    public SubMenuHandler(MFXMenu parentMenu, MFXMenuItem item, Node owner) {
+        if (owner == null) throw new IllegalArgumentException("Owner cannot be null");
+        this.owner = owner;
+
+        subMenu = new MFXMenu(parentMenu, item.subMenuItems());
+        hideListener = When.onInvalidated(parentMenu.hoveredItemProperty())
+            .then(_ -> hide())
+            .listen();
+    }
+
+    /// Shows the submenu by calling [MFXMenu#showSub(Node, Pos, AnchorHandlers.Align)] with [Pos#TOP_RIGHT], [AnchorHandlers.HAlign#AFTER] and
+    /// [AnchorHandlers.VAlign#BELOW] as the parameters.
+    ///
+    /// Also resets the submenu's hovered item to `null`.
+    public void show() {
+        subMenu.setHoveredItem(null);
+        subMenu.showSub(owner, Pos.TOP_RIGHT, AnchorHandlers.Align.of(AnchorHandlers.HAlign.AFTER, AnchorHandlers.VAlign.BELOW));
+    }
+
+    /// Hides the submenu only if its parent's [MFXMenu#hoveredItemProperty()] is not this entry.
+    public void hide() {
+        Node hc = subMenu.getParentMenu().getHoveredItem();
+        if (hc != owner) {
+            subMenu.hide();
+        }
+    }
+
+    /// When a submenu is shown by a [KeyEvent], transfer focus from its content to its first item.
+    public void focus() {
+        Node content = subMenu.getContent();
+        content.requestFocusTraversal(TraversalDirection.NEXT);
+    }
+
+    /// Delegate to [MFXMenu#isShowing()].
+    public boolean isShowing() {
+        return subMenu.isShowing();
+    }
+
+    /// Sets the submenu's content to the product of the given function, which accepts the submenu itself as the input.
+    ///
+    /// This is to allow custom implementations of [MFXMenuContent] to be propagated to the submenus, because by default
+    /// every [MFXMenu]'s content is set to [MFXMenuContent].
+    public void setContent(Function<MFXMenu, ? extends MFXMenuContent> contentSupplier) {
+        subMenu.setContent(contentSupplier.apply(subMenu));
+    }
+
+    /// @return the managed submenu
+    public MFXMenu getSubMenu() {
+        return subMenu;
+    }
+
+    public void dispose() {
+        hideListener.dispose();
+        hideListener = null;
+        subMenu.setContent(null);
+        subMenu = null;
+        owner = null;
+    }
+}

@@ -27,15 +27,10 @@ import io.github.palexdev.mfxcore.controls.Label;
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.events.WhenEvent;
 import io.github.palexdev.mfxcore.observables.When;
-import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
-import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.HAlign;
-import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.VAlign;
 import io.github.palexdev.mfxcore.utils.fx.LayoutUtils;
 import javafx.beans.InvalidationListener;
 import javafx.geometry.HPos;
-import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.Node;
 import javafx.scene.TraversalDirection;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -47,7 +42,10 @@ import javafx.scene.layout.Region;
 /// two labels:
 /// - The 'leading' label displays the icon and the text specified by the item. Can be selected in CSS with `.leading`.
 /// - The 'trailing' label displays the shortcut text or an arrow if the item is the entry for a submenu. Can be selected
-/// in CSS with `.leading`. If it opens a submenu, the style class `.sub` is also added.
+/// in CSS with `.trailing`. If it opens a submenu, the style class `.sub` is also added.<br >
+/// When the entry shows a submenu, the trailing label contains a [Region] with style class '.svg-icon'. This is used to
+/// show the arrow icon, and it's expected to be properly set up in CSS with a SVG shape (-fx-shape. This is because
+/// MFXCore does not depend on MFXResources, so we don't have font icon capabilities here).
 ///
 /// Any entry has also a dependency on the menu that owns it. This is necessary to properly handle the cascade of submenus.
 ///
@@ -82,7 +80,7 @@ public class MFXMenuEntry extends Region implements MFXStyleable {
         leading.getStyleClass().add("leading");
 
         Region tIcon = new Region();
-        tIcon.getStyleClass().add("icon");
+        tIcon.getStyleClass().add("svg-icon");
         trailing = new Label("", tIcon);
         trailing.getStyleClass().add("trailing");
         handleSubMenu();
@@ -175,7 +173,7 @@ public class MFXMenuEntry extends Region implements MFXStyleable {
         } else {
             trailing.setText(null);
             trailing.getStyleClass().add("sub");
-            subMenuHandler = new SubMenuHandler();
+            subMenuHandler = new SubMenuHandler(menu, item, this);
         }
     }
 
@@ -225,57 +223,5 @@ public class MFXMenuEntry extends Region implements MFXStyleable {
         double h = getHeight();
         layoutInArea(leading, x, y, w, h, 0, getPadding(), HPos.LEFT, VPos.CENTER);
         layoutInArea(trailing, x, y, w, h, 0, getPadding(), HPos.RIGHT, VPos.CENTER);
-    }
-
-    //================================================================================
-    // Inner Classes
-    //================================================================================
-
-    /// Utility class to make the submenu's handling easier and clearer.
-    protected class SubMenuHandler {
-        private MFXMenu subMenu;
-        private When<?> hideListener;
-
-        public SubMenuHandler() {
-            subMenu = new MFXMenu(menu, item.subMenuItems());
-            hideListener = When.onInvalidated(menu.hoveredItemProperty())
-                .then(_ -> hide())
-                .listen();
-        }
-
-        /// Shows the submenu by calling [MFXMenu#showSub(Node, Pos, Align)] with [Pos#TOP_RIGHT], [HAlign#AFTER] and
-        /// [VAlign#BELOW] as the parameters.
-        ///
-        /// Also resets the submenu's hovered item to `null`.
-        public void show() {
-            subMenu.setHoveredItem(null);
-            subMenu.showSub(MFXMenuEntry.this, Pos.TOP_RIGHT, Align.of(HAlign.AFTER, VAlign.BELOW));
-        }
-
-        /// Hides the submenu only if its parent's [MFXMenu#hoveredItemProperty()] is not this entry.
-        public void hide() {
-            Node hc = menu.getHoveredItem();
-            if (hc != MFXMenuEntry.this) {
-                subMenu.hide();
-            }
-        }
-
-        /// When a submenu is shown by a [KeyEvent], transfer focus from its content to its first item.
-        public void focus() {
-            Node content = subMenu.getContent();
-            content.requestFocusTraversal(TraversalDirection.NEXT);
-        }
-
-        /// Delegate to [MFXMenu#isShowing()].
-        public boolean isShowing() {
-            return subMenu.isShowing();
-        }
-
-        public void dispose() {
-            hideListener.dispose();
-            hideListener = null;
-            subMenu.setContent(null);
-            subMenu = null;
-        }
     }
 }

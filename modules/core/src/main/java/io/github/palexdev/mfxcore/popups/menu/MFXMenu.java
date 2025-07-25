@@ -176,6 +176,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
 
     /// This constructor is specifically for creating submenus.
     protected MFXMenu(MFXMenu parent, ObservableList<MFXMenuItem> items) {
+        if (parent == null) throw new IllegalArgumentException("Parent menu cannot be null!");
         MenuConfig.DEFAULT.apply(this);
         this.items = items;
 
