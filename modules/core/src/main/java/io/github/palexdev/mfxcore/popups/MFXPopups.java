@@ -20,6 +20,7 @@ package io.github.palexdev.mfxcore.popups;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.popups.menu.MFXMenu;
@@ -94,10 +95,13 @@ public class MFXPopups {
             if (config != null) config.apply(popup);
         }
 
-        /// Note: does nothing for [MFXMenus][MFXMenu].
         public Builder<O, P> setContent(Node content) {
-            if (popup instanceof MFXMenu) return this;
             popup.setContent(content);
+            return this;
+        }
+
+        public Builder<O, P> setContent(Function<P, Node> contentFn) {
+            popup.setContent(contentFn.apply(popup));
             return this;
         }
 
