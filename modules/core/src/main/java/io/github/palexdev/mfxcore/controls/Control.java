@@ -105,6 +105,16 @@ public abstract class Control<B extends BehaviorBase<? extends Node>>
 
     /// {@inheritDoc}
     ///
+    /// Overridden to also initialize the behavior on the preloaded skin!
+    @Override
+    public void preloadSkin() {
+        MFXSkinnable.super.preloadSkin();
+        if (getSkin() instanceof SkinBase sb)
+            sb.initBehavior(behavior);
+    }
+
+    /// {@inheritDoc}
+    ///
     /// Overridden to be final and to delegate to [#buildSkin()]. We still need this to initialize the component.
     @Override
     protected final SkinBase<?, ?> createDefaultSkin() {
