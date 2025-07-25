@@ -35,6 +35,7 @@ import io.github.palexdev.mfxcore.popups.menu.MFXMenu.MenuConfig.Builder;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.HAlign;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.VAlign;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
@@ -151,7 +152,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
     // SubMenus Specific
     private Supplier<PopupAnimation> animationProvider;
     private final ReadOnlyObjectWrapper<MFXMenu> parent = new ReadOnlyObjectWrapper<>(null);
-    private final ReadOnlyObjectWrapper<Node> hoveredItem = new ReadOnlyObjectWrapper<>();
+    private final ObjectProperty<Node> hoveredItem = new SimpleObjectProperty<>();
 
     //================================================================================
     // Constructors
@@ -385,7 +386,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
     /// Specifies the currently hovered entry in the menu. When this changes, submenus react appropriately
     /// (by either hiding the cascade or showing themselves).
     public ReadOnlyObjectProperty<Node> hoveredItemProperty() {
-        return hoveredItem.getReadOnlyProperty();
+        return hoveredItem;
     }
 
     protected void setHoveredItem(Node item) {
