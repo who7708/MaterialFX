@@ -103,4 +103,68 @@ public record MFXMenuItem(
     public MFXMenuItem withDisableExpression(Supplier<BooleanExpression> disableExpressionSupplier) {
         return new MFXMenuItem(icon, text, shortcut, action, subMenuItems, disableExpressionSupplier.get());
     }
+
+    //================================================================================
+    // Builder
+    //================================================================================
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+        private Node icon;
+        private String text;
+        private KeyShortcut shortcut;
+        private Runnable action;
+        private BooleanExpression disableExpression;
+        private final ObservableList<MFXMenuItem> subMenuItems = FXCollections.observableArrayList();
+
+        public Builder() {}
+
+        public Builder icon(Node icon) {
+            this.icon = icon;
+            return this;
+        }
+
+        public Builder text(String text) {
+            this.text = text;
+            return this;
+        }
+
+        public Builder shortcut(KeyShortcut shortcut) {
+            this.shortcut = shortcut;
+            return this;
+        }
+
+        public Builder action(Runnable action) {
+            this.action = action;
+            return this;
+        }
+
+        public Builder disableExpression(BooleanExpression disableExpression) {
+            this.disableExpression = disableExpression;
+            return this;
+        }
+
+        public Builder disableExpression(Supplier<BooleanExpression> disableExpressionSupplier) {
+            this.disableExpression = disableExpressionSupplier.get();
+            return this;
+        }
+
+        public Builder subMenuItems(MFXMenuItem... subMenuItems) {
+            this.subMenuItems.addAll(subMenuItems);
+            return this;
+        }
+
+        public MFXMenuItem build() {
+            return new MFXMenuItem(
+                icon,
+                text,
+                shortcut,
+                action,
+                subMenuItems,
+                disableExpression
+            );
+        }
+    }
 }
