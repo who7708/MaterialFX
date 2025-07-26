@@ -26,34 +26,26 @@ import java.util.function.Consumer;
 
 import io.github.palexdev.mfxcore.controls.SkinBase;
 import io.github.palexdev.mfxcore.events.WhenEvent;
+import io.github.palexdev.mfxcore.utils.fx.LayoutUtils;
 import javafx.beans.InvalidationListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 
 /// Default skin implementation for [MFXMenuContent]. Extends [SkinBase] and expects behaviors of type
 /// [MFXMenuContentBehavior].
 ///
-/// The layout is very simple as we rely on a [VBox] to contain the menu's entries.
-/// There are only two peculiarities in this skin:
+/// The layout is manual but very simple:
 /// 1) Entries are cached. This means that every time a change occurs in the [MFXMenu#getItems()] list, it
 /// reuses the prebuilt entries if possible, while discarding only those for which the item is no longer in the list.
 /// The method responsible for updating the entries is [#updateChildren()].
-/// 2) The style classes specified by [MFXMenu#defaultStyleClasses()] are applied on the [VBox] container here. This is
-/// one of the things that I DO NOT like about the JavaFX MVC architecture is that the control is effectively a Node that
-/// needs to be rendered. In my opinion, only the skin should have been, because the current architecture increases the
-/// nodes count for nothing. Not only that, if you use containers/panes for easier layout handling, you are basically
-/// adding one more level in the hierarchy. So, from a CSS point of view, you would select the content as
-/// `.control > .container > .content`. I wanted to avoid this, and so, by applying the classes directly to the container
-/// it becomes `.mfx-menu .menu-content > .menu-entry`.
+/// 2) Entries are positioned one below the other, spaced evenly by the [MFXMenuContent#spacingProperty()]
+/// 3) The width is the maximum between the entries. The height is the sum of all the entries' heights including the gap.
 public class MFXMenuContentSkin extends SkinBase<MFXMenuContent, MFXMenuContentBehavior> {
     //================================================================================
     // Methods
     //================================================================================
-    protected final VBox box;
-
     private Map<MFXMenuItem, MFXMenuEntry> itemsToNodes = new HashMap<>();
     private InvalidationListener itemsListener = _ -> updateChildren();
 
@@ -62,15 +54,8 @@ public class MFXMenuContentSkin extends SkinBase<MFXMenuContent, MFXMenuContentB
     //================================================================================
     public MFXMenuContentSkin(MFXMenuContent mc) {
         super(mc);
-
-        // Init
-        box = new VBox();
-        mc.defaultStyleClasses(box); // Apply the style classes on the box rather than the control itself for easier styling
         updateChildren();
-
-        // Finalize
         addListeners();
-        getChildren().setAll(box);
     }
 
     //================================================================================
@@ -94,7 +79,7 @@ public class MFXMenuContentSkin extends SkinBase<MFXMenuContent, MFXMenuContentB
     protected void updateChildren() {
         ObservableList<MFXMenuItem> items = getMenu().getItems();
         if (items.isEmpty()) {
-            box.getChildren().clear();
+            getChildren().clear();
             itemsToNodes.values().forEach(MFXMenuEntry::dispose);
             itemsToNodes.clear();
             return;
@@ -122,7 +107,7 @@ public class MFXMenuContentSkin extends SkinBase<MFXMenuContent, MFXMenuContentB
         tmp.values().forEach(MFXMenuEntry::dispose);
         tmp.clear();
 
-        box.getChildren().setAll(children);
+        getChildren().setAll(children);
     }
 
     /// Creates a new [MFXMenuEntry] for the given [MFXMenuItem].
@@ -160,6 +145,33 @@ public class MFXMenuContentSkin extends SkinBase<MFXMenuContent, MFXMenuContentB
     }
 
     @Override
+    protected double computePrefWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
+        return getChildren().stream()
+                   .mapToDouble(LayoutUtils::snappedBoundWidth)
+                   .max()
+                   .orElse(0.0) + rightInset + leftInset;
+    }
+
+    @Override
+    protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
+        double gap = getSkinnable().getSpacing();
+        return getChildren().stream()
+                   .mapToDouble(node -> LayoutUtils.boundHeight(node) + gap)
+                   .sum() + topInset + bottomInset - gap;
+    }
+
+    @Override
+    protected void layoutChildren(double x, double y, double w, double h) {
+        double gap = getSkinnable().getSpacing();
+        double advance = 0;
+        for (Node child : getChildren()) {
+            double ch = LayoutUtils.boundHeight(child);
+            child.resizeRelocate(0, y + advance, w, ch);
+            advance += ch + gap;
+        }
+    }
+
+    @Override
     public void dispose() {
         if (itemsListener != null) {
             MFXMenu menu = getMenu();
@@ -168,7 +180,7 @@ public class MFXMenuContentSkin extends SkinBase<MFXMenuContent, MFXMenuContentB
         }
         itemsToNodes.values().forEach(MFXMenuEntry::dispose);
         itemsToNodes.clear();
-        box.getChildren().clear();
+        getChildren().clear();
         super.dispose();
     }
 }

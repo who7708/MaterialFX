@@ -21,15 +21,18 @@ package io.github.palexdev.mfxcore.popups.menu;
 import java.util.List;
 import java.util.function.Supplier;
 
+import io.github.palexdev.mfxcore.base.properties.styleable.StyleableDoubleProperty;
 import io.github.palexdev.mfxcore.controls.Control;
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.controls.SkinBase;
+import io.github.palexdev.mfxcore.utils.fx.StyleUtils;
+import javafx.css.CssMetaData;
+import javafx.css.Styleable;
+import javafx.css.StyleablePropertyFactory;
 
 /// This class represents the base and preset type of content for any [MFXMenu]. Extends [Control], and has [MFXMenuContentBehavior]
 /// and [MFXMenuContentSkin] as its default behavior and skin implementations. It also implements [MFXStyleable], the
-/// default style class to select this from CSS is: `.menu-content` (**Note:** the style class is actually not applied on
-/// the control itself but on a container in the default skin. This design choice was made to make CSS styling more straightforward.
-/// See [MFXMenuContentSkin]!)
+/// default style class to select this from CSS is: `.menu-content`.
 public class MFXMenuContent extends Control<MFXMenuContentBehavior> implements MFXStyleable {
     //================================================================================
     // Properties
@@ -41,6 +44,7 @@ public class MFXMenuContent extends Control<MFXMenuContentBehavior> implements M
     //================================================================================
     public MFXMenuContent(MFXMenu menu) {
         this.menu = menu;
+        defaultStyleClasses(this);
     }
 
     //================================================================================
@@ -59,6 +63,67 @@ public class MFXMenuContent extends Control<MFXMenuContentBehavior> implements M
     @Override
     public List<String> defaultStyleClasses() {
         return MFXStyleable.styleClasses("menu-content");
+    }
+
+    //================================================================================
+    // Styleable Properties
+    //================================================================================
+    private final StyleableDoubleProperty spacing = new StyleableDoubleProperty(
+        StyleableProperties.SPACING,
+        this,
+        "spacing",
+        0.0
+    ) {
+        @Override
+        protected void invalidated() {
+            requestLayout();
+        }
+    };
+
+    public double getSpacing() {
+        return spacing.get();
+    }
+
+    /// Specifies the spacing between each entry in the menu.
+    ///
+    /// Can be set from CSS via the property: '-mfx-spacing'.
+    public StyleableDoubleProperty spacingProperty() {
+        return spacing;
+    }
+
+    public void setSpacing(double spacing) {
+        this.spacing.set(spacing);
+    }
+
+    //================================================================================
+    // CssMetaData
+    //================================================================================
+    private static class StyleableProperties {
+        private static final StyleablePropertyFactory<MFXMenuContent> FACTORY = new StyleablePropertyFactory<>(Control.getClassCssMetaData());
+        private static final List<CssMetaData<? extends Styleable, ?>> cssMetaDataList;
+
+        private static final CssMetaData<MFXMenuContent, Number> SPACING =
+            FACTORY.createSizeCssMetaData(
+                "-mfx-spacing",
+                MFXMenuContent::spacingProperty,
+                0.0
+            );
+
+        static {
+            cssMetaDataList = StyleUtils.cssMetaDataList(
+                Control.getClassCssMetaData(),
+                SPACING
+            );
+        }
+    }
+
+    public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
+        return StyleableProperties.cssMetaDataList;
+    }
+
+    @Override
+    public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
+        return getClassCssMetaData();
     }
 
     //================================================================================
