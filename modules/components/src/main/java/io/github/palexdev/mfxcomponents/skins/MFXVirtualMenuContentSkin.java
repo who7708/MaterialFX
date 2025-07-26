@@ -18,10 +18,15 @@
 
 package io.github.palexdev.mfxcomponents.skins;
 
+import java.util.Optional;
+import java.util.function.Supplier;
+
 import io.github.palexdev.mfxcomponents.popups.MFXVirtualMenuContent;
 import io.github.palexdev.mfxcore.controls.MFXSkinnable;
 import io.github.palexdev.mfxcore.controls.SkinBase;
 import io.github.palexdev.mfxcore.events.WhenEvent;
+import io.github.palexdev.mfxcore.observables.When;
+import io.github.palexdev.mfxcore.popups.menu.MFXMenuContent;
 import io.github.palexdev.mfxcore.popups.menu.MFXMenuContentBehavior;
 import io.github.palexdev.mfxcore.popups.menu.MFXMenuItem;
 import io.github.palexdev.mfxcore.utils.fx.LayoutUtils;
@@ -31,7 +36,10 @@ import io.github.palexdev.virtualizedfx.enums.ScrollPaneEnums;
 import io.github.palexdev.virtualizedfx.list.VFXList;
 import io.github.palexdev.virtualizedfx.utils.ScrollParams;
 import javafx.event.Event;
+import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
+import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
 
@@ -44,6 +52,9 @@ public class MFXVirtualMenuContentSkin extends SkinBase<MFXVirtualMenuContent, M
     //================================================================================
     private final VFXScrollPane vsp;
     private final VFXList<MFXMenuItem, VFXCell<MFXMenuItem>> list;
+
+    // Keep a reference to it here for layout
+    private Node placeholder;
 
     //================================================================================
     // Constructors
@@ -75,7 +86,41 @@ public class MFXVirtualMenuContentSkin extends SkinBase<MFXVirtualMenuContent, M
         vsp.preloadSkin();
 
         // Finalize
+        addListeners();
         getChildren().setAll(vsp);
+    }
+
+    //================================================================================
+    // Methods
+    //================================================================================
+
+    /// Adds listeners to the following properties:
+    /// - [VFXList#emptyProperty()] to add/remove the placeholder node specified by the[MFXMenuContent#placeholderSupplierProperty()]
+    protected void addListeners() {
+        MFXVirtualMenuContent content = getSkinnable();
+        listeners(
+            When.onInvalidated(list.emptyProperty())
+                .then(b -> {
+                    if (b) {
+                        Optional.ofNullable(content.getPlaceholderSupplier())
+                            .map(Supplier::get)
+                            .ifPresentOrElse(
+                                n -> {
+                                    placeholder = n;
+                                    placeholder.getStyleClass().add("placeholder");
+                                    getChildren().add(n);
+                                },
+                                () -> placeholder = null
+                            );
+                    } else {
+                        placeholder = null;
+                        getChildren().setAll(vsp);
+                    }
+                    vsp.setVisible(!b);
+                })
+                .invalidating(content.placeholderSupplierProperty())
+                .executeNow()
+        );
     }
 
     //================================================================================
@@ -95,13 +140,19 @@ public class MFXVirtualMenuContentSkin extends SkinBase<MFXVirtualMenuContent, M
     @Override
     protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
         return topInset +
-               LayoutUtils.snappedBoundHeight(vsp) +
+               (placeholder != null ?
+                   LayoutUtils.snappedBoundHeight(placeholder) :
+                   LayoutUtils.snappedBoundHeight(vsp)
+               ) +
                bottomInset;
     }
 
     @Override
     protected void layoutChildren(double x, double y, double w, double h) {
         vsp.resizeRelocate(x, y, w, h);
+        if (placeholder != null) {
+            layoutInArea(placeholder, x, y, w, h, 0, HPos.CENTER, VPos.CENTER);
+        }
     }
 
     @Override
