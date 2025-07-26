@@ -1,0 +1,153 @@
+/*
+ * Copyright (C) 2025 Parisi Alessandro - alessandro.parisi406@gmail.com
+ * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX)
+ *
+ * MaterialFX is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * MaterialFX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use '../../base/typography' as *;
+@use '../../base/vars' as *;
+@use '../layers' as *;
+
+// We are not 100% following the specs because Google designers are incompetent and use elephant sizes for everything
+// And also because the MD3 menu compared to many other apps kinda sucks (e.g. VSCode, IntelliJ)
+@mixin MaterialMenus() {
+  .mfx-menu {
+    -fx-background-color  : -md-sys-color-surface-container;
+    -fx-background-radius : shape('small');
+    -fx-effect            : dropshadow(gaussian, rgba(0, 0, 0, 0.2), 8, 0.16, 0, 3);
+    -fx-min-width         : 150px;
+    -fx-max-width         : 280px;
+
+    > .menu-content {
+      > .separator {
+        /*
+         * The reason for this value is that the recommended gap between the separator and other items is 8px.
+         * The separator itself is a line of width 1px, so 8+8+1. I don't know if there's a better way to do this.
+         */
+        -fx-background-color  : -md-sys-color-outline-variant;
+        -fx-background-insets : 8px 0px 8px 0px;
+        -fx-pref-height       : 17.0;
+      }
+
+      /*! Specific to virtualized menus */
+      > .vfx-scroll-pane {
+        -vfx-auto-hide-bars : true;
+        -vfx-layout-mode    : COMPACT;
+        -vfx-smooth-scroll  : true;
+        -fx-padding         : 8px 4px 0px 4px;
+
+        .vfx-list {
+          -vfx-cell-size : 40px;
+
+          .menu-entry {
+            -fx-padding : 0px 16px 0px 12px;
+          }
+        }
+      }
+
+      .menu-entry {
+        -fx-min-height : 40px; /*! For non-virtualized menus */
+        -fx-padding    : 0px 12px 0px 12px;
+
+        /*! For non-virtualized menus */
+        > .pseudo-surface {
+          -fx-background-color : -md-sys-color-on-surface;
+          -fx-opacity          : 0.0;
+        }
+
+        > .surface {
+          -fx-background-color : -md-sys-color-on-surface;
+        }
+
+        > .mfx-ripple-generator {
+          -mfx-ripple-color : -md-sys-color-on-surface;
+        }
+
+        > .label {
+          @include LabelLarge();
+          -fx-graphic-text-gap : 8px;
+          -fx-text-fill        : -md-sys-color-on-surface;
+        }
+
+        > .label > .mfx-font-icon {
+          -mfx-color : -md-sys-color-on-surface;
+          -mfx-size  : 16px;
+        }
+
+        > .label.trailing.sub > .mfx-font-icon {
+          -mfx-icon : "fas-angle-right";
+        }
+
+        /*! For non-virtualized menus */
+        > .label.trailing.sub > .svg-icon {
+          -fx-background-color : -md-sys-color-on-surface;
+          -fx-pref-width       : 8px;
+          -fx-max-height       : 12px;
+          -fx-shape            : "M439.1 297.4C451.6 309.9 451.6 330.2 439.1 342.7L279.1 502.7C266.6 515.2 246.3 515.2 233.8 502.7C221.3 490.2 221.3 469.9 233.8 457.4L371.2 320L233.9 182.6C221.4 170.1 221.4 149.8 233.9 137.3C246.4 124.8 266.7 124.8 279.2 137.3L439.2 297.3z";
+        }
+
+        &:first-child {
+          > .pseudo-surface,
+          > .surface {
+            -fx-background-radius : shape('small') shape('small') 0px 0px;
+          }
+        }
+
+        &:last-child {
+          > .pseudo-surface,
+          > .surface {
+            -fx-background-radius : 0px 0px shape('small') shape('small');
+          }
+        }
+
+        &:only-child {
+          > .pseudo-surface,
+          > .surface {
+            -fx-background-radius : shape('small');
+          }
+        }
+
+        &:hover {
+          > .pseudo-surface {
+            -fx-opacity : opacity('hover');
+          }
+        }
+
+        &:focused {
+          > .pseudo-surface {
+            -fx-opacity : opacity('focused');
+          }
+        }
+
+        &:pressed,
+        &:selected {
+          > .pseudo-surface {
+            -fx-opacity : opacity('pressed');
+          }
+        }
+
+        &:disabled {
+          > .pseudo-surface {
+            -fx-opacity : opacity('disabled');
+          }
+
+          > .label {
+            -fx-opacity : opacity('disabled-text');
+          }
+        }
+      }
+    }
+  }
+}

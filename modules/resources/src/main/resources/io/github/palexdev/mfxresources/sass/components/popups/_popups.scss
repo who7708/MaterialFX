@@ -16,20 +16,8 @@
  * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use 'buttons' as *;
-@use 'buttons-group' as *;
-@use 'fabs' as *;
-@use 'fabs-menu' as *;
-@use 'iconbuttons' as *;
-@use 'layers' as *;
-@use 'popups/popups' as *;
+@use 'menus' as *;
 
-@mixin MaterialComponents() {
-  @include SurfaceRipples();
-  @include MaterialButtons();
-  @include MaterialButtonsGroup();
-  @include MaterialFloatingActionButtons();
-  @include MaterialFloatingActionButtonsMenu();
-  @include MaterialIconButtons();
-  @include MaterialPopups();
+@mixin MaterialPopups() {
+  @include MaterialMenus();
 }
