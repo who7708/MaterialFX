@@ -44,4 +44,8 @@ public class MFXResources {
     public static InputStream loadFont(String path) {
         return loadStream("fonts/" + path);
     }
+
+    public static String loadTheme(String path) {
+        return load("sass/themes/" + path);
+    }
 }
