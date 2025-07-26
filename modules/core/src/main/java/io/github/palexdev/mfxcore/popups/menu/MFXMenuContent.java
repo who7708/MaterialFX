@@ -21,23 +21,29 @@ package io.github.palexdev.mfxcore.popups.menu;
 import java.util.List;
 import java.util.function.Supplier;
 
+import io.github.palexdev.mfxcore.base.properties.functional.SupplierProperty;
 import io.github.palexdev.mfxcore.base.properties.styleable.StyleableDoubleProperty;
 import io.github.palexdev.mfxcore.controls.Control;
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.controls.SkinBase;
+import io.github.palexdev.mfxcore.utils.Memoizer;
 import io.github.palexdev.mfxcore.utils.fx.StyleUtils;
 import javafx.css.CssMetaData;
 import javafx.css.Styleable;
 import javafx.css.StyleablePropertyFactory;
+import javafx.scene.Node;
 
 /// This class represents the base and preset type of content for any [MFXMenu]. Extends [Control], and has [MFXMenuContentBehavior]
 /// and [MFXMenuContentSkin] as its default behavior and skin implementations. It also implements [MFXStyleable], the
 /// default style class to select this from CSS is: `.menu-content`.
+///
+/// It also allows you to specify a [Node] to show when the menu is empty through the [#placeholderSupplierProperty()].
 public class MFXMenuContent extends Control<MFXMenuContentBehavior> implements MFXStyleable {
     //================================================================================
     // Properties
     //================================================================================
     private final MFXMenu menu;
+    private final SupplierProperty<Node> placeholderSupplier = new SupplierProperty<>();
 
     //================================================================================
     // Constructors
@@ -127,11 +133,27 @@ public class MFXMenuContent extends Control<MFXMenuContentBehavior> implements M
     }
 
     //================================================================================
-    // Getters
+    // Getters/Setters
     //================================================================================
 
     /// @return the [MFXMenu] instance to which this content is associated to.
     public MFXMenu getMenu() {
         return menu;
+    }
+
+    public Supplier<Node> getPlaceholderSupplier() {
+        return placeholderSupplier.get();
+    }
+
+    /// This property can be used to specify a [Node] to be shown when the menu is empty.<br >
+    /// We use a [Supplier] so that the placeholder is created lazily, only when needed.<br >
+    /// If your placeholder is always the same (likely to be so), it's recommended to use a caching [Supplier], see
+    /// [Memoizer#memoize(Supplier)].
+    public SupplierProperty<Node> placeholderSupplierProperty() {
+        return placeholderSupplier;
+    }
+
+    public void setPlaceholderSupplier(Supplier<Node> placeholderSupplier) {
+        this.placeholderSupplier.set(placeholderSupplier);
     }
 }

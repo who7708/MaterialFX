@@ -18,17 +18,17 @@
 
 package io.github.palexdev.mfxcore.popups.menu;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import io.github.palexdev.mfxcore.controls.SkinBase;
 import io.github.palexdev.mfxcore.events.WhenEvent;
 import io.github.palexdev.mfxcore.utils.fx.LayoutUtils;
 import javafx.beans.InvalidationListener;
 import javafx.collections.ObservableList;
+import javafx.geometry.HPos;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Region;
@@ -42,12 +42,22 @@ import javafx.scene.layout.Region;
 /// The method responsible for updating the entries is [#updateChildren()].
 /// 2) Entries are positioned one below the other, spaced evenly by the [MFXMenuContent#spacingProperty()]
 /// 3) The width is the maximum between the entries. The height is the sum of all the entries' heights including the gap.
+/// 4) If the menu is empty, and the [MFXMenuContent#placeholderSupplierProperty()] produces a valid result, a placeholder
+/// node is shown instead. This node can be selected from CSS via the style class: '.placeholder'
 public class MFXMenuContentSkin extends SkinBase<MFXMenuContent, MFXMenuContentBehavior> {
     //================================================================================
     // Methods
     //================================================================================
     private Map<MFXMenuItem, MFXMenuEntry> itemsToNodes = new HashMap<>();
     private InvalidationListener itemsListener = _ -> updateChildren();
+    private InvalidationListener placeholderListener = _ -> {
+        MFXMenuContent content = getSkinnable();
+        MFXMenu menu = content.getMenu();
+        if (menu.getItems().isEmpty()) updateChildren();
+    };
+
+    // Keep a reference to it for layout
+    private Node placeholder;
 
     //================================================================================
     // Constructors
@@ -64,9 +74,13 @@ public class MFXMenuContentSkin extends SkinBase<MFXMenuContent, MFXMenuContentB
 
     /// Adds the following listeners:
     /// - A listener on the [MFXMenu#getItems()] list to call [#updateChildren()]
+    /// - A listener on the [MFXMenuContent#placeholderSupplierProperty()] to call [#updateChildren()] when the menu has
+    /// no items
     protected void addListeners() {
-        MFXMenu menu = getMenu();
+        MFXMenuContent content = getSkinnable();
+        MFXMenu menu = content.getMenu();
         menu.getItems().addListener(itemsListener);
+        content.placeholderSupplierProperty().addListener(placeholderListener);
     }
 
     /// This core method is responsible for building, caching and reusing the nodes that compose the menu's content.
@@ -77,9 +91,22 @@ public class MFXMenuContentSkin extends SkinBase<MFXMenuContent, MFXMenuContentB
     /// @see #buildEntry(MFXMenuItem)
     /// @see #buildSeparator()
     protected void updateChildren() {
-        ObservableList<MFXMenuItem> items = getMenu().getItems();
+        MFXMenuContent content = getSkinnable();
+        ObservableList<MFXMenuItem> items = content.getMenu().getItems();
         if (items.isEmpty()) {
-            getChildren().clear();
+            Optional.ofNullable(content.getPlaceholderSupplier())
+                .map(Supplier::get)
+                .ifPresentOrElse(
+                    n -> {
+                        placeholder = n;
+                        placeholder.getStyleClass().add("placeholder");
+                        getChildren().setAll(n);
+                    },
+                    () -> {
+                        placeholder = null;
+                        getChildren().clear();
+                    }
+                );
             itemsToNodes.values().forEach(MFXMenuEntry::dispose);
             itemsToNodes.clear();
             return;
@@ -107,6 +134,7 @@ public class MFXMenuContentSkin extends SkinBase<MFXMenuContent, MFXMenuContentB
         tmp.values().forEach(MFXMenuEntry::dispose);
         tmp.clear();
 
+        placeholder = null;
         getChildren().setAll(children);
     }
 
@@ -146,6 +174,7 @@ public class MFXMenuContentSkin extends SkinBase<MFXMenuContent, MFXMenuContentB
 
     @Override
     protected double computePrefWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
+        if (placeholder != null) return LayoutUtils.snappedBoundWidth(placeholder);
         return getChildren().stream()
                    .mapToDouble(LayoutUtils::snappedBoundWidth)
                    .max()
@@ -154,6 +183,7 @@ public class MFXMenuContentSkin extends SkinBase<MFXMenuContent, MFXMenuContentB
 
     @Override
     protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
+        if (placeholder != null) return LayoutUtils.snappedBoundHeight(placeholder);
         double gap = getSkinnable().getSpacing();
         return getChildren().stream()
                    .mapToDouble(node -> LayoutUtils.boundHeight(node) + gap)
@@ -169,15 +199,25 @@ public class MFXMenuContentSkin extends SkinBase<MFXMenuContent, MFXMenuContentB
             child.resizeRelocate(0, y + advance, w, ch);
             advance += ch + gap;
         }
+
+        if (placeholder != null) {
+            layoutInArea(placeholder, x, y, w, h, 0, HPos.CENTER, VPos.CENTER);
+        }
     }
 
     @Override
     public void dispose() {
+        MFXMenuContent content = getSkinnable();
         if (itemsListener != null) {
             MFXMenu menu = getMenu();
             menu.getItems().removeListener(itemsListener);
             itemsListener = null;
         }
+        if (placeholderListener != null) {
+            content.placeholderSupplierProperty().removeListener(placeholderListener);
+            placeholderListener = null;
+        }
+        placeholder = null;
         itemsToNodes.values().forEach(MFXMenuEntry::dispose);
         itemsToNodes.clear();
         getChildren().clear();
