@@ -18,7 +18,10 @@
 
 package io.github.palexdev.mfxcore.popups.menu;
 
+import java.util.function.Supplier;
+
 import io.github.palexdev.mfxcore.input.KeyShortcut;
+import javafx.beans.binding.BooleanExpression;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -42,7 +45,8 @@ public record MFXMenuItem(
     String text,
     KeyShortcut shortcut,
     Runnable action,
-    ObservableList<MFXMenuItem> subMenuItems
+    ObservableList<MFXMenuItem> subMenuItems,
+    BooleanExpression disableExpression
 ) {
     //================================================================================
     // Static Properties
@@ -59,6 +63,10 @@ public record MFXMenuItem(
         this(icon, text, shortcut, action, FXCollections.observableArrayList());
     }
 
+    public MFXMenuItem(Node icon, String text, KeyShortcut shortcut, Runnable action, ObservableList<MFXMenuItem> subMenuItems) {
+        this(icon, text, shortcut, action, subMenuItems, null);
+    }
+
     /// Allows building a [MFXMenuItem] by specifying the shortcut as a string. It is converted to a [KeyShortcut] with
     /// [KeyShortcut#of(String)].
     public static MFXMenuItem of(Node icon, String text, String shortcut, Runnable action) {
@@ -69,22 +77,30 @@ public record MFXMenuItem(
     // Withers
     //================================================================================
     public MFXMenuItem withIcon(Node icon) {
-        return new MFXMenuItem(icon, text, shortcut, action, subMenuItems);
+        return new MFXMenuItem(icon, text, shortcut, action, subMenuItems, disableExpression);
     }
 
     public MFXMenuItem withText(String text) {
-        return new MFXMenuItem(icon, text, shortcut, action, subMenuItems);
+        return new MFXMenuItem(icon, text, shortcut, action, subMenuItems, disableExpression);
     }
 
     public MFXMenuItem withShortcut(KeyShortcut shortcut) {
-        return new MFXMenuItem(icon, text, shortcut, action, subMenuItems);
+        return new MFXMenuItem(icon, text, shortcut, action, subMenuItems, disableExpression);
     }
 
     public MFXMenuItem withShortcut(String shortcut) {
-        return new MFXMenuItem(icon, text, KeyShortcut.of(shortcut), action, subMenuItems);
+        return new MFXMenuItem(icon, text, KeyShortcut.of(shortcut), action, subMenuItems, disableExpression);
     }
 
     public MFXMenuItem withAction(Runnable action) {
-        return new MFXMenuItem(icon, text, shortcut, action, subMenuItems);
+        return new MFXMenuItem(icon, text, shortcut, action, subMenuItems, disableExpression);
+    }
+
+    public MFXMenuItem withDisableExpression(BooleanExpression disableExpression) {
+        return new MFXMenuItem(icon, text, shortcut, action, subMenuItems, disableExpression);
+    }
+
+    public MFXMenuItem withDisableExpression(Supplier<BooleanExpression> disableExpressionSupplier) {
+        return new MFXMenuItem(icon, text, shortcut, action, subMenuItems, disableExpressionSupplier.get());
     }
 }

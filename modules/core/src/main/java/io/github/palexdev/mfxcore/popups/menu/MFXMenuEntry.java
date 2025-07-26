@@ -90,6 +90,9 @@ public class MFXMenuEntry extends Region implements MFXStyleable {
         trailing.getStyleClass().add("trailing");
         handleSubMenu();
 
+        if (item.disableExpression() != null)
+            disableProperty().bind(item.disableExpression());
+
         // Finalize
         addListeners();
         getChildren().setAll(surface, leading, trailing);
@@ -193,6 +196,7 @@ public class MFXMenuEntry extends Region implements MFXStyleable {
         }
         disposables.forEach(DisposableAction::dispose);
         disposables.clear();
+        disableProperty().unbind();
     }
 
     //================================================================================
