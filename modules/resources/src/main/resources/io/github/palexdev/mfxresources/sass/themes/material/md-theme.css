@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
  */
+@import url(../../../fonts/Fonts.css);
+
 * {
   -fx-font-smoothing-type: GRAY
 }
@@ -1046,4 +1048,117 @@
 
 .mfx-icon-button.tonal.toggle:selected > .surface {
   -fx-background-color: -md-sys-color-on-secondary
+}
+
+.mfx-menu {
+  -fx-background-color: -md-sys-color-surface-container;
+  -fx-background-radius: 8px;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 8, 0.16, 0, 3);
+  -fx-min-width: 150px;
+  -fx-max-width: 280px
+}
+
+.mfx-menu > .menu-content {
+  /*! Specific to virtualized menus */
+}
+
+.mfx-menu > .menu-content > .separator {
+  -fx-background-color: -md-sys-color-outline-variant;
+  -fx-background-insets: 8px 0px 8px 0px;
+  -fx-pref-height: 17
+}
+
+.mfx-menu > .menu-content > .vfx-scroll-pane {
+  -vfx-auto-hide-bars: true;
+  -vfx-layout-mode: COMPACT;
+  -vfx-smooth-scroll: true;
+  -fx-padding: 8px 4px 0px 4px
+}
+
+.mfx-menu > .menu-content > .vfx-scroll-pane .vfx-list {
+  -vfx-cell-size: 40px
+}
+
+.mfx-menu > .menu-content > .vfx-scroll-pane .vfx-list .menu-entry {
+  -fx-padding: 0px 16px 0px 12px
+}
+
+.mfx-menu > .menu-content .menu-entry {
+  -fx-min-height: 40px;
+  /*! For non-virtualized menus */
+  -fx-padding: 0px 12px 0px 12px /*! For non-virtualized menus */
+  /*! For non-virtualized menus */
+}
+
+.mfx-menu > .menu-content .menu-entry > .pseudo-surface {
+  -fx-background-color: -md-sys-color-on-surface;
+  -fx-opacity: 0
+}
+
+.mfx-menu > .menu-content .menu-entry > .surface {
+  -fx-background-color: -md-sys-color-on-surface
+}
+
+.mfx-menu > .menu-content .menu-entry > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-on-surface
+}
+
+.mfx-menu > .menu-content .menu-entry > .label {
+  -fx-font-family: "MontSerrat Medium";
+  -fx-font-size: 14px;
+  -fx-line-spacing: 20px;
+  -fx-graphic-text-gap: 8px;
+  -fx-text-fill: -md-sys-color-on-surface
+}
+
+.mfx-menu > .menu-content .menu-entry > .label > .mfx-font-icon {
+  -mfx-color: -md-sys-color-on-surface;
+  -mfx-size: 16px
+}
+
+.mfx-menu > .menu-content .menu-entry > .label.trailing.sub > .mfx-font-icon {
+  -mfx-icon: "fas-angle-right"
+}
+
+.mfx-menu > .menu-content .menu-entry > .label.trailing.sub > .svg-icon {
+  -fx-background-color: -md-sys-color-on-surface;
+  -fx-pref-width: 8px;
+  -fx-max-height: 12px;
+  -fx-shape: "M439.1 297.4C451.6 309.9 451.6 330.2 439.1 342.7L279.1 502.7C266.6 515.2 246.3 515.2 233.8 502.7C221.3 490.2 221.3 469.9 233.8 457.4L371.2 320L233.9 182.6C221.4 170.1 221.4 149.8 233.9 137.3C246.4 124.8 266.7 124.8 279.2 137.3L439.2 297.3z"
+}
+
+.mfx-menu > .menu-content .menu-entry:first-child > .pseudo-surface,
+.mfx-menu > .menu-content .menu-entry:first-child > .surface {
+  -fx-background-radius: 8px 8px 0px 0px
+}
+
+.mfx-menu > .menu-content .menu-entry:last-child > .pseudo-surface,
+.mfx-menu > .menu-content .menu-entry:last-child > .surface {
+  -fx-background-radius: 0px 0px 8px 8px
+}
+
+.mfx-menu > .menu-content .menu-entry:only-child > .pseudo-surface,
+.mfx-menu > .menu-content .menu-entry:only-child > .surface {
+  -fx-background-radius: 8px
+}
+
+.mfx-menu > .menu-content .menu-entry:hover > .pseudo-surface {
+  -fx-opacity: 8%
+}
+
+.mfx-menu > .menu-content .menu-entry:focused > .pseudo-surface {
+  -fx-opacity: 10%
+}
+
+.mfx-menu > .menu-content .menu-entry:pressed > .pseudo-surface,
+.mfx-menu > .menu-content .menu-entry:selected > .pseudo-surface {
+  -fx-opacity: 12%
+}
+
+.mfx-menu > .menu-content .menu-entry:disabled > .pseudo-surface {
+  -fx-opacity: 10%
+}
+
+.mfx-menu > .menu-content .menu-entry:disabled > .label {
+  -fx-opacity: 38%
 }
