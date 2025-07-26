@@ -198,6 +198,7 @@ public class MFXMenuCell extends VFXCellBase<MFXMenuItem> {
             MFXMenuCell cell = getSkinnable();
             MFXMenuItem item = cell.getItem();
             if (item == null) {
+                cell.disableProperty().unbind();
                 leading.setText("");
                 leading.setGraphic(null);
                 trailing.setText("");
@@ -205,6 +206,7 @@ public class MFXMenuCell extends VFXCellBase<MFXMenuItem> {
             }
             cell.setVisible(MFXMenuItem.SEPARATOR != item);
 
+            if (item.disableExpression() != null) cell.disableProperty().bind(item.disableExpression());
             leading.setGraphic(item.icon());
             leading.setText(item.text());
             trailing.setText(item.shortcut() != null ? item.shortcut().toDisplayString() : null);
@@ -351,6 +353,7 @@ public class MFXMenuCell extends VFXCellBase<MFXMenuItem> {
             }
             surface.dispose();
             rg.dispose();
+            cell.disableProperty().unbind();
             super.dispose();
         }
     }
