@@ -21,6 +21,7 @@ package io.github.palexdev.mfxcore.utils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /// Simple implementation of a Memoizer.
 ///
@@ -36,7 +37,21 @@ public class Memoizer<T, U> {
         return value -> cache.computeIfAbsent(value, function);
     }
 
-    public static <T, U> Function<T, U> memoize(final Function<T, U> function) {
+    public static <T, U> Function<T, U> memoize(Function<T, U> function) {
         return new Memoizer<T, U>().doMemoize(function);
+    }
+
+    /// This is here because the mechanism is similar to memoized functions. However, since a [Supplier] has no inputs,
+    /// the produced value is simply stored in an anonymous instance of it, and **it's expected to always be the same**.
+    public static <T> Supplier<T> memoize(Supplier<T> supplier) {
+        return new Supplier<>() {
+            T cached;
+
+            @Override
+            public T get() {
+                if (cached == null) cached = supplier.get();
+                return cached;
+            }
+        };
     }
 }
