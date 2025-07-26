@@ -57,6 +57,7 @@ public class MFXMenuEntry extends Region implements MFXStyleable {
     private final MFXMenu menu;
     private final MFXMenuItem item;
 
+    private final Region surface;
     private final Label leading;
     private final Label trailing;
 
@@ -74,6 +75,10 @@ public class MFXMenuEntry extends Region implements MFXStyleable {
         setFocusTraversable(true);
 
         // Build UI
+        surface = new Region();
+        surface.getStyleClass().add("pseudo-surface");
+        surface.setManaged(false);
+
         leading = new Label();
         leading.setGraphic(item.icon());
         leading.setText(item.text());
@@ -87,7 +92,7 @@ public class MFXMenuEntry extends Region implements MFXStyleable {
 
         // Finalize
         addListeners();
-        getChildren().setAll(leading, trailing);
+        getChildren().setAll(surface, leading, trailing);
     }
 
     //================================================================================
@@ -203,6 +208,7 @@ public class MFXMenuEntry extends Region implements MFXStyleable {
         return snappedLeftInset() +
                LayoutUtils.snappedBoundWidth(leading) +
                LayoutUtils.snappedBoundWidth(trailing) +
+               12.0 + // Arbitrary ideal gap between the labels
                snappedRightInset();
     }
 
@@ -221,6 +227,7 @@ public class MFXMenuEntry extends Region implements MFXStyleable {
         double y = 0;
         double w = getWidth();
         double h = getHeight();
+        surface.resizeRelocate(x, y, w, h);
         layoutInArea(leading, x, y, w, h, 0, getPadding(), HPos.LEFT, VPos.CENTER);
         layoutInArea(trailing, x, y, w, h, 0, getPadding(), HPos.RIGHT, VPos.CENTER);
     }
