@@ -1071,6 +1071,7 @@
 .mfx-menu > .menu-content > .vfx-scroll-pane {
   -vfx-auto-hide-bars: true;
   -vfx-layout-mode: COMPACT;
+  -vfx-min-bars-opacity: 0.2;
   -vfx-smooth-scroll: true;
   -fx-padding: 8px 4px 0px 4px
 }
