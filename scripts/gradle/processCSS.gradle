@@ -7,8 +7,8 @@ import org.apache.tools.ant.taskdefs.condition.Os
 tasks.register("processCSS") {
     doLast {
         def rootDir = rootProject.projectDir.absolutePath
-        def resDir = "$rootDir/modules/resources/src/main/resources/io/github/palexdev/mfxresources/sass/themes"
-        def dirs = new File(resDir).listFiles()
+        def resDir = new File("$rootDir/modules/resources/src/main/resources/io/github/palexdev/mfxresources/sass/themes")
+        def dirs = resDir.listFiles()
         if (dirs == null || dirs.length == 0) return
         List<File> themesDirs = Arrays.stream(dirs)
                 .filter(File::isDirectory)
@@ -43,9 +43,10 @@ tasks.register("processCSS") {
                             "cleancss",
                             "-O2", "specialComments:all",
                             "--format", "beautify",
+                            "--inline", "none",
                             "${path}" as String,
                             "-o", "${tmp}" as String
-                    ])
+                    ], new File(path).parentFile)
 
                     logger.warn("Beautifying: $name")
                     execute([
@@ -53,7 +54,7 @@ tasks.register("processCSS") {
                             "-i2",
                             "-f", "${tmp}" as String,
                             "-w", "${path}" as String
-                    ])
+                    ], new File(path).parentFile)
 
                     delete(tmp)
                 }
@@ -62,10 +63,12 @@ tasks.register("processCSS") {
     }
 }
 
-boolean execute(List<String> cmd) {
+boolean execute(List<String> cmd, File workDir = null) {
     if (isWindows) cmd.addAll(0, "cmd", "/c") // Prepend call to cmd
     try {
-        Process proc = new ProcessBuilder(cmd).start()
+        Process proc = new ProcessBuilder(cmd)
+                .directory(workDir)
+                .start()
         proc.waitForOrKill(10_000)
         return proc.exitValue() == 0
     } catch (Throwable e) {
