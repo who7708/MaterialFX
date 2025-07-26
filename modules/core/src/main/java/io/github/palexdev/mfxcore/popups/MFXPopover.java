@@ -258,6 +258,20 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
 
         {
             getScene().setRoot(root);
+
+            // You can complain to the JavaFX dick heads for this
+            // For some fucking stupid reason they take into account the content's local bounds (clips and effects)
+            // and shift the popup to some fucking arbitrary position.
+            // Oh, and of course all of this is private bullshit that cannot be overridden.
+            // Reset this crap and FUCK YOU
+            When.onInvalidated(root.translateXProperty())
+                .condition(_ -> root.getTranslateX() != 0.0 || root.getTranslateY() != 0.0)
+                .then(_ -> {
+                    root.setTranslateX(0.0);
+                    root.setTranslateY(0.0);
+                })
+                .invalidating(root.translateYProperty())
+                .listen();
         }
 
         protected void setStyleableParent(Node styleableParent) {
