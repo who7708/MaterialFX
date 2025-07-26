@@ -26,6 +26,7 @@ import io.github.palexdev.mfxcore.base.properties.PositionProperty;
 import io.github.palexdev.mfxcore.observables.When;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -228,7 +229,12 @@ public interface MFXPopup<O> {
         Pane getRoot();
 
         default void setContent(Node content) {
-            getRoot().getChildren().setAll(content);
+            ObservableList<Node> children = getRoot().getChildren();
+            if (content == null) {
+                children.clear();
+            } else {
+                children.setAll(content);
+            }
         }
 
         default void setStyleClass(String... stylecClass) {
