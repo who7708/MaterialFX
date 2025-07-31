@@ -485,7 +485,7 @@
   -fx-background-radius: 16px;
   -fx-border-radius: 16px;
   -fx-padding: 0px 16px 0px 16px;
-  -mfx-min-size: "56px 56px"
+  -mfx-min-size: 56px 56px
 }
 
 .mfx-fab.s > .label > .mfx-icon-wrapper > .mfx-font-icon {
@@ -507,7 +507,7 @@
   -fx-background-radius: 20px;
   -fx-border-radius: 20px;
   -fx-padding: 0px 26px 0px 26px;
-  -mfx-min-size: "80px 80px"
+  -mfx-min-size: 80px 80px
 }
 
 .mfx-fab.m > .label > .mfx-icon-wrapper > .mfx-font-icon {
@@ -529,7 +529,7 @@
   -fx-background-radius: 28px;
   -fx-border-radius: 28px;
   -fx-padding: 0px 28px 0px 28px;
-  -mfx-min-size: "96px 96px"
+  -mfx-min-size: 96px 96px
 }
 
 .mfx-fab.l > .label > .mfx-icon-wrapper > .mfx-font-icon {
