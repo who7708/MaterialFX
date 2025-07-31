@@ -1,3 +1,12 @@
+## 24.2.0 - 31-07-2025 - 10f296ba
+
+### Features
+
+- <8024a5bd> Backport changes to SizeProperty and PositionProperty from MFXCore (again)
+- <6e91502c> Backport changes to SizeProperty and PositionProperty from MFXCore, remove Styleable versions
+
+
+
 ## 24.1.0 - 03-07-2025 - cc69b56a
 
 ### Features
@@ -18,5 +27,4 @@
 ### Documentation
 
 - <4995b7b7> Fix Javadoc error
-
 

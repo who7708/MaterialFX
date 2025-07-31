@@ -1,5 +1,7 @@
-## Project - 91ae528e
+## Project - 10f296ba
 
+- 31-07-2025 <1b33de6b> Upgrade VirtualizedFX to v24.3.0
+- 26-07-2025 <f597c6d9> Make cleancss not inline imports and set working dir to correctly resolve urls
 - 22-07-2025 <64b9ea1c> Make format action not fail if the changelogs are updated
 - 17-07-2025 <5d8a8e86> Work on the latest commit
 - 04-07-2025 <9a551c33> Add help message and dry run option to Release script too

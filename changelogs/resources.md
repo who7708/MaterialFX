@@ -1,3 +1,25 @@
+## 24.2.1 - 31-07-2025 - 10f296ba
+
+### Features
+
+- <124ba29b> Add convenience method to load themes
+- <31710355> Include fonts in material theme
+- <9387b51e> Add styles for MFXMenus
+
+### Refactoring
+
+- <6f71db17> Do not hide scroll bars completely in menus
+
+### Documentation
+
+- <0cf99081> F u IntelliJ
+
+### Style
+
+- <f0c6843e> Update FAB styles
+
+
+
 ## 24.2.0 - 22-07-2025 - 91ae528e
 
 ### Features
@@ -31,4 +53,3 @@
 - <5d825ac8> Add 'large-increased' to shapes vars
 - <44f8ec16> Update assets
 - <1f0c9625> Replace Comfortaa and OpenSans fonts with MontSerrat
-
