@@ -18,11 +18,28 @@
 
 package app;
 
+import io.github.palexdev.mfxcore.controls.Label;
+import io.github.palexdev.mfxcore.utils.StringUtils;
 import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
-public class Launcher {
+public class LabelTestApp extends Application {
 
-    public static void main(String[] args) {
-        Application.launch(LabelTestApp.class, args);
+    @Override
+    public void start(Stage stage) {
+        Label label = new Label(StringUtils.randAlphanumeric(100));
+        label.setMaxWidth(200);
+        label.setFont(Font.font(16));
+        label.setDisableTruncation(true);
+        StackPane root = new StackPane(label);
+
+        label.setStyle("-fx-border-color: red");
+
+        Scene scene = new Scene(root, 300, 250);
+        stage.setScene(scene);
+        stage.show();
     }
 }

@@ -21,15 +21,14 @@ package app;
 import java.util.List;
 
 import io.github.palexdev.mfxcore.base.beans.Size;
-import io.github.palexdev.mfxcore.base.properties.styleable.StyleableSizeProperty;
-import io.github.palexdev.mfxcore.base.properties.styleable.StyleableSizeProperty.SizeConverter;
+import io.github.palexdev.mfxcore.base.properties.SizeProperty;
+import io.github.palexdev.mfxcore.base.properties.styleable.StyleableObjectProperty;
 import io.github.palexdev.mfxcore.utils.fx.ColorUtils;
 import io.github.palexdev.mfxcore.utils.fx.StyleUtils;
 import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.css.CssMetaData;
 import javafx.css.Styleable;
-import javafx.css.StyleableProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -58,7 +57,7 @@ public class SizeConverterTest extends Application {
         ));
         Button button = new Button("Set Style");
         button.setOnAction(event -> {
-            pane.setStyle(String.format("-fx-size: \"%d %d\"", random.nextInt(100, 400), random.nextInt(100, 400)));
+            pane.setStyle(String.format("-fx-size: %d %d", random.nextInt(100, 400), random.nextInt(100, 400)));
             rt.setFill(ColorUtils.getRandomColor());
         });
         VBox box = new VBox(30, rt, button);
@@ -70,7 +69,7 @@ public class SizeConverterTest extends Application {
     }
 
     private static class CustomPane extends Pane {
-        private final StyleableSizeProperty size = new StyleableSizeProperty(
+        private final StyleableObjectProperty<Size> size = SizeProperty.styleableProperty(
             StyleableProperties.SIZE,
             this,
             "size",
@@ -81,7 +80,7 @@ public class SizeConverterTest extends Application {
             return size.get();
         }
 
-        public StyleableSizeProperty sizeProperty() {
+        public StyleableObjectProperty<Size> sizeProperty() {
             return size;
         }
 
@@ -97,19 +96,11 @@ public class SizeConverterTest extends Application {
         private static class StyleableProperties {
             private static final List<CssMetaData<? extends Styleable, ?>> cssMetaDataList;
 
-            private static final CssMetaData<CustomPane, Size> SIZE = new CssMetaData<>(
-                "-fx-size", SizeConverter.getInstance(), Size.of(100, 100)
-            ) {
-                @Override
-                public boolean isSettable(CustomPane styleable) {
-                    return !styleable.sizeProperty().isBound();
-                }
-
-                @Override
-                public StyleableProperty<Size> getStyleableProperty(CustomPane styleable) {
-                    return styleable.sizeProperty();
-                }
-            };
+            private static final CssMetaData<CustomPane, Size> SIZE = SizeProperty.cssMetaData(
+                "-fx-size",
+                CustomPane::sizeProperty,
+                Size.of(100, 100)
+            );
 
             static {
                 cssMetaDataList = StyleUtils.cssMetaDataList(
