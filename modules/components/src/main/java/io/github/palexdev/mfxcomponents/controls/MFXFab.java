@@ -32,9 +32,9 @@ import io.github.palexdev.mfxcomponents.variants.api.Variant;
 import io.github.palexdev.mfxcomponents.variants.api.VariantsHandler;
 import io.github.palexdev.mfxcomponents.variants.api.WithVariants;
 import io.github.palexdev.mfxcore.base.beans.Size;
+import io.github.palexdev.mfxcore.base.properties.SizeProperty;
 import io.github.palexdev.mfxcore.base.properties.styleable.StyleableBooleanProperty;
-import io.github.palexdev.mfxcore.base.properties.styleable.StyleableSizeProperty;
-import io.github.palexdev.mfxcore.base.properties.styleable.StyleableSizeProperty.SizeConverter;
+import io.github.palexdev.mfxcore.base.properties.styleable.StyleableObjectProperty;
 import io.github.palexdev.mfxcore.controls.Label;
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.controls.SkinBase;
@@ -160,7 +160,7 @@ public class MFXFab extends MFXButtonBase<MFXButtonBehaviorBase<MFXFab>> impleme
         }
     };
 
-    private final StyleableSizeProperty minSize = new StyleableSizeProperty(
+    private final StyleableObjectProperty<Size> minSize = SizeProperty.styleableProperty(
         StyleableProperties.MIN_SIZE,
         this,
         "minSize",
@@ -198,8 +198,8 @@ public class MFXFab extends MFXButtonBase<MFXButtonBehaviorBase<MFXFab>> impleme
     ///
     /// Can be set from CSS via the property: '-mfx-min-size'.
     ///
-    /// @see SizeConverter
-    public StyleableSizeProperty minSizeProperty() {
+    /// @see SizeProperty#styleableProperty(CssMetaData, Object, String, Size)
+    public StyleableObjectProperty<Size> minSizeProperty() {
         return minSize;
     }
 
@@ -221,8 +221,11 @@ public class MFXFab extends MFXButtonBase<MFXButtonBehaviorBase<MFXFab>> impleme
                 false
             );
 
-        private static final CssMetaData<MFXFab, Size> MIN_SIZE =
-            StyleableSizeProperty.metaDataFor("-mfx-min-size", MFXFab::minSizeProperty, Size.zero());
+        private static final CssMetaData<MFXFab, Size> MIN_SIZE = SizeProperty.cssMetaData(
+            "-mfx-min-size",
+            MFXFab::minSizeProperty,
+            Size.zero()
+        );
 
         static {
             cssMetaDataList = StyleUtils.cssMetaDataList(
