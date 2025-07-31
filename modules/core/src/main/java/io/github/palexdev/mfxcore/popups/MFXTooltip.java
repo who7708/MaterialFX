@@ -34,7 +34,6 @@ import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.events.WhenEvent;
 import io.github.palexdev.mfxcore.observables.When;
 import io.github.palexdev.mfxcore.popups.MFXTooltip.TooltipConfig.Builder;
-import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.HAlign;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.VAlign;
@@ -180,7 +179,7 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
             timer.stop();
 
         if (!isShowing()) return;
-        timer.setDelay(outDelay);
+        timer.setDuration(outDelay);
         timer.setOnFinished(_ -> hide());
         timer.playFromStart();
     }
@@ -345,7 +344,7 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
 
         public static final class Builder {
             private Pos anchor = Pos.BOTTOM_CENTER;
-            private Align alignment = AnchorHandlers.Align.of(HAlign.CENTER, VAlign.BELOW);
+            private Align alignment = Align.of(HAlign.CENTER, VAlign.BELOW);
             private Position offset = Position.origin();
             private Duration inDelay = Duration.millis(500);
             private Duration outDelay = Duration.millis(500);

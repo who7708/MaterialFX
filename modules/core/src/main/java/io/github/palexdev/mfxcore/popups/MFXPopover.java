@@ -199,6 +199,8 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
     // Inner Classes
     //================================================================================
 
+    // Peer
+
     /// Custom extension of [PopupWindow] which serves as the peer for [MFXPopover].
     ///
     /// Sets the root to a [StackPane].
