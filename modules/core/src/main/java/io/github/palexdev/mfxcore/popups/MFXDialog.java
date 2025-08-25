@@ -71,6 +71,8 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
     //================================================================================
     // Properties
     //================================================================================
+    private boolean hasBeenShown = false;
+
     private Screen fallbackScreen;
     private MFXBackdrop backdrop;
 
@@ -139,6 +141,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
         content.setVisible(false);
 
         positionProperty().setPosition(x, y);
+        hasBeenShown = true;
         peer.show();
 
         if (anchor != null) {
@@ -275,10 +278,9 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
         public void apply(MFXDialog popup) {
             popup.offset = offset;
             popup.fallbackScreen = fallbackScreen;
-            try {
-                // Nice shit JavaFX
+            if (!popup.hasBeenShown) {
                 popup.peer.initModality(modality);
-            } catch (Exception ignored) {}
+            }
             if (useBackdrop) {
                 popup.backdrop = new MFXBackdrop();
                 popup.backdrop.getStyleClass().addAll(backdropStyleClass);
