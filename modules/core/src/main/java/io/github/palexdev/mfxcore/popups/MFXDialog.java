@@ -82,10 +82,12 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
     //================================================================================
     public MFXDialog() {
         defaultStyleClasses(getRoot());
+        DialogConfig.DEFAULT.apply(this);
     }
 
     public MFXDialog(String... styleClass) {
         setStyleClass(styleClass);
+        DialogConfig.DEFAULT.apply(this);
     }
 
     //================================================================================
@@ -267,6 +269,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
         boolean alwaysOnTop,
         boolean lockInPlace
     ) implements Config<MFXDialog> {
+        public static final DialogConfig DEFAULT = builder().build();
 
         @Override
         public void apply(MFXDialog popup) {
