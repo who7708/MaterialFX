@@ -102,8 +102,9 @@ public class SimpleEventBus implements EventBus {
     @Override
     public <E extends Event> void unsubscribe(Class<E> evt, Subscriber<E> subscriber) {
         Queue<Subscriber<Event>> queue = subscribers.get(evt);
-        if (queue == null || queue.isEmpty()) return;
+        if (queue == null) return;
         queue.remove(subscriber);
+        if (queue.isEmpty()) subscribers.remove(evt);
     }
 
     @Override
