@@ -16,7 +16,7 @@
  * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.palexdev.mfxcore.base.bindings;
+package io.github.palexdev.mfxcore.collections;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
