@@ -25,7 +25,7 @@ import io.github.palexdev.mfxcore.events.Event;
 /// Public API to implement a basic event bus.
 ///
 /// @see SimpleEventBus
-public interface IEventBus {
+public interface EventBus {
 
     /// Registers the given [Subscriber] for the given event type.
     <E extends Event> void subscribe(Class<E> evt, Subscriber<E> subscriber);

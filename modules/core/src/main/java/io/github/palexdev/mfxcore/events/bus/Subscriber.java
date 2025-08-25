@@ -32,7 +32,7 @@ public interface Subscriber<E extends Event> {
     void handle(E event);
 
     /// @return the priority of this subscriber, by default 0
-    /// @see IEventBus#subscribe(Class, Consumer, int)
+    /// @see EventBus#subscribe(Class, Consumer, int)
     /// @see SimpleEventBus#notifySubscribers(Event)
     default int priority() {
         return 0;

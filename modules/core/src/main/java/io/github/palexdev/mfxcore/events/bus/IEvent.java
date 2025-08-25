@@ -21,14 +21,14 @@ package io.github.palexdev.mfxcore.events.bus;
 import io.github.palexdev.mfxcore.events.Event;
 
 //@formatter:off fuck IntelliJ I guess
-/// Functional interface representing a generic event that carries some generic data, used by [IEventBus].
+/// Functional interface representing a generic event that carries some generic data, used by [EventBus].
 ///
 /// An example could be as follows:
-/// ```
+/// ```java
 /// public class App extends Application{
 ///   // While there is no limitation on how many buses you can create...
 ///   // Ideally you want a single instance for everything in your app
-///   public static final IEventBus bus = new SimpleEventBus();
+///   public static final EventBus bus = new SimpleEventBus();
 ///
 ///  @Override
 ///  void start(Stage stage) {

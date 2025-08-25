@@ -36,13 +36,13 @@ import io.github.palexdev.mfxcore.events.Event;
 /// **Trivia: Why this?**
 ///
 /// Long story short. I transitioned one of my projects from Spring to another framework that didn't have events functionality.
-/// I could not use JavaFX ones of course, so I developed my own simple solution.
+/// I could not use JavaFX ones, of course, so I developed my own simple solution.
 ///
-/// @see IEventBus
+/// @see EventBus
 /// @see IEvent
 /// @see Event
 /// @see Subscriber
-public class SimpleEventBus implements IEventBus {
+public class SimpleEventBus implements EventBus {
     //================================================================================
     // Properties
     //===============================================================================
