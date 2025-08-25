@@ -113,7 +113,8 @@ public abstract class When<T> implements DisposableAction {
 
     /// Adds an [Observable] to watch for changes that will trigger [#invalidate()].
     public When<T> invalidating(Observable o) {
-        invalidating.add(o);
+        boolean added = invalidating.add(o);
+        if (active && added) o.addListener(invalidatingListener);
         return this;
     }
 
