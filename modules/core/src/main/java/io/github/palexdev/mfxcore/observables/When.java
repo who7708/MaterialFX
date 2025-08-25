@@ -84,6 +84,47 @@ public abstract class When<T> implements DisposableAction {
         return new OnChanged<>(observable);
     }
 
+    /// Builds a special construct that is not tied to a specific [ObservableValue] but rather to a group of generic
+    /// [Observables][Observable], executing the given action when any of them changes.
+    ///
+    /// This is not added to the disposal map and therefore will not result in [#totalSize()]. To dispose of such
+    /// special constructs, you need the instance.
+    public static When<?> observe(Runnable action, Observable... observables) {
+        return new When<Void>(null) {
+
+            {
+                for (Observable o : observables) invalidating(o);
+            }
+
+            @Override
+            protected When<Void> invalidate() {
+                action.run();
+                if (oneShot) dispose();
+                return this;
+            }
+
+            @Override
+            public When<Void> executeNow() {
+                action.run();
+                if (oneShot && execNowOneShot) dispose();
+                return this;
+            }
+
+            @Override
+            public When<Void> listen() {
+                if (isDisposed() || isActive()) return this;
+                register();
+                return this;
+            }
+
+            @Override
+            protected void register() {
+                invalidating.forEach(o -> o.addListener(invalidatingListener));
+                active = true;
+            }
+        };
+    }
+
     //================================================================================
     // Abstract Methods
     //================================================================================
