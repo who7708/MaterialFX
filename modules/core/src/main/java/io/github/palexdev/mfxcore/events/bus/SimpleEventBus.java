@@ -109,4 +109,14 @@ public class SimpleEventBus implements EventBus {
     public <E extends Event> void publish(E event) {
         notifySubscribers(event);
     }
+
+    @Override
+    public boolean hasSubscribers() {
+        return !subscribers.isEmpty();
+    }
+
+    @Override
+    public void clear() {
+        subscribers.clear();
+    }
 }

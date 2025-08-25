@@ -39,4 +39,10 @@ public interface EventBus {
     /// Publishes the given event. What this exactly means depends on the implementations. Typically, this results in a
     /// loop running which passes the event to all the subscribers for the event type, added by [#subscribe(Class, Subscriber)].
     <E extends Event> void publish(E event);
+
+    /// @return whether there are registered subscribers in the event bus currently or not.
+    boolean hasSubscribers();
+
+    /// Clears the event bus by removing all registered subscribers.
+    void clear();
 }
