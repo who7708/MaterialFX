@@ -46,6 +46,7 @@ public class SimpleEventBus implements EventBus {
     //================================================================================
     // Properties
     //===============================================================================
+    private static final Comparator<Subscriber<Event>> SUBSCRIBER_COMPARATOR = Comparator.comparingInt(Subscriber::priority);
     private final Map<Class<? extends Event>, PriorityQueue<Subscriber<Event>>> subscribers = new HashMap<>();
 
     //================================================================================
@@ -71,7 +72,7 @@ public class SimpleEventBus implements EventBus {
     public <E extends Event> void subscribe(Class<E> evt, Subscriber<E> subscriber) {
         Queue<Subscriber<Event>> queue = subscribers.computeIfAbsent(
             evt,
-            c -> new PriorityQueue<>(Comparator.comparingInt(Subscriber::priority))
+            _ -> new PriorityQueue<>(SUBSCRIBER_COMPARATOR)
         );
         queue.add((Subscriber<Event>) subscriber);
     }
