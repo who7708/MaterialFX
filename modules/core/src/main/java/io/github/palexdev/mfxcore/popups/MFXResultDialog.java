@@ -48,16 +48,16 @@ import javafx.stage.Window;
 /// Because of such design choices, the usage is the same as [MFXDialog] except for very few differences:
 /// ```java
 /// MFXResultDialog<String> dialog = new MFXResultDialog<>();
-///// 1) Set the result supplier
+/// // 1) Set the result supplier
 /// dialog.setResultSupplier(() -> "A result!");
-///// 2) Show the dialog
+/// // 2) Show the dialog
 /// dialog.show(...);
-///// 3) Get the result
+/// // 3) Get the result
 /// String res = dialog.result(); // or resultOpt()
 ///
-///// Now you just need hooks to the confirm and cancel methods.
-///// Typically that happens within the dialog's content.
-///// For example, you may have a content with a bar at the bottom with the two buttons
+/// // Now you just need hooks to the confirm and cancel methods.
+/// // Typically that happens within the dialog's content.
+/// // For example, you may have a content with a bar at the bottom with the two buttons
 /// Button confirm = new Button("Confirm");
 /// confirm.setOnAction(_ -> dialog.confirm());
 /// Button cancel = new Button("Cancel");
@@ -154,7 +154,7 @@ public class MFXResultDialog<R> extends MFXDialog {
     ///
     /// **Usage:**<br >
     /// ```java
-    ///// Assuming you have an event bus here or use the network as `bus`
+    /// // Assuming you have an event bus here or use the network as `bus`
     /// MFXResultDialog<String> dialog = new MFXResultDialog<>();
     /// bus.subscribe(ResultDialogEven.class, e -> {
     ///     if (e.isConfirmed()){
@@ -164,7 +164,7 @@ public class MFXResultDialog<R> extends MFXDialog {
     ///}
     ///});
     ///
-    ///// From somewhere else in your program, on the same `bus` or network
+    /// // From somewhere else in your program, on the same `bus` or network
     /// bus.publish(new ResultDialogEvent(<true | false>));
     ///```
     public static class ResultDialogEvent extends Event {
