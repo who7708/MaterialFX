@@ -18,105 +18,43 @@
 
 package unit.bindings;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.github.palexdev.mfxcore.base.beans.Size;
-import io.github.palexdev.mfxcore.base.bindings.*;
-import io.github.palexdev.mfxcore.base.bindings.base.Updater;
+import io.github.palexdev.mfxcore.base.bindings.MappedBidirectionalBinding;
+import io.github.palexdev.mfxcore.base.bindings.MappedBidirectionalBinding.Target;
 import io.github.palexdev.mfxcore.base.properties.SizeProperty;
+import io.github.palexdev.mfxcore.behavior.DisposableAction;
 import javafx.beans.property.*;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BidirectionalBindingsTests {
-    private final MFXBindings bindings = MFXBindings.instance();
+    static List<DisposableAction> disposables = new ArrayList<>();
 
-    @Test
-    public void biBindingTest1() {
-        assertTrue(bindings.biIsEmpty());
-
-        IntegerProperty i1 = new SimpleIntegerProperty();
-        IntegerProperty i2 = new SimpleIntegerProperty();
-
-        bindings.bindBidirectional(i1)
-            .addSource(new Source<>(i2).implicit(i1, i2))
-            .get();
-
-        i1.set(10);
-        assertEquals(10, i1.get());
-        assertEquals(10, i2.get());
-
-        i2.set(20);
-        assertEquals(20, i1.get());
-        assertEquals(20, i2.get());
-
-        bindings.unbindBidirectional(i1, i2);
+    @AfterAll
+    static void dispose() {
+        disposables.forEach(DisposableAction::dispose);
+        disposables.clear();
     }
 
     @Test
-    public void biBindingTest2() {
-        assertTrue(bindings.biIsEmpty());
-
-        IntegerProperty iA = new SimpleIntegerProperty();
-        IntegerProperty iB = new SimpleIntegerProperty();
-        IntegerProperty iC = new SimpleIntegerProperty();
-
-        bindings.bindBidirectional(iA)
-            .addSource(new Source<>(iB).implicit(iA, iB))
-            .addSource(new Source<>(iC).implicit(iA, iC))
-            .get();
-
-        iA.set(8); // All properties must be 8
-        assertEquals(8, iA.get());
-        assertEquals(8, iB.get());
-        assertEquals(8, iC.get());
-
-        iB.set(10); // All properties must be 10
-        assertEquals(10, iA.get());
-        assertEquals(10, iB.get());
-        assertEquals(10, iC.get());
-
-        iC.set(12); // All properties must be
-        assertEquals(12, iA.get());
-        assertEquals(12, iB.get());
-        assertEquals(12, iC.get());
-
-        bindings.unbindBidirectional(iA);
-    }
-
-    @Test
-    public void biBindingTest3() {
-        assertTrue(bindings.biIsEmpty());
-
+    public void mappedBiBindingTest() {
         SizeProperty size = new SizeProperty();
         StringProperty width = new SimpleStringProperty();
         DoubleProperty height = new SimpleDoubleProperty();
 
-        bindings.bindBidirectional(size)
-            .addSource(new MappingSource<String, Size>(width)
-                .setTargetUpdater(new MappedUpdater<>(
-                    Mapper.<String, Size>of(s -> Size.of(Double.parseDouble(s), size.getHeight()))
-                        .orElse(() -> Size.of(0.0, 0.0)),
-                    Updater.implicit(size)
-                ))
-                .setSourceUpdater(new MappedUpdater<>(
-                    Mapper.<Size, String>of(s -> String.valueOf(s.width()))
-                        .orElse(() -> ""),
-                    Updater.implicit(width)
-                ))
-            )
-            .addSource(new MappingSource<Number, Size>(height)
-                .setTargetUpdater(new MappedUpdater<>(
-                    Mapper.<Number, Size>of(n -> Size.of(size.getWidth(), n.doubleValue()))
-                        .orElse(() -> Size.of(0.0, 0.0)),
-                    Updater.implicit(size)
-                ))
-                .setSourceUpdater(new MappedUpdater<>(
-                    Mapper.<Size, Number>of(Size::height).orElse(() -> 0.0),
-                    Updater.implicit(height)
-                ))
-            )
-            .get();
+        MappedBidirectionalBinding<Size, String> wb = MappedBidirectionalBinding.bind(size, width)
+            .setFirstToSecondMapper(s -> String.valueOf(s.width()))
+            .setSecondToFirstMapper(s -> Size.of(Double.parseDouble(s), size.getHeight()))
+            .bind();
+        MappedBidirectionalBinding<Size, Number> hb = MappedBidirectionalBinding.bind(size, height)
+            .setFirstToSecondMapper(Size::height)
+            .setSecondToFirstMapper(h -> Size.of(size.getWidth(), h.doubleValue()))
+            .bind();
 
         size.set(Size.of(10.0, 20.0));
         assertEquals("10.0", width.get());
@@ -130,59 +68,48 @@ public class BidirectionalBindingsTests {
         assertEquals(80.0, size.get().height());
         assertEquals("55.5", width.get());
 
-        bindings.unbindBidirectional(size);
-        assertTrue(bindings.biIsEmpty());
+        disposables.add(wb);
+        disposables.add(hb);
     }
 
     @Test
-    public void testEagerBinding() {
-        assertTrue(bindings.biIsEmpty());
+    public void mappedBiBindingTestLazy() {
+        IntegerProperty first = new SimpleIntegerProperty(4);
+        StringProperty second = new SimpleStringProperty("10");
 
-        IntegerProperty i1 = new SimpleIntegerProperty(null, "1", 5);
-        IntegerProperty i2 = new SimpleIntegerProperty(null, "2", 10);
-        IntegerProperty i3 = new SimpleIntegerProperty(null, "3", 15);
+        disposables.add(MappedBidirectionalBinding.bind(first, second)
+            .setFirstToSecondMapper(Object::toString)
+            .setSecondToFirstMapper(Integer::parseInt)
+            .bind(true)
+        );
 
-        bindings.bindBidirectional(i1)
-            .addSources(
-                new Source<>(i2).implicit(i1, i2),
-                new Source<>(i3).implicit(i1, i3)
-            )
-            .get()
-            .invalidate();
+        assertEquals(4, first.get());
+        assertEquals("10", second.get());
 
-        assertEquals(15, i1.get());
-        assertEquals(15, i2.get());
-        assertEquals(15, i3.get());
-
-        bindings.unbindBidirectional(i1);
-        assertTrue(bindings.biIsEmpty());
+        first.set(5);
+        assertEquals(5, first.get());
+        assertEquals("5", second.get());
     }
 
     @Test
-    public void testLazyBinding() {
-        assertTrue(bindings.biIsEmpty());
+    public void mappedBiBindingDepsTest() {
+        DoubleProperty mul = new SimpleDoubleProperty(1.0);
+        StringProperty first = new SimpleStringProperty("10");
+        DoubleProperty second = new SimpleDoubleProperty(4.0);
 
-        IntegerProperty i1 = new SimpleIntegerProperty(5);
-        IntegerProperty i2 = new SimpleIntegerProperty(10);
-        IntegerProperty i3 = new SimpleIntegerProperty(15);
+        disposables.add(MappedBidirectionalBinding.bind(first, second)
+            .setFirstToSecondMapper(s -> Double.parseDouble(s) * mul.get())
+            .setSecondToFirstMapper(Object::toString)
+            .addDependenciesFor(Target.SECOND, mul)
+            .bind()
+        );
 
-        bindings.bindBidirectional(i1)
-            .addSources(
-                new Source<>(i2).implicit(i1, i2),
-                new Source<>(i3).implicit(i1, i3)
-            )
-            .get();
+        assertEquals("10", first.get());
+        assertEquals(10.0, second.get());
 
-        assertEquals(5, i1.get());
-        assertEquals(10, i2.get());
-        assertEquals(15, i3.get());
-
-        i1.set(20);
-        assertEquals(20, i1.get());
-        assertEquals(20, i2.get());
-        assertEquals(20, i3.get());
-
-        bindings.unbindBidirectional(i1);
+        mul.set(2.0);
+        assertEquals("10", first.get());
+        assertEquals(20.0, second.get());
     }
 
     @Test

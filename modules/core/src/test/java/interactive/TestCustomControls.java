@@ -18,17 +18,28 @@
 
 package interactive;
 
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
 
+import io.github.palexdev.mfxcore.base.beans.Position;
+import io.github.palexdev.mfxcore.base.beans.Size;
+import io.github.palexdev.mfxcore.base.properties.PositionProperty;
+import io.github.palexdev.mfxcore.base.properties.SizeProperty;
+import io.github.palexdev.mfxcore.base.properties.styleable.StyleableObjectProperty;
 import io.github.palexdev.mfxcore.behavior.BehaviorBase;
 import io.github.palexdev.mfxcore.controls.Control;
 import io.github.palexdev.mfxcore.controls.Label;
 import io.github.palexdev.mfxcore.controls.SkinBase;
+import io.github.palexdev.mfxcore.utils.fx.CSSFragment;
+import io.github.palexdev.mfxcore.utils.fx.StyleUtils;
+import javafx.css.CssMetaData;
+import javafx.css.Styleable;
 import javafx.scene.Scene;
 import javafx.scene.control.Skin;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.api.FxRobot;
@@ -44,6 +55,12 @@ public class TestCustomControls {
     @Start
     void start(Stage stage) {
         stage.show();
+    }
+
+    @BeforeEach
+    void setup() {
+        CustomBehavior.instances = 0;
+        CustomSkin.instances = 0;
     }
 
     @Test
@@ -99,6 +116,30 @@ public class TestCustomControls {
         assertEquals("Hello custom world!", label.getText());
     }
 
+    @Test
+    void testStyleable(FxRobot robot) {
+        StackPane pane = setupStage();
+        CustomControl control = new CustomControl();
+        robot.interact(() -> pane.getChildren().add(control));
+
+        assertEquals(Size.zero(), control.size.get());
+        assertEquals(Position.origin(), control.position.get());
+
+        robot.interact(() ->
+            CSSFragment.applyOn("""
+                    .my-control {
+                      -size: 40px 80px;
+                      -position: 25px 10px;
+                    }
+                    """,
+                pane
+            )
+        );
+
+        assertEquals(Size.of(40.0, 80.0), control.size.get());
+        assertEquals(Position.of(25.0, 10.0), control.position.get());
+    }
+
     StackPane setupStage() {
         StackPane pane = new StackPane();
         try {
@@ -115,6 +156,10 @@ public class TestCustomControls {
     //================================================================================
     static class CustomControl extends Control<CustomBehavior> {
 
+        {
+            getStyleClass().add("my-control");
+        }
+
         @Override
         public Supplier<CustomBehavior> defaultBehaviorProvider() {
             return () -> new CustomBehavior(this);
@@ -124,6 +169,47 @@ public class TestCustomControls {
         public Supplier<SkinBase<?, ?>> defaultSkinProvider() {
             return () -> new CustomSkin(this);
         }
+
+        private final StyleableObjectProperty<Size> size = SizeProperty.styleableProperty(
+            _SIZE,
+            this,
+            "size",
+            Size.zero()
+        );
+
+        private final StyleableObjectProperty<Position> position = PositionProperty.styleableProperty(
+            _POSITION,
+            this,
+            "position",
+            Position.origin()
+        );
+
+        private static final CssMetaData<CustomControl, Size> _SIZE = SizeProperty.cssMetaData(
+            "-size",
+            c -> c.size,
+            Size.zero()
+        );
+
+        private static final CssMetaData<CustomControl, Position> _POSITION = PositionProperty.cssMetaData(
+            "-position",
+            c -> c.position,
+            Position.origin()
+        );
+
+        private static final List<CssMetaData<? extends Styleable, ?>> CSS_META = StyleUtils.cssMetaDataList(
+            Control.getClassCssMetaData(),
+            _SIZE, _POSITION
+        );
+
+        public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
+            return CSS_META;
+        }
+
+        @Override
+        public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
+            return getClassCssMetaData();
+        }
+
     }
 
     static class CustomBehavior extends BehaviorBase<CustomControl> {

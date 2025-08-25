@@ -22,10 +22,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.palexdev.mfxcore.observables.When;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -114,5 +111,30 @@ public class WhenTests {
         prop.set(0);
         assertTrue(changed.get());
         assertEquals(0, When.totalSize());
+    }
+
+    @Test
+    void testOnlyInvalidations() {
+        IntegerProperty iProp = new SimpleIntegerProperty(-1);
+        StringProperty sProp = new SimpleStringProperty("0");
+        DoubleProperty dProp = new SimpleDoubleProperty(1.0);
+        AtomicInteger counter = new AtomicInteger(0);
+
+        When<?> when = When.observe(
+            counter::incrementAndGet,
+            iProp, sProp, dProp
+        ).listen();
+        assertEquals(0, counter.get());
+
+        iProp.set(1);
+        assertEquals(1, counter.get());
+
+        sProp.set("1");
+        assertEquals(2, counter.get());
+
+        dProp.set(2.0);
+        assertEquals(3, counter.get());
+
+        when.dispose();
     }
 }
