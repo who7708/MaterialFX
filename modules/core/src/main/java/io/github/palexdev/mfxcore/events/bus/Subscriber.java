@@ -18,11 +18,15 @@
 
 package io.github.palexdev.mfxcore.events.bus;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import io.github.palexdev.mfxcore.events.Event;
 
 /// A `Subscriber` is a functional interface, and essentially an action to perform given a certain type of event.
+///
+/// Optionally can specify a priority, which determines order of execution in case of multiple subscribers on the same event
+/// (depends on the bus implementation!).
 ///
 /// @param <E> the event type
 /// @see SimpleEventBus
@@ -30,6 +34,39 @@ import io.github.palexdev.mfxcore.events.Event;
 @FunctionalInterface
 public interface Subscriber<E extends Event> {
     void handle(E event);
+
+    /// @return a composed `Subscriber` that performs, in sequence, this operation followed by the `after` operation.
+    /// Retains the priority of the first, can be easily overridden by using [#withPriority(int)].
+    default Subscriber<E> andThen(Subscriber<E> after) {
+        Objects.requireNonNull(after);
+        return new Subscriber<>() {
+            @Override
+            public void handle(E event) {
+                Subscriber.this.handle(event);
+                after.handle(event);
+            }
+
+            @Override
+            public int priority() {
+                return Subscriber.this.priority();
+            }
+        };
+    }
+
+    /// @return a new `Subscriber` with overridden [#priority()] method to return the given `priority`.
+    default Subscriber<E> withPriority(int priority) {
+        return new Subscriber<>() {
+            @Override
+            public void handle(E event) {
+                Subscriber.this.handle(event);
+            }
+
+            @Override
+            public int priority() {
+                return priority;
+            }
+        };
+    }
 
     /// @return the priority of this subscriber, by default 0
     /// @see EventBus#subscribe(Class, Consumer, int)
