@@ -25,7 +25,7 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.function.Supplier;
 
-import io.github.palexdev.mfxcore.behavior.DisposableAction;
+import io.github.palexdev.mfxcore.base.Disposable;
 import io.github.palexdev.mfxcore.collections.WeakHashSet;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -54,7 +54,7 @@ import javafx.beans.value.ObservableValue;
 ///
 /// As per above, you may notice that to dispose of such constructs you need their reference, this is because it's possible to
 /// have more than one construct per [ObservableValue], which automatically raises the issue: "Which construct do you want to dispose?"
-public abstract class When<T> implements DisposableAction {
+public abstract class When<T> implements Disposable {
     //================================================================================
     // Properties
     //================================================================================

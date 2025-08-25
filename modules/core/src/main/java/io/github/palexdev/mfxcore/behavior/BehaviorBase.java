@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
+import io.github.palexdev.mfxcore.base.Disposable;
 import io.github.palexdev.mfxcore.events.WhenEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -49,7 +50,7 @@ public abstract class BehaviorBase<N extends Node> {
     // Properties
     //================================================================================
     private N node;
-    private final List<DisposableAction> actions = new ArrayList<>();
+    private final List<Disposable> actions = new ArrayList<>();
 
     //================================================================================
     // Constructors
@@ -81,7 +82,7 @@ public abstract class BehaviorBase<N extends Node> {
     /// Calls [#dispose()] on all the registered actions, then clears
     /// the list and sets the node field to `null` making this behavior not usable anymore.
     public void dispose() {
-        actions.forEach(DisposableAction::dispose);
+        actions.forEach(Disposable::dispose);
         actions.clear();
         node = null;
     }
@@ -303,7 +304,7 @@ public abstract class BehaviorBase<N extends Node> {
     }
 
     /// @return the list of registered actions as an unmodifiable list
-    public List<DisposableAction> getActions() {
+    public List<Disposable> getActions() {
         return Collections.unmodifiableList(actions);
     }
 }

@@ -26,10 +26,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import io.github.palexdev.mfxcore.base.Disposable;
 import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.base.properties.NodeProperty;
 import io.github.palexdev.mfxcore.base.properties.PositionProperty;
-import io.github.palexdev.mfxcore.behavior.DisposableAction;
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.events.WhenEvent;
 import io.github.palexdev.mfxcore.observables.When;
@@ -124,7 +124,7 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
     private Align alignment;
 
     private final PauseTransition timer = new PauseTransition();
-    private final List<DisposableAction> handlers = new ArrayList<>();
+    private final List<Disposable> handlers = new ArrayList<>();
 
     private Duration inDelay;
     private Duration outDelay;
@@ -169,7 +169,7 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
     }
 
     public void uninstall() {
-        handlers.forEach(DisposableAction::dispose);
+        handlers.forEach(Disposable::dispose);
         handlers.clear();
         this.owner = null;
     }

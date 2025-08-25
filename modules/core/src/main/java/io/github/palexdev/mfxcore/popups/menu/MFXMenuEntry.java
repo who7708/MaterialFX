@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import io.github.palexdev.mfxcore.behavior.DisposableAction;
+import io.github.palexdev.mfxcore.base.Disposable;
 import io.github.palexdev.mfxcore.controls.Label;
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.events.WhenEvent;
@@ -63,7 +63,7 @@ public class MFXMenuEntry extends Region implements MFXStyleable {
 
     private InvalidationListener subListener;
     private SubMenuHandler subMenuHandler;
-    private final List<DisposableAction> disposables = new ArrayList<>();
+    private final List<Disposable> disposables = new ArrayList<>();
 
     //================================================================================
     // Constructors
@@ -194,7 +194,7 @@ public class MFXMenuEntry extends Region implements MFXStyleable {
             subMenuHandler.dispose();
             subMenuHandler = null;
         }
-        disposables.forEach(DisposableAction::dispose);
+        disposables.forEach(Disposable::dispose);
         disposables.clear();
         disableProperty().unbind();
     }

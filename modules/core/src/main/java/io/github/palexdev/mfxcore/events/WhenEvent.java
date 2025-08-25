@@ -25,8 +25,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import io.github.palexdev.mfxcore.base.Disposable;
 import io.github.palexdev.mfxcore.base.TriConsumer;
-import io.github.palexdev.mfxcore.behavior.DisposableAction;
 import io.github.palexdev.mfxcore.collections.WeakHashSet;
 import io.github.palexdev.mfxcore.observables.When;
 import javafx.beans.value.ObservableValue;
@@ -81,7 +81,7 @@ import javafx.event.EventType;
 ///```
 ///
 /// @see EventTarget
-public class WhenEvent<T extends Event> implements DisposableAction {
+public class WhenEvent<T extends Event> implements Disposable {
     //================================================================================
     // Properties
     //================================================================================

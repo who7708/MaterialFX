@@ -16,10 +16,10 @@
  * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.palexdev.mfxcore.behavior;
+package io.github.palexdev.mfxcore.base;
 
 /// Public API for every action that should be disposed once it's not necessary anymore
-public interface DisposableAction {
+public interface Disposable {
 
     /// Disposes this action.
     void dispose();

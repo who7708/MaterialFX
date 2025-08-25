@@ -23,7 +23,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import io.github.palexdev.mfxcore.behavior.DisposableAction;
+import io.github.palexdev.mfxcore.base.Disposable;
 import io.github.palexdev.mfxcore.events.WhenEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -158,7 +158,7 @@ public class WhenEventTests {
             })
             .otherwise((w, e) -> {
                 filterFailed.set(true);
-                Optional.ofNullable(w.get()).ifPresent(DisposableAction::dispose);
+                Optional.ofNullable(w.get()).ifPresent(Disposable::dispose);
             })
             .register();
 

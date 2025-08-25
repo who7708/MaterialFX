@@ -21,11 +21,11 @@ package unit.bindings;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.palexdev.mfxcore.base.Disposable;
 import io.github.palexdev.mfxcore.base.beans.Size;
 import io.github.palexdev.mfxcore.base.bindings.MappedBidirectionalBinding;
 import io.github.palexdev.mfxcore.base.bindings.MappedBidirectionalBinding.Target;
 import io.github.palexdev.mfxcore.base.properties.SizeProperty;
-import io.github.palexdev.mfxcore.behavior.DisposableAction;
 import javafx.beans.property.*;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
@@ -33,11 +33,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BidirectionalBindingsTests {
-    static List<DisposableAction> disposables = new ArrayList<>();
+    static List<Disposable> disposables = new ArrayList<>();
 
     @AfterAll
     static void dispose() {
-        disposables.forEach(DisposableAction::dispose);
+        disposables.forEach(Disposable::dispose);
         disposables.clear();
     }
 

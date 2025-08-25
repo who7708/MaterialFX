@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import io.github.palexdev.mfxcore.base.Disposable;
 import io.github.palexdev.mfxcore.behavior.BehaviorBase;
-import io.github.palexdev.mfxcore.behavior.DisposableAction;
 import io.github.palexdev.mfxcore.behavior.WithBehavior;
 import io.github.palexdev.mfxcore.events.WhenEvent;
 import io.github.palexdev.mfxcore.observables.When;
@@ -69,7 +69,7 @@ public abstract class SkinBase<C extends javafx.scene.control.Control & WithBeha
     //================================================================================
     // Properties
     //================================================================================
-    private List<DisposableAction> listeners = new ArrayList<>();
+    private List<Disposable> listeners = new ArrayList<>();
 
     //================================================================================
     // Constructors
@@ -129,7 +129,7 @@ public abstract class SkinBase<C extends javafx.scene.control.Control & WithBeha
     //================================================================================
     @Override
     public void dispose() {
-        listeners.forEach(DisposableAction::dispose);
+        listeners.forEach(Disposable::dispose);
         listeners.clear();
         listeners = null;
         super.dispose();
