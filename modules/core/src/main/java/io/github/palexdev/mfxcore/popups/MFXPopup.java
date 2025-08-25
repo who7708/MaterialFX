@@ -19,6 +19,7 @@
 package io.github.palexdev.mfxcore.popups;
 
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.base.properties.NodeProperty;
@@ -155,6 +156,11 @@ public interface MFXPopup<O> {
 
     default void setContent(Node content) {
         contentProperty().set(content);
+    }
+
+    /// Convenience method to set the popup's content from a supplier, delegates to [#setcontent(Node)].
+    default void supplyContent(Supplier<Node> contentSupplier) {
+        setContent(contentSupplier.get());
     }
 
     /// @return the popup's true position, see [#positionProperty()]
