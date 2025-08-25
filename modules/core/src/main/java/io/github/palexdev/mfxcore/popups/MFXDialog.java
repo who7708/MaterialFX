@@ -31,6 +31,7 @@ import io.github.palexdev.mfxcore.popups.MFXDialog.WindowPeer;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
 import io.github.palexdev.mfxcore.utils.fx.MFXBackdrop;
+import javafx.application.Platform;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
@@ -79,6 +80,9 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
     private boolean lockInPlace;
     private When<?> lockWhen;
 
+    protected boolean await = false;
+    protected boolean inNestedLoop = false;
+
     //================================================================================
     // Constructors
     //================================================================================
@@ -103,6 +107,24 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
         cfg.accept(builder);
         builder.build().apply(this);
         return this;
+    }
+
+    /// Stops code execution until the dialog is closed.
+    ///
+    /// @throws IllegalStateException if the dialog is not showing or already waiting
+    protected void doAwait() {
+        if (!isShowing())
+            throw new IllegalStateException("Dialog must be showing to await!");
+        if (inNestedLoop)
+            throw new IllegalStateException("Already awaiting!");
+
+        try {
+            inNestedLoop = true;
+            Platform.enterNestedEventLoop(peer);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            inNestedLoop = false;
+        }
     }
 
     //================================================================================
@@ -153,6 +175,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
         if (animation != null) animation.playIn();
         content.setVisible(true);
         setState(PopupState.SHOWN);
+        if (await) doAwait();
     }
 
     @Override
@@ -175,6 +198,11 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
 
     @Override
     public void hide() {
+        if (inNestedLoop) {
+            Platform.exitNestedEventLoop(peer, null);
+            inNestedLoop = false;
+        }
+
         if (lockWhen != null) {
             lockWhen.dispose();
             lockWhen = null;
@@ -282,7 +310,8 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
         boolean useBackdrop,
         String[] backdropStyleClass,
         boolean alwaysOnTop,
-        boolean lockInPlace
+        boolean lockInPlace,
+        boolean await
     ) implements Config<MFXDialog> {
         public static final DialogConfig DEFAULT = builder().build();
 
@@ -301,6 +330,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
             }
             popup.peer.setAlwaysOnTop(alwaysOnTop);
             popup.lockInPlace = lockInPlace;
+            popup.await = await;
             popup.config = this;
         }
 
@@ -316,7 +346,8 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
                 .useBackdrop(config.useBackdrop)
                 .backdropStyleClass(config.backdropStyleClass)
                 .alwaysOnTop(config.alwaysOnTop)
-                .lockInPlace(config.lockInPlace);
+                .lockInPlace(config.lockInPlace)
+                .await(config.await);
         }
 
         public static final class Builder {
@@ -327,6 +358,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
             private String[] backdropStyleClass = new String[]{};
             private boolean alwaysOnTop = false;
             private boolean lockInPlace = false;
+            private boolean await = false;
 
             public Builder offset(Position offset) {
                 this.offset = offset;
@@ -363,6 +395,11 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
                 return this;
             }
 
+            public Builder await(boolean await) {
+                this.await = await;
+                return this;
+            }
+
             public DialogConfig build() {
                 return new DialogConfig(
                     offset,
@@ -371,7 +408,8 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
                     useBackdrop,
                     backdropStyleClass,
                     alwaysOnTop,
-                    lockInPlace
+                    lockInPlace,
+                    await
                 );
             }
         }
