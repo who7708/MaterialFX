@@ -21,6 +21,7 @@ package io.github.palexdev.mfxcore.base.bindings;
 import java.util.*;
 import java.util.function.Function;
 
+import io.github.palexdev.mfxcore.base.Disposable;
 import io.github.palexdev.mfxcore.observables.When;
 import javafx.beans.Observable;
 import javafx.beans.value.ObservableValue;
@@ -41,7 +42,7 @@ import javafx.beans.value.WritableValue;
 ///
 /// @param <A> the type of the first observable value
 /// @param <B> the type of the second observable value
-public class MappedBidirectionalBinding<A, B> {
+public class MappedBidirectionalBinding<A, B> implements Disposable {
     //================================================================================
     // Properties
     //================================================================================
