@@ -18,11 +18,8 @@
 
 package io.github.palexdev.mfxcore.base.properties.synced;
 
-import io.github.palexdev.mfxcore.base.bindings.MFXBindings;
-import io.github.palexdev.mfxcore.base.bindings.Source;
 import io.github.palexdev.mfxcore.base.properties.base.SynchronizedProperty;
 import io.github.palexdev.mfxcore.observables.When;
-import javafx.beans.property.Property;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -102,75 +99,5 @@ public class SynchronizedObjectProperty<T> extends ReadOnlyObjectWrapper<T> impl
     protected void fireValueChangedEvent() {
         if (isWaiting()) return;
         super.fireValueChangedEvent();
-    }
-
-    //================================================================================
-    // Binding
-    //================================================================================
-
-    /// Creates a unidirectional bindings with the given observable.
-    ///
-    /// The binding is created using the new [MFXBindings] mechanism.
-    ///
-    /// If the property is already bound, it is automatically unbound before bindings to the new observable.
-    ///
-    /// @throws IllegalArgumentException if the given observable is the property itself
-    /// @see MFXBindings
-    @Override
-    public void bind(ObservableValue<? extends T> source) {
-        if (this == source) {
-            throw new IllegalArgumentException("Cannot bind to itself!");
-        }
-
-        if (isBound()) unbind();
-        MFXBindings.instance().bind(this).source(source).get();
-    }
-
-    /// Creates a bidirectional bindings between this property and the given property.
-    ///
-    /// The binding is created using the new [MFXBindings] mechanism.
-    ///
-    ///
-    /// If the property is already bound unidirectionally, it is automatically unbound.
-    ///
-    /// If the property is already bound bidirectionally, it won't be automatically unbound, just like JavaFX,
-    /// this way you can have multiple bidirectional bindings
-    ///
-    /// @throws IllegalArgumentException if the given observable is the property itself
-    /// @see MFXBindings
-    @Override
-    public void bindBidirectional(Property<T> other) {
-        if (this == other) {
-            throw new IllegalArgumentException("Cannot bind to itself!");
-        }
-
-        if (isBound()) unbind();
-        MFXBindings.instance().bindBidirectional(this).addSource(
-            new Source<>(other).implicit(this, other)).get();
-    }
-
-    /// Overridden to call [MFXBindings#unbind(ObservableValue)].
-    @Override
-    public void unbind() {
-        MFXBindings.instance().unbind(this);
-    }
-
-    /// Overridden to call [MFXBindings#unbindBidirectional(ObservableValue,ObservableValue)].
-    @Override
-    public void unbindBidirectional(Property<T> other) {
-        MFXBindings.instance().unbindBidirectional(this, other);
-    }
-
-    /// Delegate method for [MFXBindings#disposeBidirectional(ObservableValue)].
-    public void clearBidirectional() {
-        MFXBindings.instance().disposeBidirectional(this);
-    }
-
-    /// Overridden to check the [MFXBindings#isBound(ObservableValue)] flag value and [MFXBindings#isIgnoreBinding(ObservableValue)].
-    ///
-    /// @return true only if `MFXBindings.isBound()` is true and `isIgnoreBound()` is false
-    @Override
-    public boolean isBound() {
-        return MFXBindings.instance().isBound(this) && !MFXBindings.instance().isIgnoreBinding(this);
     }
 }
