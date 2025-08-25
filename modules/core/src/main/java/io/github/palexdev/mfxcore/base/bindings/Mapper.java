@@ -18,13 +18,14 @@
 
 package io.github.palexdev.mfxcore.base.bindings;
 
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 /// Specialization of [Function] to also add the support for "orElse".
 ///
 /// @param <T> – the type of the input to the function
-/// @param <R> – the type of the result of the function, as well as the type of the orElse supplier
+/// @param <R> – the function's result type, as well as the type of the orElse supplier
 public class Mapper<T, R> implements Function<T, R> {
     //================================================================================
     // Properties
@@ -39,7 +40,7 @@ public class Mapper<T, R> implements Function<T, R> {
     }
 
     public Mapper(Function<T, R> fn) {
-        this.fn = fn;
+        this.fn = Objects.requireNonNull(fn);
     }
 
     public static <T, R> Mapper<T, R> of(Function<T, R> fn) {
@@ -80,7 +81,7 @@ public class Mapper<T, R> implements Function<T, R> {
 
     /// Sets the "orElse" [Supplier] of this mapper.
     public Mapper<T, R> orElse(Supplier<R> orElse) {
-        this.orElse = orElse;
+        this.orElse = Objects.requireNonNull(orElse);
         return this;
     }
 }
