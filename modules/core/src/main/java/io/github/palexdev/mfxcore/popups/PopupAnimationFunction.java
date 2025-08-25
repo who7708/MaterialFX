@@ -18,6 +18,7 @@
 
 package io.github.palexdev.mfxcore.popups;
 
+import io.github.palexdev.mfxcore.utils.fx.CubicCurve;
 import javafx.animation.*;
 import javafx.scene.CacheHint;
 import javafx.scene.Node;
@@ -91,45 +92,4 @@ public interface PopupAnimationFunction {
             }
         }
     };
-}
-
-/// Backport from effects module.
-class CubicCurve extends Interpolator {
-    private final double x1;
-    private final double y1;
-    private final double x2;
-    private final double y2;
-
-    private static final double CUBIC_ERROR_BOUND = 0.001;
-
-    public CubicCurve(double x1, double y1, double x2, double y2) {
-        this.x1 = x1;
-        this.y1 = y1;
-        this.x2 = x2;
-        this.y2 = y2;
-    }
-
-    double elevateCubic(double a, double b, double m) {
-        return 3 * a * (1 - m) * (1 - m) * m +
-               3 * b * (1 - m) * m * m +
-               m * m * m;
-    }
-
-    @Override
-    public double curve(double t) {
-        double start = 0.0;
-        double end = 1.0;
-        while (true) {
-            final double midpoint = (start + end) / 2;
-            final double estimate = elevateCubic(x1, x2, midpoint);
-            if (Math.abs(t - estimate) < CUBIC_ERROR_BOUND) {
-                return elevateCubic(y1, y2, midpoint);
-            }
-            if (estimate < t) {
-                start = midpoint;
-            } else {
-                end = midpoint;
-            }
-        }
-    }
 }
