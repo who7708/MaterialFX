@@ -47,7 +47,7 @@ public class OnInvalidated<T> extends When<T> {
     /// This should be used specifically when several listeners will execute the same action. To improve performance and
     /// memory usage, you can build the listener yourself and create the construct with this.
     ///
-    /// Automatically actived upon creation!
+    /// Automatically activated upon creation!
     ///
     /// **Note** however that this special construct will not have any of its features working (no action, no condition,
     /// no otherwise, etc.) because the listener is not built but the construct, of course.
@@ -57,6 +57,13 @@ public class OnInvalidated<T> extends When<T> {
                 listener = il;
                 register();
                 observable.addListener(listener);
+            }
+
+            @Override
+            public OnInvalidated<T> executeNow() {
+                listener.invalidated(observable);
+                if (oneShot && execNowOneShot) dispose();
+                return this;
             }
         };
     }

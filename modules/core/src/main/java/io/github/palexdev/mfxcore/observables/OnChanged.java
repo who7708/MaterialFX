@@ -58,6 +58,13 @@ public class OnChanged<T> extends When<T> {
                 register();
                 observable.addListener(cl);
             }
+
+            @Override
+            public OnChanged<T> executeNow() {
+                listener.changed(observable, null, observable.getValue());
+                if (oneShot && execNowOneShot) dispose();
+                return this;
+            }
         };
     }
 
