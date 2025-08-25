@@ -128,12 +128,11 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
                 .register();
 
             if (lockInPlace) {
-                lockWhen = When.onInvalidated(owner.xProperty())
-                    .then(_ -> reposition())
-                    .invalidating(owner.yProperty())
-                    .invalidating(owner.widthProperty())
-                    .invalidating(owner.heightProperty())
-                    .listen();
+                lockWhen = When.observe(
+                    this::reposition,
+                    owner.xProperty(), owner.yProperty(),
+                    owner.widthProperty(), owner.heightProperty()
+                ).listen();
             }
         }
 
