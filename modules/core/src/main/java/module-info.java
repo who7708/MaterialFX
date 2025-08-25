@@ -13,7 +13,6 @@ module mfx.core {
     exports io.github.palexdev.mfxcore.base.beans;
     exports io.github.palexdev.mfxcore.base.beans.range;
     exports io.github.palexdev.mfxcore.base.bindings;
-    exports io.github.palexdev.mfxcore.base.bindings.base;
     exports io.github.palexdev.mfxcore.base.properties;
     exports io.github.palexdev.mfxcore.base.properties.base;
     exports io.github.palexdev.mfxcore.base.properties.functional;
@@ -60,6 +59,7 @@ module mfx.core {
 
     // Selection
     exports io.github.palexdev.mfxcore.selection;
+    exports io.github.palexdev.mfxcore.selection.model;
 
     // Settings
     exports io.github.palexdev.mfxcore.settings;
