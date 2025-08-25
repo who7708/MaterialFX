@@ -179,6 +179,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
             lockWhen.dispose();
             lockWhen = null;
         }
+        peer.indirectHide = true;
         super.hide();
     }
 
@@ -244,8 +245,9 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
     /// Sets the root node to a [StackPane], the style to [StageStyle#TRANSPARENT] and the scene's fill to transparent.
     ///
     /// Offers a bunch of convenience methods.
-    protected static class WindowPeer extends Stage implements Peer {
+    protected class WindowPeer extends Stage implements Peer {
         private final StackPane root = new StackPane();
+        private boolean indirectHide = false;
 
         {
             initStyle(StageStyle.TRANSPARENT);
@@ -257,6 +259,17 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
         @Override
         public StackPane getRoot() {
             return root;
+        }
+
+        @Override
+        public void hide() {
+            // Redirect auto-hide handling to dialog hide logic!
+            if (!indirectHide) {
+                MFXDialog.this.hide();
+                return;
+            }
+            indirectHide = false;
+            super.hide();
         }
     }
 
