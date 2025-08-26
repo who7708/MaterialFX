@@ -24,7 +24,6 @@ import java.util.function.Supplier;
 import io.github.palexdev.mfxcomponents.behaviors.MFXFabMenuBehavior;
 import io.github.palexdev.mfxcomponents.controls.base.MFXControl;
 import io.github.palexdev.mfxcomponents.skins.MFXFabMenuSkin;
-import io.github.palexdev.mfxcomponents.theming.PseudoClasses;
 import io.github.palexdev.mfxcomponents.variants.FABVariants.StyleVariant;
 import io.github.palexdev.mfxcomponents.variants.api.Variant;
 import io.github.palexdev.mfxcomponents.variants.api.VariantsHandler;
@@ -34,6 +33,7 @@ import io.github.palexdev.mfxcore.base.properties.styleable.StyleableObjectPrope
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.controls.SkinBase;
 import io.github.palexdev.mfxcore.enums.Corner;
+import io.github.palexdev.mfxcore.utils.fx.PseudoClasses;
 import io.github.palexdev.mfxcore.utils.fx.StyleUtils;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;

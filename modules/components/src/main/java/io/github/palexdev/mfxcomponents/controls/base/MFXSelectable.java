@@ -21,11 +21,11 @@ package io.github.palexdev.mfxcomponents.controls.base;
 import java.util.function.Consumer;
 
 import io.github.palexdev.mfxcomponents.behaviors.MFXSelectableBehavior;
-import io.github.palexdev.mfxcomponents.theming.PseudoClasses;
 import io.github.palexdev.mfxcore.selection.Selectable;
 import io.github.palexdev.mfxcore.selection.SelectionGroup;
 import io.github.palexdev.mfxcore.selection.SelectionGroupProperty;
 import io.github.palexdev.mfxcore.selection.SelectionProperty;
+import io.github.palexdev.mfxcore.utils.fx.PseudoClasses;
 import javafx.scene.Node;
 
 /// Base class for all `MaterialFX` components which behave like buttons and are selectable.
@@ -73,7 +73,7 @@ public abstract class MFXSelectable<B extends MFXSelectableBehavior<?>> extends 
     ///
     /// By default, de-/activates the ':selected' pseudo-class on the component and calls the user-specified action.
     ///
-    /// @see MFXSelectableBehavior#handleSelection()
+    /// @see MFXSelectableBehavior
     protected void onSelectionChanged(boolean state) {
         PseudoClasses.SELECTED.setOn(this, state);
         if (onSelectionChanged != null) onSelectionChanged.accept(state);

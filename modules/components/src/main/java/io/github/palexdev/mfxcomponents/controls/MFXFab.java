@@ -25,7 +25,6 @@ import io.github.palexdev.mfxcomponents.behaviors.MFXButtonBehaviorBase;
 import io.github.palexdev.mfxcomponents.controls.base.MFXButtonBase;
 import io.github.palexdev.mfxcomponents.controls.base.MFXLabeled;
 import io.github.palexdev.mfxcomponents.skins.MFXFabSkin;
-import io.github.palexdev.mfxcomponents.theming.PseudoClasses;
 import io.github.palexdev.mfxcomponents.variants.FABVariants.SizeVariant;
 import io.github.palexdev.mfxcomponents.variants.FABVariants.StyleVariant;
 import io.github.palexdev.mfxcomponents.variants.api.Variant;
@@ -38,6 +37,7 @@ import io.github.palexdev.mfxcore.base.properties.styleable.StyleableObjectPrope
 import io.github.palexdev.mfxcore.controls.Label;
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.controls.SkinBase;
+import io.github.palexdev.mfxcore.utils.fx.PseudoClasses;
 import io.github.palexdev.mfxcore.utils.fx.StyleUtils;
 import io.github.palexdev.mfxresources.icon.IconProperty;
 import io.github.palexdev.mfxresources.icon.MFXFontIcon;
