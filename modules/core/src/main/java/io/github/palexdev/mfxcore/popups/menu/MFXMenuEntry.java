@@ -168,14 +168,14 @@ public class MFXMenuEntry extends Region implements MFXStyleable {
         );
 
         subListener = _ -> handleSubMenu();
-        item.subMenuItems().addListener(subListener);
+        item.children().addListener(subListener);
     }
 
     /// This method is mainly responsible for creating or disposing the submenu depending on the [MFXMenuItem#subMenuItems()]
     /// list. It also updates the trailing label because if a submenu is needed, its text is set to `null` (no shortcut)
     /// and the `.sub` style clas is added.
     protected void handleSubMenu() {
-        if (item.subMenuItems().isEmpty()) {
+        if (item.children().isEmpty()) {
             trailing.getStyleClass().remove("sub");
             trailing.setText(item.shortcut() != null ? item.shortcut().toDisplayString() : null);
         } else {
@@ -187,7 +187,7 @@ public class MFXMenuEntry extends Region implements MFXStyleable {
 
     public void dispose() {
         if (subListener != null) {
-            item.subMenuItems().removeListener(subListener);
+            item.children().removeListener(subListener);
             subListener = null;
         }
         if (subMenuHandler != null) {

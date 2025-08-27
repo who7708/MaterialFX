@@ -57,6 +57,9 @@ public class MFXMenuContentBehavior extends BehaviorBase<MFXMenuContent> {
         if (ke.getCode() == KeyCode.DOWN && mc.isFocused()) {
             mc.requestFocusTraversal(TraversalDirection.NEXT);
         }
+        if (ke.getCode() == KeyCode.ESCAPE) {
+            mc.getMenu().hide();
+        }
         if (callback != null) callback.accept(ke);
     }
 }
