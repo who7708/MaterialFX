@@ -23,6 +23,7 @@ import java.util.Arrays;
 import io.github.palexdev.mfxcore.input.KeyShortcut;
 import io.github.palexdev.mfxcore.utils.fx.FXCollectors;
 import javafx.beans.binding.BooleanExpression;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 
@@ -53,8 +54,16 @@ public record MFXMenuItem(
     // TODO add support for icon and text carrying separators, so that even virtualized menus can have them
     public static final MFXMenuItem SEPARATOR = new MFXMenuItem();
 
+    //================================================================================
+    // Constructors
+    //================================================================================
     private MFXMenuItem() {
         this(null, null, null, null, null, null);
+    }
+
+    public MFXMenuItem {
+        if (children == null)
+            children = FXCollections.observableArrayList();
     }
 
     //================================================================================
