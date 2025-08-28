@@ -18,12 +18,17 @@
 
 package io.github.palexdev.mfxcore.selection.model;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
 import io.github.palexdev.mfxcore.base.beans.range.IntegerRange;
 import javafx.beans.property.MapProperty;
+import javafx.beans.property.SimpleMapProperty;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 
+/// A no-op implementation of [ISelectionModel].
 @SuppressWarnings({"unchecked", "rawtypes"})
 public final class NoOpSelectionModel<T> implements ISelectionModel<T> {
     //================================================================================
@@ -34,6 +39,17 @@ public final class NoOpSelectionModel<T> implements ISelectionModel<T> {
     public static <T> NoOpSelectionModel<T> instance() {
         return instance;
     }
+
+    //================================================================================
+    // Properties
+    //================================================================================
+    private final SelectionEventHandler seh = new SelectionEventHandler() {
+        @Override
+        public void handle(MouseEvent me, int index) {}
+
+        @Override
+        public void handle(KeyEvent ke, int index) {}
+    };
 
     //================================================================================
     // Constructors
@@ -100,12 +116,12 @@ public final class NoOpSelectionModel<T> implements ISelectionModel<T> {
 
     @Override
     public MapProperty<Integer, T> selection() {
-        return null;
+        return new SimpleMapProperty<>();
     }
 
     @Override
     public List<T> getSelectedItems() {
-        return List.of();
+        return Collections.EMPTY_LIST;
     }
 
     @Override
@@ -118,12 +134,9 @@ public final class NoOpSelectionModel<T> implements ISelectionModel<T> {
 
     @Override
     public SelectionEventHandler eventHandler() {
-        return null;
+        return seh;
     }
 
     @Override
     public void setEventHandler(Function<ISelectionModel<T>, SelectionEventHandler> fn) {}
-
-    @Override
-    public void dispose() {}
 }
