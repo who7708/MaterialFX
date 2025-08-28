@@ -111,6 +111,8 @@ public interface ISelectionModel<T> {
         void handle(MouseEvent me, int index, boolean selected);
 
         void handle(KeyEvent ke, int index, boolean selected);
+        void handle(MouseEvent me, int index);
+        void handle(KeyEvent ke, int index);
     }
 
     class SingleSelectionHandler implements SelectionEventHandler {
@@ -119,8 +121,9 @@ public interface ISelectionModel<T> {
         public SingleSelectionHandler(ISelectionModel<?> sm) {this.sm = sm;}
 
         @Override
-        public void handle(MouseEvent me, int index, boolean selected) {
+        public void handle(MouseEvent me, int index) {
             if (me.getButton() != MouseButton.PRIMARY) return;
+            boolean selected = sm.contains(index);
             if (selected) {
                 sm.selectIndex(index);
             } else {
@@ -129,8 +132,9 @@ public interface ISelectionModel<T> {
         }
 
         @Override
-        public void handle(KeyEvent ke, int index, boolean selected) {
+        public void handle(KeyEvent ke, int index) {
             if (ke.getCode() == KeyCode.ENTER || ke.getCode() == KeyCode.SPACE) {
+                boolean selected = sm.contains(index);
                 if (selected) {
                     sm.selectIndex(index);
                 } else {
@@ -146,10 +150,11 @@ public interface ISelectionModel<T> {
         public MultipleSelectionHandler(ISelectionModel<?> sm) {this.sm = sm;}
 
         @Override
-        public void handle(MouseEvent me, int index, boolean selected) {
+        public void handle(MouseEvent me, int index) {
             boolean shiftDown = me.isShiftDown();
             boolean ctrlDown = me.isControlDown();
             if (!shiftDown && ctrlDown) {
+                boolean selected = sm.contains(index);
                 if (selected) {
                     sm.deselectIndex(index);
                 } else {
@@ -166,8 +171,9 @@ public interface ISelectionModel<T> {
         }
 
         @Override
-        public void handle(KeyEvent ke, int index, boolean selected) {
+        public void handle(KeyEvent ke, int index) {
             if (ke.getCode() != KeyCode.ENTER && ke.getCode() != KeyCode.SPACE) return;
+            boolean selected = sm.contains(index);
             if (selected) {
                 sm.deselectIndex(index);
             } else {
