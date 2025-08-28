@@ -18,6 +18,7 @@
 
 package io.github.palexdev.mfxcore.popups;
 
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -26,6 +27,7 @@ import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.popups.menu.MFXMenu;
 import io.github.palexdev.mfxcore.popups.menu.MFXMenuItem;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.stage.Window;
@@ -129,6 +131,22 @@ public class MFXPopups {
         public Builder<O, P> addMenuItems(MFXMenuItem... items) {
             if (popup instanceof MFXMenu m) {
                 m.getItems().addAll(items);
+            }
+            return this;
+        }
+
+        /// Node: works only for [MFXMenus][MFXMenu].
+        public Builder<O, P> setMenuItems(List<MFXMenuItem> items) {
+            if (popup instanceof MFXMenu m) {
+                m.getItems().setAll(items);
+            }
+            return this;
+        }
+
+        /// Node: works only for [MFXMenus][MFXMenu].
+        public Builder<O, P> setSubMenuFactory(Function<ObservableList<MFXMenuItem>, MFXMenu> factory) {
+            if (popup instanceof MFXMenu m) {
+                m.setSubMenuFactory(factory);
             }
             return this;
         }

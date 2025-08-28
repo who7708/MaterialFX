@@ -37,7 +37,7 @@ public class SubMenuHandler {
         if (owner == null) throw new IllegalArgumentException("Owner cannot be null");
         this.owner = owner;
 
-        subMenu = new MFXMenu(parentMenu, item.children());
+        subMenu = parentMenu.createSubMenu(item.children());
         hideListener = When.onInvalidated(parentMenu.hoveredItemProperty())
             .then(_ -> hide())
             .listen();

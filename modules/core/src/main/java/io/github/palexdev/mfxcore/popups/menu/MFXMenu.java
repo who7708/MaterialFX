@@ -23,6 +23,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import io.github.palexdev.mfxcore.base.beans.Position;
@@ -47,6 +48,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+
+import static io.github.palexdev.mfxcore.popups.PopupAnimationFunction.FADE;
 
 /// Custom implementation of menus based on the [MFXPopup] API. It also implements [MFXStyleable], the default CSS
 /// style-class is set to '.root' and '.mfx-menu.'. This mimics JavaFX popups which also have the '.root' style class
@@ -150,6 +153,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
     private WhenEvent<?> trigger;
 
     // SubMenus Specific
+    private Function<ObservableList<MFXMenuItem>, MFXMenu> subMenuFactory = MFXMenu::new;
     private Supplier<PopupAnimation> animationProvider;
     private final ReadOnlyObjectWrapper<MFXMenu> parent = new ReadOnlyObjectWrapper<>(null);
     private final ObjectProperty<Node> hoveredItem = new SimpleObjectProperty<>();
@@ -172,23 +176,6 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
 
         // By design, menus open and close immediately
         setAnimation(null);
-    }
-
-    /// This constructor is specifically for creating submenus.
-    protected MFXMenu(MFXMenu parent, ObservableList<MFXMenuItem> items) {
-        if (parent == null) throw new IllegalArgumentException("Parent menu cannot be null!");
-        MenuConfig.DEFAULT.apply(this);
-        this.items = items;
-
-        /*
-         * We need to duplicate the constructor logic to set any properties for the subs here, before the content is changed
-         * otherwise they don't propagate properly
-         */
-        this.animationProvider = parent.animationProvider;
-        setParentMenu(parent);
-        setAnimation(parent.animationProvider.get());
-
-        setContent(new MFXMenuContent(this));
     }
 
     //================================================================================
@@ -238,6 +225,17 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
         }
         setContent(null);
         owner = null;
+    }
+
+    protected MFXMenu createSubMenu(ObservableList<MFXMenuItem> items) {
+        MFXMenu subMenu = Optional.ofNullable(subMenuFactory)
+            .map(f -> f.apply(items))
+            .orElse(null);
+        if (subMenu == null) return null;
+
+        subMenu.setParentMenu(this);
+        subMenu.setSubMenuFactory(subMenuFactory);
+        return subMenu;
     }
 
     /// This should be used by submenus to appear on the screen, next to the element that owns the submenu. This is
@@ -367,6 +365,14 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
         return root;
     }
 
+    public Function<ObservableList<MFXMenuItem>, MFXMenu> getSubMenuFactory() {
+        return subMenuFactory;
+    }
+
+    public void setSubMenuFactory(Function<ObservableList<MFXMenuItem>, MFXMenu> subMenuFactory) {
+        this.subMenuFactory = subMenuFactory;
+    }
+
     public MFXMenu getParentMenu() {
         return parent.get();
     }
@@ -474,7 +480,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
             private Position offset = Position.origin();
             private MouseButton triggerButton = MouseButton.SECONDARY;
             private boolean anchorBasedPositioning = true;
-            private Supplier<PopupAnimation> animationProvider = () -> null;
+            private Supplier<PopupAnimation> animationProvider = () -> new PopupAnimation(FADE);
 
             public Builder anchor(Pos anchor) {
                 this.anchor = anchor;
