@@ -51,140 +51,87 @@ public class NumberUtils {
         return Math.max(min, Math.min(max, val));
     }
 
-    /// Given a certain value, the range of possible values, and a different range, converts the given value
-    /// from its range to the given second range.
+    private static double mapImpl(double value,
+                                  double fromMin, double fromMax,
+                                  double toMin, double toMax,
+                                  int decimalPrecision) {
+        double deltaA = fromMax - fromMin;
+        double deltaB = toMax - toMin;
+
+        if (deltaA == 0.0 || !Double.isFinite(deltaA) || !Double.isFinite(deltaB)) {
+            return toMin; // degenerate range
+        }
+
+        double scale = deltaB / deltaA;
+        double offset = (-fromMin * scale) + toMin;
+        double result = (value * scale) + offset;
+
+        if (!Double.isFinite(result)) {
+            return toMin;
+        }
+
+        if (decimalPrecision >= 0) {
+            double factor = Math.pow(10, decimalPrecision);
+            result = Math.round(result * factor) / factor;
+        }
+
+        return result;
+    }
+
+    /// Maps a value from one range into another, with optional rounding.
     ///
+    /// Example:
+    /// ```
+    /// mapOneRangeToAnother(0, new DoubleRange(-100, 100), new DoubleRange(0, 100), 2)
+    ///// -> 50.0
+    ///```
     ///
-    /// For example let's say I have a value of 0 that can go from -100 to 100 and I want to convert the
-    /// value to a range of 0 to 100, the converted value will be 50 (0 is at the middle in the -100-100 range, and
-    /// 50 is at the middle in the 0-100 range).
+    /// If the source range has zero width, or a non-finite result occurs, returns the target minimum.
     public static double mapOneRangeToAnother(double value, DoubleRange fromRange, DoubleRange toRange, int decimalPrecision) {
-        double deltaA = fromRange.getMax() - fromRange.getMin();
-        double deltaB = toRange.getMax() - toRange.getMin();
-        double scale = deltaB / deltaA;
-        double negA = -1 * fromRange.getMin();
-        double offset = (negA * scale) + toRange.getMin();
-        double finalNumber = (value * scale) + offset;
-        int calcScale = (int) Math.pow(10, decimalPrecision);
-        return (double) Math.round(finalNumber * calcScale) / calcScale;
+        return mapImpl(value, fromRange.getMin(), fromRange.getMax(),
+            toRange.getMin(), toRange.getMax(), decimalPrecision);
     }
 
-    /// Given a certain value, the range of possible values, and a different range, converts the given value
-    /// from its range to the given second range.
-    ///
-    ///
-    /// For example let's say I have a value of 0 that can go from -100 to 100 and I want to convert the
-    /// value to a range of 0 to 100, the converted value will be 50 (0 is at the middle in the -100-100 range, and
-    /// 50 is at the middle in the 0-100 range).
+    /// Same as [#mapOneRangeToAnother(double, DoubleRange, DoubleRange, int)] but for floats.
     public static float mapOneRangeToAnother(float value, FloatRange fromRange, FloatRange toRange, int decimalPrecision) {
-        double deltaA = fromRange.getMax() - fromRange.getMin();
-        double deltaB = toRange.getMax() - toRange.getMin();
-        double scale = deltaB / deltaA;
-        double negA = -1 * fromRange.getMin();
-        double offset = (negA * scale) + toRange.getMin();
-        double finalNumber = (value * scale) + offset;
-        int calcScale = (int) Math.pow(10, decimalPrecision);
-        return (float) Math.round(finalNumber * calcScale) / calcScale;
+        return (float) mapImpl(value, fromRange.getMin(), fromRange.getMax(),
+            toRange.getMin(), toRange.getMax(), decimalPrecision);
     }
 
-    /// Given a certain value, the range of possible values, and a different range, converts the given value
-    /// from its range to the given second range.
-    ///
-    ///
-    /// For example let's say I have a value of 0 that can go from -100 to 100 and I want to convert the
-    /// value to a range of 0 to 100, the converted value will be 50 (0 is at the middle in the -100-100 range, and
-    /// 50 is at the middle in the 0-100 range).
+    /// Same as [#mapOneRangeToAnother(double, DoubleRange, DoubleRange, int)] but for ints.
     public static int mapOneRangeToAnother(int value, IntegerRange fromRange, IntegerRange toRange, int decimalPrecision) {
-        double deltaA = fromRange.getMax() - fromRange.getMin();
-        double deltaB = toRange.getMax() - toRange.getMin();
-        double scale = deltaB / deltaA;
-        double negA = -1 * fromRange.getMin();
-        double offset = (negA * scale) + toRange.getMin();
-        double finalNumber = (value * scale) + offset;
-        int calcScale = (int) Math.pow(10, decimalPrecision);
-        return (int) Math.round(finalNumber * calcScale) / calcScale;
+        return (int) mapImpl(value, fromRange.getMin(), fromRange.getMax(),
+            toRange.getMin(), toRange.getMax(), decimalPrecision);
     }
 
-    /// Given a certain value, the range of possible values, and a different range, converts the given value
-    /// from its range to the given second range.
-    ///
-    ///
-    /// For example let's say I have a value of 0 that can go from -100 to 100 and I want to convert the
-    /// value to a range of 0 to 100, the converted value will be 50 (0 is at the middle in the -100-100 range, and
-    /// 50 is at the middle in the 0-100 range).
+    /// Same as [#mapOneRangeToAnother(double, DoubleRange, DoubleRange, int)] but for longs.
     public static long mapOneRangeToAnother(long value, LongRange fromRange, LongRange toRange, int decimalPrecision) {
-        double deltaA = fromRange.getMax() - fromRange.getMin();
-        double deltaB = toRange.getMax() - toRange.getMin();
-        double scale = deltaB / deltaA;
-        double negA = -1 * fromRange.getMin();
-        double offset = (negA * scale) + toRange.getMin();
-        double finalNumber = (value * scale) + offset;
-        int calcScale = (int) Math.pow(10, decimalPrecision);
-        return Math.round(finalNumber * calcScale) / calcScale;
+        return Math.round(mapImpl(value, fromRange.getMin(), fromRange.getMax(),
+            toRange.getMin(), toRange.getMax(), decimalPrecision));
     }
 
-    /// Given a certain value, the range of possible values, and a different range, converts the given value
-    /// from its range to the given second range.
-    ///
-    ///
-    /// For example let's say I have a value of 0 that can go from -100 to 100 and I want to convert the
-    /// value to a range of 0 to 100, the converted value will be 50 (0 is at the middle in the -100-100 range, and
-    /// 50 is at the middle in the 0-100 range).
+    /// Maps a value from one range into another (double precision).
     public static double mapOneRangeToAnother(double value, DoubleRange fromRange, DoubleRange toRange) {
-        double deltaA = fromRange.getMax() - fromRange.getMin();
-        double deltaB = toRange.getMax() - toRange.getMin();
-        double scale = deltaB / deltaA;
-        double negA = -1 * fromRange.getMin();
-        double offset = (negA * scale) + toRange.getMin();
-        return (value * scale) + offset;
+        return mapImpl(value, fromRange.getMin(), fromRange.getMax(),
+            toRange.getMin(), toRange.getMax(), -1);
     }
 
-    /// Given a certain value, the range of possible values, and a different range, converts the given value
-    /// from its range to the given second range.
-    ///
-    ///
-    /// For example let's say I have a value of 0 that can go from -100 to 100 and I want to convert the
-    /// value to a range of 0 to 100, the converted value will be 50 (0 is at the middle in the -100-100 range, and
-    /// 50 is at the middle in the 0-100 range).
+    /// Maps a value from one range into another (float precision).
     public static float mapOneRangeToAnother(float value, FloatRange fromRange, FloatRange toRange) {
-        double deltaA = fromRange.getMax() - fromRange.getMin();
-        double deltaB = toRange.getMax() - toRange.getMin();
-        double scale = deltaB / deltaA;
-        double negA = -1 * fromRange.getMin();
-        double offset = (negA * scale) + toRange.getMin();
-        return (float) ((value * scale) + offset);
+        return (float) mapImpl(value, fromRange.getMin(), fromRange.getMax(),
+            toRange.getMin(), toRange.getMax(), -1);
     }
 
-    /// Given a certain value, the range of possible values, and a different range, converts the given value
-    /// from its range to the given second range.
-    ///
-    ///
-    /// For example let's say I have a value of 0 that can go from -100 to 100 and I want to convert the
-    /// value to a range of 0 to 100, the converted value will be 50 (0 is at the middle in the -100-100 range, and
-    /// 50 is at the middle in the 0-100 range).
+    /// Maps a value from one range into another (int precision).
     public static int mapOneRangeToAnother(int value, IntegerRange fromRange, IntegerRange toRange) {
-        double deltaA = fromRange.getMax() - fromRange.getMin();
-        double deltaB = toRange.getMax() - toRange.getMin();
-        double scale = deltaB / deltaA;
-        double negA = -1 * fromRange.getMin();
-        double offset = (negA * scale) + toRange.getMin();
-        return (int) ((value * scale) + offset);
+        return (int) mapImpl(value, fromRange.getMin(), fromRange.getMax(),
+            toRange.getMin(), toRange.getMax(), -1);
     }
 
-    /// Given a certain value, the range of possible values, and a different range, converts the given value
-    /// from its range to the given second range.
-    ///
-    ///
-    /// For example let's say I have a value of 0 that can go from -100 to 100 and I want to convert the
-    /// value to a range of 0 to 100, the converted value will be 50 (0 is at the middle in the -100-100 range, and
-    /// 50 is at the middle in the 0-100 range).
+    /// Maps a value from one range into another (long precision).
     public static long mapOneRangeToAnother(long value, LongRange fromRange, LongRange toRange) {
-        double deltaA = fromRange.getMax() - fromRange.getMin();
-        double deltaB = toRange.getMax() - toRange.getMin();
-        double scale = deltaB / deltaA;
-        double negA = -1 * fromRange.getMin();
-        double offset = (negA * scale) + toRange.getMin();
-        return (long) ((value * scale) + offset);
+        return Math.round(mapImpl(value, fromRange.getMin(), fromRange.getMax(),
+            toRange.getMin(), toRange.getMax(), -1));
     }
 
     /// Given a certain value, finds the closest value in the given numbers list.
@@ -193,7 +140,7 @@ public class NumberUtils {
             return 0.0;
         }
 
-        double res = list.get(0);
+        double res = list.getFirst();
         for (int i = 1; i < list.size(); i++) {
             if (Math.abs(val - res) >
                 Math.abs(val - list.get(i))) {
@@ -210,7 +157,7 @@ public class NumberUtils {
             return 0;
         }
 
-        float res = list.get(0);
+        float res = list.getFirst();
         for (int i = 1; i < list.size(); i++) {
             if (Math.abs(val - res) >
                 Math.abs(val - list.get(i))) {
@@ -227,7 +174,7 @@ public class NumberUtils {
             return 0;
         }
 
-        int res = list.get(0);
+        int res = list.getFirst();
         for (int i = 1; i < list.size(); i++) {
             if (Math.abs(val - res) >
                 Math.abs(val - list.get(i))) {
@@ -244,7 +191,7 @@ public class NumberUtils {
             return 0;
         }
 
-        long res = list.get(0);
+        long res = list.getFirst();
         for (int i = 1; i < list.size(); i++) {
             if (Math.abs(val - res) >
                 Math.abs(val - list.get(i))) {
@@ -262,6 +209,7 @@ public class NumberUtils {
     }
 
     /// Returns the given value as a string the specified number of decimal places.
+    @SuppressWarnings("MalformedFormatString")
     public static String formatToString(double value, int decimalPrecision) {
         return String.format("%." + decimalPrecision + "f", value);
     }
