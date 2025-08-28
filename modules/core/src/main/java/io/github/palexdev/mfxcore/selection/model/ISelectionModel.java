@@ -24,94 +24,145 @@ import java.util.function.Function;
 
 import io.github.palexdev.mfxcore.base.beans.range.IntegerRange;
 import javafx.beans.property.MapProperty;
+import javafx.collections.ObservableMap;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
+/// My own API for selection models that can both in single and multiple selection modes.
+///
+/// The selection is expressed through an observable map, which associates the selected data with its index in the source list.
+/// As you may guess, operations on indexes are generally faster and, if possible, should be preferred over operations on data.
+///
+/// Additionally, it provides pre-defined handlers to manage selection on user input (mouse or keyboard), see [SelectionEventHandler].
 @SuppressWarnings("unchecked")
 public interface ISelectionModel<T> {
+
+    /// Checks if the element associated with the given index is currently selected.
     boolean contains(int index);
 
+    /// Checks if the given element is currently selected.
     boolean contains(T element);
 
+    /// Clears the selection.
     void clearSelection();
 
+    /// Deselects the element associated with the given index if present.
     void deselectIndex(int index);
 
-    void deselectItem(T item);
-
+    /// Deselects all the elements associated with the given indexes if present.
     void deselectIndexes(int... indexes);
 
+    /// Deselects all the elements associated with the given range if present.
     void deselectIndexes(IntegerRange range);
 
+    /// Deselects the given element if present.
+    void deselectItem(T item);
+
+    /// Deselects all the given elements if present.
     void deselectItems(T... items);
 
+    /// Selects the element associated with the given index if present.
     void selectIndex(int index);
 
-    void selectItem(T item);
-
+    /// Selects all the elements associated with the given indexes if present.
     void selectIndexes(Integer... indexes);
 
+    /// Selects all the elements associated with the given range if present.
     void selectIndexes(IntegerRange range);
 
+    /// Selects the given element if present.
+    void selectItem(T item);
+
+    /// Selects all the given elements if present.
     void selectItems(T... items);
 
+    /// Expands the selection depending on the `fromLast` parameter:
+    /// - If `false`, the selection is expanded towards the given index.
+    /// - If `true`, the last selected index is taken as reference, and the selection is replaced by the range that
+    /// includes the last selected index and the given index (which is first/last depends on which is smaller).
+    ///
+    /// This is typically used when selecting with the _Shift_ key modifier.
     void expandSelection(int index, boolean fromLast);
 
+    /// Replaces the selection with the given indexes and the associated elements.
     void replaceSelection(Integer... indexes);
 
+    /// Replaces the selection with the given range and the associated elements.
     void replaceSelection(IntegerRange range);
 
+    /// Replaces the selection with the given elements.
     void replaceSelection(T... items);
 
+    /// @return the [ObservableMap] keeping track of the selected entries
     MapProperty<Integer, T> selection();
 
+    /// @return the list of currently selected items
     List<T> getSelectedItems();
 
-    default int size() {
-        return selection().size();
-    }
-
-    default boolean isEmpty() {
-        return selection().isEmpty();
-    }
-
+    /// Convenience method to retrieve the first selected item or `null` if the selection is empty.<br >
+    /// (useful for single selection mode)
     default T getSelectedItem() {
         return (size() == 0) ? null : getSelectedItems().getFirst();
     }
 
+    /// Wraps [#getSelectedItem] in an [Optional].
     default Optional<T> getSelectedItemOpt() {
         return Optional.ofNullable(getSelectedItem());
     }
 
+    /// Convenience method to retrieve the last selected item or `null` if the selection is empty.
     default T getLastSelectedItem() {
         int size = size();
         return (size == 0) ? null : getSelectedItems().get(size - 1);
     }
 
+    /// Wraps [#getLastSelectedItem] in an [Optional].
     default Optional<T> getLastSelectedItemOpt() {
         return Optional.ofNullable(getLastSelectedItem());
     }
 
+    /// @return the number of selected items
+    default int size() {
+        return selection().size();
+    }
+
+    /// @return whether the selection is empty
+    default boolean isEmpty() {
+        return selection().isEmpty();
+    }
+
+    /// @return whether multiple selection is allowed
     boolean allowsMultipleSelection();
 
+    /// Sets whether to allow multiple selection.
     void setAllowsMultipleSelection(boolean allowsMultipleSelection);
 
+    /// @return the [SelectionEventHandler] implementation used to handle selection on user inputs (from mouse or keyboard)
     SelectionEventHandler eventHandler();
 
+    /// Sets the [SelectionEventHandler] implementation used to handle selection on user inputs (from mouse or keyboard)
+    /// from the given factory.
     void setEventHandler(Function<ISelectionModel<T>, SelectionEventHandler> fn);
 
-    void dispose();
+    /// Disposes the selection model if needed.
+    default void dispose() {}
 
     //================================================================================
     // Inner Classes
     //================================================================================
-    interface SelectionEventHandler {
-        void handle(MouseEvent me, int index, boolean selected);
 
-        void handle(KeyEvent ke, int index, boolean selected);
+    /// A simple interface which handles mouse and keyboard interactions that may modify the selection state in a selection model.
+    ///
+    /// There are two concrete implementations: [SingleSelectionHandler] for single selection mode, and [MultipleSelectionHandler]
+    /// for multiple selection mode.
+    interface SelectionEventHandler {
+
+        /// Handles the selection at the given index on a [MouseEvent] interaction.
         void handle(MouseEvent me, int index);
+
+        /// Handles the selection at the given index on a [KeyEvent] interaction.
         void handle(KeyEvent ke, int index);
     }
 

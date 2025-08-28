@@ -34,6 +34,16 @@ import javafx.collections.ObservableMap;
 
 import static java.util.function.Function.identity;
 
+/// Implementation of [ISelectionModel] that either works on a [ObservableList] or a [ListProperty] as the source.
+///
+/// Because the source is a dependency, this implementation automatically 'fixes' the selection when the source changes
+/// using a [ListChangeHelper].
+///
+/// The backing map used to keep track of the selection is a [LinkedHashMap], so the selection order is preserved.
+/// If you want to change this, you can simply override the two methods: [#newMap()] and [#newMap(Map)].
+///
+/// To make operation on the selection appear as 'atomic', most of them are performed on a temporary map created by the
+/// aforementioned methods. At the end, the selection is replaced with the new map. See [MapProperty].
 @SuppressWarnings("unchecked")
 public class SelectionModel<T> implements ISelectionModel<T> {
     //================================================================================
@@ -117,6 +127,9 @@ public class SelectionModel<T> implements ISelectionModel<T> {
         return selection.containsKey(index);
     }
 
+    /// {@inheritDoc}
+    ///
+    /// @see Map#containsValue(Object)
     @Override
     public boolean contains(T element) {
         return selection.containsValue(element);
@@ -130,14 +143,6 @@ public class SelectionModel<T> implements ISelectionModel<T> {
     @Override
     public void deselectIndex(int index) {
         selection.remove(index);
-    }
-
-    @Override
-    public void deselectItem(T item) {
-        int index = items.indexOf(item);
-        if (index != -1) {
-            selection.remove(index);
-        }
     }
 
     @Override
@@ -158,6 +163,20 @@ public class SelectionModel<T> implements ISelectionModel<T> {
         selection.set(tmp);
     }
 
+    /// {@inheritDoc}
+    ///
+    /// Uses [List#indexOf(Object)]!
+    @Override
+    public void deselectItem(T item) {
+        int index = items.indexOf(item);
+        if (index != -1) {
+            selection.remove(index);
+        }
+    }
+
+    /// {@inheritDoc}
+    ///
+    /// Uses [List#indexOf(Object)] on each item!!
     @Override
     public void deselectItems(T... items) {
         Map<Integer, T> tmp = Arrays.stream(items)
@@ -172,18 +191,6 @@ public class SelectionModel<T> implements ISelectionModel<T> {
     @Override
     public void selectIndex(int index) {
         T item = items.get(index);
-        if (allowsMultipleSelection) {
-            selection.put(index, item);
-        } else {
-            ObservableMap<Integer, T> map = newMap();
-            map.put(index, item);
-            selection.set(map);
-        }
-    }
-
-    @Override
-    public void selectItem(T item) {
-        int index = items.indexOf(item);
         if (allowsMultipleSelection) {
             selection.put(index, item);
         } else {
@@ -237,6 +244,24 @@ public class SelectionModel<T> implements ISelectionModel<T> {
         }
     }
 
+    /// {@inheritDoc}
+    ///
+    /// Uses [List#indexOf(Object)]!
+    @Override
+    public void selectItem(T item) {
+        int index = items.indexOf(item);
+        if (allowsMultipleSelection) {
+            selection.put(index, item);
+        } else {
+            ObservableMap<Integer, T> map = newMap();
+            map.put(index, item);
+            selection.set(map);
+        }
+    }
+
+    /// {@inheritDoc}
+    ///
+    /// Uses [List#indexOf(Object)] on each item!!
     @Override
     public void selectItems(T... items) {
         if (items.length != 0) {
@@ -334,6 +359,9 @@ public class SelectionModel<T> implements ISelectionModel<T> {
         }
     }
 
+    /// {@inheritDoc}
+    ///
+    /// Uses [List#indexOf(Object)] on each item!!
     @Override
     public void replaceSelection(T... items) {
         ObservableMap<Integer, T> newSelection = newMap();
@@ -368,6 +396,9 @@ public class SelectionModel<T> implements ISelectionModel<T> {
         return allowsMultipleSelection;
     }
 
+    /// {@inheritDoc}
+    ///
+    /// The selection is also cleared!
     @Override
     public void setAllowsMultipleSelection(boolean allowsMultipleSelection) {
         // Clear selection when switching modes
