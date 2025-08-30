@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (C) 2025 Parisi Alessandro - alessandro.parisi406@gmail.com
  * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX)
  *
@@ -23,6 +23,53 @@
 
 .surface-ripple {
   -fx-opacity: 36%
+}
+
+.vfx-scroll-pane {
+  -vfx-auto-hide-bars: true;
+  -vfx-clip-border-radius: 16px;
+  -vfx-layout-mode: COMPACT;
+  -vfx-min-bars-opacity: 0.2;
+  -vfx-smooth-scroll: true
+}
+
+.vfx-list {
+  -fx-background-color: -md-sys-color-surface-container;
+  -fx-background-radius: 8px
+}
+
+.cell > .label {
+  -fx-font-family: "MontSerrat Medium";
+  -fx-font-size: 14px;
+  -fx-line-spacing: 20px;
+  -fx-graphic-text-gap: 8px;
+  -fx-padding: 0px 8px 0px 8px;
+  -fx-text-fill: -md-sys-color-on-surface
+}
+
+.cell > .label > .mfx-font-icon {
+  -mfx-color: -md-sys-color-on-surface;
+  -mfx-size: 16px
+}
+
+.cell > .surface {
+  -fx-background-color: -md-sys-color-on-surface
+}
+
+.cell > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-on-surface
+}
+
+.cell:first-child > .surface {
+  -fx-background-radius: 8px 8px 0px 0px
+}
+
+.cell:last-child > .surface {
+  -fx-background-radius: 0px 0px 8px 8px
+}
+
+.cell:only-child > .surface {
+  -fx-background-radius: 8px
 }
 
 .mfx-button {
@@ -1054,12 +1101,8 @@
   -fx-background-color: -md-sys-color-surface-container;
   -fx-background-radius: 8px;
   -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 8, 0.16, 0, 3);
-  -fx-min-width: 150px;
+  -fx-min-width: 160px;
   -fx-max-width: 280px
-}
-
-.mfx-menu > .menu-content {
-  /*! Specific to virtualized menus */
 }
 
 .mfx-menu > .menu-content > .separator {
@@ -1068,43 +1111,21 @@
   -fx-pref-height: 17
 }
 
-.mfx-menu > .menu-content > .vfx-scroll-pane {
-  -vfx-auto-hide-bars: true;
-  -vfx-layout-mode: COMPACT;
-  -vfx-min-bars-opacity: 0.2;
-  -vfx-smooth-scroll: true;
-  -fx-padding: 8px 4px 0px 4px
-}
-
-.mfx-menu > .menu-content > .vfx-scroll-pane .vfx-list {
-  -vfx-cell-size: 40px
-}
-
-.mfx-menu > .menu-content > .vfx-scroll-pane .vfx-list .menu-entry {
-  -fx-padding: 0px 16px 0px 12px
-}
-
-.mfx-menu > .menu-content .menu-entry {
+.mfx-menu > .menu-content > .menu-entry {
   -fx-min-height: 40px;
-  /*! For non-virtualized menus */
-  -fx-padding: 0px 12px 0px 12px /*! For non-virtualized menus */
-  /*! For non-virtualized menus */
+  -fx-padding: 0px 12px 0px 12px
 }
 
-.mfx-menu > .menu-content .menu-entry > .pseudo-surface {
+.mfx-menu > .menu-content > .menu-entry > .pseudo-surface {
   -fx-background-color: -md-sys-color-on-surface;
   -fx-opacity: 0
 }
 
-.mfx-menu > .menu-content .menu-entry > .surface {
-  -fx-background-color: -md-sys-color-on-surface
-}
-
-.mfx-menu > .menu-content .menu-entry > .mfx-ripple-generator {
+.mfx-menu > .menu-content > .menu-entry > .mfx-ripple-generator {
   -mfx-ripple-color: -md-sys-color-on-surface
 }
 
-.mfx-menu > .menu-content .menu-entry > .label {
+.mfx-menu > .menu-content > .menu-entry > .label {
   -fx-font-family: "MontSerrat Medium";
   -fx-font-size: 14px;
   -fx-line-spacing: 20px;
@@ -1112,54 +1133,179 @@
   -fx-text-fill: -md-sys-color-on-surface
 }
 
-.mfx-menu > .menu-content .menu-entry > .label > .mfx-font-icon {
+.mfx-menu > .menu-content > .menu-entry > .label > .mfx-font-icon {
   -mfx-color: -md-sys-color-on-surface;
   -mfx-size: 16px
 }
 
-.mfx-menu > .menu-content .menu-entry > .label.trailing.sub > .mfx-font-icon {
+.mfx-menu > .menu-content > .menu-entry > .label.trailing.sub > .mfx-font-icon {
   -mfx-icon: "fas-angle-right"
 }
 
-.mfx-menu > .menu-content .menu-entry > .label.trailing.sub > .svg-icon {
+.mfx-menu > .menu-content > .menu-entry > .label.trailing.sub > .svg-icon {
   -fx-background-color: -md-sys-color-on-surface;
   -fx-pref-width: 8px;
   -fx-max-height: 12px;
   -fx-shape: "M439.1 297.4C451.6 309.9 451.6 330.2 439.1 342.7L279.1 502.7C266.6 515.2 246.3 515.2 233.8 502.7C221.3 490.2 221.3 469.9 233.8 457.4L371.2 320L233.9 182.6C221.4 170.1 221.4 149.8 233.9 137.3C246.4 124.8 266.7 124.8 279.2 137.3L439.2 297.3z"
 }
 
-.mfx-menu > .menu-content .menu-entry:first-child > .pseudo-surface,
-.mfx-menu > .menu-content .menu-entry:first-child > .surface {
+.mfx-menu > .menu-content > .menu-entry:first-child > .pseudo-surface {
   -fx-background-radius: 8px 8px 0px 0px
 }
 
-.mfx-menu > .menu-content .menu-entry:last-child > .pseudo-surface,
-.mfx-menu > .menu-content .menu-entry:last-child > .surface {
+.mfx-menu > .menu-content > .menu-entry:last-child > .pseudo-surface {
   -fx-background-radius: 0px 0px 8px 8px
 }
 
-.mfx-menu > .menu-content .menu-entry:only-child > .pseudo-surface,
-.mfx-menu > .menu-content .menu-entry:only-child > .surface {
+.mfx-menu > .menu-content > .menu-entry:only-child > .pseudo-surface {
   -fx-background-radius: 8px
 }
 
-.mfx-menu > .menu-content .menu-entry:hover > .pseudo-surface {
+.mfx-menu > .menu-content > .menu-entry:hover > .pseudo-surface {
   -fx-opacity: 8%
 }
 
-.mfx-menu > .menu-content .menu-entry:focused > .pseudo-surface {
+.mfx-menu > .menu-content > .menu-entry:focused > .pseudo-surface {
   -fx-opacity: 10%
 }
 
-.mfx-menu > .menu-content .menu-entry:pressed > .pseudo-surface,
-.mfx-menu > .menu-content .menu-entry:selected > .pseudo-surface {
+.mfx-menu > .menu-content > .menu-entry:pressed > .pseudo-surface,
+.mfx-menu > .menu-content > .menu-entry:selected > .pseudo-surface {
   -fx-opacity: 12%
 }
 
-.mfx-menu > .menu-content .menu-entry:disabled > .pseudo-surface {
+.mfx-menu > .menu-content > .menu-entry:disabled > .pseudo-surface {
   -fx-opacity: 10%
 }
 
-.mfx-menu > .menu-content .menu-entry:disabled > .label {
+.mfx-menu > .menu-content > .menu-entry:disabled > .label {
   -fx-opacity: 38%
+}
+
+.mfx-split-button > .mfx-button.leading .view-cell {
+  -fx-background-color: transparent
+}
+
+.mfx-split-button > .mfx-button.leading .view-cell .mfx-ripple-generator,
+.mfx-split-button > .mfx-button.leading .view-cell .surface {
+  visibility: hidden
+}
+
+.mfx-split-button > .mfx-button.leading.xs {
+  -fx-background-radius: 16px 4px 4px 16px;
+  -fx-border-radius: 32px 4px 4px 32px
+}
+
+.mfx-split-button > .mfx-button.leading.xs > .surface {
+  -fx-background-radius: 16px 4px 4px 16px
+}
+
+.mfx-split-button > .mfx-button.trailing.xs {
+  -fx-background-radius: 4px 16px 16px 4px;
+  -fx-border-radius: 4px 32px 32px 4px
+}
+
+.mfx-split-button > .mfx-button.trailing.xs > .surface {
+  -fx-background-radius: 4px 16px 16px 4px
+}
+
+.mfx-split-button > .mfx-button.leading.s {
+  -fx-background-radius: 20px 4px 4px 20px;
+  -fx-border-radius: 40px 4px 4px 40px
+}
+
+.mfx-split-button > .mfx-button.leading.s > .surface {
+  -fx-background-radius: 20px 4px 4px 20px
+}
+
+.mfx-split-button > .mfx-button.trailing.s {
+  -fx-background-radius: 4px 20px 20px 4px;
+  -fx-border-radius: 4px 40px 40px 4px
+}
+
+.mfx-split-button > .mfx-button.trailing.s > .surface {
+  -fx-background-radius: 4px 20px 20px 4px
+}
+
+.mfx-split-button > .mfx-button.leading.m {
+  -fx-background-radius: 28px 4px 4px 28px;
+  -fx-border-radius: 56px 4px 4px 56px
+}
+
+.mfx-split-button > .mfx-button.leading.m > .surface {
+  -fx-background-radius: 28px 4px 4px 28px
+}
+
+.mfx-split-button > .mfx-button.trailing.m {
+  -fx-background-radius: 4px 28px 28px 4px;
+  -fx-border-radius: 4px 56px 56px 4px
+}
+
+.mfx-split-button > .mfx-button.trailing.m > .surface {
+  -fx-background-radius: 4px 28px 28px 4px
+}
+
+.mfx-split-button > .mfx-button.leading.l {
+  -fx-background-radius: 48px 8px 8px 48px;
+  -fx-border-radius: 96px 8px 8px 96px
+}
+
+.mfx-split-button > .mfx-button.leading.l > .surface {
+  -fx-background-radius: 48px 8px 8px 48px
+}
+
+.mfx-split-button > .mfx-button.trailing.l {
+  -fx-background-radius: 8px 48px 48px 8px;
+  -fx-border-radius: 8px 96px 96px 8px
+}
+
+.mfx-split-button > .mfx-button.trailing.l > .surface {
+  -fx-background-radius: 8px 48px 48px 8px
+}
+
+.mfx-split-button > .mfx-button.leading.xl {
+  -fx-background-radius: 68px 12px 12px 68px;
+  -fx-border-radius: 136px 12px 12px 136px
+}
+
+.mfx-split-button > .mfx-button.leading.xl > .surface {
+  -fx-background-radius: 68px 12px 12px 68px
+}
+
+.mfx-split-button > .mfx-button.trailing.xl {
+  -fx-background-radius: 12px 68px 68px 12px;
+  -fx-border-radius: 12px 136px 136px 12px
+}
+
+.mfx-split-button > .mfx-button.trailing.xl > .surface {
+  -fx-background-radius: 12px 68px 68px 12px
+}
+
+.mfx-split-button > .mfx-button.trailing > .label > .mfx-font-icon {
+  -mfx-icon: "fas-angle-down";
+  -fx-rotate: 0deg;
+  transition-property: -fx-rotate;
+  transition-timing-function: cubic-bezier(0.34, 0.8, 0.34, 1);
+  transition-duration: .2s
+}
+
+.mfx-split-button > .mfx-button.trailing:selected > .label > .mfx-font-icon {
+  -fx-rotate: 180deg
+}
+
+.mfx-split-button.outlined > .mfx-button {
+  -fx-border-insets: 0.04em;
+  -fx-border-width: 0.06875em
+}
+
+.mfx-split-button .mfx-popover {
+  -fx-background-color: -md-sys-color-surface-container;
+  -fx-background-radius: 8px;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 8, 0.16, 0, 3);
+  -fx-min-width: 150px;
+  -fx-max-width: 280px
+}
+
+.mfx-split-button .mfx-popover > .vfx-scroll-pane .vfx-list {
+  -vfx-cell-size: 40px
 }

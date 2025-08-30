@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (C) 2025 Parisi Alessandro - alessandro.parisi406@gmail.com
  * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX)
  *
@@ -138,4 +138,134 @@
   transition-property: -fx-background-radius, -fx-scale-x, -fx-scale-y;
   transition-timing-function: cubic-bezier(0.27, 1, 0.18, 1);
   transition-duration: 350ms
+}
+
+.mfx-split-button > .mfx-button.leading.xs:hover,
+.mfx-split-button > .mfx-button.leading.xs:pressed,
+.mfx-split-button > .mfx-button.leading.xs:selected {
+  -fx-background-radius: 16px 12px 12px 16px;
+  -fx-border-radius: 32px 12px 12px 32px
+}
+
+.mfx-split-button > .mfx-button.leading.xs:hover > .surface,
+.mfx-split-button > .mfx-button.leading.xs:pressed > .surface,
+.mfx-split-button > .mfx-button.leading.xs:selected > .surface {
+  -fx-background-radius: 16px 12px 12px 16px
+}
+
+.mfx-split-button > .mfx-button.trailing.xs:hover,
+.mfx-split-button > .mfx-button.trailing.xs:pressed,
+.mfx-split-button > .mfx-button.trailing.xs:selected {
+  -fx-background-radius: 12px 16px 16px 12px;
+  -fx-border-radius: 12px 32px 32px 12px
+}
+
+.mfx-split-button > .mfx-button.trailing.xs:hover > .surface,
+.mfx-split-button > .mfx-button.trailing.xs:pressed > .surface,
+.mfx-split-button > .mfx-button.trailing.xs:selected > .surface {
+  -fx-background-radius: 12px 16px 16px 12px
+}
+
+.mfx-split-button > .mfx-button.leading.s:hover,
+.mfx-split-button > .mfx-button.leading.s:pressed,
+.mfx-split-button > .mfx-button.leading.s:selected {
+  -fx-background-radius: 20px 12px 12px 20px;
+  -fx-border-radius: 40px 12px 12px 40px
+}
+
+.mfx-split-button > .mfx-button.leading.s:hover > .surface,
+.mfx-split-button > .mfx-button.leading.s:pressed > .surface,
+.mfx-split-button > .mfx-button.leading.s:selected > .surface {
+  -fx-background-radius: 20px 12px 12px 20px
+}
+
+.mfx-split-button > .mfx-button.trailing.s:hover,
+.mfx-split-button > .mfx-button.trailing.s:pressed,
+.mfx-split-button > .mfx-button.trailing.s:selected {
+  -fx-background-radius: 12px 20px 20px 12px;
+  -fx-border-radius: 12px 40px 40px 12px
+}
+
+.mfx-split-button > .mfx-button.trailing.s:hover > .surface,
+.mfx-split-button > .mfx-button.trailing.s:pressed > .surface,
+.mfx-split-button > .mfx-button.trailing.s:selected > .surface {
+  -fx-background-radius: 12px 20px 20px 12px
+}
+
+.mfx-split-button > .mfx-button.leading.m:hover,
+.mfx-split-button > .mfx-button.leading.m:pressed,
+.mfx-split-button > .mfx-button.leading.m:selected {
+  -fx-background-radius: 28px 12px 12px 28px;
+  -fx-border-radius: 56px 12px 12px 56px
+}
+
+.mfx-split-button > .mfx-button.leading.m:hover > .surface,
+.mfx-split-button > .mfx-button.leading.m:pressed > .surface,
+.mfx-split-button > .mfx-button.leading.m:selected > .surface {
+  -fx-background-radius: 28px 12px 12px 28px
+}
+
+.mfx-split-button > .mfx-button.trailing.m:hover,
+.mfx-split-button > .mfx-button.trailing.m:pressed,
+.mfx-split-button > .mfx-button.trailing.m:selected {
+  -fx-background-radius: 12px 28px 28px 12px;
+  -fx-border-radius: 12px 56px 56px 12px
+}
+
+.mfx-split-button > .mfx-button.trailing.m:hover > .surface,
+.mfx-split-button > .mfx-button.trailing.m:pressed > .surface,
+.mfx-split-button > .mfx-button.trailing.m:selected > .surface {
+  -fx-background-radius: 12px 28px 28px 12px
+}
+
+.mfx-split-button > .mfx-button.leading.l:hover,
+.mfx-split-button > .mfx-button.leading.l:pressed,
+.mfx-split-button > .mfx-button.leading.l:selected {
+  -fx-background-radius: 48px 20px 20px 48px;
+  -fx-border-radius: 96px 20px 20px 96px
+}
+
+.mfx-split-button > .mfx-button.leading.l:hover > .surface,
+.mfx-split-button > .mfx-button.leading.l:pressed > .surface,
+.mfx-split-button > .mfx-button.leading.l:selected > .surface {
+  -fx-background-radius: 48px 20px 20px 48px
+}
+
+.mfx-split-button > .mfx-button.trailing.l:hover,
+.mfx-split-button > .mfx-button.trailing.l:pressed,
+.mfx-split-button > .mfx-button.trailing.l:selected {
+  -fx-background-radius: 20px 48px 48px 20px;
+  -fx-border-radius: 20px 96px 96px 20px
+}
+
+.mfx-split-button > .mfx-button.trailing.l:hover > .surface,
+.mfx-split-button > .mfx-button.trailing.l:pressed > .surface,
+.mfx-split-button > .mfx-button.trailing.l:selected > .surface {
+  -fx-background-radius: 20px 48px 48px 20px
+}
+
+.mfx-split-button > .mfx-button.leading.xl:hover,
+.mfx-split-button > .mfx-button.leading.xl:pressed,
+.mfx-split-button > .mfx-button.leading.xl:selected {
+  -fx-background-radius: 68px 20px 20px 68px;
+  -fx-border-radius: 136px 20px 20px 136px
+}
+
+.mfx-split-button > .mfx-button.leading.xl:hover > .surface,
+.mfx-split-button > .mfx-button.leading.xl:pressed > .surface,
+.mfx-split-button > .mfx-button.leading.xl:selected > .surface {
+  -fx-background-radius: 68px 20px 20px 68px
+}
+
+.mfx-split-button > .mfx-button.trailing.xl:hover,
+.mfx-split-button > .mfx-button.trailing.xl:pressed,
+.mfx-split-button > .mfx-button.trailing.xl:selected {
+  -fx-background-radius: 20px 68px 68px 20px;
+  -fx-border-radius: 20px 136px 136px 20px
+}
+
+.mfx-split-button > .mfx-button.trailing.xl:hover > .surface,
+.mfx-split-button > .mfx-button.trailing.xl:pressed > .surface,
+.mfx-split-button > .mfx-button.trailing.xl:selected > .surface {
+  -fx-background-radius: 20px 68px 68px 20px
 }
