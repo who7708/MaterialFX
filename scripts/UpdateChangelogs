@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2025 Parisi Alessandro - alessandro.parisi406@gmail.com
+ * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX)
+ *
+ * MaterialFX is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * MaterialFX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #!/usr/local/bin/java --source 21
 
 import java.io.BufferedReader;
@@ -22,7 +40,9 @@ public class UpdateChangelogs {
     static final String COMMIT_AUTHOR = "github-actions[bot] <github-actions[bot]@users.noreply.github.com>";
 
     static final Path CHANGELOGS_PATH = Paths.get("changelogs");
+    static final Category MISC = new Category("Misc");
     static final List<Category> CATEGORIES = List.of(
+        new Category("Removed", ":fire:", ":wastebasket:"),
         new Category("Features", ":sparkles:", ":boom:"),
         new Category("Bug Fixes", ":bug:"),
         new Category("Refactoring", ":recycle:"),
@@ -30,7 +50,7 @@ public class UpdateChangelogs {
         new Category("Performance", ":zap:"),
         new Category("Style", ":art:", ":lipstick:"),
         new Category("Tests", ":white_check_mark:", ":rotating_light:"),
-        new Category("Misc")
+        MISC
     );
 
     public static void main(String[] args) {
@@ -285,17 +305,13 @@ public class UpdateChangelogs {
 
     Map<Category, List<Commit>> categorizeCommits(List<Commit> commits) {
         Map<Category, List<Commit>> categorized = new HashMap<>();
-        outer:
         for (Commit commit : commits) {
-            for (Category category : CATEGORIES) {
-                for (String emoji : category.emojis()) {
-                    if (commit.header().contains(emoji)) {
-                        List<Commit> l = categorized.computeIfAbsent(category, c -> new ArrayList<>());
-                        l.add(commit);
-                        continue outer;
-                    }
-                }
-            }
+            Category category = CATEGORIES.stream()
+                .filter(c -> c.emojis().stream().anyMatch(commit.header()::contains))
+                .findFirst()
+                .orElse(MISC);
+            categorized.computeIfAbsent(category, c -> new ArrayList<>())
+                .add(commit);
         }
         return categorized;
     }
