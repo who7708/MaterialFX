@@ -1,0 +1,79 @@
+/*!
+ * Copyright (C) 2025 Parisi Alessandro - alessandro.parisi406@gmail.com
+ * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX)
+ *
+ * MaterialFX is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * MaterialFX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use '../base/typography' as *;
+@use '../base/vars' as *;
+
+@mixin MaterialScrolling() {
+  @include ScrollPanes();
+  @include MaterialLists();
+  @include MaterialCells();
+}
+
+@mixin ScrollPanes() {
+  .vfx-scroll-pane {
+    -vfx-auto-hide-bars     : true;
+    -vfx-clip-border-radius : shape('large');
+    -vfx-layout-mode        : COMPACT;
+    -vfx-min-bars-opacity   : 0.2;
+    -vfx-smooth-scroll      : true;
+  }
+}
+
+@mixin MaterialLists() {
+  .vfx-list {
+    -fx-background-color  : -md-sys-color-surface-container;
+    -fx-background-radius : shape('small');
+  }
+}
+
+@mixin MaterialCells() {
+  .cell {
+    > .label {
+      @include LabelLarge();
+      -fx-graphic-text-gap : 8px;
+      -fx-padding          : 0px 8px 0px 8px;
+      -fx-text-fill        : -md-sys-color-on-surface;
+
+      > .mfx-font-icon {
+        -mfx-color : -md-sys-color-on-surface;
+        -mfx-size  : 16px;
+      }
+    }
+
+    > .surface {
+      -fx-background-color : -md-sys-color-on-surface;
+    }
+
+    > .mfx-ripple-generator {
+      -mfx-ripple-color : -md-sys-color-on-surface;
+    }
+
+    &:first-child > .surface {
+      -fx-background-radius : shape('small') shape('small') 0px 0px;
+    }
+
+    &:last-child > .surface {
+      -fx-background-radius : 0px 0px shape('small') shape('small');
+    }
+
+    &:only-child > .surface {
+      -fx-background-radius : shape('small');
+    }
+  }
+}

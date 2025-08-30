@@ -1,0 +1,158 @@
+/*!
+ * Copyright (C) 2025 Parisi Alessandro - alessandro.parisi406@gmail.com
+ * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX)
+ *
+ * MaterialFX is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * MaterialFX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use '../base/vars' as *;
+
+@mixin MaterialSplitButtons() {
+  .mfx-split-button {
+    > .mfx-button.leading .view-cell {
+      -fx-background-color : transparent;
+
+      .surface,
+      .mfx-ripple-generator {
+        visibility : hidden;
+      }
+    }
+
+    // XS
+    > .mfx-button.leading.xs {
+      -fx-background-radius : 16px 4px 4px 16px;
+      -fx-border-radius     : 32px 4px 4px 32px;
+
+      > .surface {
+        -fx-background-radius : 16px 4px 4px 16px;
+      }
+    }
+
+    > .mfx-button.trailing.xs {
+      -fx-background-radius : 4px 16px 16px 4px;
+      -fx-border-radius     : 4px 32px 32px 4px;
+
+      > .surface {
+        -fx-background-radius : 4px 16px 16px 4px;
+      }
+    }
+
+    // S
+    > .mfx-button.leading.s {
+      -fx-background-radius : 20px 4px 4px 20px;
+      -fx-border-radius     : 40px 4px 4px 40px;
+
+      > .surface {
+        -fx-background-radius : 20px 4px 4px 20px;
+      }
+    }
+
+    > .mfx-button.trailing.s {
+      -fx-background-radius : 4px 20px 20px 4px;
+      -fx-border-radius     : 4px 40px 40px 4px;
+
+      > .surface {
+        -fx-background-radius : 4px 20px 20px 4px;
+      }
+    }
+
+    // M
+    > .mfx-button.leading.m {
+      -fx-background-radius : 28px 4px 4px 28px;
+      -fx-border-radius     : 56px 4px 4px 56px;
+
+      > .surface {
+        -fx-background-radius : 28px 4px 4px 28px;
+      }
+    }
+
+    > .mfx-button.trailing.m {
+      -fx-background-radius : 4px 28px 28px 4px;
+      -fx-border-radius     : 4px 56px 56px 4px;
+
+      > .surface {
+        -fx-background-radius : 4px 28px 28px 4px;
+      }
+    }
+
+    // L
+    > .mfx-button.leading.l {
+      -fx-background-radius : 48px 8px 8px 48px;
+      -fx-border-radius     : 96px 8px 8px 96px;
+
+      > .surface {
+        -fx-background-radius : 48px 8px 8px 48px;
+      }
+    }
+
+    > .mfx-button.trailing.l {
+      -fx-background-radius : 8px 48px 48px 8px;
+      -fx-border-radius     : 8px 96px 96px 8px;
+
+      > .surface {
+        -fx-background-radius : 8px 48px 48px 8px;
+      }
+    }
+
+    // XL
+    > .mfx-button.leading.xl {
+      -fx-background-radius : 68px 12px 12px 68px;
+      -fx-border-radius     : 136px 12px 12px 136px;
+
+      > .surface {
+        -fx-background-radius : 68px 12px 12px 68px;
+      }
+    }
+
+    > .mfx-button.trailing.xl {
+      -fx-background-radius : 12px 68px 68px 12px;
+      -fx-border-radius     : 12px 136px 136px 12px;
+
+      > .surface {
+        -fx-background-radius : 12px 68px 68px 12px;
+      }
+    }
+
+    > .mfx-button.trailing > .label > .mfx-font-icon {
+      -mfx-icon                  : "fas-angle-down";
+      -fx-rotate                 : 0deg;
+      /* TODO this should be replaced with a spatial curve once PR1822 is merged */
+      transition-property        : -fx-rotate;
+      transition-timing-function : md-easing("expressive-default-effects");
+      transition-duration        : md-duration("expressive-default-effects");
+    }
+
+    > .mfx-button.trailing:selected > .label > .mfx-font-icon {
+      -fx-rotate : 180deg;
+    }
+  }
+
+  .mfx-split-button.outlined > .mfx-button {
+    -fx-border-insets : 0.04em;
+    -fx-border-width  : 0.06875em;
+  }
+
+  /* Popup */
+  .mfx-split-button .mfx-popover {
+    -fx-background-color  : -md-sys-color-surface-container;
+    -fx-background-radius : shape('small');
+    -fx-effect            : dropshadow(gaussian, rgba(0, 0, 0, 0.2), 8, 0.16, 0, 3);
+    -fx-min-width         : 150px;
+    -fx-max-width         : 280px;
+
+    > .vfx-scroll-pane .vfx-list {
+      -vfx-cell-size : 40px;
+    }
+  }
+}
