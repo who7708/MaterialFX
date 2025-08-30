@@ -1,5 +1,9 @@
-## Project - 10f296ba
+## Project - 80336482
 
+- 30-08-2025 <891a615e> Update UpdateChangelogs script to support removals and properly write to Misc category
+- 30-08-2025 <fc4a6e64> Temporarily enable preview features
+- 30-08-2025 <361dddb4> Update TODO.md
+- 30-08-2025 <27600a13> Upgrade VirtualizedFX to v24.5.0
 - 31-07-2025 <1b33de6b> Upgrade VirtualizedFX to v24.3.0
 - 26-07-2025 <f597c6d9> Make cleancss not inline imports and set working dir to correctly resolve urls
 - 22-07-2025 <64b9ea1c> Make format action not fail if the changelogs are updated

@@ -1,3 +1,66 @@
+## 24.4.0 - 30-08-2025 - 80336482
+
+### Removed
+
+- <ee5eca54> Nuke custom bindings
+
+### Features
+
+- <ac53687c> Implement a simple notification system
+- <d52519b5> Implement EventBusNetwork, a way to group multiple event buses under one "network", and reference specific ones via a simple tag system
+- <177c8567> Implement dialogs capable of computing and returning a certain result
+- <36281580> MFXDialog: implement showAndWait() functionality which can be enabled through the configuration
+- <2d19045c> MFXPopup: allow setting content through supplier, convenient to create and configure nodes "on the go"
+- <f3b220c7> Subscriber: allow composition and priority override through convenience methods
+- <8c9619cc> EventBus: add APIs to clear subscriptions and check if the bus currently has subscribers
+- <90edc0ec> Backport and improve selection models
+- <623e117b> When: add new utility
+- <a31bb21e> Implement a new utility for bidirectional bindings
+- <46c93523> Add a bunch of utilities for collections
+
+### Bug Fixes
+
+- <8f72ecc3> NumberUtils: rewrite mapping utilities and prevent NaN/Infinite results
+- <ae363947> OnChanged and OnInvalidated override the executeNow(...) method for constructs with prebuilt listeners, since there is no action there it would cause a NullPointerException
+
+### Refactoring
+
+- <3ef229ed> MFXMenu: move from protected constructor to a public factory to create submenus.
+- <44278dc2> NoOpSelectionModel: avoid potential NullPointerExceptions
+- <09231a43> SelectionEventHandler: remove selection state parameter as not needed
+- <702d833c> MFXMenuItem: never null children list (avoids null checks everywhere)
+- <645b707c> MFXMenuItem: remove withers and implement some sort of DSL to build menus; also rename subMenuItems to children
+- <be6ca6d0> MappedBidirectionalBinding: implement Disposable
+- <9e5945ec> MFXDialog: redirect hide events from external sources (like the OS) to our own hide logic (allows to always play animations for example)
+- <2f579a2f> MFXDialog: use new When.observe utility for lock in place functionality
+- <e206eeda> MFXDialog: allow setting modality until the dialog is shown the first time
+- <849b7ace> MFXDialog: use default config like other popups
+- <d8704c3c> SimpleEventBus: remove empty queues automatically
+- <6496c128> SimpleEventBus: use prebuilt comparator for all buses
+- <9f9269d1> PositionProperty and SizeProperty make use of PropUtils to build styleable properties
+- <f6413efb> Reworked PropUtils to use the Builder pattern for more advanced configurations (maintains backwards compatibility!)
+- <3840668e> SynchronizedProperties: do not use MFXBindins anymore
+- <30e48f23> When: allow registering invalidating sources when the construct is already active
+
+### Documentation
+
+- <08c08fca> Add documentation for selection models
+
+### Tests
+
+- <46db4a05> Update tests
+
+### Misc
+
+- <d4e94354> Move PseudoClasses from components to core
+- <0e34235c> Move CubicCurve to utils and make it public
+- <15f6b05e> Rename DisposableAction to Disposable and move to base package
+- <228b21cb> Update module-info.java
+- <98e93a2a> Rename IEventBus to EventBus
+- <51315a3b> Moved WeakLinkedHashMap to the 'collections' package
+
+
+
 ## 24.3.0 - 31-07-2025 - 10f296ba
 
 ### Features
