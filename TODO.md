@@ -2,11 +2,11 @@
 
 *New goals and features will be added on the go*
 
-#### Components
+### ⬜ Components - Buttons
 
-- Buttons
+- 🟨 Buttons
   - [x] Button and toggle modes
-  - [x] Variants: elevated, filled, tonal, outlined, text)
+  - [x] Variants: elevated, filled, tonal, outlined, text
   - [x] Preset sizes: xs, s m, l, xl
   - [x] Preset shapes: round and square
   - [x] Shape morphs
@@ -14,7 +14,7 @@
   - [ ] Emphasized font
   - [x] CSS
 
-- Icon Buttons
+- ✅ Icon Buttons
   - [x] Button and toggle modes
   - [x] Variants: standard, filled, tonal, outlined
   - [x] Preset sizes: xs, s, m, l, xl
@@ -24,23 +24,33 @@
   - [x] Focus ring
   - [x] CSS
 
-- Button Groups
+- ✅ Button Groups
   - [x] Variants: standard and connected
   - [x] CSS
 
-- FABs
+- ✅ FABs
   - [x] Variants: primary, secondary, tertiary (and relative containers/tonal)
   - [x] Preset sizes: small/standard, medium, large
   - [x] Animations (expand/collapse, icon change)
   - [x] Focus ring
   - [x] CSS
 
-- FABs Menu
+- ✅ FABs Menu
   - [x] Variants: primary, secondary, tertiary
   - [x] Animations (open/close)
   - [x] Automatic close (I may have missed something)
   - [x] Focus ring and proper focus traversal
   - [x] CSS
+
+- 🟨 Split Buttons
+    - [x] Variants: elevated, filled, tonal, outlined
+    - [x] Preset sizes: xs, s, m, l, xl
+    - [x] Popup menu
+    - [ ] Placeholder
+    - [x] Shape morphs
+    - [x] CSS
+
+- ⬜ Segmented Buttons (even if deprecated, I still believe it's a good component)
 
 #### Misc
 
