@@ -21,33 +21,31 @@ package io.github.palexdev.mfxcore.behavior;
 import java.util.function.Supplier;
 
 import io.github.palexdev.mfxcore.base.properties.functional.SupplierProperty;
+import javafx.scene.Node;
 
 /// Public API for all components that want to integrate with the new Behavior API.
-///
-/// @param <B> the type of behavior the component will use
-/// @see BehaviorBase
-public interface WithBehavior<B extends BehaviorBase<?>> {
+public interface WithBehavior {
 
     /// @return the instance of the current behavior object
-    B getBehavior();
+    BehaviorBase<? extends Node> getBehavior();
 
-    /// @return a [Supplier] that is the provider for the default behavior used by the component.
-    Supplier<B> defaultBehaviorProvider();
+    /// @return a [Supplier] that is the factory for the default behavior used by the component.
+    Supplier<BehaviorBase<? extends Node>> defaultBehaviorFactory();
 
-    default Supplier<B> getBehaviorProvider() {
-        return behaviorProviderProperty().get();
+    default Supplier<BehaviorBase<? extends Node>> getBehaviorFactory() {
+        return behaviorFactoryProperty().get();
     }
 
     /// Specifies the [Supplier] used to produce a behavior object for the component.
-    SupplierProperty<B> behaviorProviderProperty();
+    SupplierProperty<BehaviorBase<? extends Node>> behaviorFactoryProperty();
 
-    default void setBehaviorProvider(Supplier<B> factory) {
-        behaviorProviderProperty().set(factory);
+    default void setBehaviorFactory(Supplier<BehaviorBase<? extends Node>> factory) {
+        behaviorFactoryProperty().set(factory);
     }
 
-    /// Restores the component's behavior to the default one using [#defaultBehaviorProvider()]
-    /// and [#setBehaviorProvider(Supplier)].
-    default void setDefaultBehaviorProvider() {
-        setBehaviorProvider(defaultBehaviorProvider());
+    /// Restores the component's behavior to the default one using [#defaultBehaviorFactory()]
+    /// and [#setBehaviorFactory(Supplier)].
+    default void setDefaultBehaviorFactory() {
+        setBehaviorFactory(defaultBehaviorFactory());
     }
 }

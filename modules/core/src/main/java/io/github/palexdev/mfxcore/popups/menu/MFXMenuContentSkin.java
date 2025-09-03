@@ -22,6 +22,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import io.github.palexdev.mfxcore.behavior.BehaviorBase;
 import io.github.palexdev.mfxcore.controls.SkinBase;
 import io.github.palexdev.mfxcore.input.WhenEvent;
 import io.github.palexdev.mfxcore.utils.fx.LayoutUtils;
@@ -44,7 +45,7 @@ import javafx.scene.layout.Region;
 /// 3) The width is the maximum between the entries. The height is the sum of all the entries' heights including the gap.
 /// 4) If the menu is empty, and the [MFXMenuContent#placeholderSupplierProperty()] produces a valid result, a placeholder
 /// node is shown instead. This node can be selected from CSS via the style class: '.placeholder'
-public class MFXMenuContentSkin extends SkinBase<MFXMenuContent, MFXMenuContentBehavior> {
+public class MFXMenuContentSkin extends SkinBase<MFXMenuContent> {
     //================================================================================
     // Methods
     //================================================================================
@@ -163,7 +164,7 @@ public class MFXMenuContentSkin extends SkinBase<MFXMenuContent, MFXMenuContentB
     /// - An event handler on the control itself for key handling,
     /// see [MFXMenuContentBehavior#keyPressed(KeyEvent, Consumer)]
     @Override
-    protected void initBehavior(MFXMenuContentBehavior behavior) {
+    protected void initBehavior(BehaviorBase<? extends MFXMenuContent> behavior) {
         super.initBehavior(behavior);
         MFXMenuContent mc = getSkinnable();
         events(

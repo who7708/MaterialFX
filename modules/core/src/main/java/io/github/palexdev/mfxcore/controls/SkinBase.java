@@ -62,10 +62,10 @@ import javafx.scene.Node;
 /// The development flow for controls with the new Behavior and Skin API would be:
 ///  - Have a component that extends either [Control], [Labeled] or any of their subclasses
 ///  - Having an implementation of this base Skin, either one of the already provided or a custom one
-///  - Having a behavior class and set the provider on the component, or using [BehaviorBase] if you don't need it
+///  - Having a behavior class and set the factory on the component, or using [BehaviorBase] if you don't need it
 ///  - Override the [#initBehavior(BehaviorBase)] to initialize the behavior if needed
-///  - Initialization and changes to the behavior provider are automatically handled, hassle-free
-public abstract class SkinBase<C extends javafx.scene.control.Control & WithBehavior<B>, B extends BehaviorBase<? extends Node>> extends javafx.scene.control.SkinBase<C> {
+///  - Initialization and changes to the behavior factory are automatically handled, hassle-free
+public abstract class SkinBase<C extends javafx.scene.control.Control & WithBehavior> extends javafx.scene.control.SkinBase<C> {
     //================================================================================
     // Properties
     //================================================================================
@@ -83,14 +83,9 @@ public abstract class SkinBase<C extends javafx.scene.control.Control & WithBeha
     /// This is responsible for initializing the behavior every time it changes.
     /// The given parameter is the current uninitialized behavior.
     ///
-    /// To avoid boilerplate code, this already calls [B#init()].
-    protected void initBehavior(B behavior) {
+    /// To avoid boilerplate code, this already calls [BehaviorBase#init()].
+    protected void initBehavior(BehaviorBase<? extends C> behavior) {
         behavior.init();
-    }
-
-    /// Since [#getSkinnable()] is final, this is a convenience method to get and cast a control to the given subclass.
-    protected <C1 extends C> C1 getControl(Class<C1> klass) {
-        return klass.cast(getSkinnable());
     }
 
     //================================================================================
@@ -139,9 +134,21 @@ public abstract class SkinBase<C extends javafx.scene.control.Control & WithBeha
     // Getters
     //================================================================================
 
-    /// Delegate for [#getBehavior()].
+    /// Since [#getSkinnable()] is final, this is a convenience method to get and cast a control to the given class.
+    protected <C1 extends C> C1 getControlAs(Class<C1> klass) {
+        return klass.cast(getSkinnable());
+    }
+
+    /// Delegate for [WithBehavior#getBehavior()].
     ///
     /// Since this is called on the component, the return value could also be `null` if the behavior
-    /// provider was not set or produces `null` references.
-    protected B getBehavior() {return getSkinnable().getBehavior();}
+    /// factory was not set or produces `null` references.
+    protected BehaviorBase<? extends Node> getBehavior() {
+        return getSkinnable().getBehavior();
+    }
+
+    /// Convenience method to get and cast the control's behavior to the given class.
+    protected <B extends BehaviorBase<? extends Node>> B getBehaviorAs(Class<B> klass) {
+        return klass.cast(getBehavior());
+    }
 }

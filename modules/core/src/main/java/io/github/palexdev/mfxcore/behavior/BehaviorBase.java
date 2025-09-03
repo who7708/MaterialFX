@@ -286,7 +286,6 @@ public abstract class BehaviorBase<N extends Node> implements Disposable {
         scroll(e, NO_OP_CALLBACK);
     }
 
-
     //================================================================================
     // Overridden Methods
     //================================================================================

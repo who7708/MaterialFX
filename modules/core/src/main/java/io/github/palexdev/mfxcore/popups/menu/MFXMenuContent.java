@@ -23,6 +23,7 @@ import java.util.function.Supplier;
 
 import io.github.palexdev.mfxcore.base.properties.functional.SupplierProperty;
 import io.github.palexdev.mfxcore.base.properties.styleable.StyleableDoubleProperty;
+import io.github.palexdev.mfxcore.behavior.BehaviorBase;
 import io.github.palexdev.mfxcore.controls.Control;
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.controls.SkinBase;
@@ -38,7 +39,7 @@ import javafx.scene.Node;
 /// default style class to select this from CSS is: `.menu-content`.
 ///
 /// It also allows you to specify a [Node] to show when the menu is empty through the [#placeholderSupplierProperty()].
-public class MFXMenuContent extends Control<MFXMenuContentBehavior> implements MFXStyleable {
+public class MFXMenuContent extends Control implements MFXStyleable {
     //================================================================================
     // Properties
     //================================================================================
@@ -57,12 +58,12 @@ public class MFXMenuContent extends Control<MFXMenuContentBehavior> implements M
     // Overridden Methods
     //================================================================================
     @Override
-    public Supplier<MFXMenuContentBehavior> defaultBehaviorProvider() {
+    public Supplier<BehaviorBase<? extends Node>> defaultBehaviorFactory() {
         return () -> new MFXMenuContentBehavior(this);
     }
 
     @Override
-    public Supplier<SkinBase<?, ?>> defaultSkinProvider() {
+    public Supplier<SkinBase<? extends Control>> defaultSkinFactory() {
         return () -> new MFXMenuContentSkin(this);
     }
 

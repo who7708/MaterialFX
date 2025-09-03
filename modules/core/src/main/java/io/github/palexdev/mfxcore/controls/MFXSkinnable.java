@@ -25,37 +25,34 @@ import javafx.scene.control.Skin;
 import javafx.scene.control.Skinnable;
 
 /// Public API for all components that want to integrate with the new Skin API.
-///
-/// @param <S> the type of skin the component will use
-/// @see SkinBase
-public interface MFXSkinnable<S extends SkinBase<?, ?>> extends Skinnable {
+public interface MFXSkinnable extends Skinnable {
 
-    /// Shortcut for `setSkin(getSkinProvider().get())`.
+    /// Shortcut for `setSkin(getSkinFactory().get())`.
     ///
     /// Sometimes, you may want to initialize the skin of a control before it is shown in a Scene.
     /// For example, for performance reasons, you may want to create the skin of a popup's content before the popup shows,
     /// to avoid any possible delay due to the skin instantiation and first layout.
     default void preloadSkin() {
         Skin<?> skin = getSkin();
-        if (skin == null) setSkin(getSkinProvider().get());
+        if (skin == null) setSkin(getSkinFactory().get());
     }
 
-    /// @return a [Supplier] that is the provider for the default skin used by the component.
-    Supplier<S> defaultSkinProvider();
+    /// @return a [Supplier] that is the factory for the default skin used by the component.
+    Supplier<SkinBase<? extends Control>> defaultSkinFactory();
 
-    default Supplier<S> getSkinProvider() {
-        return skinProviderProperty().get();
+    default Supplier<SkinBase<? extends Control>> getSkinFactory() {
+        return skinFactoryProperty().get();
     }
 
     /// Specifies the [Supplier] used to produce a skin object for the component.
-    SupplierProperty<S> skinProviderProperty();
+    SupplierProperty<SkinBase<? extends Control>> skinFactoryProperty();
 
-    default void setSkinProvider(Supplier<S> provider) {
-        skinProviderProperty().set(provider);
+    default void setSkinFactory(Supplier<SkinBase<? extends Control>> factory) {
+        skinFactoryProperty().set(factory);
     }
 
-    /// Restores the component's skin to the default one using [#defaultSkinProvider()] and [#setSkinProvider(Supplier)].
-    default void setDefaultSkinProvider() {
-        setSkinProvider(defaultSkinProvider());
+    /// Restores the component's skin to the default one using [#defaultSkinFactory()] and [#setSkinFactory(Supplier)].
+    default void setDefaultSkinFactory() {
+        setSkinFactory(defaultSkinFactory());
     }
 }
