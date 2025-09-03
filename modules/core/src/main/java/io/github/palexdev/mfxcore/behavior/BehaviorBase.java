@@ -43,21 +43,26 @@ import javafx.scene.input.TouchEvent;
 /// with ease at any time, and it would still be functional.
 ///
 /// Actions are taken in the form of [WhenEvent] constructs, they can be added by wrapping them in a
-/// [#register(WhenEvent[])] call. The constructs are added into a list and can be deactivated/disposed by invoking
-/// [#dispose()].
-public abstract class BehaviorBase<N extends Node> {
+/// [#register(WhenEvent[])] call. The constructs are added into a list and can be deactivated/disposed by invoking [#dispose()].
+@SuppressWarnings("unchecked")
+public abstract class BehaviorBase<N extends Node> implements Disposable {
+    //================================================================================
+    // Static Properties
+    //================================================================================
+    @SuppressWarnings("rawtypes")
+    public static final Consumer NO_OP_CALLBACK = _ -> {};
+
     //================================================================================
     // Properties
     //================================================================================
     private N node;
-    private final List<Disposable> actions = new ArrayList<>();
+    private final List<Disposable> handlers = new ArrayList<>();
 
     //================================================================================
     // Constructors
     //================================================================================
-    public BehaviorBase(N node) {
-        this.node = node;
-    }
+
+    protected BehaviorBase(N node) {this.node = node;}
 
     //================================================================================
     // Methods
@@ -66,44 +71,31 @@ public abstract class BehaviorBase<N extends Node> {
     /// Behaviors can specify a set of actions to initialize themselves if needed.
     public void init() {}
 
-    /// The behavior API registers input actions in the form of [WhenEvent] constructs. This method adds them
-    /// to a list (which will be used for disposal, avoiding memory leaks when calling [#dispose()]).
-    ///
-    /// Also note that if the constructs were not activated before by invoking [WhenEvent#register()], this method
-    /// will do it for you automatically.
     @SafeVarargs
-    public final <T extends Event> void register(WhenEvent<T>... wes) {
-        for (WhenEvent<T> w : wes) {
+    public final <E extends Event> void register(WhenEvent<E>... ws) {
+        for (WhenEvent<?> w : ws) {
             if (!w.isActive()) w.register();
-            actions.add(w);
+            handlers.add(w);
         }
-    }
-
-    /// Calls [#dispose()] on all the registered actions, then clears
-    /// the list and sets the node field to `null` making this behavior not usable anymore.
-    public void dispose() {
-        actions.forEach(Disposable::dispose);
-        actions.clear();
-        node = null;
     }
 
     //================================================================================
     // Events Specific Methods
     //================================================================================
 
-    // Mouse
+    //***** Mouse *****//
 
     /// Should be used by subclasses to handle [MouseEvent#MOUSE_PRESSED] events.
     ///
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
     public void mousePressed(MouseEvent e, Consumer<MouseEvent> callback) {
-        if (callback != null) callback.accept(e);
+        callback.accept(e);
     }
 
-    /// Convenience delegate method for [#mousePressed(MouseEvent, Consumer)], invoked with a `null` callback.
-    public void mousePressed(MouseEvent e) {
-        mousePressed(e, null);
+    /// Convenience delegate method for [#mousePressed(MouseEvent, Consumer)], invoked with a no-op callback.
+    public final void mousePressed(MouseEvent e) {
+        mousePressed(e, NO_OP_CALLBACK);
     }
 
     /// Should be used by subclasses to handle [MouseEvent#MOUSE_RELEASED] events.
@@ -111,12 +103,12 @@ public abstract class BehaviorBase<N extends Node> {
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
     public void mouseReleased(MouseEvent e, Consumer<MouseEvent> callback) {
-        if (callback != null) callback.accept(e);
+        callback.accept(e);
     }
 
-    /// Convenience delegate method for [#mouseReleased(MouseEvent, Consumer)], invoked with a `null` callback.
-    public void mouseReleased(MouseEvent e) {
-        mouseReleased(e, null);
+    /// Convenience delegate method for [#mouseReleased(MouseEvent, Consumer)], invoked with a no-op callback.
+    public final void mouseReleased(MouseEvent e) {
+        mouseReleased(e, NO_OP_CALLBACK);
     }
 
     /// Should be used by subclasses to handle [MouseEvent#MOUSE_CLICKED] events.
@@ -124,12 +116,12 @@ public abstract class BehaviorBase<N extends Node> {
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
     public void mouseClicked(MouseEvent e, Consumer<MouseEvent> callback) {
-        if (callback != null) callback.accept(e);
+        callback.accept(e);
     }
 
-    /// Convenience delegate method for [#mouseClicked(MouseEvent, Consumer)], invoked with a `null` callback.
-    public void mouseClicked(MouseEvent e) {
-        mouseClicked(e, null);
+    /// Convenience delegate method for [#mouseClicked(MouseEvent, Consumer)], invoked with a no-op callback.
+    public final void mouseClicked(MouseEvent e) {
+        mouseClicked(e, NO_OP_CALLBACK);
     }
 
     /// Should be used by subclasses to handle [MouseEvent#MOUSE_MOVED] events.
@@ -137,12 +129,12 @@ public abstract class BehaviorBase<N extends Node> {
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
     public void mouseMoved(MouseEvent e, Consumer<MouseEvent> callback) {
-        if (callback != null) callback.accept(e);
+        callback.accept(e);
     }
 
-    /// Convenience delegate method for [#mouseMoved(MouseEvent, Consumer)], invoked with a `null` callback.
-    public void mouseMoved(MouseEvent e) {
-        mouseMoved(e, null);
+    /// Convenience delegate method for [#mouseMoved(MouseEvent, Consumer)], invoked with a no-op callback.
+    public final void mouseMoved(MouseEvent e) {
+        mouseMoved(e, NO_OP_CALLBACK);
     }
 
     /// Should be used by subclasses to handle [MouseEvent#MOUSE_DRAGGED] events.
@@ -150,12 +142,12 @@ public abstract class BehaviorBase<N extends Node> {
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
     public void mouseDragged(MouseEvent e, Consumer<MouseEvent> callback) {
-        if (callback != null) callback.accept(e);
+        callback.accept(e);
     }
 
-    /// Convenience delegate method for [#mouseDragged(MouseEvent, Consumer)], invoked with a `null` callback.
-    public void mouseDragged(MouseEvent e) {
-        mouseDragged(e, null);
+    /// Convenience delegate method for [#mouseDragged(MouseEvent, Consumer)], invoked with a no-op callback.
+    public final void mouseDragged(MouseEvent e) {
+        mouseDragged(e, NO_OP_CALLBACK);
     }
 
     /// Should be used by subclasses to handle [MouseEvent#MOUSE_ENTERED] events.
@@ -163,12 +155,12 @@ public abstract class BehaviorBase<N extends Node> {
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
     public void mouseEntered(MouseEvent e, Consumer<MouseEvent> callback) {
-        if (callback != null) callback.accept(e);
+        callback.accept(e);
     }
 
-    /// Convenience delegate method for [#mouseEntered(MouseEvent, Consumer)], invoked with a `null` callback.
-    public void mouseEntered(MouseEvent e) {
-        mouseEntered(e, null);
+    /// Convenience delegate method for [#mouseEntered(MouseEvent, Consumer)], invoked with a no-op callback.
+    public final void mouseEntered(MouseEvent e) {
+        mouseEntered(e, NO_OP_CALLBACK);
     }
 
     /// Should be used by subclasses to handle [MouseEvent#MOUSE_EXITED] events.
@@ -176,27 +168,27 @@ public abstract class BehaviorBase<N extends Node> {
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
     public void mouseExited(MouseEvent e, Consumer<MouseEvent> callback) {
-        if (callback != null) callback.accept(e);
+        callback.accept(e);
     }
 
-    /// Convenience delegate method for [#mouseExited(MouseEvent, Consumer)], invoked with a `null` callback.
-    public void mouseExited(MouseEvent e) {
-        mouseExited(e, null);
+    /// Convenience delegate method for [#mouseExited(MouseEvent, Consumer)], invoked with a no-op callback.
+    public final void mouseExited(MouseEvent e) {
+        mouseExited(e, NO_OP_CALLBACK);
     }
 
-    // Keys
+    //***** Keys *****//
 
     /// Should be used by subclasses to handle [KeyEvent#KEY_PRESSED] events.
     ///
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
     public void keyPressed(KeyEvent e, Consumer<KeyEvent> callback) {
-        if (callback != null) callback.accept(e);
+        callback.accept(e);
     }
 
-    /// Convenience delegate method for [#keyPressed(KeyEvent,Consumer)], invoked with a `null` callback.
-    public void keyPressed(KeyEvent e) {
-        keyPressed(e, null);
+    /// Convenience delegate method for [#keyPressed(KeyEvent,Consumer)], invoked with a no-op callback.
+    public final void keyPressed(KeyEvent e) {
+        keyPressed(e, NO_OP_CALLBACK);
     }
 
     /// Should be used by subclasses to handle [KeyEvent#KEY_RELEASED] events.
@@ -204,12 +196,12 @@ public abstract class BehaviorBase<N extends Node> {
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
     public void keyReleased(KeyEvent e, Consumer<KeyEvent> callback) {
-        if (callback != null) callback.accept(e);
+        callback.accept(e);
     }
 
-    /// Convenience delegate method for [#keyReleased(KeyEvent,Consumer)], invoked with a `null` callback.
-    public void keyReleased(KeyEvent e) {
-        keyReleased(e, null);
+    /// Convenience delegate method for [#keyReleased(KeyEvent,Consumer)], invoked with a no-op callback.
+    public final void keyReleased(KeyEvent e) {
+        keyReleased(e, NO_OP_CALLBACK);
     }
 
     /// Should be used by subclasses to handle [KeyEvent#KEY_TYPED] events.
@@ -217,27 +209,27 @@ public abstract class BehaviorBase<N extends Node> {
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
     public void keyTyped(KeyEvent e, Consumer<KeyEvent> callback) {
-        if (callback != null) callback.accept(e);
+        callback.accept(e);
     }
 
-    /// Convenience delegate method for [#keyTyped(KeyEvent,Consumer)], invoked with a `null` callback.
-    public void keyTyped(KeyEvent e) {
-        keyTyped(e, null);
+    /// Convenience delegate method for [#keyTyped(KeyEvent,Consumer)], invoked with a no-op callback.
+    public final void keyTyped(KeyEvent e) {
+        keyTyped(e, NO_OP_CALLBACK);
     }
 
-    // Touch
+    //***** Touch *****//
 
     /// Should be used by subclasses to handle [TouchEvent#TOUCH_PRESSED] events.
     ///
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
     public void touchPressed(TouchEvent e, Consumer<TouchEvent> callback) {
-        if (callback != null) callback.accept(e);
+        callback.accept(e);
     }
 
-    /// Convenience delegate method for [#touchPressed(TouchEvent, Consumer)], invoked with a `null` callback.
-    public void touchPressed(TouchEvent e) {
-        touchPressed(e, null);
+    /// Convenience delegate method for [#touchPressed(TouchEvent, Consumer)], invoked with a no-op callback.
+    public final void touchPressed(TouchEvent e) {
+        touchPressed(e, NO_OP_CALLBACK);
     }
 
     /// Should be used by subclasses to handle [TouchEvent#TOUCH_RELEASED] events.
@@ -245,12 +237,12 @@ public abstract class BehaviorBase<N extends Node> {
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
     public void touchReleased(TouchEvent e, Consumer<TouchEvent> callback) {
-        if (callback != null) callback.accept(e);
+        callback.accept(e);
     }
 
-    /// Convenience delegate method for [#touchReleased(TouchEvent, Consumer)], invoked with a `null` callback.
-    public void touchReleased(TouchEvent e) {
-        touchReleased(e, null);
+    /// Convenience delegate method for [#touchReleased(TouchEvent, Consumer)], invoked with a no-op callback.
+    public final void touchReleased(TouchEvent e) {
+        touchReleased(e, NO_OP_CALLBACK);
     }
 
     /// Should be used by subclasses to handle [TouchEvent#TOUCH_MOVED] events.
@@ -258,12 +250,12 @@ public abstract class BehaviorBase<N extends Node> {
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
     public void touchMoved(TouchEvent e, Consumer<TouchEvent> callback) {
-        if (callback != null) callback.accept(e);
+        callback.accept(e);
     }
 
-    /// Convenience delegate method for [#touchMoved(TouchEvent, Consumer)], invoked with a `null` callback.
-    public void touchMoved(TouchEvent e) {
-        touchMoved(e, null);
+    /// Convenience delegate method for [#touchMoved(TouchEvent, Consumer)], invoked with a no-op callback.
+    public final void touchMoved(TouchEvent e) {
+        touchMoved(e, NO_OP_CALLBACK);
     }
 
     /// Should be used by subclasses to handle [TouchEvent#TOUCH_STATIONARY] events.
@@ -271,40 +263,59 @@ public abstract class BehaviorBase<N extends Node> {
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
     public void touchStationary(TouchEvent e, Consumer<TouchEvent> callback) {
-        if (callback != null) callback.accept(e);
+        callback.accept(e);
     }
 
-    /// Convenience delegate method for [#touchStationary(TouchEvent, Consumer)], invoked with a `null` callback.
-    public void touchStationary(TouchEvent e) {
-        touchStationary(e, null);
+    /// Convenience delegate method for [#touchStationary(TouchEvent, Consumer)], invoked with a no-op callback.
+    public final void touchStationary(TouchEvent e) {
+        touchStationary(e, NO_OP_CALLBACK);
     }
 
-    // Scroll
+    //***** Scroll *****//
 
     /// Should be used by subclasses to handle [ScrollEvent#SCROLL] events.
     ///
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
     public void scroll(ScrollEvent e, Consumer<ScrollEvent> callback) {
-        if (callback != null) callback.accept(e);
+        callback.accept(e);
     }
 
-    /// Convenience delegate method for [#scroll(ScrollEvent, Consumer)], invoked with a `null` callback.
+    /// Convenience delegate method for [#scroll(ScrollEvent, Consumer)], invoked with a no-op callback.
     public void scroll(ScrollEvent e) {
-        scroll(e, null);
+        scroll(e, NO_OP_CALLBACK);
+    }
+
+
+    //================================================================================
+    // Overridden Methods
+    //================================================================================
+
+    /// The behavior API registers input actions in the form of [WhenEvent] constructs. This method adds them
+    /// to a list (which will be used for disposal, avoiding memory leaks when calling [#dispose()]).
+    ///
+    /// Also note that if the constructs were not activated before by invoking [WhenEvent#register()], this method
+    /// will do it for you automatically.
+    @Override
+    public void dispose() {
+        handlers.forEach(Disposable::dispose);
+        handlers.clear();
+        node = null;
     }
 
     //================================================================================
-    // Getters/Setters
+    // Getters
     //================================================================================
 
-    /// @return the node on which this behavior is applied
     public N getNode() {
         return node;
     }
 
-    /// @return the list of registered actions as an unmodifiable list
-    public List<Disposable> getActions() {
-        return Collections.unmodifiableList(actions);
+    protected <N1 extends Node> N1 getNodeAs(Class<N1> klass) {
+        return klass.cast(node);
+    }
+
+    public List<Disposable> getHandlers() {
+        return Collections.unmodifiableList(handlers);
     }
 }
