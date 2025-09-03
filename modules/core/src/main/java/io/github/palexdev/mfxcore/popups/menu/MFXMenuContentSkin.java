@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import io.github.palexdev.mfxcore.controls.SkinBase;
-import io.github.palexdev.mfxcore.events.WhenEvent;
+import io.github.palexdev.mfxcore.input.WhenEvent;
 import io.github.palexdev.mfxcore.utils.fx.LayoutUtils;
 import javafx.beans.InvalidationListener;
 import javafx.collections.ObservableList;

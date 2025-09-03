@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
-import io.github.palexdev.mfxcore.events.WhenEvent;
 import javafx.event.EventHandler;
 import javafx.event.EventTarget;
 import javafx.scene.Scene;

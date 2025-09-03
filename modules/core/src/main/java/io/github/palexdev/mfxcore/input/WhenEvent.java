@@ -16,7 +16,7 @@
  * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.palexdev.mfxcore.events;
+package io.github.palexdev.mfxcore.input;
 
 import java.lang.ref.WeakReference;
 import java.util.Optional;

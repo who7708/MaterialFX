@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import io.github.palexdev.mfxcore.base.Disposable;
-import io.github.palexdev.mfxcore.events.WhenEvent;
+import io.github.palexdev.mfxcore.input.WhenEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Node;

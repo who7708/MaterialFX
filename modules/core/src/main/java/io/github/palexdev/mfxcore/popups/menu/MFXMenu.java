@@ -30,7 +30,7 @@ import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.base.properties.NodeProperty;
 import io.github.palexdev.mfxcore.base.properties.PositionProperty;
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
-import io.github.palexdev.mfxcore.events.WhenEvent;
+import io.github.palexdev.mfxcore.input.WhenEvent;
 import io.github.palexdev.mfxcore.popups.*;
 import io.github.palexdev.mfxcore.popups.menu.MFXMenu.MenuConfig.Builder;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;

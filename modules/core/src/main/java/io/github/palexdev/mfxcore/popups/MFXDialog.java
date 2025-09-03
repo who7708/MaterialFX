@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 
 import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
-import io.github.palexdev.mfxcore.events.WhenEvent;
+import io.github.palexdev.mfxcore.input.WhenEvent;
 import io.github.palexdev.mfxcore.observables.When;
 import io.github.palexdev.mfxcore.popups.MFXDialog.DialogConfig.Builder;
 import io.github.palexdev.mfxcore.popups.MFXDialog.WindowPeer;

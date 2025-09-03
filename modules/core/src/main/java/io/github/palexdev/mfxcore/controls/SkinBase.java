@@ -25,7 +25,7 @@ import java.util.Optional;
 import io.github.palexdev.mfxcore.base.Disposable;
 import io.github.palexdev.mfxcore.behavior.BehaviorBase;
 import io.github.palexdev.mfxcore.behavior.WithBehavior;
-import io.github.palexdev.mfxcore.events.WhenEvent;
+import io.github.palexdev.mfxcore.input.WhenEvent;
 import io.github.palexdev.mfxcore.observables.When;
 import javafx.scene.Node;
 
