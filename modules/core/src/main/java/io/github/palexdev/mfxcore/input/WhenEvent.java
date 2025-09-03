@@ -114,12 +114,12 @@ public class WhenEvent<T extends Event> implements Disposable {
     //================================================================================
 
     /// Sets the [Consumer] used to "process" any given event.
-    public WhenEvent<T> process(Consumer<T> action) {
+    public WhenEvent<T> handle(Consumer<T> action) {
         this.action = action;
         return this;
     }
 
-    /// Sets the condition under which an event will be passed to the action specified by [#process(Consumer)].
+    /// Sets the condition under which an event will be passed to the action specified by [#handle(Consumer)].
     ///
     /// @see #otherwise(BiConsumer)
     public WhenEvent<T> condition(Function<T, Boolean> condition) {

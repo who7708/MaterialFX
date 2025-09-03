@@ -144,7 +144,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
         this.owner = owner;
         if (owner != null) {
             WhenEvent.intercept(owner, WindowEvent.WINDOW_CLOSE_REQUEST)
-                .process(_ -> hide())
+                .handle(_ -> hide())
                 .asFilter()
                 .oneShot()
                 .register();

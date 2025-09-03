@@ -126,13 +126,13 @@ public class MFXMenuEntry extends Region implements MFXStyleable {
                 .listen(),
             WhenEvent.intercept(this, MouseEvent.MOUSE_CLICKED)
                 .condition(e -> e.getButton() == MouseButton.PRIMARY && item.action() != null)
-                .process(_ -> {
+                .handle(_ -> {
                     menu.getRootMenu().hide();
                     item.action().run();
                 })
                 .register(),
             WhenEvent.intercept(this, KeyEvent.KEY_PRESSED)
-                .process(e -> {
+                .handle(e -> {
                     KeyCode code = e.getCode();
                     switch (code) {
                         case SPACE, ENTER -> {

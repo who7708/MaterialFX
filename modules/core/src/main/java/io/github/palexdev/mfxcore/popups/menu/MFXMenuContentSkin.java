@@ -168,7 +168,7 @@ public class MFXMenuContentSkin extends SkinBase<MFXMenuContent, MFXMenuContentB
         MFXMenuContent mc = getSkinnable();
         events(
             WhenEvent.intercept(mc, KeyEvent.KEY_PRESSED)
-                .process(behavior::keyPressed)
+                .handle(behavior::keyPressed)
         );
     }
 

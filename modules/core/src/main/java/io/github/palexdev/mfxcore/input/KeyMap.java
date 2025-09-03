@@ -85,7 +85,7 @@ public class KeyMap extends HashMap<KeyStroke, BiConsumer<KeyEvent, KeyStroke>> 
     public void install(EventTarget target, boolean asFilter) {
         if (this.target != null) uninstall();
         handler = WhenEvent.intercept(target, KeyEvent.KEY_PRESSED)
-            .process(this::handleEvent)
+            .handle(this::handleEvent)
             .asFilter(asFilter)
             .register();
         this.target = new WeakReference<>(target);

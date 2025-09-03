@@ -195,7 +195,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
     protected void initMenu(Node owner) {
         trigger = WhenEvent.intercept(owner, MouseEvent.MOUSE_CLICKED)
             .condition(e -> e.getButton() == triggerButton)
-            .process(e -> {
+            .handle(e -> {
                 if (anchorBasedPositioning) {
                     peer.show(owner, anchor, alignment);
                     return;

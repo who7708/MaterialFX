@@ -153,11 +153,11 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
     protected void initTooltip(Node owner) {
         Collections.addAll(handlers,
             WhenEvent.intercept(owner, MouseEvent.MOUSE_ENTERED)
-                .process(_ -> peer.show(owner, anchor, alignment))
+                .handle(_ -> peer.show(owner, anchor, alignment))
                 .asFilter()
                 .register(),
             WhenEvent.intercept(owner, MouseEvent.MOUSE_EXITED)
-                .process(_ -> hideDelayed())
+                .handle(_ -> hideDelayed())
                 .asFilter()
                 .register(),
             When.onInvalidated(owner.hoverProperty())
