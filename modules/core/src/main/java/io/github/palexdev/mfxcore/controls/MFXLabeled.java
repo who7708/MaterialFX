@@ -42,7 +42,7 @@ import javafx.scene.control.Skin;
 /// The skin factory is more of a convenience to the user that does not need to inline-override the method responsible for
 /// creating the skin. The new mechanism is much more flexible and automatically integrates with the behavior API.<br >
 /// As a consequence, components that inherit from this do not support the "-fx-skin" CSS property. You'll have to do it in code.
-public abstract class MFXLabeled extends Labeled implements WithBehavior, MFXSkinnable {
+public abstract class MFXLabeled extends Labeled implements WithBehavior, MFXSkinnable, MFXStyleable {
     //================================================================================
     // Properties
     //================================================================================
@@ -83,6 +83,7 @@ public abstract class MFXLabeled extends Labeled implements WithBehavior, MFXSki
     {
         setDefaultBehaviorFactory();
         setDefaultSkinFactory();
+        defaultStyleClasses(this);
     }
 
     //================================================================================
