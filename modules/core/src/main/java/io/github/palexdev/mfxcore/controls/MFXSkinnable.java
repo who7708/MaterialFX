@@ -21,6 +21,7 @@ package io.github.palexdev.mfxcore.controls;
 import java.util.function.Supplier;
 
 import io.github.palexdev.mfxcore.base.properties.functional.SupplierProperty;
+import javafx.scene.Node;
 import javafx.scene.control.Skin;
 import javafx.scene.control.Skinnable;
 
@@ -38,16 +39,16 @@ public interface MFXSkinnable extends Skinnable {
     }
 
     /// @return a [Supplier] that is the factory for the default skin used by the component.
-    Supplier<MFXSkinBase<? extends MFXControl>> defaultSkinFactory();
+    Supplier<MFXSkinBase<? extends Node>> defaultSkinFactory();
 
-    default Supplier<MFXSkinBase<? extends MFXControl>> getSkinFactory() {
+    default Supplier<MFXSkinBase<? extends Node>> getSkinFactory() {
         return skinFactoryProperty().get();
     }
 
     /// Specifies the [Supplier] used to produce a skin object for the component.
-    SupplierProperty<MFXSkinBase<? extends MFXControl>> skinFactoryProperty();
+    SupplierProperty<MFXSkinBase<? extends Node>> skinFactoryProperty();
 
-    default void setSkinFactory(Supplier<MFXSkinBase<? extends MFXControl>> factory) {
+    default void setSkinFactory(Supplier<MFXSkinBase<? extends Node>> factory) {
         skinFactoryProperty().set(factory);
     }
 

@@ -55,7 +55,7 @@ public abstract class MFXControl extends Control implements WithBehavior, MFXSki
             if (skin != null && behavior != null) skin.registerBehavior();
         }
     };
-    private final SupplierProperty<MFXSkinBase<? extends MFXControl>> skinFactory = new SupplierProperty<>() {
+    private final SupplierProperty<MFXSkinBase<? extends Node>> skinFactory = new SupplierProperty<>() {
         @Override
         protected void invalidated() {
             // Do not run if createDefaultSkin() has not been called yet.
@@ -129,7 +129,7 @@ public abstract class MFXControl extends Control implements WithBehavior, MFXSki
     }
 
     @Override
-    public SupplierProperty<MFXSkinBase<? extends MFXControl>> skinFactoryProperty() {
+    public SupplierProperty<MFXSkinBase<? extends Node>> skinFactoryProperty() {
         return skinFactory;
     }
 }

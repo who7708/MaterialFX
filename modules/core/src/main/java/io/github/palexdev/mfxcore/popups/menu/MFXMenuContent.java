@@ -63,7 +63,7 @@ public class MFXMenuContent extends MFXControl implements MFXStyleable {
     }
 
     @Override
-    public Supplier<MFXSkinBase<? extends MFXControl>> defaultSkinFactory() {
+    public Supplier<MFXSkinBase<? extends Node>> defaultSkinFactory() {
         return () -> new MFXMenuContentSkin(this);
     }
 
