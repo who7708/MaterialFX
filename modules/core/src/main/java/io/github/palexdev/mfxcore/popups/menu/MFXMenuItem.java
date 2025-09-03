@@ -20,7 +20,7 @@ package io.github.palexdev.mfxcore.popups.menu;
 
 import java.util.Arrays;
 
-import io.github.palexdev.mfxcore.input.KeyShortcut;
+import io.github.palexdev.mfxcore.input.KeyStroke;
 import io.github.palexdev.mfxcore.utils.fx.FXCollectors;
 import javafx.beans.binding.BooleanExpression;
 import javafx.collections.FXCollections;
@@ -29,7 +29,7 @@ import javafx.scene.Node;
 
 /// This record represents an entry in a [MFXMenu] and has five key properties:
 /// - The icon and the text for the entry, these **should** always be present.
-/// - A [KeyShortcut] that triggers the action. To be precise, this is more of a hint to the user, there's no
+/// - A [KeyStroke] that triggers the action. To be precise, this is more of a hint to the user, there's no
 /// key event handling involved. The event handling cannot be done by the menu or its entries, but rather they must be
 /// intercepted and processed on the owner. Two examples come to my mind:
 ///     1) Preset app-wise action. For example, 'Save' or 'Load' in a text editor. In this case a key map on the app's
@@ -40,10 +40,11 @@ import javafx.scene.Node;
 /// - A list of [MFXMenuItems][MFXMenuItem]. When this is not empty, it indicates that the entry should open a submenu.
 ///
 /// @see MFXMenuItem#SEPARATOR
+// TODO support selection? (maybe we should use a standard class, it's too big)
 public record MFXMenuItem(
     Node icon,
     String text,
-    KeyShortcut shortcut,
+    KeyStroke shortcut,
     Runnable action,
     BooleanExpression disableExpression,
     ObservableList<MFXMenuItem> children
@@ -108,7 +109,7 @@ public record MFXMenuItem(
     public static class Builder {
         private Node icon;
         private String text;
-        private KeyShortcut shortcut;
+        private KeyStroke shortcut;
         private Runnable action;
         private BooleanExpression disableExpression;
         private ObservableList<MFXMenuItem> children;
@@ -123,14 +124,14 @@ public record MFXMenuItem(
             return this;
         }
 
-        public Builder shortcut(KeyShortcut shortcut) {
+        public Builder shortcut(KeyStroke shortcut) {
             this.shortcut = shortcut;
             return this;
         }
 
-        /// The string should follow the format indicated [here][KeyShortcut#of(String)].
+        /// The string should follow the format indicated [here][KeyStroke#of(String)].
         public Builder shortcut(String shortcut) {
-            this.shortcut = KeyShortcut.of(shortcut);
+            this.shortcut = KeyStroke.of(shortcut);
             return this;
         }
 

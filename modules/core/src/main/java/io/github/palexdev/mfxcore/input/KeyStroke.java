@@ -37,13 +37,13 @@ import javafx.scene.input.KeyEvent;
 /// 2) From a string, see [#of(String)]
 ///
 /// Technically, there's also a third one, which is [#fromEvent(KeyEvent)], but that is more of a utility to check if
-/// a [KeyEvent] corresponds to a certain [KeyShortcut].
+/// a [KeyEvent] corresponds to a certain [KeyStroke].
 ///
 /// The [Key][KeyCode] for the shortcut can't be a modifier ([KeyCode#isModifierKey()]) and it should be a valid key
 /// according to [KeyCodeUtils#isValidShortcutKey(KeyCode)].
 ///
 /// To display the shortcut in the UI don't use `toString()`, but rather [#toDisplayString()].
-public record KeyShortcut(
+public record KeyStroke(
     EnumSet<KeyModifier> modifiers,
     KeyCode key
 ) {
@@ -51,19 +51,19 @@ public record KeyShortcut(
     //================================================================================
     // Constructors
     //================================================================================
-    public KeyShortcut {
+    public KeyStroke {
         if (key.isModifierKey())
             throw new IllegalArgumentException("Cannot use modifier key as shortcut key: " + key);
         if (!KeyCodeUtils.isValidShortcutKey(key))
             throw new IllegalArgumentException("Invalid shortcut key: " + key);
     }
 
-    public KeyShortcut(KeyCode code, KeyModifier... modifiers) {
+    public KeyStroke(KeyCode code, KeyModifier... modifiers) {
         this(EnumSet.noneOf(KeyModifier.class), code);
         Collections.addAll(this.modifiers, modifiers);
     }
 
-    /// Creates a new [KeyShortcut] from the given string. Here's the ideal format for the string:
+    /// Creates a new [KeyStroke] from the given string. Here's the ideal format for the string:
     /// `<modifier>+<modifier>+...<key>` where:
     /// - Each key/modifier is separated by the sign `+`
     /// - Modifiers can be zero or more
@@ -72,7 +72,7 @@ public record KeyShortcut(
     ///
     /// @throws IllegalArgumentException if the string is `null` or empty
     /// @throws IllegalArgumentException if the key cannot be parsed from the string
-    public static KeyShortcut of(String s) {
+    public static KeyStroke of(String s) {
         if (s == null || s.trim().isEmpty()) {
             throw new IllegalArgumentException("Key combo string cannot be null or empty");
         }
@@ -91,45 +91,40 @@ public record KeyShortcut(
         if (code == null) {
             throw new IllegalArgumentException("Could not parse key from combo string: " + s);
         }
-        return new KeyShortcut(modifiers, code);
+        return new KeyStroke(modifiers, code);
     }
 
-    /// Convenience method to create a new [KeyShortcut] object from a JavaFX [KeyEvent].
+    /// Convenience method to create a new [KeyStroke] object from a JavaFX [KeyEvent].
     /// This is useful if you want to check whether an event corresponds to your desired key combination.
     ///
-    /// **Minor Performance Improvement**
+    /// **Implementation Details**
     ///
     /// The only way to check which modifiers are active on a [KeyEvent] is to use the various query methods.
-    /// ([KeyEvent#isAltDown()], [KeyEvent#isShiftDown()],...)
-    /// This means that to create a [KeyShortcut] from an event, there are a series of ifs here to add the right [KeyModifiers][KeyModifier].
+    /// ([KeyEvent#isAltDown()], [KeyEvent#isShiftDown()], etc...)
+    /// This means that to create a [KeyStroke] from an event, there are a series of ifs here to add the right [KeyModifiers][KeyModifier].
     ///
-    /// The recommended way to use this is as follows:
-    /// ```java
-    /// EventHandler<KeyEvent> handler = e -> {
-    ///     if (e.getText() != null && !e.getText().isEmpty()){
-    ///         KeyShortcut ks = KeyShortcut.fromEvent(ke);
-    ///         // ...your logic here
-    ///}
-    ///}
-    ///```
-    /// Explanation: [KeyEvents][KeyEvent] are fired for modifiers too. For example, if you press `SHIFT`, JavaFX will
-    /// notify of such event. However, for a shortcut, such events are irrelevant.
-    /// We want to create a [KeyShortcut] only when a "standard" key is pressed. So, to filter events, we check the
+    /// However, we can slightly optimize this by excluding events for which [KeyEvent#getText()] is `null` or empty.
+    /// This is possible because [KeyEvents][KeyEvent] are fired for modifiers too. For example, if you press `SHIFT`,
+    /// JavaFX will notify of such an event, but these are irrelevant for a keystroke.<br >
+    /// We want to create a [KeyStroke] only when a "standard" key is pressed. So, to filter events, we check the
     /// `getText()` value, which apparently is `null` or empty for special keys (did not test in depth though!).
-    public static KeyShortcut fromEvent(KeyEvent ke) {
+    public static KeyStroke fromEvent(KeyEvent ke) {
+        if (ke.getText() == null || ke.getText().isEmpty())
+            return null;
+
         EnumSet<KeyModifier> modifiers = EnumSet.noneOf(KeyModifier.class);
         if (ke.isAltDown()) modifiers.add(KeyModifier.ALT);
         if (ke.isControlDown()) modifiers.add(KeyModifier.CONTROL);
         if (ke.isShiftDown()) modifiers.add(KeyModifier.SHIFT);
         if (ke.isMetaDown()) modifiers.add(KeyModifier.META);
-        return new KeyShortcut(modifiers, ke.getCode());
+        return new KeyStroke(modifiers, ke.getCode());
     }
 
     //================================================================================
     // Methods
     //================================================================================
 
-    /// Converts this [KeyShortcut] to a string which can be displayed in UI components.
+    /// Converts this [KeyStroke] to a string which can be displayed in UI components.
     ///
     /// First it appends all modifiers, then the [KeyCode] converted with [KeyCodeUtils#toDisplayString(KeyCode)].
     /// Everything is separated by `+` signs.
