@@ -41,7 +41,6 @@ import javafx.scene.control.Skin;
 /// The skin factory is more of a convenience to the user that does not need to inline-override the method responsible for
 /// creating the skin. The new mechanism is much more flexible and automatically integrates with the behavior API.<br >
 /// As a consequence, components that inherit from this do not support the "-fx-skin" CSS property. You'll have to do it in code.
-@SuppressWarnings({"rawtypes", "unchecked"})
 public abstract class Labeled extends javafx.scene.control.Labeled implements WithBehavior, MFXSkinnable {
     //================================================================================
     // Properties
@@ -50,12 +49,10 @@ public abstract class Labeled extends javafx.scene.control.Labeled implements Wi
     private final SupplierProperty<BehaviorBase<? extends Node>> behaviorFactory = new SupplierProperty<>() {
         @Override
         protected void invalidated() {
-            if (behavior != null) {
-                behavior.dispose();
-            }
+            if (behavior != null) behavior.dispose();
             behavior = get().get();
-            SkinBase skin = (SkinBase) getSkin();
-            if (skin != null && behavior != null) skin.initBehavior(behavior);
+            SkinBase<?> skin = (SkinBase<?>) getSkin();
+            if (skin != null && behavior != null) skin.registerBehavior();
         }
     };
     private final SupplierProperty<SkinBase<? extends Control>> skinFactory = new SupplierProperty<>() {
@@ -92,15 +89,15 @@ public abstract class Labeled extends javafx.scene.control.Labeled implements Wi
     //================================================================================
 
     /// This is the core method responsible for creating the component's skin when the [#skinFactoryProperty()]
-    /// changes. Does not allow `null` skins and automatically call [SkinBase#initBehavior(BehaviorBase)]
+    /// changes. Does not allow `null` skins and automatically call [SkinBase#registerBehavior(BehaviorBase)]
     /// with the current behavior.
     ///
     /// Note that the very first skin instance is created by JavaFX with the usual [#createDefaultSkin()].
     protected SkinBase<?> buildSkin() {
-        SkinBase skin = getSkinFactory().get();
+        SkinBase<?> skin = getSkinFactory().get();
         if (skin == null)
             throw new IllegalArgumentException("The new skin cannot be null!");
-        skin.initBehavior(behavior);
+        skin.registerBehavior();
         return skin;
     }
 
@@ -114,8 +111,8 @@ public abstract class Labeled extends javafx.scene.control.Labeled implements Wi
     @Override
     public void preloadSkin() {
         MFXSkinnable.super.preloadSkin();
-        if (getSkin() instanceof SkinBase sb)
-            sb.initBehavior(behavior);
+        if (getSkin() instanceof SkinBase<?> sb)
+            sb.registerBehavior();
     }
 
     /// {@inheritDoc}

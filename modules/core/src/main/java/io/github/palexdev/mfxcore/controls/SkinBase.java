@@ -43,7 +43,7 @@ import javafx.scene.Node;
 ///
 /// [Control] and [Labeled] are a bridge between these three parts. They retain the reference of the current
 /// built behavior object, which can be retrieved via [#getBehavior()]. They are responsible for calling
-/// [#initBehavior(BehaviorBase)] every time the behavior changes, as well as dispose it, of course.
+/// [#registerBehavior()] every time the behavior changes, as well as dispose it, of course.
 ///
 /// The behavior is specifically responsible for managing user input, in other words, event handlers and filters.
 /// On the other hand, the skin is responsible for handling listeners related to the control's properties.
@@ -63,7 +63,7 @@ import javafx.scene.Node;
 ///  - Have a component that extends either [Control], [Labeled] or any of their subclasses
 ///  - Having an implementation of this base Skin, either one of the already provided or a custom one
 ///  - Having a behavior class and set the factory on the component, or using [BehaviorBase] if you don't need it
-///  - Override the [#initBehavior(BehaviorBase)] to initialize the behavior if needed
+///  - Override the [#registerBehavior()] to initialize the behavior if needed
 ///  - Initialization and changes to the behavior factory are automatically handled, hassle-free
 public abstract class SkinBase<C extends javafx.scene.control.Control & WithBehavior> extends javafx.scene.control.SkinBase<C> {
     //================================================================================
@@ -80,12 +80,11 @@ public abstract class SkinBase<C extends javafx.scene.control.Control & WithBeha
     // Methods
     //================================================================================
 
-    /// This is responsible for initializing the behavior every time it changes.
-    /// The given parameter is the current uninitialized behavior.
+    /// This should be overridden when needed to register additional behavior logic onto the control's behavior class.
     ///
-    /// To avoid boilerplate code, this already calls [BehaviorBase#init()].
-    protected void initBehavior(BehaviorBase<? extends C> behavior) {
-        behavior.init();
+    /// By default, calls [BehaviorBase#init()]
+    protected void registerBehavior() {
+        getBehavior().init();
     }
 
     //================================================================================

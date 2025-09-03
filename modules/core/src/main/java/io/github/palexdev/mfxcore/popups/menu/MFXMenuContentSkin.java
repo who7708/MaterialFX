@@ -164,9 +164,10 @@ public class MFXMenuContentSkin extends SkinBase<MFXMenuContent> {
     /// - An event handler on the control itself for key handling,
     /// see [MFXMenuContentBehavior#keyPressed(KeyEvent, Consumer)]
     @Override
-    protected void initBehavior(BehaviorBase<? extends MFXMenuContent> behavior) {
-        super.initBehavior(behavior);
+    protected void registerBehavior() {
+        super.registerBehavior();
         MFXMenuContent mc = getSkinnable();
+        BehaviorBase<? extends Node> behavior = getBehavior();
         events(
             WhenEvent.intercept(mc, KeyEvent.KEY_PRESSED)
                 .handle(behavior::keyPressed)
