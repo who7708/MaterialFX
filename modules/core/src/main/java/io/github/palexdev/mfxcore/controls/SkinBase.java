@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 import io.github.palexdev.mfxcore.base.Disposable;
-import io.github.palexdev.mfxcore.behavior.BehaviorBase;
+import io.github.palexdev.mfxcore.behavior.MFXBehavior;
 import io.github.palexdev.mfxcore.behavior.WithBehavior;
 import io.github.palexdev.mfxcore.input.WhenEvent;
 import io.github.palexdev.mfxcore.observables.When;
@@ -62,7 +62,7 @@ import javafx.scene.Node;
 /// The development flow for controls with the new Behavior and Skin API would be:
 ///  - Have a component that extends either [Control], [Labeled] or any of their subclasses
 ///  - Having an implementation of this base Skin, either one of the already provided or a custom one
-///  - Having a behavior class and set the factory on the component, or using [BehaviorBase] if you don't need it
+///  - Having a behavior class and set the factory on the component, or using [MFXBehavior] if you don't need it
 ///  - Override the [#registerBehavior()] to initialize the behavior if needed
 ///  - Initialization and changes to the behavior factory are automatically handled, hassle-free
 public abstract class SkinBase<C extends javafx.scene.control.Control & WithBehavior> extends javafx.scene.control.SkinBase<C> {
@@ -82,7 +82,7 @@ public abstract class SkinBase<C extends javafx.scene.control.Control & WithBeha
 
     /// This should be overridden when needed to register additional behavior logic onto the control's behavior class.
     ///
-    /// By default, calls [BehaviorBase#init()]
+    /// By default, calls [MFXBehavior#init()]
     protected void registerBehavior() {
         getBehavior().init();
     }
@@ -142,12 +142,12 @@ public abstract class SkinBase<C extends javafx.scene.control.Control & WithBeha
     ///
     /// Since this is called on the component, the return value could also be `null` if the behavior
     /// factory was not set or produces `null` references.
-    protected BehaviorBase<? extends Node> getBehavior() {
+    protected MFXBehavior<? extends Node> getBehavior() {
         return getSkinnable().getBehavior();
     }
 
     /// Convenience method to get and cast the control's behavior to the given class.
-    protected <B extends BehaviorBase<? extends Node>> B getBehaviorAs(Class<B> klass) {
+    protected <B extends MFXBehavior<? extends Node>> B getBehaviorAs(Class<B> klass) {
         return klass.cast(getBehavior());
     }
 }

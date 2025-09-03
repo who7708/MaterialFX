@@ -19,7 +19,7 @@
 package io.github.palexdev.mfxcore.controls;
 
 import io.github.palexdev.mfxcore.base.properties.functional.SupplierProperty;
-import io.github.palexdev.mfxcore.behavior.BehaviorBase;
+import io.github.palexdev.mfxcore.behavior.MFXBehavior;
 import io.github.palexdev.mfxcore.behavior.WithBehavior;
 import javafx.scene.Node;
 import javafx.scene.control.Skin;
@@ -45,8 +45,8 @@ public abstract class Labeled extends javafx.scene.control.Labeled implements Wi
     //================================================================================
     // Properties
     //================================================================================
-    private BehaviorBase<? extends Node> behavior;
-    private final SupplierProperty<BehaviorBase<? extends Node>> behaviorFactory = new SupplierProperty<>() {
+    private MFXBehavior<? extends Node> behavior;
+    private final SupplierProperty<MFXBehavior<? extends Node>> behaviorFactory = new SupplierProperty<>() {
         @Override
         protected void invalidated() {
             if (behavior != null) behavior.dispose();
@@ -89,7 +89,7 @@ public abstract class Labeled extends javafx.scene.control.Labeled implements Wi
     //================================================================================
 
     /// This is the core method responsible for creating the component's skin when the [#skinFactoryProperty()]
-    /// changes. Does not allow `null` skins and automatically call [SkinBase#registerBehavior(BehaviorBase)]
+    /// changes. Does not allow `null` skins and automatically call [SkinBase#registerBehavior(MFXBehavior)]
     /// with the current behavior.
     ///
     /// Note that the very first skin instance is created by JavaFX with the usual [#createDefaultSkin()].
@@ -128,12 +128,12 @@ public abstract class Labeled extends javafx.scene.control.Labeled implements Wi
     // Getters/Setters
     //================================================================================
     @Override
-    public BehaviorBase<? extends Node> getBehavior() {
+    public MFXBehavior<? extends Node> getBehavior() {
         return behavior;
     }
 
     @Override
-    public SupplierProperty<BehaviorBase<? extends Node>> behaviorFactoryProperty() {
+    public SupplierProperty<MFXBehavior<? extends Node>> behaviorFactoryProperty() {
         return behaviorFactory;
     }
 

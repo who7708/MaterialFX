@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 
 import io.github.palexdev.mfxcore.base.properties.functional.SupplierProperty;
 import io.github.palexdev.mfxcore.base.properties.styleable.StyleableDoubleProperty;
-import io.github.palexdev.mfxcore.behavior.BehaviorBase;
+import io.github.palexdev.mfxcore.behavior.MFXBehavior;
 import io.github.palexdev.mfxcore.controls.Control;
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.controls.SkinBase;
@@ -58,7 +58,7 @@ public class MFXMenuContent extends Control implements MFXStyleable {
     // Overridden Methods
     //================================================================================
     @Override
-    public Supplier<BehaviorBase<? extends Node>> defaultBehaviorFactory() {
+    public Supplier<MFXBehavior<? extends Node>> defaultBehaviorFactory() {
         return () -> new MFXMenuContentBehavior(this);
     }
 

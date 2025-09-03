@@ -27,19 +27,19 @@ import javafx.scene.Node;
 public interface WithBehavior {
 
     /// @return the instance of the current behavior object
-    BehaviorBase<? extends Node> getBehavior();
+    MFXBehavior<? extends Node> getBehavior();
 
     /// @return a [Supplier] that is the factory for the default behavior used by the component.
-    Supplier<BehaviorBase<? extends Node>> defaultBehaviorFactory();
+    Supplier<MFXBehavior<? extends Node>> defaultBehaviorFactory();
 
-    default Supplier<BehaviorBase<? extends Node>> getBehaviorFactory() {
+    default Supplier<MFXBehavior<? extends Node>> getBehaviorFactory() {
         return behaviorFactoryProperty().get();
     }
 
     /// Specifies the [Supplier] used to produce a behavior object for the component.
-    SupplierProperty<BehaviorBase<? extends Node>> behaviorFactoryProperty();
+    SupplierProperty<MFXBehavior<? extends Node>> behaviorFactoryProperty();
 
-    default void setBehaviorFactory(Supplier<BehaviorBase<? extends Node>> factory) {
+    default void setBehaviorFactory(Supplier<MFXBehavior<? extends Node>> factory) {
         behaviorFactoryProperty().set(factory);
     }
 

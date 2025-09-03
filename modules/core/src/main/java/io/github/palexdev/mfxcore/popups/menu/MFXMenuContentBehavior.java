@@ -20,7 +20,7 @@ package io.github.palexdev.mfxcore.popups.menu;
 
 import java.util.function.Consumer;
 
-import io.github.palexdev.mfxcore.behavior.BehaviorBase;
+import io.github.palexdev.mfxcore.behavior.MFXBehavior;
 import javafx.scene.Node;
 import javafx.scene.TraversalDirection;
 import javafx.scene.input.KeyCode;
@@ -29,7 +29,7 @@ import javafx.scene.input.KeyEvent;
 /// Default behavior implementation for [MFXMenuContent].
 ///
 /// There isn't much going on here except for a focus handling workaround in [#keyPressed(KeyEvent, Consumer)].
-public class MFXMenuContentBehavior extends BehaviorBase<MFXMenuContent> {
+public class MFXMenuContentBehavior extends MFXBehavior<MFXMenuContent> {
 
     //================================================================================
     // Constructors

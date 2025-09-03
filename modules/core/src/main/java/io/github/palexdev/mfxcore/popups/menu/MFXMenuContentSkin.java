@@ -22,7 +22,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import io.github.palexdev.mfxcore.behavior.BehaviorBase;
+import io.github.palexdev.mfxcore.behavior.MFXBehavior;
 import io.github.palexdev.mfxcore.controls.SkinBase;
 import io.github.palexdev.mfxcore.input.WhenEvent;
 import io.github.palexdev.mfxcore.utils.fx.LayoutUtils;
@@ -167,7 +167,7 @@ public class MFXMenuContentSkin extends SkinBase<MFXMenuContent> {
     protected void registerBehavior() {
         super.registerBehavior();
         MFXMenuContent mc = getSkinnable();
-        BehaviorBase<? extends Node> behavior = getBehavior();
+        MFXBehavior<? extends Node> behavior = getBehavior();
         events(
             WhenEvent.intercept(mc, KeyEvent.KEY_PRESSED)
                 .handle(behavior::keyPressed)

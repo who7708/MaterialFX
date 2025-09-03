@@ -45,7 +45,7 @@ import javafx.scene.input.TouchEvent;
 /// Actions are taken in the form of [WhenEvent] constructs, they can be added by wrapping them in a
 /// [#register(WhenEvent[])] call. The constructs are added into a list and can be deactivated/disposed by invoking [#dispose()].
 @SuppressWarnings("unchecked")
-public abstract class BehaviorBase<N extends Node> implements Disposable {
+public abstract class MFXBehavior<N extends Node> implements Disposable {
     //================================================================================
     // Static Properties
     //================================================================================
@@ -62,7 +62,7 @@ public abstract class BehaviorBase<N extends Node> implements Disposable {
     // Constructors
     //================================================================================
 
-    protected BehaviorBase(N node) {this.node = node;}
+    protected MFXBehavior(N node) {this.node = node;}
 
     //================================================================================
     // Methods
