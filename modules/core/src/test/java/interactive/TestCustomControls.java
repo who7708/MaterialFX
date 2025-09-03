@@ -27,14 +27,15 @@ import io.github.palexdev.mfxcore.base.beans.Size;
 import io.github.palexdev.mfxcore.base.properties.PositionProperty;
 import io.github.palexdev.mfxcore.base.properties.SizeProperty;
 import io.github.palexdev.mfxcore.base.properties.styleable.StyleableObjectProperty;
-import io.github.palexdev.mfxcore.behavior.BehaviorBase;
-import io.github.palexdev.mfxcore.controls.Control;
+import io.github.palexdev.mfxcore.behavior.MFXBehavior;
 import io.github.palexdev.mfxcore.controls.Label;
-import io.github.palexdev.mfxcore.controls.SkinBase;
+import io.github.palexdev.mfxcore.controls.MFXControl;
+import io.github.palexdev.mfxcore.controls.MFXSkinBase;
 import io.github.palexdev.mfxcore.utils.fx.CSSFragment;
 import io.github.palexdev.mfxcore.utils.fx.StyleUtils;
 import javafx.css.CssMetaData;
 import javafx.css.Styleable;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Skin;
 import javafx.scene.layout.StackPane;
@@ -82,7 +83,7 @@ public class TestCustomControls {
         robot.interact(() -> {
             pane.getChildren().clear();
             assertNull(control.getScene());
-            control.setSkinProvider(() -> new CustomSkin(control) {
+            control.setSkinFactory(() -> new CustomSkin(control) {
                 final Label label = new Label("Hello world!");
 
                 {
@@ -99,7 +100,7 @@ public class TestCustomControls {
         assertEquals(1, control.getChildrenUnmodifiable().size());
 
         robot.interact(() ->
-            control.setSkinProvider(() -> new CustomSkin(control) {
+            control.setSkinFactory(() -> new CustomSkin(control) {
                 final Label label = new Label("Hello custom world!");
 
                 {
@@ -154,19 +155,24 @@ public class TestCustomControls {
     //================================================================================
     // Inner Classes
     //================================================================================
-    static class CustomControl extends Control<CustomBehavior> {
+    static class CustomControl extends MFXControl {
 
         {
-            getStyleClass().add("my-control");
+            getStyleClass().add("my-node");
         }
 
         @Override
-        public Supplier<CustomBehavior> defaultBehaviorProvider() {
+        public CustomBehavior getBehavior() {
+            return ((CustomBehavior) super.getBehavior());
+        }
+
+        @Override
+        public Supplier<MFXBehavior<? extends Node>> defaultBehaviorFactory() {
             return () -> new CustomBehavior(this);
         }
 
         @Override
-        public Supplier<SkinBase<?, ?>> defaultSkinProvider() {
+        public Supplier<MFXSkinBase<? extends MFXControl>> defaultSkinFactory() {
             return () -> new CustomSkin(this);
         }
 
@@ -197,7 +203,7 @@ public class TestCustomControls {
         );
 
         private static final List<CssMetaData<? extends Styleable, ?>> CSS_META = StyleUtils.cssMetaDataList(
-            Control.getClassCssMetaData(),
+            MFXControl.getClassCssMetaData(),
             _SIZE, _POSITION
         );
 
@@ -212,7 +218,7 @@ public class TestCustomControls {
 
     }
 
-    static class CustomBehavior extends BehaviorBase<CustomControl> {
+    static class CustomBehavior extends MFXBehavior<CustomControl> {
         public static int instances = 0;
         public int initCount = 0;
 
@@ -227,11 +233,11 @@ public class TestCustomControls {
         }
     }
 
-    static class CustomSkin extends SkinBase<CustomControl, CustomBehavior> {
+    static class CustomSkin extends MFXSkinBase<CustomControl> {
         public static int instances = 0;
 
-        public CustomSkin(CustomControl control) {
-            super(control);
+        public CustomSkin(CustomControl node) {
+            super(node);
             instances++;
         }
     }

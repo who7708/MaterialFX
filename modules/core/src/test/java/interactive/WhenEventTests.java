@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.palexdev.mfxcore.base.Disposable;
-import io.github.palexdev.mfxcore.events.WhenEvent;
+import io.github.palexdev.mfxcore.input.WhenEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
@@ -58,7 +58,7 @@ public class WhenEventTests {
 
         WhenEvent<MouseEvent> w1 = WhenEvent.intercept(btn, MouseEvent.MOUSE_CLICKED)
             .condition(e -> e.getButton() == MouseButton.PRIMARY)
-            .process(e -> cnt.incrementAndGet())
+            .handle(e -> cnt.incrementAndGet())
             .register();
 
         robot.clickOn(btn);
@@ -69,7 +69,7 @@ public class WhenEventTests {
 
         WhenEvent<KeyEvent> w2 = WhenEvent.intercept(btn, KeyEvent.KEY_PRESSED)
             .condition(e -> e.getCode() == KeyCode.ENTER)
-            .process(e -> cnt.incrementAndGet())
+            .handle(e -> cnt.incrementAndGet())
             .register();
 
         if (!btn.isFocused()) robot.interact(btn::requestFocus);
@@ -77,7 +77,7 @@ public class WhenEventTests {
         assertEquals(2, cnt.get());
 
         WhenEvent<MouseEvent> w3 = WhenEvent.intercept(btn, MouseEvent.MOUSE_PRESSED)
-            .process(e -> cnt.incrementAndGet())
+            .handle(e -> cnt.incrementAndGet())
             .register();
 
         robot.clickOn(btn);
@@ -100,7 +100,7 @@ public class WhenEventTests {
         AtomicInteger cnt = new AtomicInteger();
 
         WhenEvent<MouseEvent> w = WhenEvent.intercept(btn, MouseEvent.MOUSE_CLICKED)
-            .process(e -> cnt.incrementAndGet())
+            .handle(e -> cnt.incrementAndGet())
             .oneShot()
             .register();
 
@@ -118,7 +118,7 @@ public class WhenEventTests {
         AtomicInteger cnt = new AtomicInteger();
 
         WhenEvent<MouseEvent> w1 = WhenEvent.intercept(btn, MouseEvent.MOUSE_CLICKED)
-            .process(e -> {
+            .handle(e -> {
                 cnt.incrementAndGet();
                 e.consume();
             })
@@ -126,14 +126,14 @@ public class WhenEventTests {
             .register();
 
         WhenEvent<MouseEvent> w2 = WhenEvent.intercept(btn, MouseEvent.MOUSE_CLICKED)
-            .process(e -> cnt.incrementAndGet())
+            .handle(e -> cnt.incrementAndGet())
             .register();
 
         robot.clickOn(btn);
         assertEquals(1, cnt.get());
 
         WhenEvent<MouseEvent> w3 = WhenEvent.intercept(btn, MouseEvent.MOUSE_PRESSED)
-            .process(e -> cnt.incrementAndGet())
+            .handle(e -> cnt.incrementAndGet())
             .register();
 
         robot.clickOn(btn);
@@ -152,7 +152,7 @@ public class WhenEventTests {
 
         WhenEvent<MouseEvent> w1 = WhenEvent.intercept(btn, MouseEvent.MOUSE_CLICKED)
             .condition(e -> e.getButton() == MouseButton.SECONDARY)
-            .process(e -> {
+            .handle(e -> {
                 cnt.incrementAndGet();
                 e.consume();
             })
@@ -163,7 +163,7 @@ public class WhenEventTests {
             .register();
 
         WhenEvent<MouseEvent> w2 = WhenEvent.intercept(btn, MouseEvent.MOUSE_CLICKED)
-            .process(e -> cnt.incrementAndGet())
+            .handle(e -> cnt.incrementAndGet())
             .register();
 
         robot.clickOn(btn);
