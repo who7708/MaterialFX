@@ -75,7 +75,7 @@ public abstract class MFXSkinBase<C extends javafx.scene.control.Control & WithB
     //================================================================================
     // Constructors
     //================================================================================
-    protected MFXSkinBase(C control) {super(control);}
+    public MFXSkinBase(C control) {super(control);}
 
     //================================================================================
     // Methods
@@ -95,8 +95,7 @@ public abstract class MFXSkinBase<C extends javafx.scene.control.Control & WithB
     /// Delegate for [#register(WhenEvent[])].
     ///
     /// Note this will do nothing if the return value of [#getBehavior()] is `null`.
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public void events(WhenEvent... wes) {
+    public void events(WhenEvent<?>... wes) {
         Optional.ofNullable(getBehavior()).ifPresent(b -> b.register(wes));
     }
 

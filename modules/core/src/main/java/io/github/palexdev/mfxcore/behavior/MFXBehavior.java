@@ -25,7 +25,6 @@ import java.util.function.Consumer;
 
 import io.github.palexdev.mfxcore.base.Disposable;
 import io.github.palexdev.mfxcore.input.WhenEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;
@@ -71,8 +70,12 @@ public abstract class MFXBehavior<N extends Node> implements Disposable {
     /// Behaviors can specify a set of actions to initialize themselves if needed.
     public void init() {}
 
-    @SafeVarargs
-    public final <E extends Event> void register(WhenEvent<E>... ws) {
+    /// The behavior API registers input actions in the form of [WhenEvent] constructs. This method adds them
+    /// to a list (which will be used for disposal, avoiding memory leaks when calling [#dispose()]).
+    ///
+    /// Also note that if the constructs were not activated before by invoking [WhenEvent#register()], this method
+    /// will do it for you automatically.
+    public final void register(WhenEvent<?>... ws) {
         for (WhenEvent<?> w : ws) {
             if (!w.isActive()) w.register();
             handlers.add(w);
