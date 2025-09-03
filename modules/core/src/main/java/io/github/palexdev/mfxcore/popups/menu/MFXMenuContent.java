@@ -24,9 +24,9 @@ import java.util.function.Supplier;
 import io.github.palexdev.mfxcore.base.properties.functional.SupplierProperty;
 import io.github.palexdev.mfxcore.base.properties.styleable.StyleableDoubleProperty;
 import io.github.palexdev.mfxcore.behavior.MFXBehavior;
-import io.github.palexdev.mfxcore.controls.Control;
+import io.github.palexdev.mfxcore.controls.MFXControl;
+import io.github.palexdev.mfxcore.controls.MFXSkinBase;
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
-import io.github.palexdev.mfxcore.controls.SkinBase;
 import io.github.palexdev.mfxcore.utils.Memoizer;
 import io.github.palexdev.mfxcore.utils.fx.StyleUtils;
 import javafx.css.CssMetaData;
@@ -34,12 +34,12 @@ import javafx.css.Styleable;
 import javafx.css.StyleablePropertyFactory;
 import javafx.scene.Node;
 
-/// This class represents the base and preset type of content for any [MFXMenu]. Extends [Control], and has [MFXMenuContentBehavior]
+/// This class represents the base and preset type of content for any [MFXMenu]. Extends [MFXControl], and has [MFXMenuContentBehavior]
 /// and [MFXMenuContentSkin] as its default behavior and skin implementations. It also implements [MFXStyleable], the
 /// default style class to select this from CSS is: `.menu-content`.
 ///
 /// It also allows you to specify a [Node] to show when the menu is empty through the [#placeholderSupplierProperty()].
-public class MFXMenuContent extends Control implements MFXStyleable {
+public class MFXMenuContent extends MFXControl implements MFXStyleable {
     //================================================================================
     // Properties
     //================================================================================
@@ -63,7 +63,7 @@ public class MFXMenuContent extends Control implements MFXStyleable {
     }
 
     @Override
-    public Supplier<SkinBase<? extends Control>> defaultSkinFactory() {
+    public Supplier<MFXSkinBase<? extends MFXControl>> defaultSkinFactory() {
         return () -> new MFXMenuContentSkin(this);
     }
 
@@ -106,7 +106,7 @@ public class MFXMenuContent extends Control implements MFXStyleable {
     // CssMetaData
     //================================================================================
     private static class StyleableProperties {
-        private static final StyleablePropertyFactory<MFXMenuContent> FACTORY = new StyleablePropertyFactory<>(Control.getClassCssMetaData());
+        private static final StyleablePropertyFactory<MFXMenuContent> FACTORY = new StyleablePropertyFactory<>(MFXControl.getClassCssMetaData());
         private static final List<CssMetaData<? extends Styleable, ?>> cssMetaDataList;
 
         private static final CssMetaData<MFXMenuContent, Number> SPACING =
@@ -118,7 +118,7 @@ public class MFXMenuContent extends Control implements MFXStyleable {
 
         static {
             cssMetaDataList = StyleUtils.cssMetaDataList(
-                Control.getClassCssMetaData(),
+                MFXControl.getClassCssMetaData(),
                 SPACING
             );
         }

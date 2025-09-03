@@ -28,8 +28,9 @@ import io.github.palexdev.mfxcore.behavior.WithBehavior;
 import io.github.palexdev.mfxcore.input.WhenEvent;
 import io.github.palexdev.mfxcore.observables.When;
 import javafx.scene.Node;
+import javafx.scene.control.SkinBase;
 
-/// Extension of [javafx.scene.control.SkinBase] used by components that want a seamless integration with the new Behavior API.
+/// Extension of [SkinBase] used by components that want a seamless integration with the new Behavior API.
 /// The skin is responsible for initializing the behavior as needed.
 ///
 /// This integration defines a specific and recommended strategy to develop UI components. There are three main parts:
@@ -41,7 +42,7 @@ import javafx.scene.Node;
 /// The behavior may need to be connected with the specs of the component, as well as with the subcomponents defined in
 /// its view.
 ///
-/// [Control] and [Labeled] are a bridge between these three parts. They retain the reference of the current
+/// [MFXControl] and [MFXLabeled] are a bridge between these three parts. They retain the reference of the current
 /// built behavior object, which can be retrieved via [#getBehavior()]. They are responsible for calling
 /// [#registerBehavior()] every time the behavior changes, as well as dispose it, of course.
 ///
@@ -60,12 +61,12 @@ import javafx.scene.Node;
 ///
 ///
 /// The development flow for controls with the new Behavior and Skin API would be:
-///  - Have a component that extends either [Control], [Labeled] or any of their subclasses
+///  - Have a component that extends either [MFXControl], [MFXLabeled] or any of their subclasses
 ///  - Having an implementation of this base Skin, either one of the already provided or a custom one
 ///  - Having a behavior class and set the factory on the component, or using [MFXBehavior] if you don't need it
 ///  - Override the [#registerBehavior()] to initialize the behavior if needed
 ///  - Initialization and changes to the behavior factory are automatically handled, hassle-free
-public abstract class SkinBase<C extends javafx.scene.control.Control & WithBehavior> extends javafx.scene.control.SkinBase<C> {
+public abstract class MFXSkinBase<C extends javafx.scene.control.Control & WithBehavior> extends SkinBase<C> {
     //================================================================================
     // Properties
     //================================================================================
@@ -74,7 +75,7 @@ public abstract class SkinBase<C extends javafx.scene.control.Control & WithBeha
     //================================================================================
     // Constructors
     //================================================================================
-    protected SkinBase(C control) {super(control);}
+    protected MFXSkinBase(C control) {super(control);}
 
     //================================================================================
     // Methods

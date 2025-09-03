@@ -38,16 +38,16 @@ public interface MFXSkinnable extends Skinnable {
     }
 
     /// @return a [Supplier] that is the factory for the default skin used by the component.
-    Supplier<SkinBase<? extends Control>> defaultSkinFactory();
+    Supplier<MFXSkinBase<? extends MFXControl>> defaultSkinFactory();
 
-    default Supplier<SkinBase<? extends Control>> getSkinFactory() {
+    default Supplier<MFXSkinBase<? extends MFXControl>> getSkinFactory() {
         return skinFactoryProperty().get();
     }
 
     /// Specifies the [Supplier] used to produce a skin object for the component.
-    SupplierProperty<SkinBase<? extends Control>> skinFactoryProperty();
+    SupplierProperty<MFXSkinBase<? extends MFXControl>> skinFactoryProperty();
 
-    default void setSkinFactory(Supplier<SkinBase<? extends Control>> factory) {
+    default void setSkinFactory(Supplier<MFXSkinBase<? extends MFXControl>> factory) {
         skinFactoryProperty().set(factory);
     }
 
