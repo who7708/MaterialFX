@@ -18,6 +18,8 @@
 
 package io.github.palexdev.mfxcore.selection;
 
+import java.util.function.Consumer;
+
 /// Public API for components that are selectable (checks, radios, toggles and such).
 ///
 /// Ideally, such controls should have two things:
@@ -58,4 +60,9 @@ public interface Selectable {
     default void setSelectionGroup(SelectionGroup group) {
         selectionGroupProperty().set(group);
     }
+
+    /// Allows specifying a callback to invoke when the selection state of this `Selectable` changes.
+    ///
+    /// This is an optional API. By default, does nothing.
+    default void onSelectionChanged(Consumer<Boolean> action) {}
 }
