@@ -18,9 +18,16 @@
 
 package io.github.palexdev.mfxcore.controls;
 
+import java.util.List;
+
 import io.github.palexdev.mfxcore.base.properties.functional.SupplierProperty;
+import io.github.palexdev.mfxcore.base.properties.styleable.StyleableDoubleProperty;
 import io.github.palexdev.mfxcore.behavior.MFXBehavior;
 import io.github.palexdev.mfxcore.behavior.WithBehavior;
+import io.github.palexdev.mfxcore.utils.fx.StyleUtils;
+import javafx.css.CssMetaData;
+import javafx.css.Styleable;
+import javafx.css.StyleablePropertyFactory;
 import javafx.scene.Node;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.Skin;
@@ -124,6 +131,64 @@ public abstract class MFXLabeled extends Labeled implements WithBehavior, MFXSki
     @Override
     protected final MFXSkinBase<?> createDefaultSkin() {
         return buildSkin();
+    }
+
+    //================================================================================
+    // Styleable Properties
+    //================================================================================
+    private final StyleableDoubleProperty textOpacity = new StyleableDoubleProperty(
+        StyleableProperties.TEXT_OPACITY,
+        this,
+        "textOpacity",
+        1.0
+    );
+
+    public double getTextOpacity() {
+        return textOpacity.get();
+    }
+
+    /// Specifies the text node's opacity (not the label itself!).
+    ///
+    /// _This will work only if the skin uses labels of type [Label]!_
+    ///
+    /// Can be set from CSS via the property: '-mfx-text-opacity'.
+    public StyleableDoubleProperty textOpacityProperty() {
+        return textOpacity;
+    }
+
+    public void setTextOpacity(double textOpacity) {
+        this.textOpacity.set(textOpacity);
+    }
+
+    //================================================================================
+    // CssMetaData
+    //================================================================================
+    private static class StyleableProperties {
+        private static final StyleablePropertyFactory<MFXLabeled> FACTORY = new StyleablePropertyFactory<>(Labeled.getClassCssMetaData());
+        private static final List<CssMetaData<? extends Styleable, ?>> cssMetaDataList;
+
+        private static final CssMetaData<MFXLabeled, Number> TEXT_OPACITY =
+            FACTORY.createSizeCssMetaData(
+                "-mfx-text-opacity",
+                MFXLabeled::textOpacityProperty,
+                1.0
+            );
+
+        static {
+            cssMetaDataList = StyleUtils.cssMetaDataList(
+                Labeled.getClassCssMetaData(),
+                TEXT_OPACITY
+            );
+        }
+    }
+
+    public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
+        return StyleableProperties.cssMetaDataList;
+    }
+
+    @Override
+    public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
+        return getClassCssMetaData();
     }
 
     //================================================================================
