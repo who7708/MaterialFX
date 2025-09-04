@@ -133,9 +133,9 @@ public abstract class MFXSkinBase<C extends javafx.scene.control.Control & WithB
     // Getters
     //================================================================================
 
-    /// Since [#getSkinnable()] is final, this is a convenience method to get and cast a control to the given class.
-    protected <C1 extends C> C1 getControlAs(Class<C1> klass) {
-        return klass.cast(getSkinnable());
+    /// Delegate for [#getSkinnable()] that can be overridden!
+    protected C getControl() {
+        return getSkinnable();
     }
 
     /// Delegate for [WithBehavior#getBehavior()].
