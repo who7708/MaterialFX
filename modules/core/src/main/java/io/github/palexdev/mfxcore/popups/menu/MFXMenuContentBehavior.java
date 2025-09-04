@@ -52,7 +52,7 @@ public class MFXMenuContentBehavior extends MFXBehavior<MFXMenuContent> {
     /// @see Node#requestFocusTraversal(TraversalDirection)
     /// @see TraversalDirection#NEXT
     @Override
-    public void keyPressed(KeyEvent ke, Consumer<KeyEvent> callback) {
+    public void keyPressed(KeyEvent ke, Runnable callback) {
         MFXMenuContent mc = getNode();
         if (ke.getCode() == KeyCode.DOWN && mc.isFocused()) {
             mc.requestFocusTraversal(TraversalDirection.NEXT);
@@ -60,6 +60,6 @@ public class MFXMenuContentBehavior extends MFXBehavior<MFXMenuContent> {
         if (ke.getCode() == KeyCode.ESCAPE) {
             mc.getMenu().hide();
         }
-        if (callback != null) callback.accept(ke);
+        callback.run();
     }
 }

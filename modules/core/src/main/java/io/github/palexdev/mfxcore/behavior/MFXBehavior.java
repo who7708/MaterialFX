@@ -43,13 +43,11 @@ import javafx.scene.input.TouchEvent;
 ///
 /// Actions are taken in the form of [WhenEvent] constructs, they can be added by wrapping them in a
 /// [#register(WhenEvent[])] call. The constructs are added into a list and can be deactivated/disposed by invoking [#dispose()].
-@SuppressWarnings("unchecked")
 public abstract class MFXBehavior<N extends Node> implements Disposable {
     //================================================================================
     // Static Properties
     //================================================================================
-    @SuppressWarnings("rawtypes")
-    public static final Consumer NO_OP_CALLBACK = _ -> {};
+    public static final Runnable NO_OP_CALLBACK = () -> {};
 
     //================================================================================
     // Properties
@@ -92,8 +90,8 @@ public abstract class MFXBehavior<N extends Node> implements Disposable {
     ///
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-    public void mousePressed(MouseEvent e, Consumer<MouseEvent> callback) {
-        callback.accept(e);
+    public void mousePressed(MouseEvent e, Runnable callback) {
+        callback.run();
     }
 
     /// Convenience delegate method for [#mousePressed(MouseEvent, Consumer)], invoked with a no-op callback.
@@ -105,8 +103,8 @@ public abstract class MFXBehavior<N extends Node> implements Disposable {
     ///
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-    public void mouseReleased(MouseEvent e, Consumer<MouseEvent> callback) {
-        callback.accept(e);
+    public void mouseReleased(MouseEvent e, Runnable callback) {
+        callback.run();
     }
 
     /// Convenience delegate method for [#mouseReleased(MouseEvent, Consumer)], invoked with a no-op callback.
@@ -118,8 +116,8 @@ public abstract class MFXBehavior<N extends Node> implements Disposable {
     ///
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-    public void mouseClicked(MouseEvent e, Consumer<MouseEvent> callback) {
-        callback.accept(e);
+    public void mouseClicked(MouseEvent e, Runnable callback) {
+        callback.run();
     }
 
     /// Convenience delegate method for [#mouseClicked(MouseEvent, Consumer)], invoked with a no-op callback.
@@ -131,8 +129,8 @@ public abstract class MFXBehavior<N extends Node> implements Disposable {
     ///
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-    public void mouseMoved(MouseEvent e, Consumer<MouseEvent> callback) {
-        callback.accept(e);
+    public void mouseMoved(MouseEvent e, Runnable callback) {
+        callback.run();
     }
 
     /// Convenience delegate method for [#mouseMoved(MouseEvent, Consumer)], invoked with a no-op callback.
@@ -144,8 +142,8 @@ public abstract class MFXBehavior<N extends Node> implements Disposable {
     ///
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-    public void mouseDragged(MouseEvent e, Consumer<MouseEvent> callback) {
-        callback.accept(e);
+    public void mouseDragged(MouseEvent e, Runnable callback) {
+        callback.run();
     }
 
     /// Convenience delegate method for [#mouseDragged(MouseEvent, Consumer)], invoked with a no-op callback.
@@ -157,8 +155,8 @@ public abstract class MFXBehavior<N extends Node> implements Disposable {
     ///
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-    public void mouseEntered(MouseEvent e, Consumer<MouseEvent> callback) {
-        callback.accept(e);
+    public void mouseEntered(MouseEvent e, Runnable callback) {
+        callback.run();
     }
 
     /// Convenience delegate method for [#mouseEntered(MouseEvent, Consumer)], invoked with a no-op callback.
@@ -170,8 +168,8 @@ public abstract class MFXBehavior<N extends Node> implements Disposable {
     ///
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-    public void mouseExited(MouseEvent e, Consumer<MouseEvent> callback) {
-        callback.accept(e);
+    public void mouseExited(MouseEvent e, Runnable callback) {
+        callback.run();
     }
 
     /// Convenience delegate method for [#mouseExited(MouseEvent, Consumer)], invoked with a no-op callback.
@@ -185,8 +183,8 @@ public abstract class MFXBehavior<N extends Node> implements Disposable {
     ///
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-    public void keyPressed(KeyEvent e, Consumer<KeyEvent> callback) {
-        callback.accept(e);
+    public void keyPressed(KeyEvent e, Runnable callback) {
+        callback.run();
     }
 
     /// Convenience delegate method for [#keyPressed(KeyEvent,Consumer)], invoked with a no-op callback.
@@ -198,8 +196,8 @@ public abstract class MFXBehavior<N extends Node> implements Disposable {
     ///
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-    public void keyReleased(KeyEvent e, Consumer<KeyEvent> callback) {
-        callback.accept(e);
+    public void keyReleased(KeyEvent e, Runnable callback) {
+        callback.run();
     }
 
     /// Convenience delegate method for [#keyReleased(KeyEvent,Consumer)], invoked with a no-op callback.
@@ -211,8 +209,8 @@ public abstract class MFXBehavior<N extends Node> implements Disposable {
     ///
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-    public void keyTyped(KeyEvent e, Consumer<KeyEvent> callback) {
-        callback.accept(e);
+    public void keyTyped(KeyEvent e, Runnable callback) {
+        callback.run();
     }
 
     /// Convenience delegate method for [#keyTyped(KeyEvent,Consumer)], invoked with a no-op callback.
@@ -226,8 +224,8 @@ public abstract class MFXBehavior<N extends Node> implements Disposable {
     ///
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-    public void touchPressed(TouchEvent e, Consumer<TouchEvent> callback) {
-        callback.accept(e);
+    public void touchPressed(TouchEvent e, Runnable callback) {
+        callback.run();
     }
 
     /// Convenience delegate method for [#touchPressed(TouchEvent, Consumer)], invoked with a no-op callback.
@@ -239,8 +237,8 @@ public abstract class MFXBehavior<N extends Node> implements Disposable {
     ///
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-    public void touchReleased(TouchEvent e, Consumer<TouchEvent> callback) {
-        callback.accept(e);
+    public void touchReleased(TouchEvent e, Runnable callback) {
+        callback.run();
     }
 
     /// Convenience delegate method for [#touchReleased(TouchEvent, Consumer)], invoked with a no-op callback.
@@ -252,8 +250,8 @@ public abstract class MFXBehavior<N extends Node> implements Disposable {
     ///
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-    public void touchMoved(TouchEvent e, Consumer<TouchEvent> callback) {
-        callback.accept(e);
+    public void touchMoved(TouchEvent e, Runnable callback) {
+        callback.run();
     }
 
     /// Convenience delegate method for [#touchMoved(TouchEvent, Consumer)], invoked with a no-op callback.
@@ -265,8 +263,8 @@ public abstract class MFXBehavior<N extends Node> implements Disposable {
     ///
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-    public void touchStationary(TouchEvent e, Consumer<TouchEvent> callback) {
-        callback.accept(e);
+    public void touchStationary(TouchEvent e, Runnable callback) {
+        callback.run();
     }
 
     /// Convenience delegate method for [#touchStationary(TouchEvent, Consumer)], invoked with a no-op callback.
@@ -280,8 +278,8 @@ public abstract class MFXBehavior<N extends Node> implements Disposable {
     ///
     /// The caller can use the callback to register additional actions to perform after the behavior code.
     /// Behaviors should not assume a valid callback, in other words, a null callback is valid and will simply be ignored.
-    public void scroll(ScrollEvent e, Consumer<ScrollEvent> callback) {
-        callback.accept(e);
+    public void scroll(ScrollEvent e, Runnable callback) {
+        callback.run();
     }
 
     /// Convenience delegate method for [#scroll(ScrollEvent, Consumer)], invoked with a no-op callback.
