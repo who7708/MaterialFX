@@ -19,7 +19,6 @@
 package io.github.palexdev.mfxcore.popups.menu;
 
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import io.github.palexdev.mfxcore.behavior.MFXBehavior;
@@ -162,7 +161,7 @@ public class MFXMenuContentSkin extends MFXSkinBase<MFXMenuContent> {
 
     /// Adds the following handlers:
     /// - An event handler on the control itself for key handling,
-    /// see [MFXMenuContentBehavior#keyPressed(KeyEvent, Consumer)]
+    /// see [MFXMenuContentBehavior#keyPressed(KeyEvent, Runnable)]
     @Override
     protected void registerBehavior() {
         super.registerBehavior();

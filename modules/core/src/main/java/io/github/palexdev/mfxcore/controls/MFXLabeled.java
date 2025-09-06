@@ -98,7 +98,7 @@ public abstract class MFXLabeled extends Labeled implements WithBehavior, MFXSki
     //================================================================================
 
     /// This is the core method responsible for creating the component's skin when the [#skinFactoryProperty()]
-    /// changes. Does not allow `null` skins and automatically call [MFXSkinBase#registerBehavior(MFXBehavior)]
+    /// changes. Does not allow `null` skins and automatically call [MFXSkinBase#registerBehavior()]
     /// with the current behavior.
     ///
     /// Note that the very first skin instance is created by JavaFX with the usual [#createDefaultSkin()].

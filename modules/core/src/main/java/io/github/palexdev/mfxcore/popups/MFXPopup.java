@@ -158,7 +158,7 @@ public interface MFXPopup<O> {
         contentProperty().set(content);
     }
 
-    /// Convenience method to set the popup's content from a supplier, delegates to [#setcontent(Node)].
+    /// Convenience method to set the popup's content from a supplier, delegates to [#setContent(Node)].
     default void supplyContent(Supplier<Node> contentSupplier) {
         setContent(contentSupplier.get());
     }

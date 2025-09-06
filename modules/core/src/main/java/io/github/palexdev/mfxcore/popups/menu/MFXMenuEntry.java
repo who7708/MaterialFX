@@ -108,7 +108,7 @@ public class MFXMenuEntry extends Region implements MFXStyleable {
     /// - A mouse click handler to run the action specified by the entry's item and close the menu from the root.
     /// - A key handler on the entry to manage actions such as key navigation (including showing and closing submenus)
     /// and trigger
-    /// - A listener on the [MFXMenuItem#subMenuItems()] list to build/dispose the submenu as needed.
+    /// - A listener on the [MFXMenuItem#children()] list to build/dispose the submenu as needed.
     protected void addListeners() {
         Collections.addAll(disposables,
             When.onInvalidated(hoverProperty())
@@ -171,7 +171,7 @@ public class MFXMenuEntry extends Region implements MFXStyleable {
         item.children().addListener(subListener);
     }
 
-    /// This method is mainly responsible for creating or disposing the submenu depending on the [MFXMenuItem#subMenuItems()]
+    /// This method is mainly responsible for creating or disposing the submenu depending on the [MFXMenuItem#children()]
     /// list. It also updates the trailing label because if a submenu is needed, its text is set to `null` (no shortcut)
     /// and the `.sub` style clas is added.
     protected void handleSubMenu() {

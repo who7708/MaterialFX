@@ -29,7 +29,7 @@ import javafx.scene.control.Labeled;
 
 /// A specialization of [TextMeasurementCache] that operates specifically on [Labels][Labeled].
 ///
-/// Unline [TextMeasurementCache], this computes the full size of the label, including: padding, graphic, graphic text gap.
+/// Unlike [TextMeasurementCache], this computes the full size of the label, including: padding, graphic, graphic text gap.
 /// It can also handle the various configurations of [Labeled#contentDisplayProperty()].
 ///
 /// To further improve the performance, we still internally use a [TextMeasurementCache] to measure the text size.
