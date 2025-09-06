@@ -37,6 +37,7 @@ public enum PseudoClasses {
     HOVER("hover"),
     INDETERMINATE("indeterminate"),
     LAST("last"),
+    OPEN("open"),
     PRESSED("pressed"),
     SELECTABLE("selectable"),
     SELECTED("selected"),
