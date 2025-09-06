@@ -19,7 +19,6 @@
 package io.github.palexdev.mfxcore.popups;
 
 import java.util.List;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -119,11 +118,6 @@ public class MFXPopups {
 
         public Builder<O, P> setAnimation(PopupAnimation animation) {
             popup.setAnimation(animation);
-            return this;
-        }
-
-        public Builder<O, P> onState(PopupState state, BiConsumer<MFXPopup<O>, PopupState> action) {
-            popup.onState(state, action);
             return this;
         }
 
