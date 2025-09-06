@@ -50,6 +50,13 @@ public interface Selectable {
         selectedProperty().set(selected);
     }
 
+    /// Convenience method to flip the selection state.<br >
+    /// Does nothing if the [#selectedProperty()] is bound.
+    default void toggle() {
+        if (!selectedProperty().isBound())
+            setSelected(!isSelected());
+    }
+
     default SelectionGroup getSelectionGroup() {
         return selectionGroupProperty().get();
     }
