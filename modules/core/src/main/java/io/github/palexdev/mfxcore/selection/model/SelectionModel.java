@@ -45,6 +45,7 @@ import static java.util.function.Function.identity;
 /// To make operation on the selection appear as 'atomic', most of them are performed on a temporary map created by the
 /// aforementioned methods. At the end, the selection is replaced with the new map. See [MapProperty].
 @SuppressWarnings("unchecked")
+// FIXME check for potential errors
 public class SelectionModel<T> implements ISelectionModel<T> {
     //================================================================================
     // Static Properties
@@ -190,6 +191,7 @@ public class SelectionModel<T> implements ISelectionModel<T> {
 
     @Override
     public void selectIndex(int index) {
+        if (items.isEmpty()) return;
         T item = items.get(index);
         if (allowsMultipleSelection) {
             selection.put(index, item);

@@ -63,6 +63,16 @@ public interface ISelectionModel<T> {
     /// Deselects all the given elements if present.
     void deselectItems(T... items);
 
+    /// Convenience method to select the first item in the list, delegates to [#selectIndex(int)].<br >
+    default void selectFirst() {
+        selectIndex(0);
+    }
+
+    /// Convenience method to select the last item in the list, delegates to [#selectIndex(int)].<br >
+    default void selectLast() {
+        selectIndex(size() - 1);
+    }
+
     /// Selects the element associated with the given index if present.
     void selectIndex(int index);
 

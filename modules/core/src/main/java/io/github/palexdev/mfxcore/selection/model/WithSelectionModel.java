@@ -22,8 +22,18 @@ import java.util.List;
 
 import javafx.beans.property.MapProperty;
 
+/// An interface for components that have a selection model.<br >
+/// Also offers a bunch of delegate methods to the selection model.
 public interface WithSelectionModel<T> {
     ISelectionModel<T> getSelectionModel();
+
+    default void selectFirst() {
+        getSelectionModel().selectFirst();
+    }
+
+    default void selectLast() {
+        getSelectionModel().selectLast();
+    }
 
     default MapProperty<Integer, T> selection() {
         return getSelectionModel().selection();
