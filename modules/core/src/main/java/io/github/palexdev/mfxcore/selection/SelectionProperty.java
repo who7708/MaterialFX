@@ -100,9 +100,12 @@ public class SelectionProperty extends SimpleBooleanProperty {
     /// Last but not least, note that the invalidation doesn't occur if the group is changing its state due to a "switch"
     /// operation, see [SelectionGroup#isSwitching()].
     @Override
-    protected void invalidated() {
+    protected final void invalidated() {
         SelectionGroup group = selectable.getSelectionGroup();
         if (group != null && !group.isSwitching())
             group.handleSelection(selectable, get());
+        onInvalidated();
     }
+
+    protected void onInvalidated() {}
 }
