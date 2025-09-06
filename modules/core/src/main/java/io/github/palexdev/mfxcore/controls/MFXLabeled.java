@@ -33,7 +33,7 @@ import javafx.scene.control.Labeled;
 import javafx.scene.control.Skin;
 
 /// Base class that can be used as a starting point to implement text-based UI components that perfectly integrate with the
-/// new Behavior and Skin APIs, see [WithBehavior] and [MFXSkinnable].
+/// new Behavior and Skin APIs, see [WithBehavior] and [MFXSkinnable]. It also implements the [MFXStyleable] interface.
 ///
 /// The integration with the new Behavior API is achieved by having a specific property, [#behaviorFactoryProperty()],
 /// which allows changing at any time the component's behavior. The property automatically handles initialization and disposal
@@ -90,7 +90,7 @@ public abstract class MFXLabeled extends Labeled implements WithBehavior, MFXSki
     {
         setDefaultBehaviorFactory();
         setDefaultSkinFactory();
-        defaultStyleClasses(this);
+        setDefaultStyleClasses();
     }
 
     //================================================================================

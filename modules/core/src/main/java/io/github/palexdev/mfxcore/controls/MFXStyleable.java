@@ -18,24 +18,33 @@
 
 package io.github.palexdev.mfxcore.controls;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import javafx.css.Styleable;
 
-public interface MFXStyleable {
+import static io.github.palexdev.mfxcore.utils.CollectionUtils.list;
 
-    List<String> defaultStyleClasses();
+/// An extension of [Styleable] to provide any implementing component with a list of default style classes.<br >
+/// MaterialFX components inheriting from [MFXControl] or [MFXLabeled] make use of this API.
+public interface MFXStyleable extends Styleable {
 
-    default void defaultStyleClasses(Styleable styleable) {
-        styleable.getStyleClass().setAll(defaultStyleClasses());
+    /// @return the list of default style classes for this component
+    default List<String> defaultStyleClasses() {
+        return Collections.emptyList();
     }
 
+    /// Resets this [Styleable]'s style classes to the defaults, [#defaultStyleClasses()].
+    default void setDefaultStyleClasses() {
+        getStyleClass().setAll(defaultStyleClasses());
+    }
+
+    /// Convenience method to create a modifiable list of style classes.
     static List<String> styleClasses(String... styleClasses) {
-        return new ArrayList<>(List.of(styleClasses));
+        return list(styleClasses);
     }
 
+    /// Convenience method to extend a list of style classes.
     static List<String> extend(List<String> base, String... styleClasses) {
         Collections.addAll(base, styleClasses);
         return base;

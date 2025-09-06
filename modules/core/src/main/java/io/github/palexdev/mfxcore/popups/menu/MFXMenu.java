@@ -42,6 +42,10 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
+import javafx.css.CssMetaData;
+import javafx.css.PseudoClass;
+import javafx.css.Styleable;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -154,7 +158,6 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
 
     // SubMenus Specific
     private Function<ObservableList<MFXMenuItem>, MFXMenu> subMenuFactory = MFXMenu::new;
-    private Supplier<PopupAnimation> animationProvider;
     private final ReadOnlyObjectWrapper<MFXMenu> parent = new ReadOnlyObjectWrapper<>(null);
     private final ObjectProperty<Node> hoveredItem = new SimpleObjectProperty<>();
 
@@ -343,6 +346,41 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
         return peer.defaultStyleClasses();
     }
 
+    @Override
+    public String getTypeSelector() {
+        return peer.getTypeSelector();
+    }
+
+    @Override
+    public String getId() {
+        return peer.getId();
+    }
+
+    @Override
+    public ObservableList<String> getStyleClass() {
+        return peer.getStyleClass();
+    }
+
+    @Override
+    public String getStyle() {
+        return peer.getStyle();
+    }
+
+    @Override
+    public List<CssMetaData<? extends Styleable, ?>> getCssMetaData() {
+        return peer.getCssMetaData();
+    }
+
+    @Override
+    public Styleable getStyleableParent() {
+        return peer.getStyleableParent();
+    }
+
+    @Override
+    public ObservableSet<PseudoClass> getPseudoClassStates() {
+        return peer.getPseudoClassStates();
+    }
+
     //================================================================================
     // Getters/Setters
     //================================================================================
@@ -458,7 +496,6 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
             menu.triggerButton = triggerButton;
             menu.anchorBasedPositioning = anchorBasedPositioning;
             menu.config = this;
-            menu.animationProvider = animationProvider;
             menu.setAnimation(animationProvider.get());
         }
 

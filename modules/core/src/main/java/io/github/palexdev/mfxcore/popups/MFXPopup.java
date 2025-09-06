@@ -243,8 +243,8 @@ public interface MFXPopup<O> {
             }
         }
 
-        default void setStyleClass(String... stylecClass) {
-            getRoot().getStyleClass().setAll(stylecClass);
+        default void setStyleClass(String... styleClass) {
+            getRoot().getStyleClass().setAll(styleClass);
         }
     }
 

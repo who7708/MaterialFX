@@ -26,7 +26,7 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 
 /// Base class that can be used as a starting point to implement UI components that perfectly integrate with the new Behavior
-/// and Skin APIs, see [WithBehavior] and [MFXSkinnable].
+/// and Skin APIs, see [WithBehavior] and [MFXSkinnable]. It also implements the [MFXStyleable] interface.
 ///
 /// The integration with the new Behavior API is achieved by having a specific property, [#behaviorFactoryProperty()],
 /// which allows changing at any time the component's behavior. The property automatically handles initialization and disposal
@@ -41,6 +41,7 @@ import javafx.scene.control.Skin;
 /// The skin factory is more of a convenience to the user that does not need to inline-override the method responsible for
 /// creating the skin. The new mechanism is much more flexible and automatically integrates with the behavior API.<br >
 /// As a consequence, components that inherit from this do not support the "-fx-skin" CSS property. You'll have to do it in code.
+// TODO integrate MFXTooltip
 public abstract class MFXControl extends Control implements WithBehavior, MFXSkinnable, MFXStyleable {
     //================================================================================
     // Properties
@@ -73,7 +74,7 @@ public abstract class MFXControl extends Control implements WithBehavior, MFXSki
     {
         setDefaultBehaviorFactory();
         setDefaultSkinFactory();
-        defaultStyleClasses(this);
+        setDefaultStyleClasses();
     }
 
     //================================================================================

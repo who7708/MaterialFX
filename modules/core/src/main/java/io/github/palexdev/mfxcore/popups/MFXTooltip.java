@@ -41,6 +41,11 @@ import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
+import javafx.css.CssMetaData;
+import javafx.css.PseudoClass;
+import javafx.css.Styleable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -282,6 +287,41 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
     @Override
     public List<String> defaultStyleClasses() {
         return peer.defaultStyleClasses();
+    }
+
+    @Override
+    public String getTypeSelector() {
+        return peer.getTypeSelector();
+    }
+
+    @Override
+    public String getId() {
+        return peer.getId();
+    }
+
+    @Override
+    public ObservableList<String> getStyleClass() {
+        return peer.getStyleClass();
+    }
+
+    @Override
+    public String getStyle() {
+        return peer.getStyle();
+    }
+
+    @Override
+    public List<CssMetaData<? extends Styleable, ?>> getCssMetaData() {
+        return peer.getCssMetaData();
+    }
+
+    @Override
+    public Styleable getStyleableParent() {
+        return peer.getStyleableParent();
+    }
+
+    @Override
+    public ObservableSet<PseudoClass> getPseudoClassStates() {
+        return peer.getPseudoClassStates();
     }
 
     //================================================================================

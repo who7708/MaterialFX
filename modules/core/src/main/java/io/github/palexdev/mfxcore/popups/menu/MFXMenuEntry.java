@@ -71,7 +71,7 @@ public class MFXMenuEntry extends Region implements MFXStyleable {
     public MFXMenuEntry(MFXMenu menu, MFXMenuItem item) {
         this.menu = menu;
         this.item = item;
-        defaultStyleClasses(this);
+        setDefaultStyleClasses();
         setFocusTraversable(true);
 
         // Build UI

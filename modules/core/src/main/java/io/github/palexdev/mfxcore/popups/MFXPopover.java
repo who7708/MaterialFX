@@ -69,7 +69,7 @@ import javafx.stage.Window;
 /// popup's state ([#stateProperty()], and [PopupState]), it could cause a disastrous desynchronization. The good thing
 /// is that such feature still hides the window by calling [Window#hide()]; therefore, we can override the logic in our
 /// peer to redirect auto-hide requests to our method instead, as simple as adding a boolean flag.
-public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyleable {
+public class MFXPopover extends MFXPopupBase<PopupPeer, Node> {
     //================================================================================
     // Properties
     //================================================================================
@@ -79,7 +79,7 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> implements MFXStyl
     // Constructors
     //================================================================================
     public MFXPopover() {
-        defaultStyleClasses(getRoot());
+        setDefaultStyleClasses();
         PopoverConfig.DEFAULT.apply(this);
     }
 

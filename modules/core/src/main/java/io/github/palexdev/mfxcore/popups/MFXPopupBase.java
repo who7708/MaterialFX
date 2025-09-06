@@ -18,14 +18,21 @@
 
 package io.github.palexdev.mfxcore.popups;
 
+import java.util.List;
 import java.util.Optional;
 
 import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.base.properties.NodeProperty;
 import io.github.palexdev.mfxcore.base.properties.PositionProperty;
+import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.popups.MFXPopup.Peer;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
+import javafx.css.CssMetaData;
+import javafx.css.PseudoClass;
+import javafx.css.Styleable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -33,9 +40,11 @@ import javafx.stage.Window;
 
 /// Abstract implementation of [MFXPopup] to contain properties and behaviors that are common to all kinds of popups.
 ///
+/// Implements [MFXStyleable] and delegates all [Styleable] methods to the [#getRoot()] node.
+///
 /// @param <O> the popup's owner type
 /// @param <P> the popup's peer type, which is some kind of [Window]
-public abstract class MFXPopupBase<P extends Window & Peer, O> implements MFXPopup<O> {
+public abstract class MFXPopupBase<P extends Window & Peer, O> implements MFXPopup<O>, MFXStyleable {
     //================================================================================
     // Properties
     //================================================================================
@@ -69,6 +78,7 @@ public abstract class MFXPopupBase<P extends Window & Peer, O> implements MFXPop
     protected MFXPopupBase() {
         this.peer = buildPeer();
         if (animation != null) animation.init(this, peer.getScene().getRoot());
+        setDefaultStyleClasses();
     }
 
     //================================================================================
@@ -218,5 +228,40 @@ public abstract class MFXPopupBase<P extends Window & Peer, O> implements MFXPop
         if (this.animation != null) {
             this.animation.init(this, peer.getScene().getRoot());
         }
+    }
+
+    @Override
+    public String getTypeSelector() {
+        return getRoot().getTypeSelector();
+    }
+
+    @Override
+    public String getId() {
+        return getRoot().getId();
+    }
+
+    @Override
+    public ObservableList<String> getStyleClass() {
+        return getRoot().getStyleClass();
+    }
+
+    @Override
+    public String getStyle() {
+        return getRoot().getStyle();
+    }
+
+    @Override
+    public List<CssMetaData<? extends Styleable, ?>> getCssMetaData() {
+        return getRoot().getCssMetaData();
+    }
+
+    @Override
+    public Styleable getStyleableParent() {
+        return getRoot().getStyleableParent();
+    }
+
+    @Override
+    public ObservableSet<PseudoClass> getPseudoClassStates() {
+        return getRoot().getPseudoClassStates();
     }
 }

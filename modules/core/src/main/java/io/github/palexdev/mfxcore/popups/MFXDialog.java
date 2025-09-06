@@ -68,7 +68,7 @@ import javafx.stage.*;
 ///
 /// @see AnchorHandlers
 /// @see Align
-public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXStyleable {
+public class MFXDialog extends MFXPopupBase<WindowPeer, Window> {
     //================================================================================
     // Properties
     //================================================================================
@@ -87,7 +87,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> implements MFXSt
     // Constructors
     //================================================================================
     public MFXDialog() {
-        defaultStyleClasses(getRoot());
+        setDefaultStyleClasses();
         DialogConfig.DEFAULT.apply(this);
     }
 
