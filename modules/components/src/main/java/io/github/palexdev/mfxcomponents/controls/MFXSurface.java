@@ -495,7 +495,7 @@ public class MFXSurface extends Region implements MFXStyleable {
         /// The opacity is retrieved from [MFXSurface#focusedOpacityProperty()].
         public static final State FOCUSED = State.of(
             2,
-            n -> n.isFocused() || n.isFocusWithin() || PseudoClasses.isActiveOn(n, "focused", "focus-within"),
+            n -> !n.isFocusVisible() && (n.isFocused() || n.isFocusWithin() || PseudoClasses.isActiveOn(n, "focused", "focus-within")),
             MFXSurface::getFocusedOpacity
         );
 
