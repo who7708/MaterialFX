@@ -20,7 +20,6 @@ package io.github.palexdev.mfxcore.selection.model;
 
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import io.github.palexdev.mfxcore.base.beans.range.IntegerRange;
 import io.github.palexdev.mfxcore.utils.fx.ListChangeHelper;
@@ -33,6 +32,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 
 import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
 
 /// Implementation of [ISelectionModel] that either works on a [ObservableList] or a [ListProperty] as the source.
 ///
@@ -45,7 +45,6 @@ import static java.util.function.Function.identity;
 /// To make operation on the selection appear as 'atomic', most of them are performed on a temporary map created by the
 /// aforementioned methods. At the end, the selection is replaced with the new map. See [MapProperty].
 @SuppressWarnings("unchecked")
-// FIXME check for potential errors
 public class SelectionModel<T> implements ISelectionModel<T> {
     //================================================================================
     // Static Properties
@@ -56,7 +55,7 @@ public class SelectionModel<T> implements ISelectionModel<T> {
     // Properties
     //================================================================================
     private final ListProperty<T> items = new SimpleListProperty<>();
-    private final MapProperty<Integer, T> selection = new SimpleMapProperty<>();
+    private final MapProperty<Integer, T> selection = new SimpleMapProperty<>(newMap());
     protected SequencedMap<Integer, T> backingMap;
     protected ListChangeHelper<T> lch;
     private boolean allowsMultipleSelection = true;
@@ -85,7 +84,7 @@ public class SelectionModel<T> implements ISelectionModel<T> {
     //================================================================================
     protected void init() {
         lch = new ListChangeHelper<>(items)
-            .setOnClear(selection::clear)
+            .setOnClear(this::clearSelection)
             .setOnPermutation(p -> replaceSelection(
                 selection.keySet().stream()
                     .map(p::get)
@@ -118,6 +117,10 @@ public class SelectionModel<T> implements ISelectionModel<T> {
 
     public ObservableList<T> getItems() {
         return FXCollections.unmodifiableObservableList(items);
+    }
+
+    public boolean isValidIndex(int index) {
+        return index >= 0 && index < items.size();
     }
 
     //================================================================================
@@ -180,18 +183,17 @@ public class SelectionModel<T> implements ISelectionModel<T> {
     /// Uses [List#indexOf(Object)] on each item!!
     @Override
     public void deselectItems(T... items) {
-        Map<Integer, T> tmp = Arrays.stream(items)
-            .filter(this.items::contains)
-            .collect(Collectors.toMap(
-                this.items::indexOf,
-                identity()
-            ));
-        selection.set(newMap(tmp));
+        ObservableMap<Integer, T> tmp = newMap(selection);
+        for (T item : items) {
+            int index = this.items.indexOf(item);
+            if (isValidIndex(index)) tmp.remove(index);
+        }
+        selection.set(tmp);
     }
 
     @Override
     public void selectIndex(int index) {
-        if (items.isEmpty()) return;
+        if (!isValidIndex(index)) return;
         T item = items.get(index);
         if (allowsMultipleSelection) {
             selection.put(index, item);
@@ -204,45 +206,37 @@ public class SelectionModel<T> implements ISelectionModel<T> {
 
     @Override
     public void selectIndexes(Integer... indexes) {
-        if (indexes.length != 0) {
-            if (allowsMultipleSelection) {
-                Set<Integer> indexesSet = new LinkedHashSet<>(List.of(indexes));
-                Map<Integer, T> newSelection = indexesSet.stream()
-                    .collect(Collectors.toMap(
-                        identity(),
-                        items::get,
-                        (t, t2) -> t2,
-                        LinkedHashMap::new
-                    ));
-                selection.putAll(newSelection);
-            } else {
-                int index = indexes[indexes.length - 1];
-                T item = items.get(index);
-                ObservableMap<Integer, T> map = newMap();
-                map.put(index, item);
-                selection.set(map);
-            }
-        }
-    }
-
-    @Override
-    public void selectIndexes(IntegerRange range) {
-        if (!INVALID_RANGE.equals(range)) {
-            if (allowsMultipleSelection) {
-                Map<Integer, T> newSelection = range.stream().collect(Collectors.toMap(
+        if (indexes.length == 0) return;
+        if (allowsMultipleSelection) {
+            Map<Integer, T> newSelection = Arrays.stream(indexes)
+                .filter(this::isValidIndex)
+                .collect(toMap(
                     identity(),
                     items::get,
                     (_, t2) -> t2,
                     LinkedHashMap::new
                 ));
-                selection.putAll(newSelection);
-            } else {
-                int index = range.getMax();
-                T item = items.get(index);
-                ObservableMap<Integer, T> map = newMap();
-                map.put(index, item);
-                selection.set(map);
-            }
+            selection.putAll(newSelection);
+        } else {
+            selectIndex(indexes[indexes.length - 1]);
+        }
+    }
+
+    @Override
+    public void selectIndexes(IntegerRange range) {
+        if (INVALID_RANGE.equals(range)) return;
+        if (allowsMultipleSelection) {
+            Map<Integer, T> newSelection = range.stream()
+                .filter(this::isValidIndex)
+                .collect(toMap(
+                    identity(),
+                    items::get,
+                    (_, t2) -> t2,
+                    LinkedHashMap::new
+                ));
+            selection.putAll(newSelection);
+        } else {
+            selectIndex(range.getMax());
         }
     }
 
@@ -251,14 +245,7 @@ public class SelectionModel<T> implements ISelectionModel<T> {
     /// Uses [List#indexOf(Object)]!
     @Override
     public void selectItem(T item) {
-        int index = items.indexOf(item);
-        if (allowsMultipleSelection) {
-            selection.put(index, item);
-        } else {
-            ObservableMap<Integer, T> map = newMap();
-            map.put(index, item);
-            selection.set(map);
-        }
+        selectIndex(items.indexOf(item));
     }
 
     /// {@inheritDoc}
@@ -266,25 +253,18 @@ public class SelectionModel<T> implements ISelectionModel<T> {
     /// Uses [List#indexOf(Object)] on each item!!
     @Override
     public void selectItems(T... items) {
-        if (items.length != 0) {
-            if (allowsMultipleSelection) {
-                Set<Integer> indexesSet = Arrays.stream(items)
-                    .mapToInt(this.items::indexOf)
-                    .boxed()
-                    .collect(Collectors.toSet());
-                Map<Integer, T> newSelection = indexesSet.stream()
-                    .collect(Collectors.toMap(
-                        identity(),
-                        i -> items[i]
-                    ));
-                selection.putAll(newSelection);
-            } else {
-                T item = items[items.length - 1];
+        if (items.length == 0) return;
+        if (allowsMultipleSelection) {
+            Map<Integer, T> newSelection = new LinkedHashMap<>();
+            for (T item : items) {
                 int index = this.items.indexOf(item);
-                ObservableMap<Integer, T> map = newMap();
-                map.put(index, item);
-                selection.set(map);
+                if (isValidIndex(index)) newSelection.put(index, item);
             }
+            selection.putAll(newSelection);
+        } else {
+            T item = items[items.length - 1];
+            int index = this.items.indexOf(item);
+            selectIndex(index);
         }
     }
 
@@ -321,43 +301,38 @@ public class SelectionModel<T> implements ISelectionModel<T> {
 
     @Override
     public void replaceSelection(Integer... indexes) {
-        if (indexes.length != 0) {
-            ObservableMap<Integer, T> newSelection = newMap();
-            if (allowsMultipleSelection) {
-                newSelection.putAll(
-                    Arrays.stream(indexes)
-                        .collect(Collectors.toMap(
-                            identity(),
-                            items::get)
-                        )
-                );
-            } else {
-                Integer index = indexes[indexes.length - 1];
-                T item = items.get(index);
-                newSelection.put(index, item);
-            }
-            selection.set(newSelection);
-        }
-    }
-
-    @Override
-    public void replaceSelection(IntegerRange range) {
-        if (!INVALID_RANGE.equals(range)) {
-            ObservableMap<Integer, T> newSelection;
-            if (allowsMultipleSelection) {
-                newSelection = range.stream().collect(Collectors.toMap(
+        if (indexes.length == 0) return;
+        if (allowsMultipleSelection) {
+            ObservableMap<Integer, T> newSelection = Arrays.stream(indexes)
+                .filter(this::isValidIndex)
+                .collect(toMap(
                     identity(),
                     items::get,
                     (_, t2) -> t2,
                     this::newMap
                 ));
-            } else {
-                newSelection = newMap();
-                int index = range.getMax();
-                T item = items.get(index);
-                newSelection.put(index, item);
-            }
             selection.set(newSelection);
+        } else {
+            Integer index = indexes[indexes.length - 1];
+            selectIndex(index);
+        }
+    }
+
+    @Override
+    public void replaceSelection(IntegerRange range) {
+        if (INVALID_RANGE.equals(range)) return;
+        if (allowsMultipleSelection) {
+            ObservableMap<Integer, T> newSelection = range.stream()
+                .filter(this::isValidIndex)
+                .collect(toMap(
+                    identity(),
+                    items::get,
+                    (_, t2) -> t2,
+                    this::newMap
+                ));
+            selection.set(newSelection);
+        } else {
+            selectIndex(range.getMax());
         }
     }
 
@@ -366,21 +341,18 @@ public class SelectionModel<T> implements ISelectionModel<T> {
     /// Uses [List#indexOf(Object)] on each item!!
     @Override
     public void replaceSelection(T... items) {
-        ObservableMap<Integer, T> newSelection = newMap();
         if (allowsMultipleSelection) {
-            newSelection.putAll(
-                Arrays.stream(items)
-                    .collect(Collectors.toMap(
-                        this.items::indexOf,
-                        identity())
-                    )
-            );
+            ObservableMap<Integer, T> newSelection = newMap();
+            for (T item : items) {
+                int index = this.items.indexOf(item);
+                if (index != -1) newSelection.put(index, item);
+            }
+            selection.set(newSelection);
         } else {
             T item = items[items.length - 1];
             int index = this.items.indexOf(item);
-            newSelection.put(index, item);
+            selectIndex(index);
         }
-        selection.set(newSelection);
     }
 
     @Override
@@ -405,9 +377,10 @@ public class SelectionModel<T> implements ISelectionModel<T> {
     public void setAllowsMultipleSelection(boolean allowsMultipleSelection) {
         // Clear selection when switching modes
         if (this.allowsMultipleSelection != allowsMultipleSelection) {
-            selection.clear();
+            this.allowsMultipleSelection = allowsMultipleSelection;
+            clearSelection();
+            eh = ehSupplier.apply(this);
         }
-        this.allowsMultipleSelection = allowsMultipleSelection;
     }
 
     @Override
@@ -428,7 +401,7 @@ public class SelectionModel<T> implements ISelectionModel<T> {
         lch.dispose();
         lch = null;
         items.unbind();
-        items.clear();
         selection.clear();
+        selection.set(null);
     }
 }
