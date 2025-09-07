@@ -19,15 +19,16 @@
 package io.github.palexdev.mfxcomponents.behaviors;
 
 import io.github.palexdev.mfxcomponents.controls.MFXFabMenu;
-import io.github.palexdev.mfxcore.behavior.BehaviorBase;
+import io.github.palexdev.mfxcore.behavior.MFXBehavior;
 
-/// Default behavior implementation for [MFXFabMenus][MFXFabMenu].
+/// Default behavior implementation for [MFXFabMenus][MFXFabMenu].<br >
 /// Contains the logic to open/close the menu.
-public class MFXFabMenuBehavior extends BehaviorBase<MFXFabMenu> {
+public class MFXFabMenuBehavior extends MFXBehavior<MFXFabMenu> {
 
     //================================================================================
     // Constructors
     //================================================================================
+
     public MFXFabMenuBehavior(MFXFabMenu menu) {
         super(menu);
     }

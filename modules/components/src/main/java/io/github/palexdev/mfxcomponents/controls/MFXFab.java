@@ -21,9 +21,8 @@ package io.github.palexdev.mfxcomponents.controls;
 import java.util.List;
 import java.util.function.Supplier;
 
-import io.github.palexdev.mfxcomponents.behaviors.MFXButtonBehaviorBase;
+import io.github.palexdev.mfxcomponents.behaviors.MFXButtonBehavior;
 import io.github.palexdev.mfxcomponents.controls.base.MFXButtonBase;
-import io.github.palexdev.mfxcomponents.controls.base.MFXLabeled;
 import io.github.palexdev.mfxcomponents.skins.MFXFabSkin;
 import io.github.palexdev.mfxcomponents.variants.FABVariants.SizeVariant;
 import io.github.palexdev.mfxcomponents.variants.FABVariants.StyleVariant;
@@ -34,9 +33,9 @@ import io.github.palexdev.mfxcore.base.beans.Size;
 import io.github.palexdev.mfxcore.base.properties.SizeProperty;
 import io.github.palexdev.mfxcore.base.properties.styleable.StyleableBooleanProperty;
 import io.github.palexdev.mfxcore.base.properties.styleable.StyleableObjectProperty;
+import io.github.palexdev.mfxcore.behavior.MFXBehavior;
 import io.github.palexdev.mfxcore.controls.Label;
-import io.github.palexdev.mfxcore.controls.MFXStyleable;
-import io.github.palexdev.mfxcore.controls.SkinBase;
+import io.github.palexdev.mfxcore.controls.MFXSkinBase;
 import io.github.palexdev.mfxcore.utils.fx.PseudoClasses;
 import io.github.palexdev.mfxcore.utils.fx.StyleUtils;
 import io.github.palexdev.mfxresources.icon.IconProperty;
@@ -45,9 +44,12 @@ import javafx.collections.ObservableMap;
 import javafx.css.CssMetaData;
 import javafx.css.Styleable;
 import javafx.css.StyleablePropertyFactory;
+import javafx.scene.Node;
+
+import static io.github.palexdev.mfxcore.controls.MFXStyleable.styleClasses;
 
 /// Implementation of Material Design's 'Floating Action Buttons'. Extends [MFXButtonBase], uses [MFXFabSkin] and
-/// [MFXButtonBehaviorBase] as its default skin and behavior. The default CSS style class is `.mfx-fab`.
+/// [MFXButtonBehavior] as its default skin and behavior. The default CSS style class is `.mfx-fab`.
 ///
 /// As stated by the Material Design specs, FABs are highly emphasized buttons that should be used for the most common
 /// or important action on a screen. Because they are intended to be used with icons, it is enforced by the [#iconProperty()]
@@ -71,8 +73,8 @@ import javafx.css.StyleablePropertyFactory;
 /// - The label's truncation mechanism is completely disabled, otherwise the animation looks bad, see [Label]
 /// - You can't align the label, it is always positioned at the center. Not only that, it is also translated according to
 ///   the [#extendedProperty()] state. When the FAB is not extended, we need the icon to be centered!
-/// (The skin handles these issues by the way)
-public class MFXFab extends MFXButtonBase<MFXButtonBehaviorBase<MFXFab>> implements WithVariants {
+/// (The default skin automatically handles these issues by the way)
+public class MFXFab extends MFXButtonBase implements WithVariants {
     //================================================================================
     // Properties
     //================================================================================
@@ -82,6 +84,7 @@ public class MFXFab extends MFXButtonBase<MFXButtonBehaviorBase<MFXFab>> impleme
     //================================================================================
     // Constructors
     //================================================================================
+
     public MFXFab() {}
 
     public MFXFab(String text) {
@@ -94,9 +97,9 @@ public class MFXFab extends MFXButtonBase<MFXButtonBehaviorBase<MFXFab>> impleme
     }
 
     {
-        setPickOnBounds(false);
         defaultVariants();
         graphicProperty().bind(icon);
+        setPickOnBounds(false);
     }
 
     //================================================================================
@@ -113,7 +116,6 @@ public class MFXFab extends MFXButtonBase<MFXButtonBehaviorBase<MFXFab>> impleme
         return this;
     }
 
-
     /// Applies the default variants to the fab:
     /// - [StyleVariant#PRIMARY]
     /// - [SizeVariant#S]
@@ -125,19 +127,20 @@ public class MFXFab extends MFXButtonBase<MFXButtonBehaviorBase<MFXFab>> impleme
     //================================================================================
     // Overridden Methods
     //================================================================================
+
     @Override
-    public Supplier<MFXButtonBehaviorBase<MFXFab>> defaultBehaviorProvider() {
-        return () -> new MFXButtonBehaviorBase<>(this);
+    public Supplier<MFXBehavior<? extends Node>> defaultBehaviorFactory() {
+        return () -> new MFXButtonBehavior<>(this);
     }
 
     @Override
-    public Supplier<SkinBase<?, ?>> defaultSkinProvider() {
+    public Supplier<MFXSkinBase<? extends Node>> defaultSkinFactory() {
         return () -> new MFXFabSkin(this);
     }
 
     @Override
     public List<String> defaultStyleClasses() {
-        return MFXStyleable.styleClasses("mfx-fab");
+        return styleClasses("mfx-fab");
     }
 
     @Override
@@ -211,7 +214,7 @@ public class MFXFab extends MFXButtonBase<MFXButtonBehaviorBase<MFXFab>> impleme
     // CssMetaData
     //================================================================================
     private static class StyleableProperties {
-        private static final StyleablePropertyFactory<MFXFab> FACTORY = new StyleablePropertyFactory<>(MFXLabeled.getClassCssMetaData());
+        private static final StyleablePropertyFactory<MFXFab> FACTORY = new StyleablePropertyFactory<>(MFXButtonBase.getClassCssMetaData());
         private static final List<CssMetaData<? extends Styleable, ?>> cssMetaDataList;
 
         private static final CssMetaData<MFXFab, Boolean> EXTENDED =
@@ -229,7 +232,7 @@ public class MFXFab extends MFXButtonBase<MFXButtonBehaviorBase<MFXFab>> impleme
 
         static {
             cssMetaDataList = StyleUtils.cssMetaDataList(
-                MFXLabeled.getClassCssMetaData(),
+                MFXButtonBase.getClassCssMetaData(),
                 EXTENDED, MIN_SIZE
             );
         }
@@ -247,6 +250,7 @@ public class MFXFab extends MFXButtonBase<MFXButtonBehaviorBase<MFXFab>> impleme
     //================================================================================
     // Getters/Setters
     //================================================================================
+
     public MFXFontIcon getIcon() {
         return icon.get();
     }

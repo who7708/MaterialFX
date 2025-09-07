@@ -18,10 +18,10 @@
 
 package io.github.palexdev.mfxcomponents.skins;
 
-import io.github.palexdev.mfxcomponents.behaviors.MFXButtonBehaviorBase;
 import io.github.palexdev.mfxcomponents.controls.MFXSurface;
 import io.github.palexdev.mfxcomponents.controls.base.MFXButtonBase;
 import io.github.palexdev.mfxcomponents.skins.base.MFXLabeledSkin;
+import io.github.palexdev.mfxcore.behavior.MFXBehavior;
 import io.github.palexdev.mfxcore.utils.fx.LayoutUtils;
 import io.github.palexdev.mfxeffects.beans.Position;
 import io.github.palexdev.mfxeffects.ripple.MFXRippleGenerator;
@@ -34,15 +34,13 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
-import static io.github.palexdev.mfxcore.events.WhenEvent.intercept;
+import static io.github.palexdev.mfxcore.input.WhenEvent.intercept;
 
-/// Base skin implementation for all components of type {@link MFXButtonBase}.
+/// Base skin implementation for all components of type [MFXButtonBase].
 ///
-/// This skin uses behaviors of type {@link MFXButtonBehaviorBase}.
-///
-/// The layout is simple, there are just the label to show the text, the [MFXSurface] responsible for
-/// showing the various interaction states (applying an overlay background) and the [MFXRippleGenerator] for the ripple effects.
-public class MFXButtonSkin<C extends MFXButtonBase<B>, B extends MFXButtonBehaviorBase<C>> extends MFXLabeledSkin<C, B> {
+/// The layout is simple, there is just the label to show the text, the [MFXSurface] responsible for showing the various
+/// interaction states (applying an overlay background) and the [MFXRippleGenerator] for the ripple effects.
+public class MFXButtonSkin extends MFXLabeledSkin {
     //================================================================================
     // Properties
     //================================================================================
@@ -52,7 +50,8 @@ public class MFXButtonSkin<C extends MFXButtonBase<B>, B extends MFXButtonBehavi
     //================================================================================
     // Constructors
     //================================================================================
-    public MFXButtonSkin(C button) {
+
+    public MFXButtonSkin(MFXButtonBase button) {
         super(button);
 
         // Init
@@ -63,9 +62,17 @@ public class MFXButtonSkin<C extends MFXButtonBase<B>, B extends MFXButtonBehavi
         rg.setMeToPosConverter(me ->
             (me.getButton() == MouseButton.PRIMARY) ? Position.of(me.getX(), me.getY()) : null
         );
-        rg.enable();
 
         // Finalize
+        updateChildren();
+    }
+
+    //================================================================================
+    // Methods
+    //================================================================================
+
+    /// Responsible for updating the control's children list.
+    protected void updateChildren() {
         getChildren().setAll(surface, rg, label);
     }
 
@@ -73,19 +80,16 @@ public class MFXButtonSkin<C extends MFXButtonBase<B>, B extends MFXButtonBehavi
     // Overridden Methods
     //================================================================================
 
-    /// Adds the following handlers:
-    /// - [MouseEvent#MOUSE_PRESSED] to call [B#mousePressed(MouseEvent)]
-    /// - [MouseEvent#MOUSE_CLICKED] to call [B#mouseClicked(MouseEvent)]
-    /// - [KeyEvent#KEY_PRESSED] to call [B#keyPressed(KeyEvent)] and to generate the ripple effect at the center
-    /// when the ENTER or SPACEBAR keys are pressed.
     @Override
-    protected void initBehavior(B behavior) {
-        C button = getSkinnable();
-        super.initBehavior(behavior);
+    protected void registerBehavior() {
+        MFXButtonBase button = getControl();
+        MFXBehavior<? extends Node> behavior = getBehavior();
         events(
-            intercept(button, MouseEvent.MOUSE_PRESSED).process(behavior::mousePressed),
-            intercept(button, MouseEvent.MOUSE_CLICKED).process(behavior::mouseClicked),
-            intercept(button, KeyEvent.KEY_PRESSED).process(e -> behavior.keyPressed(e, _ -> {
+            intercept(button, MouseEvent.MOUSE_PRESSED).handle(e -> behavior.mousePressed(e, () -> rg.generate(e))),
+            intercept(button, MouseEvent.MOUSE_RELEASED).handle(_ -> rg.release()),
+            intercept(button, MouseEvent.MOUSE_EXITED).handle(_ -> rg.release()),
+            intercept(button, MouseEvent.MOUSE_CLICKED).handle(behavior::mouseClicked),
+            intercept(button, KeyEvent.KEY_PRESSED).handle(e -> behavior.keyPressed(e, () -> {
                 if (e.getCode() == KeyCode.ENTER || e.getCode() == KeyCode.SPACE) {
                     Bounds b = button.getLayoutBounds();
                     rg.generate(b.getCenterX(), b.getCenterY());
@@ -97,22 +101,22 @@ public class MFXButtonSkin<C extends MFXButtonBase<B>, B extends MFXButtonBehavi
 
     @Override
     protected double computePrefWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
-        C button = getSkinnable();
+        MFXButtonBase button = getControl();
         Node graphic = button.getGraphic();
         return leftInset +
                ((graphic != null) ? LayoutUtils.snappedBoundWidth(graphic) + button.getGraphicTextGap() : 0.0) +
-               ((button.getContentDisplay() == ContentDisplay.GRAPHIC_ONLY) ? 0.0 : getCachedTextWidth()) +
+               ((button.getContentDisplay() == ContentDisplay.GRAPHIC_ONLY) ? 0.0 : textWidth()) +
                rightInset;
     }
 
     @Override
     protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
-        C button = getSkinnable();
+        MFXButtonBase button = getControl();
         Node graphic = button.getGraphic();
         return topInset +
                Math.max(
                    ((graphic != null) ? LayoutUtils.snappedBoundHeight(graphic) : 0.0),
-                   getCachedTextHeight()
+                   textHeight()
                ) + bottomInset;
     }
 
@@ -128,7 +132,7 @@ public class MFXButtonSkin<C extends MFXButtonBase<B>, B extends MFXButtonBehavi
 
     @Override
     protected void layoutChildren(double x, double y, double w, double h) {
-        C button = getSkinnable();
+        MFXButtonBase button = getControl();
         Pos align = button.getAlignment();
         layoutInArea(label, x, y, w, h, 0.0, align.getHpos(), align.getVpos());
         surface.resizeRelocate(0, 0, button.getWidth(), button.getHeight());
@@ -140,5 +144,10 @@ public class MFXButtonSkin<C extends MFXButtonBase<B>, B extends MFXButtonBehavi
         surface.dispose();
         rg.dispose();
         super.dispose();
+    }
+
+    @Override
+    protected MFXButtonBase getControl() {
+        return (MFXButtonBase) super.getControl();
     }
 }

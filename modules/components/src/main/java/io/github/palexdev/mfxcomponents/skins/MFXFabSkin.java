@@ -18,13 +18,13 @@
 
 package io.github.palexdev.mfxcomponents.skins;
 
-import io.github.palexdev.mfxcomponents.behaviors.MFXButtonBehaviorBase;
 import io.github.palexdev.mfxcomponents.controls.MFXFab;
 import io.github.palexdev.mfxcomponents.controls.MFXSurface;
-import io.github.palexdev.mfxcomponents.controls.base.MFXLabeled;
 import io.github.palexdev.mfxcomponents.skins.base.MFXLabeledSkin;
+import io.github.palexdev.mfxcore.behavior.MFXBehavior;
 import io.github.palexdev.mfxcore.controls.BoundLabel;
 import io.github.palexdev.mfxcore.controls.Label;
+import io.github.palexdev.mfxcore.controls.MFXLabeled;
 import io.github.palexdev.mfxcore.utils.fx.LabelMeasurementCache;
 import io.github.palexdev.mfxcore.utils.fx.LayoutUtils;
 import io.github.palexdev.mfxcore.utils.fx.TextMeasurementCache;
@@ -32,6 +32,7 @@ import io.github.palexdev.mfxeffects.animations.Animations;
 import io.github.palexdev.mfxeffects.animations.Animations.KeyFrames;
 import io.github.palexdev.mfxeffects.animations.Animations.TimelineBuilder;
 import io.github.palexdev.mfxeffects.animations.motion.M3Motion;
+import io.github.palexdev.mfxeffects.animations.motion.M3Motion.MotionPreset;
 import io.github.palexdev.mfxeffects.beans.Position;
 import io.github.palexdev.mfxeffects.ripple.MFXRippleGenerator;
 import io.github.palexdev.mfxresources.icon.MFXFontIcon;
@@ -47,11 +48,10 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
 
-import static io.github.palexdev.mfxcore.events.WhenEvent.intercept;
+import static io.github.palexdev.mfxcore.input.WhenEvent.intercept;
 import static io.github.palexdev.mfxcore.observables.When.onInvalidated;
 
-/// Default skin implementation for all [MFXFabs][MFXFab]. Extends [MFXLabeledSkin] and expects behaviors of type
-/// [MFXButtonBehaviorBase].
+/// Default skin implementation for all [MFXFabs][MFXFab], extends [MFXLabeledSkin].
 ///
 /// Because of the numerous animations (and the type) shown by the Material Design specs, this skin is quite complex and
 /// it's precisely tweaked for them to play correctly.
@@ -65,7 +65,7 @@ import static io.github.palexdev.mfxcore.observables.When.onInvalidated;
 /// - the [MFXRippleGenerator] responsible for generating ripple effects
 ///
 /// The FAB expand/collapse is handled by [#extend(boolean, boolean)].
-public class MFXFabSkin extends MFXLabeledSkin<MFXFab, MFXButtonBehaviorBase<MFXFab>> {
+public class MFXFabSkin extends MFXLabeledSkin {
     //================================================================================
     // Properties
     //================================================================================
@@ -81,6 +81,7 @@ public class MFXFabSkin extends MFXLabeledSkin<MFXFab, MFXButtonBehaviorBase<MFX
     //================================================================================
     // Constructors
     //================================================================================
+
     public MFXFabSkin(MFXFab fab) {
         super(fab);
 
@@ -96,7 +97,6 @@ public class MFXFabSkin extends MFXLabeledSkin<MFXFab, MFXButtonBehaviorBase<MFX
         rg.setMeToPosConverter(me ->
             (me.getButton() == MouseButton.PRIMARY) ? Position.of(me.getX(), me.getY()) : null
         );
-        rg.enable();
 
         initTextMeasurementCache();
         clip();
@@ -119,7 +119,7 @@ public class MFXFabSkin extends MFXLabeledSkin<MFXFab, MFXButtonBehaviorBase<MFX
     ///   with [MFXFab#isExtended()] (re-extending the FAB if it is now collapsed) and `true` as the parameters.
     ///   This animated behavior is showcased in the Material Design 3 specs.
     protected void addListeners() {
-        MFXFab fab = getSkinnable();
+        MFXFab fab = getControl();
         listeners(
             onInvalidated(fab.extendedProperty())
                 .then(e -> {
@@ -144,13 +144,14 @@ public class MFXFabSkin extends MFXLabeledSkin<MFXFab, MFXButtonBehaviorBase<MFX
     /// - The FAB's width through its [MFXFab#prefWidthProperty()], the value is given by [#computeTargetWidth(boolean)]
     /// - The label's [Node#translateXProperty()] so that the label or the icon are always centered in the FAB, the value
     ///   is given by [#computeTargetX(boolean, double)]
-    /// - The text's opacity, `1.0` is extended, `0.0` otherwise. Note! I said the text opacity, not the label!
+    /// - The text's opacity, `1.0` when extended, `0.0` otherwise. Note! I said the text opacity, not the label!
     ///   See [MFXLabeled]
     ///
     /// @param extend specified whether to extend or collapse
     /// @param animated specifies whether to extend/collapse with an animation or not
+
     protected void extend(boolean extend, boolean animated) {
-        MFXFab fab = getSkinnable();
+        MFXFab fab = getControl();
         double targetW = snapSizeX(computeTargetWidth(extend));
         double targetX = snapSizeX(computeTargetX(extend, targetW));
         double targetO = extend ? 1.0 : 0.0;
@@ -165,8 +166,8 @@ public class MFXFabSkin extends MFXLabeledSkin<MFXFab, MFXButtonBehaviorBase<MFX
             return;
         }
 
-        M3Motion.MotionPreset eMotion = M3Motion.EXPRESSIVE_DEFAULT_EFFECTS;
-        M3Motion.MotionPreset sMotion = M3Motion.EXPRESSIVE_FAST_SPATIAL;
+        MotionPreset eMotion = M3Motion.EXPRESSIVE_DEFAULT_EFFECTS;
+        MotionPreset sMotion = M3Motion.EXPRESSIVE_FAST_SPATIAL;
         animation = TimelineBuilder.build()
             .add(KeyFrames.of(sMotion.millis(), fab.prefWidthProperty(), targetW, sMotion.curve()))
             .add(KeyFrames.of(sMotion.millis(), label.translateXProperty(), targetX, sMotion.curve()))
@@ -179,13 +180,13 @@ public class MFXFabSkin extends MFXLabeledSkin<MFXFab, MFXButtonBehaviorBase<MFX
     /// [Node#applyCss()]!
     ///
     /// Depending on the state, the target is given by:
-    /// - Extended: the label's width, which we get from the cache [LabelMeasurementCache]
+    /// - Extended: the label's width, which we get from the cache, [LabelMeasurementCache]
     /// - Collapsed: the icon's width or `0.0` if there's no icon
     ///
     /// The final value, however, is the maximum between: the width given by the [MFXFab#minSizeProperty()] and
     /// the computed value including horizontal padding.
     protected double computeTargetWidth(boolean extended) {
-        MFXFab fab = getSkinnable();
+        MFXFab fab = getControl();
         fab.applyCss(); // Ensure minSize is correct
         double minW = fab.getMinSize().width();
 
@@ -223,24 +224,29 @@ public class MFXFabSkin extends MFXLabeledSkin<MFXFab, MFXButtonBehaviorBase<MFX
 
     /// Clips the FAB's label so that the text does not overflow when animating between extended/collapsed states.
     protected void clip() {
-        MFXFab fab = getSkinnable();
+        MFXLabeled fab = getSkinnable();
         Rectangle r = new Rectangle();
         r.widthProperty().bind(fab.widthProperty());
         r.heightProperty().bind(fab.heightProperty());
         label.setClip(r);
     }
 
+
     //================================================================================
     // Overridden Methods
     //================================================================================
+
     @Override
-    protected void initBehavior(MFXButtonBehaviorBase<MFXFab> behavior) {
-        MFXFab fab = getSkinnable();
-        super.initBehavior(behavior);
+    protected void registerBehavior() {
+        super.registerBehavior();
+        MFXLabeled fab = getSkinnable();
+        MFXBehavior<? extends Node> behavior = getBehavior();
         events(
-            intercept(fab, MouseEvent.MOUSE_PRESSED).process(behavior::mousePressed),
-            intercept(fab, MouseEvent.MOUSE_CLICKED).process(behavior::mouseClicked),
-            intercept(fab, KeyEvent.KEY_PRESSED).process(e -> behavior.keyPressed(e, _ -> {
+            intercept(fab, MouseEvent.MOUSE_PRESSED).handle(e -> behavior.mousePressed(e, () -> rg.generate(e))),
+            intercept(fab, MouseEvent.MOUSE_RELEASED).handle(_ -> rg.release()),
+            intercept(fab, MouseEvent.MOUSE_EXITED).handle(_ -> rg.release()),
+            intercept(fab, MouseEvent.MOUSE_CLICKED).handle(behavior::mouseClicked),
+            intercept(fab, KeyEvent.KEY_PRESSED).handle(e -> behavior.keyPressed(e, () -> {
                 if (e.getCode() == KeyCode.ENTER || e.getCode() == KeyCode.SPACE) {
                     Bounds b = fab.getLayoutBounds();
                     rg.generate(b.getCenterX(), b.getCenterY());
@@ -271,7 +277,7 @@ public class MFXFabSkin extends MFXLabeledSkin<MFXFab, MFXButtonBehaviorBase<MFX
 
     @Override
     protected double computeMinHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
-        return topInset + getSkinnable().getMinSize().height() + bottomInset;
+        return topInset + getControl().getMinSize().height() + bottomInset;
     }
 
     @Override
@@ -291,7 +297,7 @@ public class MFXFabSkin extends MFXLabeledSkin<MFXFab, MFXButtonBehaviorBase<MFX
 
     @Override
     protected void layoutChildren(double x, double y, double w, double h) {
-        MFXFab fab = getSkinnable();
+        MFXFab fab = getControl();
         surface.resizeRelocate(0, 0, fab.getWidth(), fab.getHeight());
         rg.resizeRelocate(0, 0, fab.getWidth(), fab.getHeight());
         layoutInArea(label, x, y, w, h, 0, HPos.LEFT, VPos.CENTER);
@@ -308,5 +314,10 @@ public class MFXFabSkin extends MFXLabeledSkin<MFXFab, MFXButtonBehaviorBase<MFX
         rg.dispose();
         lmc.dispose();
         super.dispose();
+    }
+
+    @Override
+    protected MFXFab getControl() {
+        return (MFXFab) super.getControl();
     }
 }

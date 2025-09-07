@@ -22,26 +22,24 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import io.github.palexdev.mfxcomponents.behaviors.MFXButtonBehavior;
-import io.github.palexdev.mfxcomponents.controls.base.MFXSelectable;
+import io.github.palexdev.mfxcomponents.controls.base.MFXButtonBase;
+import io.github.palexdev.mfxcomponents.controls.base.MFXToggle;
 import io.github.palexdev.mfxcomponents.skins.MFXButtonSkin;
+import io.github.palexdev.mfxcomponents.variants.ButtonVariants;
 import io.github.palexdev.mfxcomponents.variants.ButtonVariants.ShapeVariant;
 import io.github.palexdev.mfxcomponents.variants.ButtonVariants.SizeVariant;
 import io.github.palexdev.mfxcomponents.variants.ButtonVariants.StyleVariant;
 import io.github.palexdev.mfxcomponents.variants.api.Variant;
 import io.github.palexdev.mfxcomponents.variants.api.VariantsHandler;
 import io.github.palexdev.mfxcomponents.variants.api.WithVariants;
-import io.github.palexdev.mfxcore.base.properties.styleable.StyleableBooleanProperty;
-import io.github.palexdev.mfxcore.controls.MFXStyleable;
-import io.github.palexdev.mfxcore.controls.SkinBase;
-import io.github.palexdev.mfxcore.selection.SelectionGroup;
-import io.github.palexdev.mfxcore.utils.fx.StyleUtils;
+import io.github.palexdev.mfxcore.behavior.MFXBehavior;
+import io.github.palexdev.mfxcore.controls.MFXSkinBase;
 import javafx.collections.ObservableMap;
-import javafx.css.CssMetaData;
-import javafx.css.Styleable;
-import javafx.css.StyleablePropertyFactory;
 import javafx.scene.Node;
 
-/// Custom implementation of a button which extends [MFXSelectable], uses [MFXButtonSkin] and [MFXButtonBehavior] as its
+import static io.github.palexdev.mfxcore.controls.MFXStyleable.styleClasses;
+
+/// Custom implementation of a button which extends [MFXButtonBase], uses [MFXButtonSkin] and [MFXButtonBehavior] as its
 /// default skin and behavior. The default CSS style class is `.mfx-button`.
 ///
 /// Material 3 specs show a vast number of configurations for standard buttons. Most of them determine the look of the
@@ -51,18 +49,9 @@ import javafx.scene.Node;
 /// - [ShapeVariant] defines the shape/radius, can be set through [#setShape(ShapeVariant)]
 /// The defaults are applied by [#defaultVariants()] upon initialization.
 ///
-/// The most important, tricky and headache-inducing feature is the [#toggleableProperty()].
-/// The newest Material 3 Expressive update unified toggles and regular buttons under the same component. To avoid code
-/// duplication as much as possible, I also decided to unify them. The downside is that this makes the [#selectedProperty()]'s
-/// handling complex, risky. For example, what happens if the button is not toggleable, but it's inside a [SelectionGroup]?
-///
-/// After much internal debate, I decided to keep things simple and stupid. The [#toggleableProperty()] is a mere indicator
-/// to the behavior class, [MFXButtonBehavior], which can redirect the user input to the selection handling logic
-/// or just trigger an action. (see [MFXButtonBehavior#handleSelection()])
-///
-/// If the button is selected and is not in toggle mode, it will be turned on by [#onSelectionChanged(boolean)].
+/// If you want the toggleable variant, use [MFXToggleButton].
 // TODO add support for emphasized text through Variants
-public class MFXButton extends MFXSelectable<MFXButtonBehavior> implements WithVariants {
+public class MFXButton extends MFXButtonBase implements WithVariants {
     //================================================================================
     // Properties
     //================================================================================
@@ -71,6 +60,7 @@ public class MFXButton extends MFXSelectable<MFXButtonBehavior> implements WithV
     //================================================================================
     // Constructors
     //================================================================================
+
     public MFXButton() {}
 
     public MFXButton(String text) {
@@ -90,14 +80,6 @@ public class MFXButton extends MFXSelectable<MFXButtonBehavior> implements WithV
     //================================================================================
     // Config
     //================================================================================
-
-    /// Shortcut for `setToggleable(true)`.
-    ///
-    /// @see #toggleableProperty()
-    public MFXButton asToggle() {
-        setToggleable(true);
-        return this;
-    }
 
     public MFXButton setStyle(StyleVariant style) {
         variantsHandler.setVariant(style);
@@ -127,28 +109,19 @@ public class MFXButton extends MFXSelectable<MFXButtonBehavior> implements WithV
     // Overridden Methods
     //================================================================================
 
-    /// {@inheritDoc}
-    ///
-    /// Overridden to activate the [#toggleableProperty()] if the given state is `true`.
     @Override
-    protected void onSelectionChanged(boolean state) {
-        if (state && !isToggleable()) setToggleable(true);
-        super.onSelectionChanged(state);
+    public Supplier<MFXBehavior<? extends Node>> defaultBehaviorFactory() {
+        return () -> new MFXButtonBehavior<>(this);
     }
 
     @Override
-    public Supplier<MFXButtonBehavior> defaultBehaviorProvider() {
-        return () -> new MFXButtonBehavior(this);
-    }
-
-    @Override
-    public Supplier<SkinBase<?, ?>> defaultSkinProvider() {
-        return () -> new MFXButtonSkin<>(this);
+    public Supplier<MFXSkinBase<? extends Node>> defaultSkinFactory() {
+        return () -> new MFXButtonSkin(this);
     }
 
     @Override
     public List<String> defaultStyleClasses() {
-        return MFXStyleable.styleClasses("mfx-button");
+        return styleClasses("mfx-button");
     }
 
     @Override
@@ -157,73 +130,73 @@ public class MFXButton extends MFXSelectable<MFXButtonBehavior> implements WithV
     }
 
     //================================================================================
-    // Styleable Properties
+    // Internal Classes
     //================================================================================
-    private final StyleableBooleanProperty toggleable = new StyleableBooleanProperty(
-        StyleableProperties.TOGGLEABLE,
-        this,
-        "toggleable",
-        false
-    ) {
+
+    /// Extension of [MFXToggle] which uses the same behavior and skin as [MFXButton]. It even has the same variants:
+    /// [ButtonVariants].
+    public static class MFXToggleButton extends MFXToggle implements WithVariants {
+        protected final VariantsHandler<MFXToggleButton> variantsHandler = new VariantsHandler<>(this);
+
+        public MFXToggleButton() {}
+
+        public MFXToggleButton(String text) {
+            super(text);
+        }
+
+        public MFXToggleButton(String text, Node graphic) {
+            super(text, graphic);
+        }
+
+        {
+            defaultVariants();
+            setMinSize(USE_PREF_SIZE, USE_PREF_SIZE);
+            setPickOnBounds(false);
+        }
+
+        public MFXToggleButton setStyle(StyleVariant style) {
+            variantsHandler.setVariant(style);
+            return this;
+        }
+
+        public MFXToggleButton setSize(SizeVariant size) {
+            variantsHandler.setVariant(size);
+            return this;
+        }
+
+        public MFXToggleButton setShape(ShapeVariant shape) {
+            variantsHandler.setVariant(shape);
+            return this;
+        }
+
+        /// Applies the default variants to the button:
+        /// - [StyleVariant#ELEVATED]
+        /// - [SizeVariant#S]
+        /// - [ShapeVariant#ROUNDED]
+        public MFXToggleButton defaultVariants() {
+            variantsHandler.setVariants(StyleVariant.ELEVATED, SizeVariant.S, ShapeVariant.ROUNDED);
+            return this;
+        }
+
+
         @Override
-        protected void invalidated() {
-            boolean val = get();
-            if (val) {
-                getStyleClass().add("toggle");
-            } else {
-                getStyleClass().remove("toggle");
-            }
+        public Supplier<MFXBehavior<? extends Node>> defaultBehaviorFactory() {
+            return () -> new MFXButtonBehavior<>(this);
         }
-    };
 
-    public boolean isToggleable() {
-        return toggleable.get();
-    }
-
-    /// Specifies the button's behavior, either as a regular button or as a toggle.
-    /// Applies/removes the `.toggle` CSS style class to the button as needed.
-    ///
-    /// Can be set from CSS via the property: '-mfx-toggleable'.
-    ///
-    /// #### Note!
-    ///
-    /// This property is more of an indicator to the behavior class, [MFXButtonBehavior].
-    public StyleableBooleanProperty toggleableProperty() {
-        return toggleable;
-    }
-
-    public void setToggleable(boolean toggleable) {
-        this.toggleable.set(toggleable);
-    }
-
-    //================================================================================
-    // CssMetaData
-    //================================================================================
-    private static class StyleableProperties {
-        private static final StyleablePropertyFactory<MFXButton> FACTORY = new StyleablePropertyFactory<>(MFXSelectable.getClassCssMetaData());
-        private static final List<CssMetaData<? extends Styleable, ?>> cssMetaDataList;
-
-        private static final CssMetaData<MFXButton, Boolean> TOGGLEABLE =
-            FACTORY.createBooleanCssMetaData(
-                "-mfx-toggleable",
-                MFXButton::toggleableProperty,
-                false
-            );
-
-        static {
-            cssMetaDataList = StyleUtils.cssMetaDataList(
-                MFXSelectable.getClassCssMetaData(),
-                TOGGLEABLE
-            );
+        @Override
+        public Supplier<MFXSkinBase<? extends Node>> defaultSkinFactory() {
+            return () -> new MFXButtonSkin(this);
         }
-    }
 
-    public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
-        return StyleableProperties.cssMetaDataList;
-    }
+        @Override
+        public List<String> defaultStyleClasses() {
+            return styleClasses("mfx-button", "toggle");
+        }
 
-    @Override
-    public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
-        return getClassCssMetaData();
+        @Override
+        public ObservableMap<Class<?>, Variant> getAppliedVariants() {
+            return variantsHandler.getAppliedVariantsUnmodifiable();
+        }
     }
 }

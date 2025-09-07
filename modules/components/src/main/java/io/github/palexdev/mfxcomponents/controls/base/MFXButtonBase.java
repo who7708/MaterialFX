@@ -18,20 +18,19 @@
 
 package io.github.palexdev.mfxcomponents.controls.base;
 
-import io.github.palexdev.mfxcomponents.behaviors.MFXButtonBehaviorBase;
 import io.github.palexdev.mfxcore.base.properties.EventHandlerProperty;
+import io.github.palexdev.mfxcore.controls.MFXLabeled;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 
 /// Base class for all `MaterialFX` buttons. Extends [MFXLabeled] since _most_ of them can display text.
-/// Uses behaviors that inherit from [MFXButtonBehaviorBase].
 ///
 /// Implements the most basic properties and behaviors of each button, such as the [#onActionProperty()] and the
 /// [#trigger()] method (JavaFX counterpart is fire()).
 ///
-/// Since it's a base class, it has no style classes.
-public abstract class MFXButtonBase<B extends MFXButtonBehaviorBase<?>> extends MFXLabeled<B> {
+/// Since it's a base class, it has no default style classes.
+public abstract class MFXButtonBase extends MFXLabeled {
     //================================================================================
     // Properties
     //================================================================================
@@ -45,6 +44,7 @@ public abstract class MFXButtonBase<B extends MFXButtonBehaviorBase<?>> extends 
     //================================================================================
     // Constructors
     //================================================================================
+
     public MFXButtonBase() {}
 
     public MFXButtonBase(String text) {
@@ -68,6 +68,7 @@ public abstract class MFXButtonBase<B extends MFXButtonBehaviorBase<?>> extends 
     //================================================================================
     // Getters/Setters
     //================================================================================
+
     public EventHandler<ActionEvent> getOnAction() {
         return onAction.get();
     }

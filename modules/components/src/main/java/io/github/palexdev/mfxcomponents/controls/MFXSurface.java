@@ -113,7 +113,7 @@ public class MFXSurface extends Region implements MFXStyleable {
     // Methods
     //================================================================================
     private void init() {
-        defaultStyleClasses(this);
+        setDefaultStyleClasses();
         setManaged(false);
         setMaxSize(USE_PREF_SIZE, USE_PREF_SIZE);
 
@@ -125,7 +125,7 @@ public class MFXSurface extends Region implements MFXStyleable {
     }
 
     /// This is the core method responsible for setting the surface's opacity according to the current interaction state
-    /// with its `owner`. A common place where we can capture state changes is the [javafx.css.Styleable#getPseudoClassStates()].
+    /// with its `owner`. A common place where we can capture state changes is the [Styleable#getPseudoClassStates()].
     /// However, note that before performing a lookup in that [Set], preset states first check properties
     /// on the node (such as [Node#isHover()], [Node#isPressed()], etc...), which is faster.
     ///

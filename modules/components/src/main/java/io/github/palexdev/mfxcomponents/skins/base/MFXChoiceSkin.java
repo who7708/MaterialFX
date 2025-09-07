@@ -23,11 +23,10 @@ import java.util.function.Function;
 
 import io.github.palexdev.mfxcomponents.controls.base.MFXChoice;
 import io.github.palexdev.mfxcomponents.popups.ExtendedPopoverConfig;
-import io.github.palexdev.mfxcore.behavior.BehaviorBase;
-import io.github.palexdev.mfxcore.controls.SkinBase;
-import io.github.palexdev.mfxcore.observables.When;
+import io.github.palexdev.mfxcore.controls.MFXSkinBase;
 import io.github.palexdev.mfxcore.popups.MFXPopover;
 import io.github.palexdev.mfxcore.popups.MFXPopups;
+import io.github.palexdev.mfxcore.popups.PopupState;
 import io.github.palexdev.mfxcore.selection.model.ISelectionModel;
 import io.github.palexdev.mfxcore.utils.NumberUtils;
 import io.github.palexdev.mfxcore.utils.fx.LayoutUtils;
@@ -37,13 +36,16 @@ import io.github.palexdev.virtualizedfx.controls.VFXScrollPane;
 import io.github.palexdev.virtualizedfx.enums.ScrollPaneEnums.ScrollBarPolicy;
 import io.github.palexdev.virtualizedfx.list.VFXList;
 import io.github.palexdev.virtualizedfx.utils.ScrollParams;
+import javafx.beans.property.BooleanProperty;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
+
+import static io.github.palexdev.mfxcore.observables.When.onInvalidated;
 
 /// Base skin containing common properties and behavior for all controls based on [MFXChoice].
 ///
 /// It manages the 'view cell' (see [#buildViewCell()] and [#updateViewCell()]) and the popup used to display the choices.
-public abstract class MFXChoiceSkin<T> extends SkinBase<MFXChoice<T>, BehaviorBase<MFXChoice<T>>> {
+public abstract class MFXChoiceSkin<T> extends MFXSkinBase<MFXChoice<T>> {
     //================================================================================
     // Properties
     //================================================================================
@@ -56,7 +58,8 @@ public abstract class MFXChoiceSkin<T> extends SkinBase<MFXChoice<T>, BehaviorBa
     //================================================================================
     // Constructors
     //================================================================================
-    public MFXChoiceSkin(MFXChoice<T> choice) {
+
+    protected MFXChoiceSkin(MFXChoice<T> choice) {
         super(choice);
 
         popupConfig = choice.getPopupConfig();
@@ -79,12 +82,12 @@ public abstract class MFXChoiceSkin<T> extends SkinBase<MFXChoice<T>, BehaviorBa
     protected void addListeners() {
         MFXChoice<T> choice = getSkinnable();
         listeners(
-            When.onInvalidated(choice.cellFactoryProperty())
+            onInvalidated(choice.cellFactoryProperty())
                 .then(_ -> buildViewCell())
                 .executeNow(() -> choice.getCellFactory() != null),
-            When.onInvalidated(choice.popupConfigProperty())
+            onInvalidated(choice.popupConfigProperty())
                 .then(c -> {
-                    // Override styleable parent to always be the button
+                    // Override styleable parent to always be the control
                     this.popupConfig = ExtendedPopoverConfig.builder(c)
                         .styleableParent(choice)
                         .build();
@@ -92,9 +95,10 @@ public abstract class MFXChoiceSkin<T> extends SkinBase<MFXChoice<T>, BehaviorBa
                     popup.getRoot().requestLayout();
                 })
                 .executeNow(),
-            When.onInvalidated(choice.selection())
+            onInvalidated(choice.selection())
                 .then(_ -> updateViewCell())
-                .executeNow()
+                .executeNow(),
+            popup.onState(null, (_, s) -> onPopupState(s))
         );
     }
 
@@ -109,7 +113,7 @@ public abstract class MFXChoiceSkin<T> extends SkinBase<MFXChoice<T>, BehaviorBa
 
     /// **What is the view cell?**
     ///
-    /// This kind of components display available choices as a list in a popup. However, they also need to communicate
+    /// This kind of component displays available choices as a list in a popup. However, they also need to communicate
     /// to the user what choice they made. There are various approaches to do this. This skin inspires to the JavaFX way.<br >
     /// By using the same cell factory specified by the [MFXChoice#cellFactoryProperty()], we build an additional cell
     /// which I call `view cell`. This cell is not part of a virtualized container, but it's directly part of the component's
@@ -118,6 +122,7 @@ public abstract class MFXChoiceSkin<T> extends SkinBase<MFXChoice<T>, BehaviorBa
     ///
     /// If you need to perform additional operations, or you just want to change the render logic for this specific cell,
     /// there are several ways to detect if a cell is the `view cell`:
+    /// - The [Node#getUserData()] is set to `VIEW_CELL`.
     /// - The 'view-cell' style class is added on its node, so you could query the [Node#getStyleClass()] list.
     /// - The context is and will remain `null` because it will never be part of a virtualized container, [VFXCell#onCreated(VFXContext)]
     /// - The index is set to [Integer#MIN_VALUE]. Index updates are always issued before item updates by `VirtualizedFX`.
@@ -129,10 +134,9 @@ public abstract class MFXChoiceSkin<T> extends SkinBase<MFXChoice<T>, BehaviorBa
             viewCell.updateIndex(Integer.MIN_VALUE);
             Node node = viewCell.toNode();
             node.getStyleClass().add("view-cell");
+            node.setUserData("VIEW_CELL");
         }
     }
-
-    // TODO implement placeholder
 
     /// This is responsible for building the popup used to show the available choices.
     ///
@@ -140,6 +144,7 @@ public abstract class MFXChoiceSkin<T> extends SkinBase<MFXChoice<T>, BehaviorBa
     /// in a [VFXScrollPane] to enable scrolling capabilities. The scroll pane's sizes are overridden:
     /// - the width will be at least the owner's width
     /// - the height will take into account the preferred number of visible items specified by [ExtendedPopoverConfig#itemsToShow()].
+    // TODO implement placeholder
     protected MFXPopover buildPopup() {
         MFXChoice<T> choice = getSkinnable();
         VFXList<T, VFXCell<T>> list = new VFXList<>(choice.getItems(), null);
@@ -168,7 +173,13 @@ public abstract class MFXChoiceSkin<T> extends SkinBase<MFXChoice<T>, BehaviorBa
         vsp.setHBarPolicy(ScrollBarPolicy.NEVER);
         vsp.preloadSkin();
         ScrollParams.cells(1.5).bind(vsp, Orientation.VERTICAL);
-
         return MFXPopups.popover().setContent(vsp).get();
+    }
+
+    /// This method is a hook into the popup's state property.<br >
+    /// By default, it's responsible for updating the [MFXChoice#openProperty()].
+    protected void onPopupState(PopupState state) {
+        MFXChoice<T> choice = getSkinnable();
+        ((BooleanProperty) choice.openProperty()).set(state == PopupState.SHOWING || state == PopupState.SHOWN);
     }
 }

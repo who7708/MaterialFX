@@ -18,16 +18,25 @@
 
 package io.github.palexdev.mfxcomponents.behaviors;
 
-import io.github.palexdev.mfxcomponents.controls.MFXButton;
-import io.github.palexdev.mfxcore.selection.SelectionGroup;
+import io.github.palexdev.mfxcomponents.controls.base.MFXButtonBase;
+import io.github.palexdev.mfxcore.behavior.MFXBehavior;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 
-/// Specialization of [MFXSelectableBehavior] for [MFXButton] which by design can act both as a standard button and as a toggle.
-public class MFXButtonBehavior extends MFXSelectableBehavior<MFXButton> {
+/// Base behavior for all MaterialFX buttons which extend from [MFXButtonBase].
+///
+/// Primarily responsible for acquiring focus and "activating" the button when appropriate (mouse click, space/enter pressed, etc.).
+///
+/// @see MFXButtonBase#trigger()
+public class MFXButtonBehavior<B extends MFXButtonBase> extends MFXBehavior<B> {
 
     //================================================================================
     // Constructors
     //================================================================================
-    public MFXButtonBehavior(MFXButton button) {
+
+    public MFXButtonBehavior(B button) {
         super(button);
     }
 
@@ -35,22 +44,21 @@ public class MFXButtonBehavior extends MFXSelectableBehavior<MFXButton> {
     // Overridden Methods
     //================================================================================
 
-    /// {@inheritDoc}
-    ///
-    /// Overridden to take into account the [MFXButton#toggleableProperty()].
-    /// The selection state will be switched only if the button is toggleable or is in a [SelectionGroup].
-    ///
-    /// In the latter case, the [MFXButton#toggleableProperty()] will always be set to `true` here.
     @Override
-    protected void handleSelection() {
-        MFXButton btn = getNode();
-        boolean shouldToggle = btn.isToggleable() || btn.getSelectionGroup() != null;
-        if (!shouldToggle) {
-            btn.trigger();
-            return;
-        }
+    public void mousePressed(MouseEvent e, Runnable callback) {
+        getNode().requestFocus();
+        callback.run();
+    }
 
-        btn.setToggleable(true); // Make sure it's toggleable
-        super.handleSelection();
+    @Override
+    public void mouseClicked(MouseEvent e, Runnable callback) {
+        if (e.getButton() == MouseButton.PRIMARY) getNode().trigger();
+        callback.run();
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e, Runnable callback) {
+        if (e.getCode() == KeyCode.ENTER || e.getCode() == KeyCode.SPACE) getNode().trigger();
+        callback.run();
     }
 }

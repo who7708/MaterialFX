@@ -22,16 +22,17 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import io.github.palexdev.mfxcomponents.behaviors.MFXFabMenuBehavior;
-import io.github.palexdev.mfxcomponents.controls.base.MFXControl;
 import io.github.palexdev.mfxcomponents.skins.MFXFabMenuSkin;
 import io.github.palexdev.mfxcomponents.variants.FABVariants.StyleVariant;
 import io.github.palexdev.mfxcomponents.variants.api.Variant;
 import io.github.palexdev.mfxcomponents.variants.api.VariantsHandler;
 import io.github.palexdev.mfxcomponents.variants.api.WithVariants;
+import io.github.palexdev.mfxcore.base.properties.EventHandlerProperty;
 import io.github.palexdev.mfxcore.base.properties.styleable.StyleableDoubleProperty;
 import io.github.palexdev.mfxcore.base.properties.styleable.StyleableObjectProperty;
-import io.github.palexdev.mfxcore.controls.MFXStyleable;
-import io.github.palexdev.mfxcore.controls.SkinBase;
+import io.github.palexdev.mfxcore.behavior.MFXBehavior;
+import io.github.palexdev.mfxcore.controls.MFXControl;
+import io.github.palexdev.mfxcore.controls.MFXSkinBase;
 import io.github.palexdev.mfxcore.enums.Corner;
 import io.github.palexdev.mfxcore.utils.fx.PseudoClasses;
 import io.github.palexdev.mfxcore.utils.fx.StyleUtils;
@@ -43,14 +44,19 @@ import javafx.collections.ObservableMap;
 import javafx.css.CssMetaData;
 import javafx.css.Styleable;
 import javafx.css.StyleablePropertyFactory;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.transform.Scale;
+
+import static io.github.palexdev.mfxcore.controls.MFXStyleable.styleClasses;
 
 /// Implementation of the FAB menu shown in the Material 3 Expressive specs.
 /// This is essentially a container for a bunch of [MFXFabs][MFXFab]. A so-called 'entry' FAB is responsible for switching
 /// the [#openProperty()], thus revealing or hiding the other FABs specified in the [#getButtons()] list.
 ///
-/// Extends [MFXControl], expects behaviors of type [MFXFabMenuBehavior], the default skin is [MFXFabMenuSkin],
+/// Extends [MFXControl], uses [MFXFabMenuBehavior] and [MFXFabMenuSkin] ad the default behavior and skin,
 /// and the default CSS style class is `.mfx-fab-menu`.
 ///
 /// It also implements [WithVariants] because by design the menu can have three color styles:
@@ -62,36 +68,36 @@ import javafx.scene.transform.Scale;
 /// for the other FABs in the menu. (the mechanism is handled by the default skin!)
 ///
 /// The 'menu' can be shown at the four corners, specified by the [#menuCornerProperty()].
-public class MFXFabMenu extends MFXControl<MFXFabMenuBehavior> implements WithVariants {
+///
+/// You can also specify an action to perform when the entry button is triggered by setting the [#onActionProperty()].
+public class MFXFabMenu extends MFXControl implements WithVariants {
     //================================================================================
     // Properties
     //================================================================================
     private final VariantsHandler<MFXFabMenu> variantsHandler = new VariantsHandler<>(this);
     private final ObservableList<MFXFab> buttons = FXCollections.observableArrayList();
+
+    private final EventHandlerProperty<ActionEvent> onAction = new EventHandlerProperty<>();
     private final BooleanProperty open = new SimpleBooleanProperty(false) {
         @Override
         protected void invalidated() {
-            PseudoClasses.setOn(MFXFabMenu.this, "open", get());
+            PseudoClasses.OPEN.setOn(MFXFabMenu.this, get());
         }
     };
 
     //================================================================================
     // Constructors
     //================================================================================
-    public MFXFabMenu() {
-        defaultConfig();
+
+    public MFXFabMenu() {}
+
+    {
+        defaultVariants();
     }
 
     //================================================================================
-    // Configs
+    // Config
     //================================================================================
-
-    /// Applies the default variants to the menu and its buttons:
-    /// - [StyleVariant#PRIMARY] (will be TONAL_PRIMARY for the buttons)
-    public MFXFabMenu defaultConfig() {
-        variantsHandler.setVariant(StyleVariant.PRIMARY);
-        return this;
-    }
 
     /// Note: Tonal variants from [StyleVariant] are forbidden and are automatically converted to
     /// their standard counterpart.
@@ -107,22 +113,30 @@ public class MFXFabMenu extends MFXControl<MFXFabMenuBehavior> implements WithVa
         return this;
     }
 
+    /// Applies the default variants to the menu and its buttons:
+    /// - [StyleVariant#PRIMARY] (will be TONAL_PRIMARY for the buttons)
+    public MFXFabMenu defaultVariants() {
+        variantsHandler.setVariant(StyleVariant.PRIMARY);
+        return this;
+    }
+
     //================================================================================
     // Overridden Methods
     //================================================================================
+
     @Override
-    public Supplier<MFXFabMenuBehavior> defaultBehaviorProvider() {
+    public Supplier<MFXBehavior<? extends Node>> defaultBehaviorFactory() {
         return () -> new MFXFabMenuBehavior(this);
     }
 
     @Override
-    public Supplier<SkinBase<?, ?>> defaultSkinProvider() {
+    public Supplier<MFXSkinBase<? extends Node>> defaultSkinFactory() {
         return () -> new MFXFabMenuSkin(this);
     }
 
     @Override
     public List<String> defaultStyleClasses() {
-        return MFXStyleable.styleClasses("mfx-fab-menu");
+        return styleClasses("mfx-fab-menu");
     }
 
     @Override
@@ -265,14 +279,29 @@ public class MFXFabMenu extends MFXControl<MFXFabMenuBehavior> implements WithVa
     //================================================================================
     // Getters/Setters
     //================================================================================
+
     public ObservableList<MFXFab> getButtons() {
         return buttons;
+    }
+
+    public EventHandler<ActionEvent> getOnAction() {
+        return onAction.get();
+    }
+
+    /// Specifies the action to perform when the entry fab is triggered.
+    public EventHandlerProperty<ActionEvent> onActionProperty() {
+        return onAction;
+    }
+
+    public void setOnAction(EventHandler<ActionEvent> onAction) {
+        this.onAction.set(onAction);
     }
 
     public boolean isOpen() {
         return open.get();
     }
 
+    /// Through this property it's possible to show or hide the menu.
     public BooleanProperty openProperty() {
         return open;
     }

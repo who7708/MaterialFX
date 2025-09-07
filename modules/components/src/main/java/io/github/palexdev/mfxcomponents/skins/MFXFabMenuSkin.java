@@ -27,10 +27,8 @@ import io.github.palexdev.mfxcomponents.controls.MFXFabMenu;
 import io.github.palexdev.mfxcomponents.variants.FABVariants.StyleVariant;
 import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.builders.bindings.ObjectBindingBuilder;
-import io.github.palexdev.mfxcore.controls.SkinBase;
+import io.github.palexdev.mfxcore.controls.MFXSkinBase;
 import io.github.palexdev.mfxcore.enums.Corner;
-import io.github.palexdev.mfxcore.events.WhenEvent;
-import io.github.palexdev.mfxcore.observables.When;
 import io.github.palexdev.mfxcore.utils.fx.LayoutUtils;
 import io.github.palexdev.mfxcore.utils.fx.PivotUtils;
 import io.github.palexdev.mfxeffects.animations.Animations;
@@ -38,36 +36,35 @@ import io.github.palexdev.mfxeffects.animations.Animations.KeyFrames;
 import io.github.palexdev.mfxeffects.animations.Animations.ParallelBuilder;
 import io.github.palexdev.mfxeffects.animations.Animations.TimelineBuilder;
 import io.github.palexdev.mfxeffects.animations.motion.M3Motion;
+import io.github.palexdev.mfxeffects.animations.motion.M3Motion.MotionPreset;
 import javafx.animation.Animation;
 import javafx.animation.ParallelTransition;
 import javafx.animation.Timeline;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.ObjectBinding;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 
+import static io.github.palexdev.mfxcore.input.WhenEvent.intercept;
+import static io.github.palexdev.mfxcore.observables.When.onInvalidated;
 
-/// Default skin implementation for all [MFXFabMenus][MFXFabMenu].
+/// Default skin implementation for all [MFXFabMenus][MFXFabMenu], expects behaviors of type [MFXFabMenuBehavior].
 ///
-/// The skin uses behaviors of type [MFXFabMenuBehavior].
-///
-/// The menu is implemented in a tricky way. Contrarty to what the name might suggest, we do not use a popup to show the
+/// The menu is implemented in a tricky way. Contrary to what the name might suggest, we do not use a popup to show the
 /// entries. Rather, we position all the FABs in the same region and just animate them in/out according to the
 /// [MFXFabMenu#openProperty()].
 ///
-/// This makes the layout logic extremely simple. The 'entry' FAB (which is the one responsible for openin/closing) the menu
-/// is the only one that accounts for the width of the menu. The others are positioned above or below it, one after the
-/// other. This depends on the [MFXFabMenu#menuCornerProperty()].
-///
+/// This makes the layout logic extremely simple. The 'entry' FAB (which is the one responsible for opening/closing) the menu
+/// is the only one that accounts for the width and height of the menu. The others are positioned above or below it,
+/// one after the other. The [MFXFabMenu#menuCornerProperty()] determines the vertical positioning and order of the FABs,
+/// see [#getOrderedButtons()].<br >
 /// The 'entry' FAB can be selected in CSS with '.entry'.
 ///
 /// Why such choices, you may ask? One word: animations.
@@ -76,19 +73,19 @@ import javafx.util.Duration;
 /// 2) FABs are not 'unmanaged', thus the size computation methods need to be properly overridden, because otherwise
 /// the extend/collapse animation would not update the layout.
 ///
-/// The only downside of not using a popup is not having proper automatic close of the menu. However, the skin adds
-/// listeners and handlers to reproduce such behavior. If you find a case in which it should close and it does not, report
-/// back and I'll try to fix it.
+/// The only downside of not using a popup is not having a proper automatic close of the menu. However, the skin adds
+/// listeners and handlers to reproduce such behavior. If you find a case in which it should close, and it does not, report
+/// back, and I'll try to fix it.
 ///
 /// #### Scaling
 ///
-/// Material Design specs show the 'entry' FAB to shrink a bit when the menu is open. This is implemented by this skin
+/// Material Design specs show the 'entry' FAB to shrinking a bit when the menu is open. This is implemented by this skin
 /// and the relative CSS by scaling down the node. However, since the specs also show that the scale may have different
 /// pivots, depending on the context/position, and because in JavaFX CSS this is not possible, we need to apply another
 /// [Scale] to the 'entry'. This one allows setting the pivot as specified by the [MFXFabMenu#scalePivotProperty()].
 /// The downside of this is having the risk of scaling down the node too much. So, my recommendation is to tweak the scale
 /// values appropriately from CSS.
-public class MFXFabMenuSkin extends SkinBase<MFXFabMenu, MFXFabMenuBehavior> {
+public class MFXFabMenuSkin extends MFXSkinBase<MFXFabMenu> {
     //================================================================================
     // Properties
     //================================================================================
@@ -105,6 +102,7 @@ public class MFXFabMenuSkin extends SkinBase<MFXFabMenu, MFXFabMenuBehavior> {
     //================================================================================
     // Constructors
     //================================================================================
+
     public MFXFabMenuSkin(MFXFabMenu menu) {
         super(menu);
 
@@ -112,6 +110,7 @@ public class MFXFabMenuSkin extends SkinBase<MFXFabMenu, MFXFabMenuBehavior> {
         entry = new MFXFab();
         entry.getStyleClass().add("entry");
         entry.setStyle(menu.getAppliedVariant(StyleVariant.class));
+        entry.onActionProperty().bind(menu.onActionProperty());
 
         spb = ObjectBindingBuilder.<Position>build()
             .setMapper(() -> {
@@ -145,10 +144,10 @@ public class MFXFabMenuSkin extends SkinBase<MFXFabMenu, MFXFabMenuBehavior> {
     protected void addListeners() {
         MFXFabMenu menu = getSkinnable();
         listeners(
-            When.onInvalidated(menu.openProperty())
+            onInvalidated(menu.openProperty())
                 .then(_ -> animateOpenClose())
-                .executeNow(() -> menu.isOpen()),
-            When.onInvalidated(menu.focusedProperty())
+                .executeNow(menu::isOpen),
+            onInvalidated(menu.focusedProperty())
                 .condition(f -> !f || !menu.isFocusWithin())
                 .then(_ -> getBehavior().close())
                 .invalidating(menu.focusWithinProperty())
@@ -158,7 +157,7 @@ public class MFXFabMenuSkin extends SkinBase<MFXFabMenu, MFXFabMenuBehavior> {
         menu.getAppliedVariants().addListener(varsListener);
     }
 
-    /// Updates the children's list of this component with the 'entry' FAB from this skin, and the FABs contained by
+    /// Updates the children's list of this component with the 'entry' FAB from this skin, and the FABs contained in
     /// [MFXFabMenu#getButtons()].
     ///
     /// Before doing so, ensures that the menu is closed.
@@ -212,7 +211,7 @@ public class MFXFabMenuSkin extends SkinBase<MFXFabMenu, MFXFabMenuBehavior> {
     /// The opacity and [MFXFab#extendedProperty()] properties are adjusted according to the open state.
     protected void animateOpenClose() {
         MFXFabMenu menu = getSkinnable();
-        ObservableList<MFXFab> buttons = menu.getButtons();
+        List<MFXFab> buttons = getOrderedButtons();
         boolean open = menu.isOpen();
 
         if (Animations.isPlaying(animation))
@@ -221,11 +220,10 @@ public class MFXFabMenuSkin extends SkinBase<MFXFabMenu, MFXFabMenuBehavior> {
         double delayAdvance = open ? ANIMATIONS_DELAY : 0.0;
         double delay = delayAdvance;
         double opacity = open ? 1.0 : 0.0;
-        M3Motion.MotionPreset om = M3Motion.STANDARD_FAST_EFFECTS;
+        MotionPreset om = M3Motion.STANDARD_FAST_EFFECTS;
 
         ParallelBuilder builder = ParallelBuilder.build();
-        for (int i = buttons.size() - 1; i >= 0; i--) {
-            MFXFab f = buttons.get(i);
+        for (MFXFab f : buttons) {
             f.setVisible(true);
             builder.add(
                 TimelineBuilder.build()
@@ -241,23 +239,25 @@ public class MFXFabMenuSkin extends SkinBase<MFXFabMenu, MFXFabMenuBehavior> {
         animation.play();
     }
 
+    /// @return the FABs list ([MFXFabMenu#getButtons()]) ordered according to the [MFXFabMenu#menuCornerProperty()].
+    /// For top corners the order is reversed.
+    protected List<MFXFab> getOrderedButtons() {
+        MFXFabMenu menu = getSkinnable();
+        return menu.getMenuCorner().isTop() ? menu.getButtons().reversed() : menu.getButtons();
+    }
+
     //================================================================================
     // Overridden Methods
     //================================================================================
 
-    /// Adds the following handlers:
-    /// - [ActionEvent#ACTION] on the `entry` FAB to call [MFXFabMenuBehavior#open()] or [MFXFabMenuBehavior#close()]
-    /// (the event is consumed at the end)
-    /// - [ActionEvent#ACTION] on the menu itself, to intercept an action from all the other FABs (that's why we consume
-    /// the above event) and close the menu
-    /// - [MouseEvent#MOUSE_PRESSED] on the menu's [Scene] to close the menu
     @Override
-    protected void initBehavior(MFXFabMenuBehavior behavior) {
+    protected void registerBehavior() {
+        super.registerBehavior();
         MFXFabMenu menu = getSkinnable();
-        super.initBehavior(behavior);
+        MFXFabMenuBehavior behavior = getBehavior();
         events(
-            WhenEvent.intercept(entry, ActionEvent.ACTION)
-                .process(e -> {
+            intercept(entry, ActionEvent.ACTION)
+                .handle(e -> {
                     if (menu.isOpen()) {
                         behavior.close();
                     } else {
@@ -266,12 +266,12 @@ public class MFXFabMenuSkin extends SkinBase<MFXFabMenu, MFXFabMenuBehavior> {
                     e.consume();
                 }),
             // Close if mouse pressed outside
-            WhenEvent.intercept(menu.getScene(), MouseEvent.MOUSE_PRESSED)
+            intercept(menu.getScene(), MouseEvent.MOUSE_PRESSED)
                 .condition(_ -> menu.isOpen())
-                .process(_ -> behavior.close()),
+                .handle(_ -> behavior.close()),
             // Actioning one of the buttons should close the menu
-            WhenEvent.intercept(menu, ActionEvent.ACTION)
-                .process(_ -> behavior.close())
+            intercept(menu, ActionEvent.ACTION)
+                .handle(_ -> behavior.close())
         );
     }
 
@@ -292,13 +292,7 @@ public class MFXFabMenuSkin extends SkinBase<MFXFabMenu, MFXFabMenuBehavior> {
 
     @Override
     protected double computePrefHeight(double width, double topInset, double rightInset, double bottomInset, double leftInset) {
-        MFXFabMenu menu = getSkinnable();
-        double gap = menu.getGap();
-        double val = gap;
-        for (Node child : getChildren()) {
-            val += LayoutUtils.snappedBoundHeight(child) + (gap / 2.0);
-        }
-        return topInset + val + bottomInset;
+        return topInset + LayoutUtils.snappedBoundHeight(entry) + bottomInset;
     }
 
     @Override
@@ -318,19 +312,21 @@ public class MFXFabMenuSkin extends SkinBase<MFXFabMenu, MFXFabMenuBehavior> {
         Corner corner = menu.getMenuCorner();
         Pos pos = corner.toPos();
 
-        VPos entryVPos = corner.isTop() ? VPos.BOTTOM : VPos.TOP;
-        layoutInArea(entry, x, y, w, h, 0, HPos.CENTER, entryVPos);
+        layoutInArea(entry, x, y, w, h, 0, HPos.CENTER, VPos.CENTER);
 
-        double advace = corner.isTop() ? gap : entry.getHeight() + gap;
-        for (MFXFab f : menu.getButtons()) {
+        List<MFXFab> buttons = getOrderedButtons();
+        double advanceMul = corner.isTop() ? -1.0 : 1.0;
+        double advance = (entry.getHeight() + gap) * advanceMul;
+
+        for (MFXFab f : buttons) {
             f.autosize();
             double fX = LayoutUtils.computeXPosition(
                 menu, f,
                 x, w, Insets.EMPTY, false, pos.getHpos(),
                 true, false
             );
-            f.relocate(fX, y + advace);
-            advace += f.getHeight() + (gap / 2.0);
+            f.relocate(fX, advance);
+            advance += advanceMul * (f.getHeight() + (gap / 2.0));
         }
     }
 
@@ -350,5 +346,10 @@ public class MFXFabMenuSkin extends SkinBase<MFXFabMenu, MFXFabMenuBehavior> {
         spb = null;
 
         super.dispose();
+    }
+
+    @Override
+    protected MFXFabMenuBehavior getBehavior() {
+        return (MFXFabMenuBehavior) super.getBehavior();
     }
 }

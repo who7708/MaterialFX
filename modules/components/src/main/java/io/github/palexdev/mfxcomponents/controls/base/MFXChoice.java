@@ -23,27 +23,26 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import io.github.palexdev.mfxcomponents.cells.MFXCell;
+import io.github.palexdev.mfxcomponents.controls.cells.MFXCell;
 import io.github.palexdev.mfxcomponents.popups.ExtendedPopoverConfig;
 import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.base.properties.functional.ConsumerProperty;
 import io.github.palexdev.mfxcore.base.properties.functional.FunctionProperty;
-import io.github.palexdev.mfxcore.behavior.BehaviorBase;
-import io.github.palexdev.mfxcore.controls.MFXStyleable;
+import io.github.palexdev.mfxcore.behavior.MFXBehavior;
+import io.github.palexdev.mfxcore.controls.MFXControl;
 import io.github.palexdev.mfxcore.selection.model.ISelectionModel;
 import io.github.palexdev.mfxcore.selection.model.ISelectionModel.MultipleSelectionHandler;
 import io.github.palexdev.mfxcore.selection.model.ISelectionModel.SelectionEventHandler;
 import io.github.palexdev.mfxcore.selection.model.ISelectionModel.SingleSelectionHandler;
 import io.github.palexdev.mfxcore.selection.model.SelectionModel;
 import io.github.palexdev.mfxcore.selection.model.WithSelectionModel;
+import io.github.palexdev.mfxcore.utils.fx.PseudoClasses;
 import io.github.palexdev.virtualizedfx.cells.base.VFXCell;
 import javafx.beans.InvalidationListener;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
@@ -59,24 +58,30 @@ import javafx.scene.input.MouseEvent;
 /// - the [#cellFactoryProperty()] to allow customizing how choices are rendered
 /// - the [#popupConfigProperty()] to configure the popup
 ///
-/// Like buttons, this component also has the [#trigger()] too. The method is invoked when the selection changes and the
-/// action to perform can be specified through a [Consumer] which offers the new selection as the input, [#onActionProperty()].
-/// See also [#updateOnActionHandler()].
-public abstract class MFXChoice<T> extends MFXControl<BehaviorBase<MFXChoice<T>>> implements WithSelectionModel<T>, MFXStyleable {
+/// It's possible to specify an action to run when the selection changes by using the [#onSelectionChangedProperty()].
+public abstract class MFXChoice<T> extends MFXControl implements WithSelectionModel<T> {
     //================================================================================
     // Properties
     //================================================================================
-    private final ConsumerProperty<T> onAction = new ConsumerProperty<>() {
+    // TODO we may change this to a RefineList in the future for filter and order functionality
+    private final ObservableList<T> items = FXCollections.observableArrayList();
+    private final FunctionProperty<T, VFXCell<T>> cellFactory = new FunctionProperty<>(MFXCell::new);
+
+    private final ISelectionModel<T> selectionModel = new SelectionModel<>(items);
+    private final ConsumerProperty<T> onSelectionChanged = new ConsumerProperty<>(_ -> {}) {
         @Override
-        protected void invalidated() {
-            updateOnActionHandler();
+        public void set(Consumer<T> newValue) {
+            if (newValue == null) newValue = _ -> {};
+            super.set(newValue);
         }
     };
 
-    private final ObservableList<T> items = FXCollections.observableArrayList();
-    private final ISelectionModel<T> sm = new SelectionModel<>(items);
-    private final FunctionProperty<T, VFXCell<T>> cellFactory = new FunctionProperty<>(MFXCell::new);
-
+    private final BooleanProperty open = new SimpleBooleanProperty() {
+        @Override
+        protected void invalidated() {
+            PseudoClasses.OPEN.setOn(MFXChoice.this, get());
+        }
+    };
     private final ObjectProperty<ExtendedPopoverConfig> popupConfig = new SimpleObjectProperty<>(
         ExtendedPopoverConfig.builder().offset(Position.of(0.0, 4.0)).build()
     );
@@ -84,58 +89,46 @@ public abstract class MFXChoice<T> extends MFXControl<BehaviorBase<MFXChoice<T>>
     //================================================================================
     // Constructors
     //================================================================================
+
     protected MFXChoice() {}
 
     @SafeVarargs
     protected MFXChoice(T... items) {
-        this.items.setAll(items);
+        this.items.addAll(items);
     }
 
     protected MFXChoice(Collection<T> items) {
-        this.items.setAll(items);
+        this.items.addAll(items);
     }
 
     {
-        sm.setAllowsMultipleSelection(false);
-        sm.setEventHandler(this::selectionHandler);
-        selection().addListener((InvalidationListener) _ -> trigger());
-        defaultStyleClasses(this);
+        selectionModel.setAllowsMultipleSelection(false);
+        selectionModel.setEventHandler(this::buildSelectionEventHandler);
+        selection().addListener((InvalidationListener) _ -> onSelectionChanged.get().accept(getSelectedItem()));
     }
 
     //================================================================================
     // Methods
     //================================================================================
 
-    /// If the component is not disabled, fires a new [ActionEvent], triggering the action specified by the [#onActionProperty()].
-    public void trigger() {
-        if (!isDisabled()) fireEvent(new ActionEvent());
-    }
-
-    /// Sets the [EventHandler] for the [ActionEvent] fired when the selection changes.
-    ///
-    /// This is called every time the [#onActionProperty()] changes.
-    protected void updateOnActionHandler() {
-        setEventHandler(ActionEvent.ACTION, _ -> onAction.get().accept(getSelectedItem()));
-    }
-
     /// This method is responsible for building the [SelectionEventHandler] for the selection model used by the component.
     ///
     /// Defaults may not be ideal depending on the component and the use case.
-    protected SelectionEventHandler selectionHandler(ISelectionModel<T> selectionModel) {
+    protected SelectionEventHandler buildSelectionEventHandler(ISelectionModel<T> selectionModel) {
         if (selectionModel.allowsMultipleSelection()) return new MultipleSelectionHandler(selectionModel);
         return new SingleSelectionHandler(selectionModel) {
             @Override
             public void handle(MouseEvent me, int index) {
                 if (me.getButton() != MouseButton.PRIMARY) return;
-                boolean selected = sm.contains(index);
-                if (!selected) sm.selectIndex(index);
+                boolean selected = selectionModel.contains(index);
+                if (!selected) selectionModel.selectIndex(index);
             }
 
             @Override
             public void handle(KeyEvent ke, int index) {
                 if (ke.getCode() != KeyCode.ENTER && ke.getCode() != KeyCode.SPACE) return;
-                boolean selected = sm.contains(index);
-                if (!selected) sm.selectIndex(index);
+                boolean selected = selectionModel.contains(index);
+                if (!selected) selectionModel.selectIndex(index);
             }
         };
     }
@@ -143,35 +136,20 @@ public abstract class MFXChoice<T> extends MFXControl<BehaviorBase<MFXChoice<T>>
     //================================================================================
     // Overridden Methods
     //================================================================================
+
     @Override
-    public Supplier<BehaviorBase<MFXChoice<T>>> defaultBehaviorProvider() {
-        return () -> new BehaviorBase<>(this) {};
+    public Supplier<MFXBehavior<? extends Node>> defaultBehaviorFactory() {
+        return () -> new MFXBehavior<>(this) {};
     }
 
     @Override
     public ISelectionModel<T> getSelectionModel() {
-        return sm;
+        return selectionModel;
     }
 
     //================================================================================
     // Getters/Setters
     //================================================================================
-
-    public Consumer<T> getOnAction() {
-        return onAction.get();
-    }
-
-    /// Specifies the action to execute when an [ActionEvent] is fired on this component.
-    ///
-    /// @see #trigger()
-    /// @see #updateOnActionHandler()
-    public ConsumerProperty<T> onActionProperty() {
-        return onAction;
-    }
-
-    public void setOnAction(Consumer<T> onAction) {
-        this.onAction.set(onAction);
-    }
 
     /// @return the list containing all the possible choices
     public ObservableList<T> getItems() {
@@ -189,6 +167,30 @@ public abstract class MFXChoice<T> extends MFXControl<BehaviorBase<MFXChoice<T>>
 
     public void setCellFactory(Function<T, VFXCell<T>> cellFactory) {
         this.cellFactory.set(cellFactory);
+    }
+
+    public Consumer<T> getOnSelectionChanged() {
+        return onSelectionChanged.get();
+    }
+
+    /// Specifies the action to perform when the selection changes, carries the current selected item or `null`.
+    public ConsumerProperty<T> onSelectionChangedProperty() {
+        return onSelectionChanged;
+    }
+
+    public void setOnSelectionChanged(Consumer<T> onSelectionChanged) {
+        this.onSelectionChanged.set(onSelectionChanged);
+    }
+
+    public boolean isOpen() {
+        return open.get();
+    }
+
+    /// Specifies whether the choice menu is open.
+    ///
+    /// This will also set the `:open` pseudo state on component accordingly.
+    public ReadOnlyBooleanProperty openProperty() {
+        return open;
     }
 
     public ExtendedPopoverConfig getPopupConfig() {

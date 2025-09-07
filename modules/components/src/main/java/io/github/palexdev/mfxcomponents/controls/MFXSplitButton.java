@@ -20,6 +20,7 @@ package io.github.palexdev.mfxcomponents.controls;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import io.github.palexdev.mfxcomponents.controls.base.MFXChoice;
@@ -29,33 +30,30 @@ import io.github.palexdev.mfxcomponents.variants.ButtonVariants.StyleVariant;
 import io.github.palexdev.mfxcomponents.variants.api.Variant;
 import io.github.palexdev.mfxcomponents.variants.api.VariantsHandler;
 import io.github.palexdev.mfxcomponents.variants.api.WithVariants;
-import io.github.palexdev.mfxcore.controls.MFXStyleable;
-import io.github.palexdev.mfxcore.controls.SkinBase;
+import io.github.palexdev.mfxcore.base.properties.functional.ConsumerProperty;
+import io.github.palexdev.mfxcore.controls.MFXSkinBase;
 import javafx.collections.ObservableMap;
+import javafx.scene.Node;
 
-/// Implementation of Material Design's 'Split Buttons'. Extends [MFXChoice], uses [MFXSplitButtonSkin] as its default skin
-/// and a generic behavior. The default CSS style class is `.mfx-split-button`.
-///
-/// As stated by the Material Design specs, split buttons offer a way to give the user more options related to an action
-/// through a menu. It helps reduce visual complexity by hiding extra options.
-///
-/// Essentially, it is the combination of two standard buttons with a little gap in between.
-/// The left button displays the current choice, while the right button manages the popup.<br >
-/// So, it inherits most of the styles/variants from [MFXButton]:
-/// - there are five size presets expressed through [SizeVariant]
-/// - there are four style presets expressed through [StyleVariant]. The text variant is not allowed and will default to
-/// [StyleVariant#ELEVATED].
-///
-/// The defaults are applied by [#defaultVariants()] upon initialization.
+import static io.github.palexdev.mfxcore.controls.MFXStyleable.styleClasses;
+
 public class MFXSplitButton<T> extends MFXChoice<T> implements WithVariants {
     //================================================================================
     // Properties
     //================================================================================
     private final VariantsHandler<MFXSplitButton<T>> variantsHandler = new VariantsHandler<>(this);
+    private final ConsumerProperty<T> onAction = new ConsumerProperty<>(_ -> {}) {
+        @Override
+        public void set(Consumer<T> newValue) {
+            if (newValue == null) newValue = _ -> {};
+            super.set(newValue);
+        }
+    };
 
     //================================================================================
     // Constructors
     //================================================================================
+
     public MFXSplitButton() {}
 
     @SafeVarargs
@@ -99,24 +97,35 @@ public class MFXSplitButton<T> extends MFXChoice<T> implements WithVariants {
     // Overridden Methods
     //================================================================================
 
-
     @Override
-    protected void updateOnActionHandler() {
-        // The action is managed by the leading button here
-    }
-
-    @Override
-    public Supplier<SkinBase<?, ?>> defaultSkinProvider() {
+    public Supplier<MFXSkinBase<? extends Node>> defaultSkinFactory() {
         return () -> new MFXSplitButtonSkin<>(this);
     }
 
     @Override
     public List<String> defaultStyleClasses() {
-        return MFXStyleable.styleClasses("mfx-split-button");
+        return styleClasses("mfx-split-button");
     }
 
     @Override
     public ObservableMap<Class<?>, Variant> getAppliedVariants() {
         return variantsHandler.getAppliedVariantsUnmodifiable();
+    }
+
+    //================================================================================
+    // Getters/Setters
+    //================================================================================
+
+    public Consumer<T> getOnAction() {
+        return onAction.get();
+    }
+
+    /// Specifies the action to perform when the selected choice is executed.
+    public ConsumerProperty<T> onActionProperty() {
+        return onAction;
+    }
+
+    public void setOnAction(Consumer<T> onAction) {
+        this.onAction.set(onAction);
     }
 }

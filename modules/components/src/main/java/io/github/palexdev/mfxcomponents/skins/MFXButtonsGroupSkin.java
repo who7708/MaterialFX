@@ -18,10 +18,10 @@
 
 package io.github.palexdev.mfxcomponents.skins;
 
-import io.github.palexdev.mfxcomponents.behaviors.MFXButtonsGroupBehavior;
 import io.github.palexdev.mfxcomponents.controls.MFXButtonsGroup;
 import io.github.palexdev.mfxcore.builders.InsetsBuilder;
-import io.github.palexdev.mfxcore.controls.SkinBase;
+import io.github.palexdev.mfxcore.controls.MFXSkinBase;
+import io.github.palexdev.mfxcore.observables.When;
 import io.github.palexdev.mfxcore.utils.fx.LayoutUtils;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.HPos;
@@ -34,23 +34,20 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 
-import static io.github.palexdev.mfxcore.observables.When.onInvalidated;
-
 /// Default skin implementation for all [MFXButtonsGroups][MFXButtonsGroup].
-///
-/// This skin uses behaviors of type [MFXButtonsGroupBehavior].
 ///
 /// The layout is simple: every button is [MFXButtonsGroup#getButtons()] is positioned in a row spaced by
 /// the [MFXButtonsGroup#spacingProperty()]'s value, just like a [HBox].
 ///
-/// The peculiarity of this skin is that it also clips the component. Material 3 specs show that the first and the last
+/// The peculiarity of this skin is that the group is also clipped. Material 3 specs show that the first and the last
 /// buttons are fully rounded at the left and at the right respectively. Implementing this in CSS would have been a nightmare,
 /// as it would also break the animations.
-public class MFXButtonsGroupSkin extends SkinBase<MFXButtonsGroup, MFXButtonsGroupBehavior> {
+public class MFXButtonsGroupSkin extends MFXSkinBase<MFXButtonsGroup> {
 
     //================================================================================
     // Constructors
     //================================================================================
+
     public MFXButtonsGroupSkin(MFXButtonsGroup group) {
         super(group);
         buildClip();
@@ -61,13 +58,11 @@ public class MFXButtonsGroupSkin extends SkinBase<MFXButtonsGroup, MFXButtonsGro
     // Methods
     //================================================================================
 
-    /// Adds listeners to the following properties:
-    /// - [MFXButtonsGroup#spacingProperty()] to update the layout.
     protected void addListeners() {
         MFXButtonsGroup group = getSkinnable();
         Bindings.bindContent(getChildren(), group.getButtons());
         listeners(
-            onInvalidated(group.spacingProperty()).then(_ -> group.requestLayout())
+            When.observe(group::requestLayout, group.spacingProperty())
         );
     }
 
@@ -85,6 +80,7 @@ public class MFXButtonsGroupSkin extends SkinBase<MFXButtonsGroup, MFXButtonsGro
     //================================================================================
     // Overridden Methods
     //================================================================================
+
     @Override
     protected double computePrefWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
         double spacing = getSkinnable().getSpacing();

@@ -21,33 +21,25 @@ package io.github.palexdev.mfxcomponents.controls;
 import java.util.List;
 import java.util.function.Supplier;
 
-import io.github.palexdev.mfxcomponents.skins.MFXButtonSkin;
+import io.github.palexdev.mfxcomponents.behaviors.MFXButtonBehavior;
+import io.github.palexdev.mfxcomponents.controls.base.MFXToggle;
 import io.github.palexdev.mfxcomponents.skins.MFXIconButtonSkin;
 import io.github.palexdev.mfxcomponents.variants.ButtonVariants.ShapeVariant;
 import io.github.palexdev.mfxcomponents.variants.ButtonVariants.SizeVariant;
 import io.github.palexdev.mfxcomponents.variants.ButtonVariants.StyleVariant;
 import io.github.palexdev.mfxcomponents.variants.ButtonVariants.WidthVariant;
-import io.github.palexdev.mfxcore.base.properties.styleable.StyleableBooleanProperty;
-import io.github.palexdev.mfxcore.controls.MFXStyleable;
-import io.github.palexdev.mfxcore.controls.SkinBase;
-import io.github.palexdev.mfxcore.utils.fx.StyleUtils;
+import io.github.palexdev.mfxcomponents.variants.api.Variant;
+import io.github.palexdev.mfxcomponents.variants.api.VariantsHandler;
+import io.github.palexdev.mfxcomponents.variants.api.WithVariants;
+import io.github.palexdev.mfxcore.behavior.MFXBehavior;
+import io.github.palexdev.mfxcore.controls.MFXSkinBase;
 import io.github.palexdev.mfxresources.icon.IconProperty;
 import io.github.palexdev.mfxresources.icon.MFXFontIcon;
-import io.github.palexdev.mfxresources.icon.MFXIconWrapper;
-import javafx.css.CssMetaData;
-import javafx.css.Styleable;
-import javafx.css.StyleablePropertyFactory;
+import javafx.collections.ObservableMap;
+import javafx.scene.Node;
 
-/// Extension of [MFXButton] which can show only a [MFXFontIcon] (enforced by [#iconProperty()] and [MFXIconButtonSkin]).
-/// The style class is overridden to `.mfx-icon-button`.
-///
-/// In addition to the variants inherited by [MFXButton], there's also the [WidthVariant] which defines the button's width,
-/// and can be set through [#setWidth(WidthVariant)].
-///
-/// See also [#setStyle(StyleVariant)] because the behavior is slightly different.
-///
-/// Can optionally play an animation when switching icons if [#animatedProperty()] is active. The animation type can be
-/// set by either overriding the skin or using CSS, see [MFXIconWrapper#animationPresetProperty()].
+import static io.github.palexdev.mfxcore.controls.MFXStyleable.styleClasses;
+
 public class MFXIconButton extends MFXButton {
     //================================================================================
     // Properties
@@ -71,11 +63,6 @@ public class MFXIconButton extends MFXButton {
     //================================================================================
     // Config
     //================================================================================
-    @Override
-    public MFXIconButton asToggle() {
-        super.asToggle();
-        return this;
-    }
 
     /// Overridden because icon buttons do not support [StyleVariant#ELEVATED] and [StyleVariant#TEXT].
     /// When any of these is given as the argument, the variant is unset and the button falls back to the standard style.
@@ -115,7 +102,6 @@ public class MFXIconButton extends MFXButton {
     /// Applies the default variants to the button:
     /// - [SizeVariant#S]
     /// - [ShapeVariant#ROUNDED]
-
     @Override
     public MFXIconButton defaultVariants() {
         variantsHandler.setVariants(SizeVariant.S, ShapeVariant.ROUNDED);
@@ -125,76 +111,26 @@ public class MFXIconButton extends MFXButton {
     //================================================================================
     // Overridden Methods
     //================================================================================
+
     @Override
-    public Supplier<SkinBase<?, ?>> defaultSkinProvider() {
+    public Supplier<MFXSkinBase<? extends Node>> defaultSkinFactory() {
         return () -> new MFXIconButtonSkin(this);
     }
 
     @Override
     public List<String> defaultStyleClasses() {
-        return MFXStyleable.styleClasses("mfx-icon-button");
-    }
-
-    //================================================================================
-    // Styleable Properties
-    //================================================================================
-    private final StyleableBooleanProperty animated = new StyleableBooleanProperty(
-        StyleableProperties.ANIMATED,
-        this,
-        "animated",
-        true
-    );
-
-    public boolean isAnimated() {
-        return animated.get();
-    }
-
-    public StyleableBooleanProperty animatedProperty() {
-        return animated;
-    }
-
-    public void setAnimated(boolean animated) {
-        this.animated.set(animated);
-    }
-
-    //================================================================================
-    // CssMetaData
-    //================================================================================
-    private static class StyleableProperties {
-        private static final StyleablePropertyFactory<MFXIconButton> FACTORY = new StyleablePropertyFactory<>(MFXButtonSkin.getClassCssMetaData());
-        private static final List<CssMetaData<? extends Styleable, ?>> cssMetaDataList;
-
-        private static final CssMetaData<MFXIconButton, Boolean> ANIMATED =
-            FACTORY.createBooleanCssMetaData(
-                "-mfx-animated",
-                MFXIconButton::animatedProperty,
-                true
-            );
-
-        static {
-            cssMetaDataList = StyleUtils.cssMetaDataList(
-                MFXButton.getClassCssMetaData(),
-                ANIMATED
-            );
-        }
-    }
-
-    public static List<CssMetaData<? extends Styleable, ?>> getClassCssMetaData() {
-        return StyleableProperties.cssMetaDataList;
-    }
-
-    @Override
-    public List<CssMetaData<? extends Styleable, ?>> getControlCssMetaData() {
-        return getClassCssMetaData();
+        return styleClasses("mfx-icon-button");
     }
 
     //================================================================================
     // Getters/Setters
     //================================================================================
+
     public MFXFontIcon getIcon() {
         return icon.get();
     }
 
+    /// Specifies the button's font icon.
     public IconProperty iconProperty() {
         return icon;
     }
@@ -203,7 +139,105 @@ public class MFXIconButton extends MFXButton {
         this.icon.set(icon);
     }
 
-    public IconProperty setIcon(String name) {
-        return icon.setIcon(name);
+    public MFXIconButton setIcon(String name) {
+        icon.setIcon(name);
+        return this;
+    }
+
+    //================================================================================
+    // Internal Classes
+    //================================================================================
+
+    public static class MFXToggleIconButton extends MFXToggle implements WithVariants {
+        private final IconProperty icon = new IconProperty();
+        protected final VariantsHandler<MFXToggleIconButton> variantsHandler = new VariantsHandler<>(this);
+
+        public MFXToggleIconButton() {}
+
+        public MFXToggleIconButton(MFXFontIcon icon) {
+            setIcon(icon);
+        }
+
+        {
+            defaultVariants();
+            graphicProperty().bind(icon);
+        }
+
+        /// Overridden because icon buttons do not support [StyleVariant#ELEVATED] and [StyleVariant#TEXT].
+        /// When any of these is given as the argument, the variant is unset and the button falls back to the standard style.
+        public MFXToggleIconButton setStyle(StyleVariant style) {
+            if (style == StyleVariant.ELEVATED || style == StyleVariant.TEXT) {
+                variantsHandler.unsetVariant(StyleVariant.class);
+            } else {
+                variantsHandler.setVariant(style);
+            }
+            return this;
+        }
+
+        public MFXToggleIconButton setSize(SizeVariant size) {
+            variantsHandler.setVariant(size);
+            return this;
+        }
+
+        public MFXToggleIconButton setShape(ShapeVariant shape) {
+            variantsHandler.setVariant(shape);
+            return this;
+        }
+
+        /// Note: similar to the standard style (for which no style class is added), [WidthVariant#DEFAULT] will simply
+        /// unset the variant (there's no `.default` style class).
+        public MFXToggleIconButton setWidth(WidthVariant width) {
+            if (width == WidthVariant.DEFAULT) {
+                variantsHandler.unsetVariant(WidthVariant.class);
+            } else {
+                variantsHandler.setVariant(width);
+            }
+            return this;
+        }
+
+        /// Applies the default variants to the button:
+        /// - [SizeVariant#S]
+        /// - [ShapeVariant#ROUNDED]
+        public MFXToggleIconButton defaultVariants() {
+            variantsHandler.setVariants(SizeVariant.S, ShapeVariant.ROUNDED);
+            return this;
+        }
+
+        @Override
+        public Supplier<MFXBehavior<? extends Node>> defaultBehaviorFactory() {
+            return () -> new MFXButtonBehavior<>(this);
+        }
+
+        @Override
+        public Supplier<MFXSkinBase<? extends Node>> defaultSkinFactory() {
+            return () -> new MFXIconButtonSkin(this);
+        }
+
+        @Override
+        public List<String> defaultStyleClasses() {
+            return styleClasses("mfx-icon-button", "toggle");
+        }
+
+        @Override
+        public ObservableMap<Class<?>, Variant> getAppliedVariants() {
+            return variantsHandler.getAppliedVariantsUnmodifiable();
+        }
+
+        public MFXFontIcon getIcon() {
+            return icon.get();
+        }
+
+        public IconProperty iconProperty() {
+            return icon;
+        }
+
+        public void setIcon(MFXFontIcon icon) {
+            this.icon.set(icon);
+        }
+
+        public MFXToggleIconButton setIcon(String name) {
+            icon.setIcon(name);
+            return this;
+        }
     }
 }

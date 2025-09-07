@@ -16,15 +16,15 @@
  * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.palexdev.mfxcomponents.cells;
+package io.github.palexdev.mfxcomponents.controls.cells;
 
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import io.github.palexdev.mfxcomponents.controls.MFXSurface;
+import io.github.palexdev.mfxcore.behavior.MFXBehavior;
 import io.github.palexdev.mfxcore.builders.bindings.BooleanBindingBuilder;
-import io.github.palexdev.mfxcore.controls.SkinBase;
+import io.github.palexdev.mfxcore.controls.MFXSkinBase;
 import io.github.palexdev.mfxcore.selection.model.ISelectionModel;
 import io.github.palexdev.mfxcore.selection.model.ISelectionModel.SelectionEventHandler;
 import io.github.palexdev.mfxcore.utils.fx.PseudoClasses;
@@ -51,12 +51,13 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.TraversalDirection;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.util.StringConverter;
 
-import static io.github.palexdev.mfxcore.events.WhenEvent.intercept;
+import static io.github.palexdev.mfxcore.input.WhenEvent.intercept;
 
 /// Simple extension of [VFXSimpleCell] and base cell for all MaterialFX components.
 ///
@@ -64,8 +65,7 @@ import static io.github.palexdev.mfxcore.events.WhenEvent.intercept;
 /// - Implements selection: for this to work properly, any virtualized control should register an instance of [ISelectionModel]
 /// in its [VFXContainer#context()]! If the service is not preset, the cell will simply not be selectable.
 /// - Adds a [MFXRippleGenerator] and a [MFXSurface] to express user interaction with the cell, [MFXCellSkin]
-/// - Implements focus handling and scrolling, [MFXCellBehavior]
-@SuppressWarnings("unchecked")
+/// - Implements focus handling and scrolling, see [MFXCellBehavior]
 public class MFXCell<T> extends VFXSimpleCell<T> {
     //================================================================================
     // Properties
@@ -76,12 +76,12 @@ public class MFXCell<T> extends VFXSimpleCell<T> {
             PseudoClasses.SELECTED.setOn(MFXCell.this, get());
         }
     };
-
     protected ISelectionModel<T> selectionModel;
 
     //================================================================================
     // Constructors
     //================================================================================
+
     public MFXCell(T item) {
         super(item);
     }
@@ -98,6 +98,7 @@ public class MFXCell<T> extends VFXSimpleCell<T> {
     // Overridden Methods
     //================================================================================
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onCreated(VFXContext<T> context) {
         super.onCreated(context);
@@ -114,18 +115,19 @@ public class MFXCell<T> extends VFXSimpleCell<T> {
     }
 
     @Override
-    public Supplier<SkinBase<?, ?>> defaultSkinProvider() {
-        return () -> new MFXCellSkin<>(this);
+    public Supplier<MFXBehavior<? extends Node>> defaultBehaviorFactory() {
+        return () -> new MFXCellBehavior<>(this);
     }
 
     @Override
-    public Supplier<CellBaseBehavior<T>> defaultBehaviorProvider() {
-        return () -> new MFXCellBehavior<>(this);
+    public Supplier<MFXSkinBase<? extends Node>> defaultSkinFactory() {
+        return () -> new MFXCellSkin<>(this);
     }
 
     //================================================================================
     // Getters/Setters
     //================================================================================
+
     protected ISelectionModel<T> getSelectionModel() {
         return selectionModel;
     }
@@ -149,11 +151,9 @@ public class MFXCell<T> extends VFXSimpleCell<T> {
     /// Default skin implementation for [MFXCell] and extension of [VFXLabeledCellSkin].
     ///
     /// Adds a [MFXSurface] and a [MFXRippleGenerator] to express user interaction with the cell.
-    ///
-    /// @see SelectionEventHandler
     public static class MFXCellSkin<T> extends VFXLabeledCellSkin<T> {
-        protected final MFXSurface surface;
-        protected final MFXRippleGenerator rg;
+        private final MFXSurface surface;
+        private final MFXRippleGenerator rg;
 
         public MFXCellSkin(MFXCell<T> cell) {
             super(cell);
@@ -170,30 +170,34 @@ public class MFXCell<T> extends VFXSimpleCell<T> {
             rg.setMeToPosConverter(me ->
                 (me.getButton() == MouseButton.PRIMARY) ? Position.of(me.getX(), me.getY()) : null
             );
-            rg.enable();
             getChildren().addAll(0, List.of(surface, rg));
         }
 
         @Override
         protected void update() {
-            MFXCell<T> cell = getControl(MFXCell.class);
+            MFXCell<T> cell = getControl();
             T item = cell.getItem();
             label.setText(cell.getConverter().toString(item));
         }
 
         @Override
-        protected void initBehavior(CellBaseBehavior<T> behavior) {
-            VFXCellBase<T> cell = getSkinnable();
-            super.initBehavior(behavior);
+        protected void registerBehavior() {
+            super.registerBehavior();
+            MFXCell<T> cell = getControl();
+            MFXBehavior<? extends Node> behavior = getBehavior();
             events(
-                intercept(cell, MouseEvent.MOUSE_CLICKED).process(behavior::mouseClicked),
-                intercept(cell, KeyEvent.KEY_PRESSED)
-                    .process(ke -> behavior.keyPressed(ke, _ -> {
+                intercept(cell, MouseEvent.MOUSE_PRESSED).handle(rg::generate),
+                intercept(cell, MouseEvent.MOUSE_RELEASED).handle(_ -> rg.release()),
+                intercept(cell, MouseEvent.MOUSE_CLICKED).handle(behavior::mouseClicked),
+                intercept(cell, MouseEvent.MOUSE_EXITED).handle(_ -> rg.release()),
+                intercept(cell, KeyEvent.KEY_PRESSED).handle(e -> behavior.keyPressed(e, () -> {
+                    if (e.getCode() == KeyCode.ENTER || e.getCode() == KeyCode.SPACE) {
                         Bounds b = cell.getLayoutBounds();
                         rg.generate(b.getCenterX(), b.getCenterY());
                         rg.release();
-                    }))
-                    .asFilter()
+                    }
+                }))
+
             );
         }
 
@@ -209,6 +213,11 @@ public class MFXCell<T> extends VFXSimpleCell<T> {
         public void dispose() {
             getChildren().clear();
             super.dispose();
+        }
+
+        @Override
+        protected MFXCell<T> getControl() {
+            return (MFXCell<T>) getSkinnable();
         }
     }
 
@@ -277,27 +286,28 @@ public class MFXCell<T> extends VFXSimpleCell<T> {
         }
 
         @Override
-        public void mouseClicked(MouseEvent me) {
+        public void mouseClicked(MouseEvent me, Runnable callback) {
             if (me.getButton() != MouseButton.PRIMARY) return;
             MFXCell<T> cell = getNode();
             ISelectionModel<T> sm = cell.getSelectionModel();
             if (sm != null) sm.eventHandler().handle(me, cell.getIndex());
+            callback.run();
         }
 
         @Override
-        public void keyPressed(KeyEvent ke, Consumer<KeyEvent> callback) {
+        public void keyPressed(KeyEvent ke, Runnable callback) {
             MFXCell<T> cell = getNode();
             switch (ke.getCode()) {
                 case ENTER, SPACE -> {
                     ISelectionModel<T> sm = cell.getSelectionModel();
                     if (sm != null) sm.eventHandler().handle(ke, cell.getIndex());
-                    if (callback != null) callback.accept(ke);
                 }
                 case UP, RIGHT, DOWN, LEFT -> {
                     traverseAndScroll(TraversalDirection.valueOf(ke.getCode().name()));
                     ke.consume();
                 }
             }
+            callback.run();
         }
 
         @Override
