@@ -18,9 +18,11 @@
 
 package io.github.palexdev.mfxresources.utils;
 
+import java.util.SequencedMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 import io.github.palexdev.mfxresources.icon.MFXFontIcon;
+import io.github.palexdev.mfxresources.icon.packs.FontAwesomeSolid;
 import io.github.palexdev.mfxresources.icon.packs.FontIconsPack;
 import io.github.palexdev.mfxresources.icon.packs.FontIconsPacks;
 import javafx.scene.paint.Color;
@@ -66,5 +68,27 @@ public class IconUtils {
     /// as the size and color.
     public static MFXFontIcon randomIcon(String packPrefix) {
         return randomIcon(packPrefix, FontIconsPack.DEFAULT_FONT_SIZE, FontIconsPack.DEFAULT_COLOR);
+    }
+
+    /// @return a new [MFXFontIcon] with a random icon name from a random [FontIconsPack].
+    public static MFXFontIcon randomIcon() {
+        return randomIcon(randomPackPrefix());
+    }
+
+    /// @return a new [MFXFontIcon] with a random icon name from the [FontAwesomeSolid] icons' pack.
+    public static MFXFontIcon randomFAS() {
+        return randomIcon("fas");
+    }
+
+    /// @return a random [FontIconsPack] among those registered in [FontIconsPacks].
+    public static FontIconsPack randomPack() {
+        return FontIconsPacks.pack(randomPackPrefix());
+    }
+
+    /// @return a random icons' pack prefix among those registered in [FontIconsPacks].
+    public static String randomPackPrefix() {
+        SequencedMap<String, FontIconsPack> packs = FontIconsPacks.packs();
+        int i = ThreadLocalRandom.current().nextInt(0, packs.size());
+        return packs.keySet().toArray(String[]::new)[i];
     }
 }
