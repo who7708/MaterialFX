@@ -1,0 +1,111 @@
+/*
+ * Copyright (C) 2025 Parisi Alessandro - alessandro.parisi406@gmail.com
+ * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX)
+ *
+ * MaterialFX is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 3 of the License,
+ * or (at your option) any later version.
+ *
+ * MaterialFX is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use '../base/typography' as *;
+@use '../base/vars' as *;
+@use 'layers' as *;
+
+@mixin MaterialCheckboxes() {
+  .mfx-checkbox {
+    @include LabelLarge();
+    -fx-graphic-text-gap : 4px;
+
+    > .box {
+      -mfx-animated         : true;
+      -mfx-animation        : SCALE;
+      -mfx-size             : 20px;
+      -fx-background-color  : transparent;
+      -fx-background-radius : 2px;
+      -fx-border-color      : -md-sys-color-on-surface-variant;
+      -fx-border-radius     : 2px;
+      -fx-border-width      : 2px;
+
+      > .mfx-font-icon {
+        -mfx-color : -md-sys-color-on-primary;
+      }
+    }
+
+    &:focus-visible > .box {
+      -fx-border-color  : -md-sys-color-on-surface-variant, -md-sys-color-secondary;
+      -fx-border-insets : 0px, -12px;
+      -fx-border-radius : 2px, 999px;
+      -fx-border-width  : 2px, 3px;
+    }
+
+    > .surface {
+      -mfx-disabled-opacity : 0.0;
+      -fx-background-color  : -md-sys-color-primary;
+      -fx-background-radius : 999px;
+    }
+
+    > .mfx-ripple-generator {
+      -mfx-ripple-color : -md-sys-color-primary;
+    }
+
+    // Indeterminate
+    &:indeterminate > .box {
+      -mfx-icon            : 'fas-minus';
+      -fx-background-color : -md-sys-color-primary;
+      -fx-border-color     : transparent;
+    }
+
+    // Selected
+    &:selected > .box {
+      -mfx-icon            : 'fas-check';
+      -fx-background-color : -md-sys-color-primary;
+      -fx-border-color     : transparent;
+    }
+
+    // Error
+    &:error {
+      > .box {
+        -mfx-icon            : 'fas-xmark';
+        -fx-background-color : -md-sys-color-error;
+        -fx-border-color     : transparent;
+
+        > .mfx-font-icon {
+          -mfx-color : -md-sys-color-on-error;
+        }
+      }
+
+      > .surface {
+        -fx-background-color : -md-sys-color-error;
+      }
+
+      > .mfx-ripple-generator {
+        -mfx-ripple-color : -md-sys-color-error;
+      }
+    }
+
+    &:disabled {
+      > .box {
+        -fx-background-color : transparent;
+        -fx-border-color     : -md-sys-color-secondary;
+        -fx-opacity          : opacity('disabled-text');
+      }
+    }
+
+    &:disabled:selected,
+    &:disabled:indeterminate {
+      > .box {
+        -fx-background-color : -md-sys-color-secondary;
+        -fx-border-color     : transparent;
+      }
+    }
+  }
+}

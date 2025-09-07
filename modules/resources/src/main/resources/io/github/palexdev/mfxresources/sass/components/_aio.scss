@@ -18,7 +18,7 @@
 
 @use 'buttons' as *;
 @use 'buttons-group' as *;
-//@use 'checkboxes' as *;
+@use 'checkboxes' as *;
 @use 'fabs' as *;
 @use 'fabs-menu' as *;
 @use 'iconbuttons' as *;
@@ -32,7 +32,7 @@
   @include MaterialScrolling();
   @include MaterialButtons();
   @include MaterialButtonsGroup();
-  //@include MaterialCheckboxes();
+  @include MaterialCheckboxes();
   @include MaterialFloatingActionButtons();
   @include MaterialFloatingActionButtonsMenu();
   @include MaterialIconButtons();

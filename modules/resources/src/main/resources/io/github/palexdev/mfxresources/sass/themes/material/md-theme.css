@@ -543,7 +543,15 @@
   -mfx-color: -md-sys-color-on-primary
 }
 
+.mfx-checkbox:focus-visible > .box {
+  -fx-border-color: -md-sys-color-on-surface-variant, -md-sys-color-secondary;
+  -fx-border-insets: 0px, -12px;
+  -fx-border-radius: 2px, 999px;
+  -fx-border-width: 2px, 3px
+}
+
 .mfx-checkbox > .surface {
+  -mfx-disabled-opacity: 0;
   -fx-background-color: -md-sys-color-primary;
   -fx-background-radius: 999px
 }
@@ -565,7 +573,7 @@
 }
 
 .mfx-checkbox:error > .box {
-  -mfx-icon: "fas-x-mark";
+  -mfx-icon: "fas-xmark";
   -fx-background-color: -md-sys-color-error;
   -fx-border-color: transparent
 }
@@ -580,6 +588,18 @@
 
 .mfx-checkbox:error > .mfx-ripple-generator {
   -mfx-ripple-color: -md-sys-color-error
+}
+
+.mfx-checkbox:disabled > .box {
+  -fx-background-color: transparent;
+  -fx-border-color: -md-sys-color-secondary;
+  -fx-opacity: 38%
+}
+
+.mfx-checkbox:disabled:indeterminate > .box,
+.mfx-checkbox:disabled:selected > .box {
+  -fx-background-color: -md-sys-color-secondary;
+  -fx-border-color: transparent
 }
 
 .mfx-fab .mfx-icon-wrapper {
