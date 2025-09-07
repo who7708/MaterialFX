@@ -142,10 +142,8 @@ public class CircleRipple extends Circle implements Ripple<Circle> {
     // Methods
     //================================================================================
 
-    /// Binds the ripple's fill to [RippleGenerator#rippleColorProperty()], determines the sizes by calling
-    /// [#determineRippleSize()] and finally initializes the animations by calling [#buildAnimations()]
+    /// Determines the sizes by calling [#determineRippleSize()] and finally initializes the animations by calling [#buildAnimations()].
     public void init() {
-        fillProperty().bind(generator.rippleColorProperty());
         determineRippleSize();
         buildAnimations();
     }
@@ -217,11 +215,13 @@ public class CircleRipple extends Circle implements Ripple<Circle> {
     /// when a request for a new effect is sent. However, we still don't want to change the position at such a time.
     /// We first need to stop the 'out' and 'pause' animations.
     ///
-    /// This is responsible for setting the opacity to `0.0`, the radius to `initRad` computed previously by [#determineRippleSize()],
-    /// and finally set the [#centerXProperty()] and [#centerYProperty()] properties to the requested position.
+    /// This is responsible for setting the opacity to `0.0`, the fill to [MFXRippleGenerator#rippleColorProperty()],
+    /// the radius to `initRad` computed previously by [#determineRippleSize()], and finally set the [#centerXProperty()]
+    /// and [#centerYProperty()] properties to the requested position.
     /// The two values are stored by [#position(double, double)] and then actually used here.
     protected void doPosition() {
         setOpacity(0.0);
+        setFill(generator.getRippleColor());
         setRadius(initRad);
         setCenterX(initX);
         setCenterY(initY);
