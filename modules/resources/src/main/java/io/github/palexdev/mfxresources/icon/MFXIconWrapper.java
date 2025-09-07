@@ -168,24 +168,29 @@ public class MFXIconWrapper extends Region {
         return this;
     }
 
-    /// This is invoked when the [#iconProperty()] becomes invalid, but only if the [#animatedProperty()] is
-    /// `true`.
+    /// This is invoked when the [#iconProperty()] becomes invalid, but only if the [#animatedProperty()] is `true`.
     ///
-    /// There are also conditions leading to the animation not being played, such as: the current icon or the new icon
-    /// being null, the region is disabled, the animation provider is null. In such cases, this falls back to [#updateChildren()].
-    ///
+    /// There are also conditions leading to the animation not being played, such as the current icon or the new icon
+    /// being `null`; the region is disabled. In such cases, it falls back to [#updateChildren()].
     ///
     /// If there's already an animation playing, it is stopped by calling [IconAnimation#stop()]. Then the new icon
     /// is set to be invisible and added to the children's list. A new animation is built by the animation provider and played
     /// using [IconAnimation#play(MFXIconWrapper)].
+    ///
+    /// @throws IllegalStateException if the icon is animated but no animation provider was set. Falls back to
+    /// [#updateChildren()]
     protected void animate(MFXFontIcon oldIcon, MFXFontIcon newIcon) {
         if (oldIcon == null ||
             newIcon == null ||
-            isDisabled() ||
-            animationProvider == null
+            isDisabled()
         ) {
             updateChildren();
             return;
+        }
+
+        if (animationProvider == null) {
+            updateChildren();
+            throw new IllegalStateException("The icon wrapper is set to be animated but no animation provider was set");
         }
 
         if (animation != null)
