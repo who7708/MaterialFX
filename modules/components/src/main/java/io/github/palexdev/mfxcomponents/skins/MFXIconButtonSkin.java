@@ -34,7 +34,7 @@ import javafx.geometry.VPos;
 /// binding between the two. You can also set the icon from CSS on the wrapper by doing this:
 /// ```css
 /// .mfx-icon-button > .mfx-icon-wrapper {
-////* These are optional and enable icons switching animations (by default are already enabled in MaterialFX themes) */
+/// /* These are optional and enable icons switching animations (by default are already enabled in MaterialFX themes) */
 ///   -mfx-animated: true;
 ///   -mfx-animation: SCALE;
 ///
