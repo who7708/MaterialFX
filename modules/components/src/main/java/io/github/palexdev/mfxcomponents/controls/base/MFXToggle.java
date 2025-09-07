@@ -25,6 +25,7 @@ import java.util.function.Supplier;
 import io.github.palexdev.mfxcomponents.behaviors.MFXButtonBehavior;
 import io.github.palexdev.mfxcore.behavior.MFXBehavior;
 import io.github.palexdev.mfxcore.selection.Selectable;
+import io.github.palexdev.mfxcore.selection.SelectionGroup;
 import io.github.palexdev.mfxcore.selection.SelectionGroupProperty;
 import io.github.palexdev.mfxcore.selection.SelectionProperty;
 import io.github.palexdev.mfxcore.utils.fx.PseudoClasses;
@@ -40,7 +41,12 @@ public abstract class MFXToggle extends MFXButtonBase implements Selectable {
     //================================================================================
     // Properties
     //================================================================================
-    private final SelectionGroupProperty group = new SelectionGroupProperty(this);
+    private final SelectionGroupProperty group = new SelectionGroupProperty(this) {
+        @Override
+        protected void invalidated() {
+            onSelectionGroupChanged(get());
+        }
+    };
     private final SelectionProperty selected = new SelectionProperty(this) {
         @Override
         protected void onInvalidated() {
@@ -64,6 +70,14 @@ public abstract class MFXToggle extends MFXButtonBase implements Selectable {
     protected MFXToggle(String text, Node graphic) {
         super(text, graphic);
     }
+
+    //================================================================================
+    // Methods
+    //================================================================================
+
+    /// A hook into the [SelectionGroupProperty] of this selectable, to perform some actions when the group changes.<br >
+    /// By default, does nothing.
+    protected void onSelectionGroupChanged(SelectionGroup group) {}
 
     //================================================================================
     // Overridden Methods
