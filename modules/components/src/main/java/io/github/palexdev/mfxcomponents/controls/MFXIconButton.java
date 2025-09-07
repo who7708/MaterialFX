@@ -48,7 +48,9 @@ public class MFXIconButton extends MFXButton {
     // Constructors
     //================================================================================
 
-    public MFXIconButton() {}
+    public MFXIconButton() {
+        this(new MFXFontIcon("mfx-logo-alt"));
+    }
 
     public MFXIconButton(MFXFontIcon icon) {
         setIcon(icon);
@@ -150,7 +152,9 @@ public class MFXIconButton extends MFXButton {
         private final IconProperty icon = new IconProperty();
         protected final VariantsHandler<MFXToggleIconButton> variantsHandler = new VariantsHandler<>(this);
 
-        public MFXToggleIconButton() {}
+        public MFXToggleIconButton() {
+            this(new MFXFontIcon("mfx-logo-alt"));
+        }
 
         public MFXToggleIconButton(MFXFontIcon icon) {
             setIcon(icon);

@@ -61,7 +61,9 @@ public class MFXButton extends MFXButtonBase implements WithVariants {
     // Constructors
     //================================================================================
 
-    public MFXButton() {}
+    public MFXButton() {
+        this("Button");
+    }
 
     public MFXButton(String text) {
         super(text);
@@ -138,7 +140,9 @@ public class MFXButton extends MFXButtonBase implements WithVariants {
     public static class MFXToggleButton extends MFXToggle implements WithVariants {
         protected final VariantsHandler<MFXToggleButton> variantsHandler = new VariantsHandler<>(this);
 
-        public MFXToggleButton() {}
+        public MFXToggleButton() {
+            this("Toggle Button");
+        }
 
         public MFXToggleButton(String text) {
             super(text);

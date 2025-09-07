@@ -85,7 +85,9 @@ public class MFXFab extends MFXButtonBase implements WithVariants {
     // Constructors
     //================================================================================
 
-    public MFXFab() {}
+    public MFXFab() {
+        this("Floating Action Button");
+    }
 
     public MFXFab(String text) {
         super(text);
