@@ -1,5 +1,6 @@
-## Project - 80336482
+## Project - 87f73d00
 
+- 07-09-2025 <19fced36> Upgrade VirtualizedFX to v24.6.0
 - 30-08-2025 <891a615e> Update UpdateChangelogs script to support removals and properly write to Misc category
 - 30-08-2025 <fc4a6e64> Temporarily enable preview features
 - 30-08-2025 <361dddb4> Update TODO.md

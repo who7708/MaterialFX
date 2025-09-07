@@ -1,3 +1,49 @@
+## 24.5.0 - 07-09-2025 - 87f73d00
+
+### Features
+
+- <b79f9a68> PseudoClasses: add OPEN pseudo class
+- <bd133a10> Selectable: add convenience toggle() method to quickly flip the selection state
+- <fb10bfba> Add a bunch of convenience methods to ISelectionModel and related classes
+- <5161ce60> MFXLabeled: backport text opacity CSS property
+- <e56e5553> Selectable: add optional selection changed callback
+- <35104818> "Relax" MaterialFX components hierarchy by not passing the behavior and skin types as class generics
+
+### Bug Fixes
+
+- <60cb6f13> MFXPopups: remove the onState() method from the builder because you would lose the reference to the When construct used to listen to the state property, leading to a potential memory leak
+- <14051523> SelectionProperty: make the invalidated() method final because it was a source of errors due to forgetting to call super when overriding. Introduce onInvalidated() method for safer
+  overrides
+
+### Refactoring
+
+- <cf0534f1> Review SelectionModel
+- <5d5c2455> MFXSkinBase: clear the behavior when the skin is disposed
+- <51ae88c5> MFXStyleable: extend from Styleable and add documentation
+- <6b939667> MFXSkinBase replace getControlAs() with overridable getControl() method
+- <230001f6> MFXBehavior: migrate callback from Consumer to Runnable
+- <35e5bd45> MFXSkinnable relax bounds to allow for MFXLabeled
+- <6c3f7dee> MFXBehavior remove generics from register(...) and add javadocs back
+- <000dd87d> Make MFXControl and MFXLabeled implement MFXStyleable
+- <b8d65908> SkinBase: rename initBehavior() to registerBehavior() and make it no-arg
+- <303cbbda> BehaviorBase minor refactor
+- <91b915f2> WhenEvent: rename process() to handle()
+- <5c9f5bec> Rename KeyShortcut to KeyStroke and optimize fromEvent(KeyEvent)
+
+### Documentation
+
+- <6203a957> Fix javadocs
+
+### Tests
+
+- <70b5fe1d> Update tests
+
+### Misc
+
+- <da5ef303> Renamed Control, Labeled and SkinBase to MFXControl, MFXLabeled and MFXSkinBase respectively
+- <525f22de> Renamed BehaviorBase to MFXBehavior
+- <61d9d3fb> Move WhenEvent to input package
+
 ## 24.4.0 - 30-08-2025 - 80336482
 
 ### Removed
