@@ -79,6 +79,12 @@ public abstract class MFXBehavior<N extends Node> implements Disposable {
         }
     }
 
+    /// Disables and removes all the handlers registered on this behavior without disposing of it, allowing re-usage if needed.
+    public void clear() {
+        handlers.forEach(Disposable::dispose);
+        handlers.clear();
+    }
+
     //================================================================================
     // Events Specific Methods
     //================================================================================
@@ -290,15 +296,10 @@ public abstract class MFXBehavior<N extends Node> implements Disposable {
     // Overridden Methods
     //================================================================================
 
-    /// The behavior API registers input actions in the form of [WhenEvent] constructs. This method adds them
-    /// to a list (which will be used for disposal, avoiding memory leaks when calling [#dispose()]).
-    ///
-    /// Also note that if the constructs were not activated before by invoking [WhenEvent#register()], this method
-    /// will do it for you automatically.
+    /// Calls [#clear()] and then sets the node instance to `null`, making the behavior effectively not usable anymore.
     @Override
     public void dispose() {
-        handlers.forEach(Disposable::dispose);
-        handlers.clear();
+        clear();
         node = null;
     }
 

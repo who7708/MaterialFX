@@ -126,6 +126,7 @@ public abstract class MFXSkinBase<C extends javafx.scene.control.Control & WithB
         listeners.forEach(Disposable::dispose);
         listeners.clear();
         listeners = null;
+        Optional.ofNullable(getBehavior()).ifPresent(MFXBehavior::clear);
         super.dispose();
     }
 
