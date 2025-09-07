@@ -178,12 +178,6 @@ public class MFXButton extends MFXButtonBase implements WithVariants {
             return this;
         }
 
-
-        @Override
-        public Supplier<MFXBehavior<? extends Node>> defaultBehaviorFactory() {
-            return () -> new MFXButtonBehavior<>(this);
-        }
-
         @Override
         public Supplier<MFXSkinBase<? extends Node>> defaultSkinFactory() {
             return () -> new MFXButtonSkin(this);

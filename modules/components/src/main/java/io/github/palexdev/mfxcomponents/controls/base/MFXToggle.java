@@ -20,7 +20,10 @@ package io.github.palexdev.mfxcomponents.controls.base;
 
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
+import io.github.palexdev.mfxcomponents.behaviors.MFXButtonBehavior;
+import io.github.palexdev.mfxcore.behavior.MFXBehavior;
 import io.github.palexdev.mfxcore.selection.Selectable;
 import io.github.palexdev.mfxcore.selection.SelectionGroupProperty;
 import io.github.palexdev.mfxcore.selection.SelectionProperty;
@@ -88,5 +91,10 @@ public abstract class MFXToggle extends MFXButtonBase implements Selectable {
     @Override
     public void onSelectionChanged(Consumer<Boolean> onSelectionChanged) {
         this.onSelectionChanged = Optional.ofNullable(onSelectionChanged).orElse(_ -> {});
+    }
+
+    @Override
+    public Supplier<MFXBehavior<? extends Node>> defaultBehaviorFactory() {
+        return () -> new MFXButtonBehavior<>(this);
     }
 }

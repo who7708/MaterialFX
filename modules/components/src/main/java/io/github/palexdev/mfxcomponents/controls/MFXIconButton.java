@@ -21,7 +21,6 @@ package io.github.palexdev.mfxcomponents.controls;
 import java.util.List;
 import java.util.function.Supplier;
 
-import io.github.palexdev.mfxcomponents.behaviors.MFXButtonBehavior;
 import io.github.palexdev.mfxcomponents.controls.base.MFXToggle;
 import io.github.palexdev.mfxcomponents.skins.MFXIconButtonSkin;
 import io.github.palexdev.mfxcomponents.variants.ButtonVariants.ShapeVariant;
@@ -31,7 +30,6 @@ import io.github.palexdev.mfxcomponents.variants.ButtonVariants.WidthVariant;
 import io.github.palexdev.mfxcomponents.variants.api.Variant;
 import io.github.palexdev.mfxcomponents.variants.api.VariantsHandler;
 import io.github.palexdev.mfxcomponents.variants.api.WithVariants;
-import io.github.palexdev.mfxcore.behavior.MFXBehavior;
 import io.github.palexdev.mfxcore.controls.MFXSkinBase;
 import io.github.palexdev.mfxresources.icon.IconProperty;
 import io.github.palexdev.mfxresources.icon.MFXFontIcon;
@@ -201,11 +199,6 @@ public class MFXIconButton extends MFXButton {
         public MFXToggleIconButton defaultVariants() {
             variantsHandler.setVariants(SizeVariant.S, ShapeVariant.ROUNDED);
             return this;
-        }
-
-        @Override
-        public Supplier<MFXBehavior<? extends Node>> defaultBehaviorFactory() {
-            return () -> new MFXButtonBehavior<>(this);
         }
 
         @Override
