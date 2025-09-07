@@ -98,6 +98,7 @@ public class FontIconsPacks {
     // Initializers
     //================================================================================
     static {
+        register("mfx-", MaterialFX.instance());
         register("fab-", FontAwesomeBrands.instance());
         register("far-", FontAwesomeRegular.instance());
         register("fas-", FontAwesomeSolid.instance());
