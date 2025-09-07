@@ -25,7 +25,6 @@ import java.util.function.Function;
 import io.github.palexdev.mfxeffects.beans.Position;
 import io.github.palexdev.mfxeffects.ripple.MFXRippleGenerator;
 import io.github.palexdev.mfxeffects.ripple.base.RippleGenerator;
-import io.github.palexdev.mfxeffects.utils.LayoutUtils;
 import io.github.palexdev.mfxeffects.utils.StyleUtils;
 import io.github.palexdev.mfxresources.icon.IconClip.IconClipConverter;
 import javafx.collections.ObservableList;
@@ -237,19 +236,33 @@ public class MFXIconWrapper extends Region {
     ///
     /// If the icon is `null`, it returns `0.0` or [#sizeProperty()] if positive.
     ///
-    /// Otherwise, it returns the maximum between three values: the icon's width and height, including horizontal and
-    /// vertical padding respectively, and the value of [#sizeProperty()].
+    /// Otherwise, it returns the maximum between two values: the icon's size, including horizontal and
+    /// vertical padding, and the value of [#sizeProperty()].
     ///
     /// The [#sizeProperty()] acts as a minimum. To make the region squared, both its minimum and maximum sizes are
     /// overridden to use the pref which delegates the computation to this method.
+    ///
+    /// **Warning:**
+    ///
+    /// As stated above, we use [MFXFontIcon#sizeProperty()] and not the actual rendered width and height.<br >
+    /// Font rendering is complicated and not reliable. Using the rendered sizes may lead to the wrapper
+    /// growing or shrinking depending on the icon. This way is not perfect and still depends on the icon pack, but it
+    /// should be more stable.
     protected double computeSize() {
         MFXFontIcon icon = getIcon();
         double size = getSize();
         if (icon == null) return Math.max(0.0, size);
 
-        double iw = snappedLeftInset() + LayoutUtils.snappedBoundWidth(icon) + snappedRightInset();
-        double ih = snappedTopInset() + LayoutUtils.snappedBoundHeight(icon) + snappedBottomInset();
+        double iw = snappedLeftInset() + icon.getSize() + snappedRightInset();
+        double ih = snappedTopInset() + icon.getSize() + snappedBottomInset();
         return Math.max(size, Math.max(iw, ih));
+    }
+
+    /// @return the wrapper's size by calling [#prefWidth(double)]. It could also call [#prefHeight(double)], but it does
+    /// not matter since both are overridden to call [#computeSize()]. So, effectively, this is a shortcut to the latter,
+    /// but we take advantage of JavaFX caching and do not compute the value every time.
+    public double prefSize() {
+        return prefWidth(-1);
     }
 
     @Override
