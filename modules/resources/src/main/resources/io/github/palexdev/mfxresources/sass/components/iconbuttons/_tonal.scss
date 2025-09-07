@@ -28,6 +28,10 @@
       -fx-background-color : -md-sys-color-on-secondary-container;
     }
 
+    > .mfx-ripple-generator {
+      -mfx-ripple-color : -md-sys-color-on-secondary-container;
+    }
+
     // Selected
     &.toggle:selected {
       -fx-background-color : -md-sys-color-secondary;
@@ -38,6 +42,10 @@
 
       > .surface {
         -fx-background-color : -md-sys-color-on-secondary;
+      }
+
+      > .mfx-ripple-generator {
+        -mfx-ripple-color : -md-sys-color-on-secondary;
       }
     }
   }

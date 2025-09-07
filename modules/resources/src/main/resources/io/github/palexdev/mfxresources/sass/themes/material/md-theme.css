@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright (C) 2025 Parisi Alessandro - alessandro.parisi406@gmail.com
  * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX)
  *
@@ -521,6 +521,67 @@
   -fx-min-width: 48px
 }
 
+.mfx-checkbox {
+  -fx-font-family: "MontSerrat Medium";
+  -fx-font-size: 14px;
+  -fx-line-spacing: 20px;
+  -fx-graphic-text-gap: 4px
+}
+
+.mfx-checkbox > .box {
+  -mfx-animated: true;
+  -mfx-animation: SCALE;
+  -mfx-size: 20px;
+  -fx-background-color: transparent;
+  -fx-background-radius: 2px;
+  -fx-border-color: -md-sys-color-on-surface-variant;
+  -fx-border-radius: 2px;
+  -fx-border-width: 2px
+}
+
+.mfx-checkbox > .box > .mfx-font-icon {
+  -mfx-color: -md-sys-color-on-primary
+}
+
+.mfx-checkbox > .surface {
+  -fx-background-color: -md-sys-color-primary;
+  -fx-background-radius: 999px
+}
+
+.mfx-checkbox > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-primary
+}
+
+.mfx-checkbox:indeterminate > .box {
+  -mfx-icon: "fas-minus";
+  -fx-background-color: -md-sys-color-primary;
+  -fx-border-color: transparent
+}
+
+.mfx-checkbox:selected > .box {
+  -mfx-icon: "fas-check";
+  -fx-background-color: -md-sys-color-primary;
+  -fx-border-color: transparent
+}
+
+.mfx-checkbox:error > .box {
+  -mfx-icon: "fas-x-mark";
+  -fx-background-color: -md-sys-color-error;
+  -fx-border-color: transparent
+}
+
+.mfx-checkbox:error > .box > .mfx-font-icon {
+  -mfx-color: -md-sys-color-on-error
+}
+
+.mfx-checkbox:error > .surface {
+  -fx-background-color: -md-sys-color-error
+}
+
+.mfx-checkbox:error > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-error
+}
+
 .mfx-fab .mfx-icon-wrapper {
   -mfx-animation: SCALE
 }
@@ -734,12 +795,13 @@
   -fx-background-color: transparent
 }
 
-.mfx-icon-button > .mfx-icon-wrapper > .mfx-font-icon {
-  -mfx-color: -md-sys-color-on-surface-variant
+.mfx-icon-button > .mfx-icon-wrapper {
+  -mfx-animated: true;
+  -mfx-animation: SCALE
 }
 
-.mfx-icon-button > .mfx-icon-wrapper > .mfx-ripple-generator {
-  -mfx-ripple-color: -md-sys-color-primary
+.mfx-icon-button > .mfx-icon-wrapper > .mfx-font-icon {
+  -mfx-color: -md-sys-color-on-surface-variant
 }
 
 .mfx-icon-button:selected > .mfx-icon-wrapper > .mfx-font-icon {
@@ -748,6 +810,10 @@
 
 .mfx-icon-button > .surface {
   -fx-background-color: -md-sys-color-primary
+}
+
+.mfx-icon-button > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-primary
 }
 
 .mfx-icon-button.xs {
@@ -993,12 +1059,12 @@
   -mfx-color: -md-sys-color-on-primary
 }
 
-.mfx-icon-button.filled > .mfx-icon-wrapper > .mfx-ripple-generator {
-  -mfx-ripple-color: -md-sys-color-on-primary
-}
-
 .mfx-icon-button.filled > .surface {
   -fx-background-color: -md-sys-color-on-primary
+}
+
+.mfx-icon-button.filled > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-on-primary
 }
 
 .mfx-icon-button.filled.toggle {
@@ -1009,12 +1075,12 @@
   -mfx-color: -md-sys-color-on-surface-variant
 }
 
-.mfx-icon-button.filled.toggle > .mfx-icon-wrapper > .mfx-ripple-generator {
-  -mfx-ripple-color: -md-sys-color-on-surface-variant
-}
-
 .mfx-icon-button.filled.toggle > .surface {
   -fx-background-color: -md-sys-color-on-surface-variant
+}
+
+.mfx-icon-button.filled.toggle > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-on-surface-variant
 }
 
 .mfx-icon-button.filled.toggle:selected {
@@ -1025,12 +1091,12 @@
   -mfx-color: -md-sys-color-on-primary
 }
 
-.mfx-icon-button.filled.toggle:selected > .mfx-icon-wrapper > .mfx-ripple-generator {
-  -mfx-ripple-color: -md-sys-color-on-primary
-}
-
 .mfx-icon-button.filled.toggle:selected > .surface {
   -fx-background-color: -md-sys-color-on-primary
+}
+
+.mfx-icon-button.filled.toggle:selected > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-on-primary
 }
 
 .mfx-icon-button.outlined {
@@ -1042,12 +1108,12 @@
   -mfx-color: -md-sys-color-on-surface-variant
 }
 
-.mfx-icon-button.outlined > .mfx-icon-wrapper > .mfx-ripple-generator {
-  -mfx-ripple-color: -md-sys-color-on-surface-variant
-}
-
 .mfx-icon-button.outlined > .surface {
   -fx-background-color: -md-sys-color-on-surface-variant
+}
+
+.mfx-icon-button.outlined > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-on-surface-variant
 }
 
 .mfx-icon-button.outlined:focus-visible {
@@ -1065,12 +1131,12 @@
   -mfx-color: -md-sys-color-inverse-on-surface
 }
 
-.mfx-icon-button.outlined.toggle:selected > .mfx-icon-wrapper > .mfx-ripple-generator {
-  -mfx-ripple-color: -md-sys-color-inverse-on-surface
-}
-
 .mfx-icon-button.outlined.toggle:selected > .surface {
   -fx-background-color: -md-sys-color-inverse-on-surface
+}
+
+.mfx-icon-button.outlined.toggle:selected > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-inverse-on-surface
 }
 
 .mfx-icon-button.tonal {
@@ -1085,6 +1151,10 @@
   -fx-background-color: -md-sys-color-on-secondary-container
 }
 
+.mfx-icon-button.tonal > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-on-secondary-container
+}
+
 .mfx-icon-button.tonal.toggle:selected {
   -fx-background-color: -md-sys-color-secondary
 }
@@ -1095,6 +1165,10 @@
 
 .mfx-icon-button.tonal.toggle:selected > .surface {
   -fx-background-color: -md-sys-color-on-secondary
+}
+
+.mfx-icon-button.tonal.toggle:selected > .mfx-ripple-generator {
+  -mfx-ripple-color: -md-sys-color-on-secondary
 }
 
 .mfx-menu {

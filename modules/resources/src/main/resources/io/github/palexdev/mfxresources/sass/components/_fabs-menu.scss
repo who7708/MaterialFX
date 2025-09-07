@@ -29,7 +29,7 @@
     // Open state
     &:open > .entry {
       /*
-       * It should be 0.9, but becasue there is technically a double scale applied to the FAB, we tone this value down a bit
+       * It should be 0.9, but because there is technically a double scale applied to the FAB, we tone this value down a bit
        * The reason for the double scale is explained in the skin documentation
        */
       -fx-background-radius : 28px; // Half of 56px (small FAB)

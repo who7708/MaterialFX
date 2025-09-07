@@ -24,12 +24,11 @@
     -fx-background-color : transparent;
 
     > .mfx-icon-wrapper {
+      -mfx-animated  : true;
+      -mfx-animation : SCALE;
+
       > .mfx-font-icon {
         -mfx-color : -md-sys-color-on-surface-variant
-      }
-
-      > .mfx-ripple-generator {
-        -mfx-ripple-color : -md-sys-color-primary;
       }
     }
 
@@ -39,6 +38,10 @@
 
     & > .surface {
       -fx-background-color : -md-sys-color-primary;
+    }
+
+    > .mfx-ripple-generator {
+      -mfx-ripple-color : -md-sys-color-primary;
     }
 
     // XS
