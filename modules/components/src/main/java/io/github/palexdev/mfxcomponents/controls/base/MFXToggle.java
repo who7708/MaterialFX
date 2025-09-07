@@ -92,6 +92,14 @@ public abstract class MFXToggle extends MFXButtonBase implements Selectable {
         super.trigger();
     }
 
+    /// Flips the selection state.<br >
+    /// Does nothing if the [#selectedProperty()] is bound or the component is disabled.
+    @Override
+    public void toggle() {
+        if (isDisabled() || selected.isBound()) return;
+        selected.set(!selected.get());
+    }
+
     @Override
     public SelectionGroupProperty selectionGroupProperty() {
         return group;
