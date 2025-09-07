@@ -1,3 +1,25 @@
+## 24.3.0 - 07-09-2025 - eb8aea6d
+
+### Features
+
+- <59e250eb> Add MaterialFX font icons pack
+- <66cc3675> IconUtils: add a bunch more utilities
+- <81eb6fb4> Add styles for scrolling related controls and split buttons
+
+### Refactoring
+
+- <94e599cd> MFXIconWrapper: rework computeSize() to be a bit more stable and add public method to retrieve the size
+- <6470f91e> MFXIconWrapper: throw an exception if animations are enabled but the provider is null, indicating the user the animation system is not properly set up
+
+### Style
+
+- <7c225ec5> Implemented checkboxes
+- <5097c4a4> Update stylesheets
+- <d4e724df> Update css output
+- <4e3ebb95> Reorganize popups styles
+
+
+
 ## 24.2.1 - 31-07-2025 - 10f296ba
 
 ### Features

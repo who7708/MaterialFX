@@ -1,3 +1,11 @@
+## 24.2.1 - 07-09-2025 - eb8aea6d
+
+### Refactoring
+
+- <6bbbab23> Revert 0165e785 and set ripple color at every generation
+
+
+
 ## 24.2.0 - 31-07-2025 - 10f296ba
 
 ### Features
@@ -27,4 +35,3 @@
 ### Documentation
 
 - <4995b7b7> Fix Javadoc error
-
