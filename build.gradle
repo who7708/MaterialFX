@@ -34,8 +34,8 @@ subprojects {
 
     // Remove vanniktech nonsense
     gradle.taskGraph.whenReady { graph ->
-        if (graph.hasTask(mavenPlainJavadocJar)) {
-            mavenPlainJavadocJar.enabled = false
+        if (graph.hasTask(plainJavadocJar)) {
+            plainJavadocJar.enabled = false
         }
     }
 
@@ -49,7 +49,7 @@ subprojects {
     dependencies {
         testImplementation platform("org.junit:junit-bom:$junit")
         testImplementation 'org.junit.jupiter:junit-jupiter'
-        testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+        testRuntimeOnly "org.junit.platform:junit-platform-launcher"
         testImplementation "org.hamcrest:hamcrest:$hamcrest"
         testImplementation "org.testfx:testfx-junit5:$testfx"
         testImplementation("io.github.palexdev:scenicview:$scenicView") {

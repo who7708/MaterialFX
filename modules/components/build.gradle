@@ -1,5 +1,3 @@
-import com.vanniktech.maven.publish.SonatypeHost
-
 version = "$components"
 
 dependencies {
@@ -32,6 +30,6 @@ tasks.register('testRun', JavaExec) {
 }
 
 mavenPublishing {
-    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    publishToMavenCentral()
     signAllPublications()
 }

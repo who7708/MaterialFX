@@ -1,5 +1,3 @@
-import com.vanniktech.maven.publish.SonatypeHost
-
 version = "$core"
 
 dependencies {
@@ -13,7 +11,7 @@ java {
 }
 
 mavenPublishing {
-    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    publishToMavenCentral()
     signAllPublications()
 }
 
