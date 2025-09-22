@@ -74,19 +74,6 @@ subprojects {
                 '--add-opens', 'javafx.graphics/com.sun.javafx.application=ALL-UNNAMED'
         ]
     }
-
-    // TODO temporary
-    tasks.withType(JavaCompile) {
-        options.compilerArgs += ["--enable-preview"]
-    }
-
-    tasks.withType(Test) {
-        jvmArgs += ["--enable-preview"]
-    }
-
-    tasks.withType(JavaExec) {
-        jvmArgs += ["--enable-preview"]
-    }
 }
 
 
