@@ -18,10 +18,14 @@
 
 package io.github.palexdev.mfxcore.events.bus;
 
-import java.util.*;
-import java.util.function.Consumer;
-
 import io.github.palexdev.mfxcore.events.Event;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.WeakHashMap;
+import java.util.function.Consumer;
 
 /// As the name suggests, this class groups multiple [EventBus] in a "network". The goal is to implement event listening
 /// and delivering on and to specific buses through a very simple tagging system. The idea is to build this on top of the
@@ -125,10 +129,10 @@ public class EventBusNetwork {
         if (bus != null) bus.clear();
     }
 
-    /// @return an unmodifiable set with the names/tags of all currently active buses, where active means that they have
-    /// at least one subscription (the `root` being the exception)
-    public Set<BusTag> getActiveBuses() {
-        return Collections.unmodifiableSet(network.keySet());
+    /// @return an unmodifiable map containing all the currently active buses
+    /// (at least one subscriber, the `root` being the exception)
+    public Map<BusTag, EventBus> getActiveBuses() {
+        return Collections.unmodifiableMap(network);
     }
 
     //================================================================================
