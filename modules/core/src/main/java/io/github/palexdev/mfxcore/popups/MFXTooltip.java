@@ -18,14 +18,6 @@
 
 package io.github.palexdev.mfxcore.popups;
 
-import java.lang.ref.Reference;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
-
 import io.github.palexdev.mfxcore.base.Disposable;
 import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.base.properties.NodeProperty;
@@ -51,6 +43,14 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
+
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 /// Custom implementation of tooltips based on the [MFXPopup] API. It also implements [MFXStyleable], the default CSS
 /// style-class is set to '.root' and '.mfx-tooltip.'. This mimics JavaFX popups which also have the '.root' style class
@@ -165,8 +165,7 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
                 .handle(_ -> hideDelayed())
                 .asFilter()
                 .register(),
-            When.onInvalidated(owner.hoverProperty())
-                .condition(h -> !h || !owner.isFocused())
+            When.onInvalidated(owner.hoverProperty()).condition(h -> isShowing() && (!h || !owner.isFocused()))
                 .then(_ -> hideDelayed())
                 .invalidating(owner.focusedProperty())
                 .listen()
