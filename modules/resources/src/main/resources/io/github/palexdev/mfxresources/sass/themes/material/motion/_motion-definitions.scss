@@ -19,17 +19,14 @@
 @use '../../../base/vars' as *;
 
 @mixin MaterialButtonsMotion() {
-  // FIXME timing function is incorrect due to JavaFX limitation not accepting numbers < 0 || > 1
   .mfx-button,
   .mfx-icon-button {
     transition-property : -fx-background-color, -fx-background-radius;
-    transition-timing-function : cubic-bezier(0.27, 1, 0.18, 1.0);
-    transition-duration        : md-duration('standard-fast-spatial');
+    @include motion('expressive-fast-spatial');
 
     > .surface {
       transition-property        : -fx-background-radius;
-      transition-timing-function : cubic-bezier(0.27, 1, 0.18, 1.0);
-      transition-duration        : md-duration('standard-fast-spatial');
+      @include motion('expressive-fast-spatial');
     }
 
     &.xs.rounded:pressed:hover,
@@ -73,8 +70,7 @@
     &.l,
     &.xl {
       transition-property : -fx-background-color, -fx-background-radius, -fx-border-radius;
-      transition-timing-function : cubic-bezier(0.27, 1, 0.18, 1.0);
-      transition-duration        : md-duration('standard-fast-spatial');
+      @include motion('expressive-fast-spatial');
     }
 
     &.xs:pressed:hover,
@@ -106,8 +102,7 @@
       -fx-scale-x         : 1.0;
       -fx-scale-y         : 1.0;
       transition-property : -fx-background-color, -fx-background-radius, -fx-scale-x, -fx-scale-y;
-      transition-timing-function : cubic-bezier(0.27, 1, 0.18, 1.0);
-      transition-duration        : md-duration('standard-fast-spatial');
+      @include motion('expressive-fast-spatial');
 
       &:pressed:hover {
         -fx-scale-x : 1.1;
@@ -120,8 +115,7 @@
 @mixin MaterialFloatingActionButtonsMenuMotion() {
   .mfx-fab-menu > .entry {
     transition-property        : -fx-background-radius, -fx-scale-x, -fx-scale-y;
-    transition-timing-function : cubic-bezier(0.27, 1, 0.18, 1.0);
-    transition-duration        : md-duration('standard-fast-spatial');
+    @include motion('expressive-fast-spatial');
   }
 }
 
@@ -260,6 +254,11 @@
           -fx-background-radius : 20px 68px 68px 20px;
         }
       }
+    }
+
+    > .mfx-button.trailing > .label > .mfx-font-icon {
+      transition-property        : -fx-rotate;
+        @include motion('expressive-fast-spatial');
     }
   }
 }

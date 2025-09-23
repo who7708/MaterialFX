@@ -17,15 +17,15 @@
  */
 .mfx-button,
 .mfx-icon-button {
-  transition-property: -fx-background-color, -fx-background-radius;
-  transition-timing-function: cubic-bezier(0.27, 1, 0.18, 1);
+  transition-property: -fx-background-color,-fx-background-radius;
+  transition-timing-function: cubic-bezier(0.42,1.67,0.21,0.9);
   transition-duration: 350ms
 }
 
 .mfx-button > .surface,
 .mfx-icon-button > .surface {
   transition-property: -fx-background-radius;
-  transition-timing-function: cubic-bezier(0.27, 1, 0.18, 1);
+  transition-timing-function: cubic-bezier(0.42,1.67,0.21,0.9);
   transition-duration: 350ms
 }
 
@@ -97,8 +97,8 @@
 .mfx-icon-button.outlined.s,
 .mfx-icon-button.outlined.xl,
 .mfx-icon-button.outlined.xs {
-  transition-property: -fx-background-color, -fx-background-radius, -fx-border-radius;
-  transition-timing-function: cubic-bezier(0.27, 1, 0.18, 1);
+  transition-property: -fx-background-color,-fx-background-radius,-fx-border-radius;
+  transition-timing-function: cubic-bezier(0.42,1.67,0.21,0.9);
   transition-duration: 350ms
 }
 
@@ -125,8 +125,8 @@
 .mfx-buttons-group.standard > .mfx-icon-button {
   -fx-scale-x: 1;
   -fx-scale-y: 1;
-  transition-property: -fx-background-color, -fx-background-radius, -fx-scale-x, -fx-scale-y;
-  transition-timing-function: cubic-bezier(0.27, 1, 0.18, 1);
+  transition-property: -fx-background-color,-fx-background-radius,-fx-scale-x,-fx-scale-y;
+  transition-timing-function: cubic-bezier(0.42,1.67,0.21,0.9);
   transition-duration: 350ms
 }
 
@@ -137,8 +137,8 @@
 }
 
 .mfx-fab-menu > .entry {
-  transition-property: -fx-background-radius, -fx-scale-x, -fx-scale-y;
-  transition-timing-function: cubic-bezier(0.27, 1, 0.18, 1);
+  transition-property: -fx-background-radius,-fx-scale-x,-fx-scale-y;
+  transition-timing-function: cubic-bezier(0.42,1.67,0.21,0.9);
   transition-duration: 350ms
 }
 
@@ -270,4 +270,10 @@
 .mfx-split-button > .mfx-button.trailing.xl:pressed > .surface,
 .mfx-split-button > .mfx-button.trailing.xl:selected > .surface {
   -fx-background-radius: 20px 68px 68px 20px
+}
+
+.mfx-split-button > .mfx-button.trailing > .label > .mfx-font-icon {
+  transition-property: -fx-rotate;
+  transition-timing-function: cubic-bezier(0.42,1.67,0.21,0.9);
+  transition-duration: 350ms
 }

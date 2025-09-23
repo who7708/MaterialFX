@@ -268,18 +268,18 @@
 }
 
 .mfx-button:disabled {
-  -fx-background-color: transparent !important;
-  -fx-text-fill: -md-sys-color-on-surface !important;
-  -mfx-text-opacity: 38% !important
+  -fx-background-color: transparent!important;
+  -fx-text-fill: -md-sys-color-on-surface!important;
+  -mfx-text-opacity: 38%!important
 }
 
 .mfx-button:disabled > .label > .mfx-font-icon {
-  -fx-opacity: 38% !important;
-  -mfx-color: -md-sys-color-on-surface !important
+  -fx-opacity: 38%!important;
+  -mfx-color: -md-sys-color-on-surface!important
 }
 
 .mfx-button:disabled > .surface {
-  -fx-background-color: -md-sys-color-on-surface !important
+  -fx-background-color: -md-sys-color-on-surface!important
 }
 
 .mfx-button.elevated {
@@ -406,9 +406,9 @@
 }
 
 .mfx-button.outlined:focus-visible {
-  -fx-border-color: -md-sys-color-outline-variant, -md-sys-color-secondary;
-  -fx-border-insets: -1px, -6px;
-  -fx-border-width: 1px, 3px
+  -fx-border-color: -md-sys-color-outline-variant,-md-sys-color-secondary;
+  -fx-border-insets: -1px,-6px;
+  -fx-border-width: 1px,3px
 }
 
 .mfx-button.outlined.toggle:selected {
@@ -493,7 +493,7 @@
 }
 
 .mfx-buttons-group > .mfx-button > .surface {
-  -mfx-elevation: NONE !important
+  -mfx-elevation: NONE!important
 }
 
 .mfx-buttons-group.xs {
@@ -544,10 +544,10 @@
 }
 
 .mfx-checkbox:focus-visible > .box {
-  -fx-border-color: -md-sys-color-on-surface-variant, -md-sys-color-secondary;
-  -fx-border-insets: 0px, -12px;
-  -fx-border-radius: 2px, 999px;
-  -fx-border-width: 2px, 3px
+  -fx-border-color: -md-sys-color-on-surface-variant,-md-sys-color-secondary;
+  -fx-border-insets: 0px,-12px;
+  -fx-border-radius: 2px,999px;
+  -fx-border-width: 2px,3px
 }
 
 .mfx-checkbox > .surface {
@@ -1059,16 +1059,16 @@
 }
 
 .mfx-icon-button:disabled {
-  -fx-background-color: transparent !important
+  -fx-background-color: transparent!important
 }
 
 .mfx-icon-button:disabled > .mfx-icon-wrapper > .mfx-font-icon {
-  -fx-opacity: 38% !important;
-  -mfx-color: -md-sys-color-on-surface !important
+  -fx-opacity: 38%!important;
+  -mfx-color: -md-sys-color-on-surface!important
 }
 
 .mfx-icon-button:disabled > .surface {
-  -fx-background-color: -md-sys-color-on-surface !important
+  -fx-background-color: -md-sys-color-on-surface!important
 }
 
 .mfx-icon-button.filled {
@@ -1137,9 +1137,9 @@
 }
 
 .mfx-icon-button.outlined:focus-visible {
-  -fx-border-color: -md-sys-color-outline-variant, -md-sys-color-secondary;
-  -fx-border-insets: 0px, -4px;
-  -fx-border-width: 1px, 3px
+  -fx-border-color: -md-sys-color-outline-variant,-md-sys-color-secondary;
+  -fx-border-insets: 0px,-4px;
+  -fx-border-width: 1px,3px
 }
 
 .mfx-icon-button.outlined.toggle:selected {
@@ -1194,7 +1194,7 @@
 .mfx-menu {
   -fx-background-color: -md-sys-color-surface-container;
   -fx-background-radius: 8px;
-  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 8, 0.16, 0, 3);
+  -fx-effect: dropshadow(gaussian,rgba(0,0,0,0.2),8,0.16,0,3);
   -fx-min-width: 160px;
   -fx-max-width: 280px
 }
@@ -1377,10 +1377,7 @@
 
 .mfx-split-button > .mfx-button.trailing > .label > .mfx-font-icon {
   -mfx-icon: "fas-angle-down";
-  -fx-rotate: 0deg;
-  transition-property: -fx-rotate;
-  transition-timing-function: cubic-bezier(0.34, 0.8, 0.34, 1);
-  transition-duration: .2s
+  -fx-rotate: 0deg
 }
 
 .mfx-split-button > .mfx-button.trailing:selected > .label > .mfx-font-icon {
@@ -1395,7 +1392,7 @@
 .mfx-split-button .mfx-popover {
   -fx-background-color: -md-sys-color-surface-container;
   -fx-background-radius: 8px;
-  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 8, 0.16, 0, 3);
+  -fx-effect: dropshadow(gaussian,rgba(0,0,0,0.2),8,0.16,0,3);
   -fx-min-width: 150px;
   -fx-max-width: 280px
 }

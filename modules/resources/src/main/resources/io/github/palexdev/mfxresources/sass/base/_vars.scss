@@ -106,3 +106,8 @@ $md-durations: (
   }
   @return ErrorFn('No duration found for key: ' + $key, 0ms);
 }
+
+@mixin motion($preset) {
+  transition-timing-function: md-easing($preset);
+  transition-duration: md-duration($preset);
+}

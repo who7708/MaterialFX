@@ -127,10 +127,6 @@
     > .mfx-button.trailing > .label > .mfx-font-icon {
       -mfx-icon                  : "fas-angle-down";
       -fx-rotate                 : 0deg;
-      /* TODO this should be replaced with a spatial curve once PR1822 is merged */
-      transition-property        : -fx-rotate;
-      transition-timing-function : md-easing("expressive-default-effects");
-      transition-duration        : md-duration("expressive-default-effects");
     }
 
     > .mfx-button.trailing:selected > .label > .mfx-font-icon {
