@@ -1,5 +1,10 @@
-## Project - eb8aea6d
+## Project - daeea187
 
+- 22-09-2025 <0fde157d> Update Maven publish plugin to v0.34.0
+- 23-09-2025 <edbb60bd> Upgrade VirtualizedFX to v25.1.0
+- 22-09-2025 <c7d61e7e> Upgrade JavaFX to v26-ea+7
+- 22-09-2025 <cfdacde8> Upgrade to JDK 25
+- 22-09-2025 <bb7e4a94> Upgrade Gradle to v9.1.0
 - 07-09-2025 <19fced36> Upgrade VirtualizedFX to v24.6.0
 - 30-08-2025 <891a615e> Update UpdateChangelogs script to support removals and properly write to Misc category
 - 30-08-2025 <fc4a6e64> Temporarily enable preview features
