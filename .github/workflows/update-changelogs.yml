@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '24'
+          java-version: '25'
 
       - name: Give permissions to script
         run: chmod +x scripts/UpdateChangelogs
