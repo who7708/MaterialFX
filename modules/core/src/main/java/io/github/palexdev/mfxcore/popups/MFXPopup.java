@@ -25,10 +25,11 @@ import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.base.properties.NodeProperty;
 import io.github.palexdev.mfxcore.base.properties.PositionProperty;
 import io.github.palexdev.mfxcore.observables.When;
-import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
+import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers;
+import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Direction;
+import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Placement;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.collections.ObservableList;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Dialog;
@@ -124,10 +125,13 @@ public interface MFXPopup<O> {
     /// The owner handling may differ depending on the implementation.
     void show(O owner, double x, double y);
 
-    /// Shows this popup for the given owner, at the specified anchor with the given alignment, all relative to the owner.
+    /// Shows this popup for the given owner, at the specified [placement][Placement], all relative to the owner.<br >
+    /// The coordinates' computation may differ depending on the implementation.
     ///
-    /// The coordinates computation may differ depending on the implementation.
-    void show(O owner, Pos anchor, Align alignment);
+    /// @see AnchorHandlers
+    /// @see Placement
+    /// @see Direction
+    void show(O owner, Placement placement);
 
     /// Hides the popup.
     void hide();

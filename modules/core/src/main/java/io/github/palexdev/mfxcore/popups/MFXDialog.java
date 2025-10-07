@@ -29,14 +29,14 @@ import io.github.palexdev.mfxcore.observables.When;
 import io.github.palexdev.mfxcore.popups.MFXDialog.DialogConfig.Builder;
 import io.github.palexdev.mfxcore.popups.MFXDialog.WindowPeer;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers;
-import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
+import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Direction;
+import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Placement;
 import io.github.palexdev.mfxcore.utils.fx.MFXBackdrop;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
-import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -60,7 +60,7 @@ import javafx.stage.*;
 /// Which means that unfortunately, we inherit all the inconveniences of it like: not being able to create the dialog
 /// outside the JavaFX Application Thread, not being able to change the modality or owner after it is shown, etc.
 ///
-/// Unlike other kinds of popups, this is not necessarily tied to an owner. The [#computePosition(Window, Pos, Align)] is
+/// Unlike other kinds of popups, this is not necessarily tied to an owner. The [#computePosition(Window, Placement)] is
 /// overridden to take this into account and use the [Screen] bounds instead. Which screen to use can be set via the
 /// configuration [DialogConfig], otherwise it defaults to the primary.
 ///
@@ -68,7 +68,8 @@ import javafx.stage.*;
 /// [WindowEvent#WINDOW_CLOSE_REQUEST] events on the owner and automatically closes itself!
 ///
 /// @see AnchorHandlers
-/// @see Align
+/// @see Placement
+/// @see Direction
 public class MFXDialog extends MFXPopupBase<WindowPeer, Window> {
     //================================================================================
     // Properties
@@ -169,9 +170,9 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> {
         hasBeenShown = true;
         peer.show();
 
-        if (anchor != null) {
+        if (placement != null) {
             // Re-compute position because the content's bounds are reliable now
-            Position pos = computePosition(owner, anchor, alignment);
+            Position pos = computePosition(owner, placement);
             setPosition(pos);
         }
         if (backdrop != null)
@@ -193,12 +194,12 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> {
     }
 
     @Override
-    public void show(Window owner, Pos anchor, Align alignment) {
+    public void show(Window owner, Placement placement) {
         if (isShowing()) {
             peer.toFront();
             return;
         }
-        super.show(owner, anchor, alignment);
+        super.show(owner, placement);
     }
 
     @Override
@@ -219,17 +220,18 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> {
             backdrop.hide();
     }
 
-    /// If the given anchor is `null` returns a position of `<0, 0>`.
+    /// If the given placement is `null` returns a position of `<0, 0>`.
     ///
     /// If the owner is `null`, the position is computed relative to the screen. The [Screen] used is the primary by
     /// default or the fallback one specified through the [DialogConfig].
     ///
     /// In any case, the computation is delegated to the handlers in [AnchorHandlers].
     @Override
-    protected Position computePosition(Window owner, Pos anchor, Align alignment) {
-        if (anchor == null) return Position.origin();
-        AnchorHandlers.AnchorHandler handler = AnchorHandlers.handler(anchor);
-        if (owner != null) return handler.compute(owner, getRoot(), alignment, getOffset());
+    protected Position computePosition(Window owner, Placement placement) {
+        if (placement == null) return Position.origin();
+        AnchorHandlers.AnchorHandler handler = AnchorHandlers.handler(placement.anchor());
+        if (owner != null)
+            return handler.compute(owner, getRoot(), placement.xDirection(), placement.yDirection(), getOffset());
 
         Screen screen = Optional.ofNullable(fallbackScreen).orElse(Screen.getPrimary());
         Rectangle2D vb = screen.getVisualBounds();
@@ -237,7 +239,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> {
             vb.getMinX(), vb.getMinY(),
             vb.getWidth(), vb.getHeight()
         );
-        return handler.compute(screenBounds, getRoot(), alignment, getOffset());
+        return handler.compute(screenBounds, getRoot(), placement.xDirection(), placement.yDirection(), getOffset());
     }
 
     @Override

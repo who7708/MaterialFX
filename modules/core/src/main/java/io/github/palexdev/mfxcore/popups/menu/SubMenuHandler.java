@@ -21,11 +21,14 @@ package io.github.palexdev.mfxcore.popups.menu;
 import java.util.function.Function;
 
 import io.github.palexdev.mfxcore.observables.When;
-import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers;
+import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Direction;
+import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Placement;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.TraversalDirection;
 import javafx.scene.input.KeyEvent;
+
+import static io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Placement.placement;
 
 /// Utility class to make the submenu's handling easier and cleaner.
 public class SubMenuHandler {
@@ -43,13 +46,13 @@ public class SubMenuHandler {
             .listen();
     }
 
-    /// Shows the submenu by calling [MFXMenu#showSub(Node, Pos, AnchorHandlers.Align)] with [Pos#TOP_RIGHT], [AnchorHandlers.HAlign#AFTER] and
-    /// [AnchorHandlers.VAlign#BELOW] as the parameters.
+    /// Shows the submenu by calling [MFXMenu#showSub(Node, Placement)] with [Pos#TOP_RIGHT] and [Direction#AFTER] for both
+    /// axis.
     ///
     /// Also resets the submenu's hovered item to `null`.
     public void show() {
         subMenu.setHoveredItem(null);
-        subMenu.showSub(owner, Pos.TOP_RIGHT, AnchorHandlers.Align.of(AnchorHandlers.HAlign.AFTER, AnchorHandlers.VAlign.BELOW));
+        subMenu.showSub(owner, placement(Pos.TOP_RIGHT, Direction.AFTER, Direction.AFTER));
     }
 
     /// Hides the submenu only if its parent's [MFXMenu#hoveredItemProperty()] is not this entry.

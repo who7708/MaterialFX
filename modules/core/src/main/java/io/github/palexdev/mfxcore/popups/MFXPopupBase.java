@@ -26,14 +26,13 @@ import io.github.palexdev.mfxcore.base.properties.NodeProperty;
 import io.github.palexdev.mfxcore.base.properties.PositionProperty;
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.popups.MFXPopup.Peer;
-import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
+import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Placement;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
 import javafx.css.CssMetaData;
 import javafx.css.PseudoClass;
 import javafx.css.Styleable;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.stage.Window;
@@ -51,8 +50,7 @@ public abstract class MFXPopupBase<P extends Window & Peer, O> implements MFXPop
     //================================================================================
     protected P peer;
     protected O owner;
-    protected Pos anchor;
-    protected Align alignment;
+    protected Placement placement;
     protected Position offset = Position.origin();
     protected PopupAnimation animation = new PopupAnimation(PopupAnimationFunction.FADE);
 
@@ -97,10 +95,10 @@ public abstract class MFXPopupBase<P extends Window & Peer, O> implements MFXPop
     protected abstract void doShow(O owner, double x, double y);
 
     /// This is responsible for computing the popup's window position relative to the given owner and according to the
-    /// given anchor and alignment.
+    /// given [placement][Placement]
     ///
     /// Implementations should take into account the offset returned by [#getOffset()].
-    protected abstract Position computePosition(O owner, Pos anchor, Align alignment);
+    protected abstract Position computePosition(O owner, Placement placement);
 
     //================================================================================
     // Methods
@@ -139,13 +137,12 @@ public abstract class MFXPopupBase<P extends Window & Peer, O> implements MFXPop
     }
 
     @Override
-    public void show(O owner, Pos anchor, Align alignment) {
+    public void show(O owner, Placement placement) {
         if (isShowing()) return;
         preShowCheck(owner);
         setState(PopupState.SHOWING);
-        this.anchor = anchor;
-        this.alignment = alignment;
-        Position p = computePosition(owner, anchor, alignment);
+        this.placement = placement;
+        Position p = computePosition(owner, placement);
         doShow(owner, p.x(), p.y());
     }
 
@@ -156,7 +153,7 @@ public abstract class MFXPopupBase<P extends Window & Peer, O> implements MFXPop
             animation.stop();
         }
         setState(PopupState.HIDING);
-        anchor = null;
+        placement = null;
         owner = null;
 
         if (animation != null) {
@@ -172,14 +169,14 @@ public abstract class MFXPopupBase<P extends Window & Peer, O> implements MFXPop
         setState(PopupState.HIDDEN);
     }
 
-    /// Simply calls [#computePosition(Object, Pos, Align)] to re-compute the position and then sets the [#positionProperty()].
+    /// Simply calls [#computePosition(Object, Placement)] to re-compute the position and then sets the [#positionProperty()].
     ///
-    /// Note that this will work only if the popup was shown with an anchor using [#show(Object, Pos, Align)].
-    /// Technically, it depends on the implementation of [#computePosition(Object, Pos, Align)], so make sure to read both
-    /// [MFXDialog#computePosition(Window, Pos,Align)] and [MFXPopover#computePosition(Node , Pos, Align)].
+    /// Note that this will work only if the popup was shown with an anchor using [#show(Object, Placement)].
+    /// Technically, it depends on the implementation of [#computePosition(Object, Placement)], so make sure to read both
+    /// [MFXDialog#computePosition(Window, Placement)] and [MFXPopover#computePosition(Node, Placement)].
     @Override
     public void reposition() {
-        Position pos = computePosition(owner, anchor, alignment);
+        Position pos = computePosition(owner, placement);
         setPosition(pos);
     }
 

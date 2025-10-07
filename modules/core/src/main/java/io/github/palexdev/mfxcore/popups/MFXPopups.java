@@ -25,9 +25,8 @@ import java.util.function.Function;
 import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.popups.menu.MFXMenu;
 import io.github.palexdev.mfxcore.popups.menu.MFXMenuItem;
-import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
+import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Placement;
 import javafx.collections.ObservableList;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.stage.Window;
 
@@ -161,13 +160,12 @@ public class MFXPopups {
         }
 
         /// Note: for tooltips and menus this will call [MFXTooltip#install(Node)] and [MFXMenu#install(Node)]
-        /// respectively. The anchor and alignment are overridden the given ones!
-        public P show(O owner, Pos anchor, Align alignment) {
+        /// respectively. The placement is overridden with the given one!
+        public P show(O owner, Placement placement) {
             if (popup instanceof MFXTooltip t) {
                 t.install(((Node) owner));
                 MFXTooltip.TooltipConfig.builder(t.getConfig())
-                    .anchor(anchor)
-                    .alignment(alignment)
+                    .placement(placement)
                     .build()
                     .apply(t);
                 return popup;
@@ -175,13 +173,12 @@ public class MFXPopups {
             if (popup instanceof MFXMenu m) {
                 m.install(((Node) owner));
                 MFXMenu.MenuConfig.builder(m.getConfig())
-                    .anchor(anchor)
-                    .alignment(alignment)
+                    .placement(placement)
                     .build()
                     .apply(m);
                 return popup;
             }
-            popup.show(owner, anchor, alignment);
+            popup.show(owner, placement);
             return popup;
         }
 

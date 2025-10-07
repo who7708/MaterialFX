@@ -27,6 +27,8 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Window;
 
+import static io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Direction.*;
+
 /// This class provides a series of utilities for computing a position relative to a certain anchor, which is represented
 /// by a [Pos].
 ///
@@ -34,7 +36,7 @@ import javafx.stage.Window;
 /// - The bounds of an 'owner' node, also called 'reference bounds'
 /// - The bounds of another node which has to be positioned relative to the 'owner', also called 'subject bounds'
 /// - The anchor to get the point relative to which compute the position (see example below), represented as a [Pos]
-/// - The vertical and horizontal alignment relative to the anchor, represented as an [Align]
+/// - The vertical and horizontal directions relative to the anchor, see [Direction]
 ///
 /// _Example 1:_
 /// ```java
@@ -43,11 +45,9 @@ import javafx.stage.Window;
 /// // I want the popup to be adjacent to the button, at its right
 /// // The anchor is the top right corner of the button
 /// Pos anchor = Pos.TOP_RIGHT;
-/// // Since I want it to be next to the button, the alignment is:
-/// Align align = Align.of(
-///     HAlign.AFTER,
-///     VAlign.BELOW
-///);
+///// Since I want it to be next to the button, the directions are:
+/// Direction hDir = Direction.AFTER;
+/// Direction vDir = Direction.AFTER;
 ///```
 ///
 /// _Example 2:_
@@ -67,21 +67,20 @@ import javafx.stage.Window;
 /// //   └─────────┘
 /// // The anchor is the bottom right corner of the component
 /// Pos anchor = Pos.BOTTOM_RIGHT;
-/// // The popup is below the anchor and to the left (inwards), so the alignment is:
-/// Align align = Align.of(
-///     HAlign.BEFORE,
-///     VAlign.BELOW
-///);
+///// The popup is below the anchor and to the left (inwards), so the directions are:
+/// Direction hDir = Direction.BEFORE;
+/// Direction vDir = Direction.AFTER;
 ///```
 /// It's a bit tricky to understand, but super flexible. Note that, although the examples show how to position a popup
-/// relative to a certain owner, the utilities are generic enough to be used with anything.
+/// relative to a certain owner, the utilities are generic enough to be used with anything.<br >
+/// Also, there are several presets available in the [Placement] class that cover most use cases.
 ///
 /// The public API to compute a position given those requirements is specified by the [AnchorHandler] interface.
 /// The class offers pre-made handlers for each anchor in [Pos]. You can retrieve the related handler with [#handler(Pos)]
 /// or use the static methods directly. (Baseline positions are not covered!!)
 ///
-/// The core methods responsible for the x and y computations are [#computeX(Bounds, Bounds, HPos, HAlign)] and
-/// [#computeY(Bounds, Bounds, VPos, VAlign)].
+/// The core methods responsible for the x and y computations are [#computeX(Bounds, Bounds, HPos, Direction)] and
+/// [#computeY(Bounds, Bounds, VPos, Direction)].
 public class AnchorHandlers {
     //================================================================================
     // Static Properties
@@ -112,89 +111,89 @@ public class AnchorHandlers {
         return HANDLERS.getOrDefault(anchor, AnchorHandlers::center);
     }
 
-    public static Position topLeft(Bounds refBounds, Bounds subjectBounds, Align alignment) {
+    public static Position topLeft(Bounds refBounds, Bounds subjectBounds, Direction hDir, Direction vDir) {
         return Position.of(
-            computeX(refBounds, subjectBounds, HPos.LEFT, alignment.hAlign()),
-            computeY(refBounds, subjectBounds, VPos.TOP, alignment.vAlign())
+            computeX(refBounds, subjectBounds, HPos.LEFT, hDir),
+            computeY(refBounds, subjectBounds, VPos.TOP, vDir)
         );
     }
 
-    public static Position topCenter(Bounds refBounds, Bounds subjectBounds, Align alignment) {
+    public static Position topCenter(Bounds refBounds, Bounds subjectBounds, Direction hDir, Direction vDir) {
         return Position.of(
-            computeX(refBounds, subjectBounds, HPos.CENTER, alignment.hAlign()),
-            computeY(refBounds, subjectBounds, VPos.TOP, alignment.vAlign())
+            computeX(refBounds, subjectBounds, HPos.CENTER, hDir),
+            computeY(refBounds, subjectBounds, VPos.TOP, vDir)
         );
     }
 
-    public static Position topRight(Bounds refBounds, Bounds subjectBounds, Align alignment) {
+    public static Position topRight(Bounds refBounds, Bounds subjectBounds, Direction hDir, Direction vDir) {
         return Position.of(
-            computeX(refBounds, subjectBounds, HPos.RIGHT, alignment.hAlign()),
-            computeY(refBounds, subjectBounds, VPos.TOP, alignment.vAlign())
+            computeX(refBounds, subjectBounds, HPos.RIGHT, hDir),
+            computeY(refBounds, subjectBounds, VPos.TOP, vDir)
         );
     }
 
-    public static Position centerLeft(Bounds refBounds, Bounds subjectBounds, Align alignment) {
+    public static Position centerLeft(Bounds refBounds, Bounds subjectBounds, Direction hDir, Direction vDir) {
         return Position.of(
-            computeX(refBounds, subjectBounds, HPos.LEFT, alignment.hAlign()),
-            computeY(refBounds, subjectBounds, VPos.CENTER, alignment.vAlign())
+            computeX(refBounds, subjectBounds, HPos.LEFT, hDir),
+            computeY(refBounds, subjectBounds, VPos.CENTER, vDir)
         );
     }
 
-    public static Position center(Bounds refBounds, Bounds subjectBounds, Align alignment) {
+    public static Position center(Bounds refBounds, Bounds subjectBounds, Direction hDir, Direction vDir) {
         return Position.of(
-            computeX(refBounds, subjectBounds, HPos.CENTER, alignment.hAlign()),
-            computeY(refBounds, subjectBounds, VPos.CENTER, alignment.vAlign())
+            computeX(refBounds, subjectBounds, HPos.CENTER, hDir),
+            computeY(refBounds, subjectBounds, VPos.CENTER, vDir)
         );
     }
 
-    public static Position centerRight(Bounds refBounds, Bounds subjectBounds, Align alignment) {
+    public static Position centerRight(Bounds refBounds, Bounds subjectBounds, Direction hDir, Direction vDir) {
         return Position.of(
-            computeX(refBounds, subjectBounds, HPos.RIGHT, alignment.hAlign()),
-            computeY(refBounds, subjectBounds, VPos.CENTER, alignment.vAlign())
+            computeX(refBounds, subjectBounds, HPos.RIGHT, hDir),
+            computeY(refBounds, subjectBounds, VPos.CENTER, vDir)
         );
     }
 
-    public static Position bottomLeft(Bounds refBounds, Bounds subjectBounds, Align alignment) {
+    public static Position bottomLeft(Bounds refBounds, Bounds subjectBounds, Direction hDir, Direction vDir) {
         return Position.of(
-            computeX(refBounds, subjectBounds, HPos.LEFT, alignment.hAlign()),
-            computeY(refBounds, subjectBounds, VPos.BOTTOM, alignment.vAlign())
+            computeX(refBounds, subjectBounds, HPos.LEFT, hDir),
+            computeY(refBounds, subjectBounds, VPos.BOTTOM, vDir)
         );
     }
 
-    public static Position bottomCenter(Bounds refBounds, Bounds subjectBounds, Align alignment) {
+    public static Position bottomCenter(Bounds refBounds, Bounds subjectBounds, Direction hDir, Direction vDir) {
         return Position.of(
-            computeX(refBounds, subjectBounds, HPos.CENTER, alignment.hAlign()),
-            computeY(refBounds, subjectBounds, VPos.BOTTOM, alignment.vAlign())
+            computeX(refBounds, subjectBounds, HPos.CENTER, hDir),
+            computeY(refBounds, subjectBounds, VPos.BOTTOM, vDir)
         );
     }
 
-    public static Position bottomRight(Bounds refBounds, Bounds subjectBounds, Align alignment) {
+    public static Position bottomRight(Bounds refBounds, Bounds subjectBounds, Direction hDir, Direction vDir) {
         return Position.of(
-            computeX(refBounds, subjectBounds, HPos.RIGHT, alignment.hAlign()),
-            computeY(refBounds, subjectBounds, VPos.BOTTOM, alignment.vAlign())
+            computeX(refBounds, subjectBounds, HPos.RIGHT, hDir),
+            computeY(refBounds, subjectBounds, VPos.BOTTOM, vDir)
         );
     }
 
     /// Responsible for computing the x position given the: reference bounds, the node bounds, the horizontal anchor and
-    /// the horizontal alignment.
+    /// the horizontal direction.
     ///
     /// First, it computes the anchor as follows:
     /// - `LEFT -> refBounds.minX`
     /// - `CENTER -> refBounds.centerX`
     /// - `RIGHT -> refBounds.maxX`
     ///
-    /// Then computes the final position applying the given alignment to the retrieved anchor position:
+    /// Then computes the final position applying the given direction to the retrieved anchor position:
     /// - `BEFORE -> anchorX - subjectBounds.width`
     /// - `CENTER -> anchorX - subjectBounds.width / 2`
     /// - `AFTER -> anchorX`
-    public static double computeX(Bounds refBounds, Bounds subjectBounds, HPos hAnchor, HAlign hAlign) {
+    public static double computeX(Bounds refBounds, Bounds subjectBounds, HPos hAnchor, Direction hDir) {
         double anchorX = switch (hAnchor) {
             case LEFT -> refBounds.getMinX();
             case CENTER -> refBounds.getCenterX();
             case RIGHT -> refBounds.getMaxX();
         };
 
-        return switch (hAlign) {
+        return switch (hDir) {
             case BEFORE -> anchorX - subjectBounds.getWidth();
             case CENTER -> anchorX - subjectBounds.getWidth() / 2.0;
             case AFTER -> anchorX;
@@ -202,28 +201,28 @@ public class AnchorHandlers {
     }
 
     /// Responsible for computing the y position given the: reference bounds, the node bounds, the vertical anchor and
-    /// the vertical alignment.
+    /// the vertical direction.
     ///
     /// First, it computes the anchor as follows:
     /// - `TOP -> refBounds.minY`
     /// - `CENTER -> refBounds.centerY`
     /// - `BOTTOM -> refBounds.maxY`
     ///
-    /// Then computes the final position applying the given alignment to the retrieved anchor position:
+    /// Then computes the final position applying the given direction to the retrieved anchor position:
     /// - `ABOVE -> anchorY - subjectBounds.height`
     /// - `CENTER -> anchorY - subjectBounds.height / 2`
     /// - `BELOW -> anchorY`
-    public static double computeY(Bounds refBounds, Bounds subjectBounds, VPos vAnchor, VAlign vAlign) {
+    public static double computeY(Bounds refBounds, Bounds subjectBounds, VPos vAnchor, Direction vDir) {
         double anchorY = switch (vAnchor) {
             case TOP -> refBounds.getMinY();
             case CENTER -> refBounds.getCenterY();
             case BASELINE, BOTTOM -> refBounds.getMaxY();
         };
 
-        return switch (vAlign) {
-            case ABOVE -> anchorY - subjectBounds.getHeight();
+        return switch (vDir) {
+            case BEFORE -> anchorY - subjectBounds.getHeight();
             case CENTER -> anchorY - subjectBounds.getHeight() / 2.0;
-            case BELOW -> anchorY;
+            case AFTER -> anchorY;
         };
     }
 
@@ -231,37 +230,96 @@ public class AnchorHandlers {
     // Inner Classes
     //================================================================================
 
-    /// Wrapper to represent both horizontal and vertical alignments, defined by [HAlign] and [VAlign] respectively.
-    public record Align(
-        HAlign hAlign, VAlign vAlign
-    ) {
-        public static Align of(HAlign hAlign, VAlign vAlign) {
-            return new Align(hAlign, vAlign);
+    /// Represents a directional offset from an anchor point on a single axis.
+    /// - `BEFORE`: extends in the negative direction (left for X, up for Y)
+    /// - `CENTER`: centers on the anchor point
+    /// - `AFTER`: extends in the positive direction (right for X, down for Y)
+    public enum Direction {
+        BEFORE, CENTER, AFTER
+    }
+
+    /// Defines how a subject (e.g., popup, tooltip) should be positioned relative to an anchor point on an owner's bounds.
+    ///
+    /// A placement consists of three components:
+    /// - `anchor`: the reference point on the owner's bounds (from [Pos])
+    /// - `xDirection`: how the subject extends horizontally from the anchor ([Direction])
+    /// - `yDirection`: how the subject extends vertically from the anchor ([Direction])
+    ///
+    /// (See [AnchorHandlers] for some examples)
+    public record Placement(Pos anchor, Direction xDirection, Direction yDirection) {
+        public static Placement placement(Pos anchor, Direction xDirection, Direction yDirection) {
+            return new Placement(anchor, xDirection, yDirection);
         }
-    }
 
-    /// Represents the horizontal alignment of some node/bounds relative to something else. In the case of [AnchorHandlers],
-    /// relative to a certain anchor point.
-    public enum HAlign {
-        BEFORE, CENTER, AFTER;
-    }
+        //================================================================================
+        // Presets
+        //================================================================================
 
-    /// Represents the vertical alignment of some node/bounds relative to something else. In the case of [AnchorHandlers],
-    /// relative to a certain anchor point.
-    public enum VAlign {
-        ABOVE, CENTER, BELOW;
+        /// Center point inside the owner.
+        public static final Placement IN_CENTER = placement(Pos.CENTER, Direction.CENTER, Direction.CENTER);
 
+        public static class Inside {
+            /// Subject extends right and down from the top-left corner (inward).
+            public static final Placement TOP_LEFT = placement(Pos.TOP_LEFT, AFTER, AFTER);
+
+            /// Subject is horizontally centered and extends down from the top edge (inward).
+            public static final Placement TOP_CENTER = placement(Pos.TOP_CENTER, CENTER, AFTER);
+
+            /// Subject extends left and down from the top-right corner (inward).
+            public static final Placement TOP_RIGHT = placement(Pos.TOP_RIGHT, BEFORE, AFTER);
+
+            /// Subject extends right and is vertically centered from the left edge (inward).
+            public static final Placement CENTER_LEFT = placement(Pos.CENTER_LEFT, AFTER, CENTER);
+
+            /// Subject extends left and is vertically centered from the right edge (inward).
+            public static final Placement CENTER_RIGHT = placement(Pos.CENTER_RIGHT, BEFORE, CENTER);
+
+            /// Subject extends right and up from the bottom-left corner (inward).
+            public static final Placement BOTTOM_LEFT = placement(Pos.BOTTOM_LEFT, AFTER, BEFORE);
+
+            /// Subject is horizontally centered and extends up from the bottom edge (inward).
+            public static final Placement BOTTOM_CENTER = placement(Pos.BOTTOM_CENTER, CENTER, BEFORE);
+
+            /// Subject extends left and up from the bottom-right corner (inward).
+            public static final Placement BOTTOM_RIGHT = placement(Pos.BOTTOM_RIGHT, BEFORE, BEFORE);
+        }
+
+        public static class Outside {
+            /// Subject extends left and up from the top-left corner (outward).
+            public static final Placement TOP_LEFT = placement(Pos.TOP_LEFT, BEFORE, BEFORE);
+
+            /// Subject is horizontally centered and extends up from the top edge (outward).
+            public static final Placement TOP_CENTER = placement(Pos.TOP_CENTER, CENTER, BEFORE);
+
+            /// Subject extends right and up from the top-right corner (outward).
+            public static final Placement TOP_RIGHT = placement(Pos.TOP_RIGHT, AFTER, BEFORE);
+
+            /// Subject extends left and is vertically centered from the left edge (outward).
+            public static final Placement CENTER_LEFT = placement(Pos.CENTER_LEFT, BEFORE, CENTER);
+
+            /// Subject extends right and is vertically centered from the right edge (outward).
+            public static final Placement CENTER_RIGHT = placement(Pos.CENTER_RIGHT, AFTER, CENTER);
+
+            /// Subject extends left and down from the bottom-left corner (outward).
+            public static final Placement BOTTOM_LEFT = placement(Pos.BOTTOM_LEFT, BEFORE, AFTER);
+
+            /// Subject is horizontally centered and extends down from the bottom edge (outward).
+            public static final Placement BOTTOM_CENTER = placement(Pos.BOTTOM_CENTER, CENTER, AFTER);
+
+            /// Subject extends right and down from the bottom-right corner (outward).
+            public static final Placement BOTTOM_RIGHT = placement(Pos.BOTTOM_RIGHT, AFTER, AFTER);
+        }
     }
 
     /// API to compute the position of something relative to the bounds of something else
     /// (the bounds could be of a node, a window or anything else).
     @FunctionalInterface
     public interface AnchorHandler {
-        Position compute(Bounds refBounds, Bounds subjectBounds, Align alignment);
+        Position compute(Bounds refBounds, Bounds subjectBounds, Direction hDir, Direction vDir);
 
-        /// Delegates to [#compute(Bounds, Bounds, Align)] after modifying the given bounds to take into account the
+        /// Delegates to [#compute(Bounds, Bounds, Direction, Direction)] after modifying the given bounds to take into account the
         /// given offset.
-        default Position compute(Bounds refBounds, Node node, Align alignment, Position offset) {
+        default Position compute(Bounds refBounds, Node node, Direction hDir, Direction vDir, Position offset) {
             if (!Position.origin().equals(offset)) {
                 refBounds = new BoundingBox(
                     refBounds.getMinX() + offset.x(),
@@ -270,16 +328,16 @@ public class AnchorHandlers {
                     refBounds.getHeight()
                 );
             }
-            return compute(refBounds, node.getLayoutBounds(), alignment);
+            return compute(refBounds, node.getLayoutBounds(), hDir, vDir);
         }
 
-        /// Delegates to [#compute(Bounds, Node, Align, Position)] after building a [BoundingBox] with the position
+        /// Delegates to [#compute(Bounds, Node, Direction, Direction, Position)] after building a [BoundingBox] with the position
         /// and size of the given owner [Window].
         ///
         /// This method prioritizes using the scene root's bounds converted to screen coordinates to get the actual
         /// content area of the window (excluding decorations like title bar and borders).
         /// If the scene or root is unavailable, it falls back to the raw window bounds.
-        default Position compute(Window owner, Node content, Align alignment, Position offset) {
+        default Position compute(Window owner, Node content, Direction hDir, Direction vDir, Position offset) {
             Bounds owBounds = Optional.ofNullable(owner.getScene())
                 .map(Scene::getRoot)
                 .map(n -> n.localToScreen(n.getLayoutBounds()))
@@ -289,13 +347,13 @@ public class AnchorHandlers {
                         owner.getWidth(), owner.getHeight()
                     )
                 );
-            return compute(owBounds, content, alignment, offset);
+            return compute(owBounds, content, hDir, vDir, offset);
         }
 
-        /// Delegates to [#compute(Bounds, Node, Align, Position)] after converting the owner's bounds to screen coordinates.
-        default Position compute(Node owner, Node content, Align alignment, Position offset) {
+        /// Delegates to [#compute(Bounds, Node, Direction, Direction, Position)] after converting the owner's bounds to screen coordinates.
+        default Position compute(Node owner, Node content, Direction hDir, Direction vDir, Position offset) {
             Bounds onBounds = owner.localToScreen(owner.getLayoutBounds());
-            return compute(onBounds, content, alignment, offset);
+            return compute(onBounds, content, hDir, vDir, offset);
         }
     }
 }

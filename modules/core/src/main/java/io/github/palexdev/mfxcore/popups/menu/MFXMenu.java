@@ -33,9 +33,8 @@ import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.input.WhenEvent;
 import io.github.palexdev.mfxcore.popups.*;
 import io.github.palexdev.mfxcore.popups.menu.MFXMenu.MenuConfig.Builder;
-import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
-import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.HAlign;
-import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.VAlign;
+import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Direction;
+import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Placement;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -78,7 +77,7 @@ import static io.github.palexdev.mfxcore.popups.PopupAnimationFunction.FADE;
 /// to keep track of the currently open menu, see [MenuTracker]. However, the difference with tooltips is that menus can
 /// "contain" submenus! So, when we say at "max one menu open", we mean a `root menu`.
 /// 2) By design, menus are tightly coupled with a specific UI element. Therefore, [#show(Node, double, double)] and
-/// [#show(Node, Pos, Align)] methods are overridden to throw an [UnsupportedOperationException].
+/// [#show(Node, Placement)] methods are overridden to throw an [UnsupportedOperationException].
 /// Like tooltips, menus must be _installed_ onto a node, use [#install(Node)] or [#uninstall()] to disable the menu.
 /// However, there's a difference here too. If you think about the context menu of a text field, it is shown at the
 /// screen coordinates where the right mouse click occurs. So, unlike tooltips, menus can have both anchor-base positioning
@@ -101,7 +100,7 @@ import static io.github.palexdev.mfxcore.popups.PopupAnimationFunction.FADE;
 /// crucial to the close behavior. When the property's value becomes `null`, any open submenu is closed, and this causes
 /// all other submenus in the cascade (if any) to close too.
 /// 3) When it comes to show/hide, submenus are an exception to the rule. They do not need to be installed on an owner,
-/// as they typically appear on hover. So, a protected extra method [#showSub(Node, Pos, Align)] allows this behavior
+/// as they typically appear on hover. So, a protected extra method [#showSub(Node, Placement)] allows this behavior
 /// internally. (this may be changed in the future, or at least made configurable)
 ///
 /// @see MenuConfig
@@ -147,8 +146,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
     };
 
     private Node owner;
-    private Pos anchor;
-    private Align alignment;
+    private Placement placement;
     private MouseButton triggerButton;
     private boolean anchorBasedPositioning;
     private MenuConfig config;
@@ -200,7 +198,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
             .condition(e -> e.getButton() == triggerButton)
             .handle(e -> {
                 if (anchorBasedPositioning) {
-                    peer.show(owner, anchor, alignment);
+                    peer.show(owner, placement);
                     return;
                 }
 
@@ -243,10 +241,9 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
 
     /// This should be used by submenus to appear on the screen, next to the element that owns the submenu. This is
     /// typically one of the entries of the parent menu.
-    protected void showSub(Node owner, Pos anchor, Align alignment) {
-        this.anchor = anchor;
-        this.alignment = alignment;
-        peer.show(owner, anchor, alignment);
+    protected void showSub(Node owner, Placement placement) {
+        this.placement = placement;
+        peer.show(owner, placement);
     }
 
     /// Convenience method to change the configuration of this menu. The provided builder starts with the values from
@@ -267,7 +264,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
     }
 
     @Override
-    public void show(Node owner, Pos anchor, Align alignment) {
+    public void show(Node owner, Placement placement) {
         throw new UnsupportedOperationException("Menus cannot be shown directly, but need to be installed on a 'owner' Node");
     }
 
@@ -472,15 +469,14 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
 
     /// A few notes on some peculiar configs:
     /// - The `anchorBasedPositioning` determines how the menu is going to be positioned on the screen. If `true`, the
-    /// position is computed by [MFXPopupBase#computePosition(Object, Pos, Align)]. Otherwise, it uses the mouse coordinates
+    /// position is computed by [MFXPopupBase#computePosition(Object, Placement)]. Otherwise, it uses the mouse coordinates
     /// from the event that triggered the menu. Example: context menus (like the ones for text fields) use the mouse
     /// coordinates, while menus from toolbars are anchored to a button.
     /// - The `animationProvider` parameter allows you to set the animation for both `root` menus and all the submenus
     /// in the cascade. This is needed because submenus are built internally by [MFXMenuCells][MFXMenuEntry].
     /// If you use [MFXPopup#setAnimation(PopupAnimation)] on the `root` menu, the animation type won't propagate!
     public record MenuConfig(
-        Pos anchor,
-        Align alignment,
+        Placement placement,
         Position offset,
         MouseButton triggerButton,
         boolean anchorBasedPositioning,
@@ -491,8 +487,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
 
         @Override
         public void apply(MFXMenu menu) {
-            menu.anchor = anchor;
-            menu.alignment = alignment;
+            menu.placement = placement;
             menu.setOffset(offset);
             menu.triggerButton = triggerButton;
             menu.anchorBasedPositioning = anchorBasedPositioning;
@@ -507,28 +502,21 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
 
         public static Builder builder(MenuConfig config) {
             return new Builder()
-                .anchor(config.anchor)
-                .alignment(config.alignment)
+                .placement(config.placement)
                 .offset(config.offset)
                 .triggerButton(config.triggerButton);
         }
 
         public static final class Builder {
-            private Pos anchor = Pos.BOTTOM_LEFT;
-            private Align alignment = Align.of(HAlign.AFTER, VAlign.BELOW);
+            private Placement placement = Placement.placement(Pos.BOTTOM_LEFT, Direction.AFTER, Direction.AFTER);
             private Position offset = Position.origin();
             private MouseButton triggerButton = MouseButton.SECONDARY;
             private boolean anchorBasedPositioning = true;
             private Supplier<PopupAnimation> animationProvider = () -> new PopupAnimation(FADE);
             private Node styleableParent;
 
-            public Builder anchor(Pos anchor) {
-                this.anchor = anchor;
-                return this;
-            }
-
-            public Builder alignment(Align alignment) {
-                this.alignment = alignment;
+            public Builder placement(Placement placement) {
+                this.placement = placement;
                 return this;
             }
 
@@ -559,8 +547,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
 
             public MenuConfig build() {
                 return new MenuConfig(
-                    anchor,
-                    alignment,
+                    placement,
                     offset,
                     triggerButton,
                     anchorBasedPositioning,

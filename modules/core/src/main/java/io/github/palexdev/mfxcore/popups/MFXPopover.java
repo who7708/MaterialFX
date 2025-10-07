@@ -27,8 +27,7 @@ import io.github.palexdev.mfxcore.observables.When;
 import io.github.palexdev.mfxcore.popups.MFXPopover.PopoverConfig.Builder;
 import io.github.palexdev.mfxcore.popups.MFXPopover.PopupPeer;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers;
-import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
-import javafx.geometry.Pos;
+import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Placement;
 import javafx.scene.Node;
 import javafx.scene.control.PopupControl;
 import javafx.stage.PopupWindow;
@@ -122,9 +121,9 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> {
         peer.show(owner, 0, 0);
         positionProperty().setPosition(x, y);
 
-        if (anchor != null) {
+        if (placement != null) {
             // Re-compute position
-            Position pos = computePosition(owner, anchor, alignment);
+            Position pos = computePosition(owner, placement);
             setPosition(pos);
         }
 
@@ -139,13 +138,14 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> {
         super.hide();
     }
 
-    /// If the given anchor or alignment are `null` returns a position of `<0, 0>`.
+    /// If the given placement is `null` returns a position of `<0, 0>`.
     ///
     /// Otherwise, the computation is delegated to the handlers in [AnchorHandlers].
     @Override
-    protected Position computePosition(Node owner, Pos anchor, Align alignment) {
-        if (anchor == null || alignment == null) return Position.origin();
-        return AnchorHandlers.handler(anchor).compute(owner, getRoot(), alignment, getOffset());
+    protected Position computePosition(Node owner, Placement placement) {
+        if (placement == null) return Position.origin();
+        return AnchorHandlers.handler(placement.anchor())
+            .compute(owner, getRoot(), placement.xDirection(), placement.yDirection(), getOffset());
     }
 
     @Override
