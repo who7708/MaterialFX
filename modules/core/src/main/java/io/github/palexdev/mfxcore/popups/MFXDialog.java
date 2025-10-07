@@ -170,7 +170,8 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> {
             Position pos = computePosition(owner, anchor, alignment);
             setPosition(pos);
         }
-        if (backdrop != null) backdrop.show(owner.getScene().getRoot());
+        if (backdrop != null)
+            backdrop.show(owner.getScene().getRoot());
 
         if (animation != null) animation.playIn();
         content.setVisible(true);
@@ -209,6 +210,9 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> {
         }
         peer.indirectHide = true;
         super.hide();
+
+        if (backdrop != null)
+            backdrop.hide();
     }
 
     /// If the given anchor is `null` returns a position of `<0, 0>`.
