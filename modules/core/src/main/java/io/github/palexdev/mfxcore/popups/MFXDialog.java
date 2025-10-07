@@ -32,6 +32,8 @@ import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
 import io.github.palexdev.mfxcore.utils.fx.MFXBackdrop;
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
@@ -270,6 +272,34 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> {
     public DialogConfig getConfig() {
         return ((DialogConfig) config);
     }
+
+    //================================================================================
+    // Delegate Methods
+    //================================================================================
+
+    public String getTitle() {return peer.getTitle();}
+
+    public StringProperty titleProperty() {return peer.titleProperty();}
+
+    public void setTitle(String value) {peer.setTitle(value);}
+
+    public boolean isAlwaysOnTop() {return peer.isAlwaysOnTop();}
+
+    public ReadOnlyBooleanProperty alwaysOnTopProperty() {return peer.alwaysOnTopProperty();}
+
+    public void setAlwaysOnTop(boolean value) {peer.setAlwaysOnTop(value);}
+
+    public void toFront() {peer.toFront();}
+
+    public void toBack() {peer.toBack();}
+
+    public void centerOnScreen() {peer.centerOnScreen();}
+
+    public boolean isFocused() {return peer.isFocused();}
+
+    public ReadOnlyBooleanProperty focusedProperty() {return peer.focusedProperty();}
+
+    public void requestFocus() {peer.requestFocus();}
 
     //================================================================================
     // Inner Classes
