@@ -156,6 +156,9 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> {
                     owner.widthProperty(), owner.heightProperty()
                 ).listen();
             }
+
+            if (!hasBeenShown)
+                peer.initOwner(owner);
         }
 
         Node content = getContent();
