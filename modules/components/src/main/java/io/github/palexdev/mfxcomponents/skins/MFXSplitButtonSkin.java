@@ -90,7 +90,7 @@ public class MFXSplitButtonSkin<T> extends MFXChoiceSkin<T> {
         trail.setManaged(false);
         trail.onSelectionChanged(s -> {
             if (s && !popup.isShowing()) {
-                popup.show(trail, popupConfig.anchor(), popupConfig.alignment());
+                popup.show(trail, popupConfig.placement());
             } else if (popup.isShowing()) {
                 popup.hide();
             }

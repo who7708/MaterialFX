@@ -23,9 +23,8 @@ import io.github.palexdev.mfxcore.popups.MFXPopover;
 import io.github.palexdev.mfxcore.popups.MFXPopover.PopoverConfig;
 import io.github.palexdev.mfxcore.popups.MFXPopup;
 import io.github.palexdev.mfxcore.popups.menu.MFXMenu.MenuConfig;
-import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
-import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.HAlign;
-import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.VAlign;
+import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Direction;
+import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Placement;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 
@@ -33,8 +32,7 @@ import javafx.scene.Node;
 ///
 /// Some controls may need menu capabilities but using generic popovers.
 public record ExtendedPopoverConfig(
-    Pos anchor,
-    Align alignment,
+    Placement placement,
     Position offset,
     boolean autoFix,
     boolean autoHide,
@@ -64,8 +62,7 @@ public record ExtendedPopoverConfig(
 
     public static Builder builder(ExtendedPopoverConfig config) {
         return new Builder()
-            .anchor(config.anchor)
-            .alignment(config.alignment)
+            .placement(config.placement)
             .offset(config.offset)
             .autoFix(config.autoFix)
             .autoHide(config.autoHide)
@@ -75,8 +72,7 @@ public record ExtendedPopoverConfig(
     }
 
     public static class Builder {
-        private Pos anchor = Pos.BOTTOM_LEFT;
-        private Align alignment = Align.of(HAlign.AFTER, VAlign.BELOW);
+        private Placement placement = Placement.placement(Pos.BOTTOM_LEFT, Direction.AFTER, Direction.AFTER);
         private Position offset = Position.origin();
         private boolean autoFix = true;
         private boolean autoHide = true;
@@ -85,13 +81,8 @@ public record ExtendedPopoverConfig(
         private Node styleableParent;
         private int itemsToShow = 5;
 
-        public Builder anchor(Pos anchor) {
-            this.anchor = anchor;
-            return this;
-        }
-
-        public Builder alignment(Align alignment) {
-            this.alignment = alignment;
+        public Builder placement(Placement placement) {
+            this.placement = placement;
             return this;
         }
 
@@ -132,8 +123,7 @@ public record ExtendedPopoverConfig(
 
         public ExtendedPopoverConfig build() {
             return new ExtendedPopoverConfig(
-                anchor,
-                alignment,
+                placement,
                 offset,
                 autoFix,
                 autoHide,
