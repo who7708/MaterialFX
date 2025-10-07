@@ -30,8 +30,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.PopupControl;
 import javafx.scene.layout.StackPane;
 
-/// This is the pane used as the root of every [MFXPopup], wrapping the content. The default style class is set to:
-/// `.mfx-popup-root`.
+/// This is the pane used as the root of every [MFXPopup], wrapping the content.
 ///
 /// ### Styling
 ///
@@ -68,7 +67,7 @@ public class PopupRoot extends StackPane {
     // Static Properties
     //================================================================================
     private static final String RESET_CSS = new CSSFragment("""
-        .mfx-popup-root {
+        PopupRoot {
           -fx-background-color: transparent;
           -fx-padding: 0px;
         }
@@ -83,14 +82,6 @@ public class PopupRoot extends StackPane {
             updateStylesheets();
         }
     };
-
-    //================================================================================
-    // Constructors
-    //================================================================================
-
-    {
-        getStyleClass().add("mfx-popup-root");
-    }
 
     //================================================================================
     // Methods
