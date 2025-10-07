@@ -20,12 +20,12 @@ package io.github.palexdev.mfxcore.validation;
 
 import io.github.palexdev.mfxcore.enums.ChainMode;
 import io.github.palexdev.mfxcore.observables.When;
-import javafx.beans.binding.BooleanExpression;
+import javafx.beans.value.ObservableValue;
 
 /// Bean used by [MFXValidator] to define a condition to be met in order for the validator's state to be valid.
 ///
 /// This bean allows specifying the [Severity] of the condition, the message to show when invalid,
-/// and of course the [BooleanExpression] that is the condition itself.
+/// and of course the [ObservableValue] that is the condition itself.
 ///
 /// It also allows specifying how this constraint should chain with others by setting its [ChainMode], [#setChainMode(ChainMode)].
 ///
@@ -36,7 +36,7 @@ public class Constraint {
     //================================================================================
     private Severity severity;
     private String message;
-    private BooleanExpression condition;
+    private ObservableValue<Boolean> condition;
     private ChainMode chainMode = ChainMode.AND;
 
     protected When<Boolean> when;
@@ -44,15 +44,14 @@ public class Constraint {
     //================================================================================
     // Constructors
     //================================================================================
-    protected Constraint() {
-    }
+    protected Constraint() {}
 
-    /// Calls [#Constraint(Severity,String,BooleanExpression)] with [Severity#ERROR].
-    public Constraint(String message, BooleanExpression condition) {
+    /// Calls [#Constraint(Severity,String,ObservableValue)] with [Severity#ERROR].
+    public Constraint(String message, ObservableValue<Boolean> condition) {
         this(Severity.ERROR, message, condition);
     }
 
-    public Constraint(Severity severity, String message, BooleanExpression condition) {
+    public Constraint(Severity severity, String message, ObservableValue<Boolean> condition) {
         if (condition == null) {
             throw new NullPointerException("The condition cannot be null!");
         }
@@ -66,12 +65,12 @@ public class Constraint {
     //================================================================================
 
     /// @return a new `Constraint` with ERROR severity and the given message and condition
-    public static Constraint of(String message, BooleanExpression condition) {
+    public static Constraint of(String message, ObservableValue<Boolean> condition) {
         return new Constraint(message, condition);
     }
 
     /// @return a new `Constraint` with the given severity, message and condition
-    public static Constraint of(Severity severity, String message, BooleanExpression condition) {
+    public static Constraint of(Severity severity, String message, ObservableValue<Boolean> condition) {
         return new Constraint(severity, message, condition);
     }
 
@@ -117,13 +116,13 @@ public class Constraint {
         this.message = message;
     }
 
-    /// @return the [BooleanExpression] used to define the condition
-    public BooleanExpression getCondition() {
+    /// @return the [ObservableValue] used to define the condition
+    public ObservableValue<Boolean> getCondition() {
         return condition;
     }
 
-    /// Sets the [BooleanExpression] used to define the condition.
-    protected void setCondition(BooleanExpression condition) {
+    /// Sets the [ObservableValue] used to define the condition.
+    protected void setCondition(ObservableValue<Boolean> condition) {
         this.condition = condition;
     }
 
@@ -158,7 +157,7 @@ public class Constraint {
             return this;
         }
 
-        public Builder setCondition(BooleanExpression condition) {
+        public Builder setCondition(ObservableValue<Boolean> condition) {
             constraint.setCondition(condition);
             return this;
         }
@@ -175,7 +174,7 @@ public class Constraint {
 
         private void checkConstraint() {
             Severity severity = constraint.getSeverity();
-            BooleanExpression condition = constraint.getCondition();
+            ObservableValue<Boolean> condition = constraint.getCondition();
 
             if (severity == null) throw new IllegalArgumentException("Severity not set!");
             if (condition == null) throw new IllegalArgumentException("Condition not set!");

@@ -26,7 +26,6 @@ import java.util.function.BiConsumer;
 import io.github.palexdev.mfxcore.enums.ChainMode;
 import io.github.palexdev.mfxcore.observables.When;
 import javafx.beans.InvalidationListener;
-import javafx.beans.binding.BooleanExpression;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.collections.FXCollections;
@@ -60,8 +59,8 @@ public class MFXValidator {
     // Constructors
     //================================================================================
     public MFXValidator() {
-        constraints.addListener((InvalidationListener) invalidated -> update());
-        dependencies.addListener((InvalidationListener) invalidated -> update());
+        constraints.addListener((InvalidationListener) _ -> update());
+        dependencies.addListener((InvalidationListener) _ -> update());
     }
 
     //================================================================================
@@ -73,21 +72,19 @@ public class MFXValidator {
     /// Also adds an [InvalidationListener] to the constraint's condition to trigger the [#update()] method when it changes.
     /// This is needed to automatically update the [#validProperty()].
     ///
-    /// The listener is build using the new [When] construct.
+    /// The listener is built using the new [When] construct.
     public MFXValidator constraint(Constraint constraint) {
-        constraint.when = When.onInvalidated(constraint.getCondition()).then(value -> update()).listen();
+        constraint.when = When.onInvalidated(constraint.getCondition()).then(_ -> update()).listen();
         constraints.add(constraint);
         return this;
     }
 
-    /// Creates a [Constraint] with the given parameters, then calls [#constraint(Constraint)].
-    public MFXValidator constraint(Severity severity, String message, BooleanExpression condition) {
-        return constraint(Constraint.of(severity, message, condition));
-    }
-
-    /// Creates a [Constraint] with ERROR severity and the given message and condition, then calls [#constraint(Constraint)].
-    public MFXValidator constraint(String message, BooleanExpression condition) {
-        return constraint(Severity.ERROR, message, condition);
+    /// Delegates to [#constraint(Constraint)].
+    public MFXValidator constraints(Constraint... constraints) {
+        for (Constraint constraint : constraints) {
+            constraint(constraint);
+        }
+        return this;
     }
 
     /// Removes the given [Constraint] from the validator.
@@ -95,6 +92,14 @@ public class MFXValidator {
     /// Also invokes [#dispose()] to properly dispose the listener added by [#constraint(Constraint)].
     public MFXValidator removeConstraint(Constraint constraint) {
         if (constraints.remove(constraint)) constraint.dispose();
+        return this;
+    }
+
+    /// Delegates to [#removeConstraint(Constraint)].
+    public MFXValidator removeConstraints(Constraint... constraints) {
+        for (Constraint constraint : constraints) {
+            removeConstraint(constraint);
+        }
         return this;
     }
 
@@ -118,18 +123,18 @@ public class MFXValidator {
 
     /// This method queries all the validator's dependencies and constraints to build a list containing all the unmet constraints.
     ///
-    /// If the list is not empty then the validator's state is invalid.
+    /// If the list is not empty, then the validator's state is invalid.
     ///
     /// The list can also be sorted by constraint severity by setting [#setSortBySeverity(boolean)] to true.
     ///
     /// The method can be also set to "fail fast" meaning that we do not care about all the invalid conditions,
     /// but it's also enough to get the first one. This applies to both dependencies and constraints.
-    /// In this case the sorting is ignored of course since the list will always contain at most one constraint.
+    /// In this case the sorting is ignored, of course, since the list will always contain at most one constraint.
     public List<Constraint> validate() {
         List<Constraint> invalidConstraints = new ArrayList<>();
         for (MFXValidator dependency : dependencies) {
             if (!dependency.isValid()) {
-                if (failFast) return List.of(dependency.validate().get(0));
+                if (failFast) return List.of(dependency.validate().getFirst());
                 invalidConstraints.addAll(dependency.validate());
             }
         }
@@ -143,9 +148,9 @@ public class MFXValidator {
         return invalidConstraints;
     }
 
-    /// This is the method responsible for updating the validator' state.
+    /// This is the method responsible for updating the validator's state.
     ///
-    /// Despite being public it should not be necessary to call it automatically as the constraints and the dependencies
+    /// Despite being public, it should not be necessary to call it automatically as the constraints and the dependencies
     /// automatically trigger this method.
     ///
     /// Note that constraints are evaluated in order of insertion and according to their [Constraint#getChainMode()],
@@ -175,7 +180,7 @@ public class MFXValidator {
         return sb.toString();
     }
 
-    /// This is called when the [#update()] method is triggered and it's responsible for running the action specified
+    /// This is called when the [#update()] method is triggered, and it's responsible for running the action specified
     /// by the user, [#setOnUpdated(BiConsumer)].
     protected void onUpdated() {
         if (onUpdated != null) {
@@ -186,7 +191,7 @@ public class MFXValidator {
     /// Used when another validator is being removed from the dependencies.
     ///
     /// When a dependency is added, a listener is added to update the main validator with the [When] construct.
-    /// Since we need the instance to properly dispose it afterward, we store the reference here.
+    /// Since we need the instance to properly dispose of it afterward, we store the reference here.
     /// The disposal is easily and automatically handled by [#removeDependency(MFXValidator)].
     protected void dispose() {
         if (when != null) when.dispose();
@@ -216,8 +221,8 @@ public class MFXValidator {
         return onUpdated;
     }
 
-    /// Allows to specify the action to perform every time the [#update()] method is triggered.
-    /// The action is a [BiConsumer] carrying the validator' state  and the list of invalid constraints (empty if valid of course).
+    /// Allows specifying the action to perform every time the [#update()] method is triggered.
+    /// The action is a [BiConsumer] carrying the validator's state and the list of invalid constraints (empty if valid, of course).
     public MFXValidator setOnUpdated(BiConsumer<Boolean, List<Constraint>> onUpdated) {
         this.onUpdated = onUpdated;
         return this;

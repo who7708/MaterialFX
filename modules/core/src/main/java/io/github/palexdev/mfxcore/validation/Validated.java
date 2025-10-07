@@ -18,43 +18,31 @@
 
 package io.github.palexdev.mfxcore.validation;
 
+import java.util.Collections;
 import java.util.List;
 
-import javafx.css.PseudoClass;
-import javafx.scene.Node;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 
 /// Interface that defines the public API every control needing validation should implement.
 ///
 /// Note that this interface just tells the user that the control already offers a [MFXValidator] instance if needed.
-///
-/// Also defines a PseudoClass, ":invalid", that can be used in CSS to style the control according to the validator's state.
-/// Note that the PseudoClass is not managed automatically, but it must be activated/deactivated by the user, you can
-/// use [#updateInvalid(Node,boolean)] to do this.
 public interface Validated {
-    PseudoClass INVALID_PSEUDO_CLASS = PseudoClass.getPseudoClass("invalid");
 
     /// @return the [MFXValidator] instance of this control
     MFXValidator getValidator();
 
-    /// @return whether the validator instance of this control is not null and valid
-    /// @see MFXValidator#validProperty()
+    /// Delegates to [getValidator().isValid()][MFXValidator#isValid()].
     default boolean isValid() {
-        return getValidator() != null && getValidator().isValid();
+        return getValidator().isValid();
     }
 
-    /// @return the list of invalid constraints for the control's validator instance.
-    ///
-    /// An empty list if null
-    /// @see MFXValidator#validate()
+    /// Delegates to [getValidator().validProperty()][MFXValidator#validProperty()].
+    default ReadOnlyBooleanProperty validProperty() {
+        return getValidator().validProperty();
+    }
+
+    /// Delegates to [getValidator().validate()][MFXValidator#validate()].
     default List<Constraint> validate() {
-        return getValidator() != null ? getValidator().validate() : List.of();
-    }
-
-    /// Convenience method to update the ":invalid" PseudoClass offered by this interface.
-    ///
-    /// @param node the node on which to apply/remove the ":invalid" PseudoClass
-    /// @param invalid the PseudoClass state
-    default void updateInvalid(Node node, boolean invalid) {
-        node.pseudoClassStateChanged(INVALID_PSEUDO_CLASS, invalid);
+        return getValidator() != null ? getValidator().validate() : Collections.emptyList();
     }
 }
