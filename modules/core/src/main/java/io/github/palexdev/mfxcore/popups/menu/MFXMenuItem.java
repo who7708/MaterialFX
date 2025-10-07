@@ -52,7 +52,7 @@ public record MFXMenuItem(
 
     /// Special instance of [MFXMenuItem] to indicate that at a certain position in [MFXMenu#getItems()] a separator region
     /// should be placed instead of a regular menu entry.
-    // TODO add support for icon and text carrying separators, so that even virtualized menus can have them
+    // TODO add support for icon and text carrying separators?
     public static final MFXMenuItem SEPARATOR = new MFXMenuItem();
 
     //================================================================================

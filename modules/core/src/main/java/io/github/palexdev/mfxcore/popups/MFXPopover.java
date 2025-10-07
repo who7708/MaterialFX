@@ -18,7 +18,7 @@
 
 package io.github.palexdev.mfxcore.popups;
 
-import java.util.*;
+import java.util.List;
 import java.util.function.Consumer;
 
 import io.github.palexdev.mfxcore.base.beans.Position;
@@ -28,13 +28,9 @@ import io.github.palexdev.mfxcore.popups.MFXPopover.PopoverConfig.Builder;
 import io.github.palexdev.mfxcore.popups.MFXPopover.PopupPeer;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Align;
-import io.github.palexdev.mfxcore.utils.fx.CSSFragment;
-import javafx.css.Styleable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.PopupControl;
-import javafx.scene.layout.StackPane;
 import javafx.stage.PopupWindow;
 import javafx.stage.Window;
 
@@ -70,14 +66,11 @@ import javafx.stage.Window;
 /// is that such feature still hides the window by calling [Window#hide()]; therefore, we can override the logic in our
 /// peer to redirect auto-hide requests to our method instead, as simple as adding a boolean flag.
 public class MFXPopover extends MFXPopupBase<PopupPeer, Node> {
-    //================================================================================
-    // Properties
-    //================================================================================
-    private Node styleableParent;
 
     //================================================================================
     // Constructors
     //================================================================================
+
     public MFXPopover() {
         setDefaultStyleClasses();
         PopoverConfig.DEFAULT.apply(this);
@@ -99,11 +92,6 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> {
         cfg.accept(builder);
         builder.build().apply(this);
         return this;
-    }
-
-    /// Invokes [PopupPeer#updateStylesheets()]. Check [PopupPeer]'s documentation to understand when to use this!
-    public void updateStylesheets() {
-        peer.updateStylesheets();
     }
 
     //================================================================================
@@ -131,9 +119,6 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> {
         Node content = getContent();
         content.setVisible(false);
 
-        peer.setStyleableParent(
-            Optional.ofNullable(styleableParent).orElse(owner)
-        );
         peer.show(owner, 0, 0);
         positionProperty().setPosition(x, y);
 
@@ -203,59 +188,9 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> {
 
     /// Custom extension of [PopupWindow] which serves as the peer for [MFXPopover].
     ///
-    /// Sets the root to a [StackPane].
-    ///
-    /// ### CSS
-    ///
-    /// The only good thing about [PopupControl] is that it allows styling from CSS _fairly_ easily. This until you look
-    /// at the internal spaghetti code. Because there is absolutely no need to overcomplicate things by enforcing the usage
-    /// of a skin, I opted for [PopupWindow] instead.
-    ///
-    /// It turns out the mechanism it uses to allow CSS styling is quite easy and stupid.
-    ///
-    /// First of all, you need to understand what is a `styleable parent`, because the information given by [Styleable] and
-    /// [Styleable#getStyleableParent()] are just **ridiculous**.
-    ///
-    /// Let's suppose you show a [PopupControl] for a button. And then you style the popup with CSS like this:
-    /// ```css
-    /// .button .my-popup {...}
-    ///```
-    ///
-    /// [PopupControl] will internally use the button (which is the owner) as the `styleable parent`, and that's what
-    /// allows you to write `.button .my-popup`; it makes it appear to the JavaFX CSS module as the popup is inside the
-    /// button.
-    ///
-    /// The `styleable parent` is not enough alone. The other internal mechanism of [PopupControl] is that starting from
-    /// that node, it walks up the scenegraph getting all the applied stylesheets along the way, adding them on the popup.
-    ///
-    /// We do the same thing here. When the `styleable parent` changes, we call [#updateStylesheets()] which will use
-    /// [#fetchStylesheets()] to get all the stylesheets upwards to the root.
-    ///
-    /// Three important notes:
-    /// 1) Who is the `styleable parent`? By default, we use the owner node for which the popup is shown. However, for
-    /// more flexibility, we allow overriding it via the [PopoverConfig].
-    /// 2) The [#updateStylesheets()] here is automatically called by [#setStyleableParent(Node)] only if the old and new
-    /// `styleable parent` are not the same. The only JavaFX mechanism I could not replicate because it would be either
-    /// dirty or too heavy on performance is the automatic refresh of stylesheets.
-    /// If you add some stylesheets on the `styleable parent` path, you'll have to call [MFXPopover#updateStylesheets()].
-    /// 3) Note that for convenience we accept a generic [Node] as the `styleable parent`, but for this mechanism to work
-    /// we need a [Parent]. Casting is automatically handled in a safe way, so if it's not a [Parent] it will fail silently
-    /// (by not fetching any stylesheet).
+    /// Sets the root to a [PopupRoot].
     protected class PopupPeer extends PopupWindow implements Peer {
-        private static final String RESET_CSS = CSSFragment.Builder.build()
-            .select(".mfx-popover")
-            .background("transparent")
-            .padding("0px")
-            .toFragment()
-            .toDataUri();
-
-        private final StackPane root = new StackPane() {
-            @Override
-            public Styleable getStyleableParent() {
-                return styleableParent;
-            }
-        };
-        private Node styleableParent;
+        private final PopupRoot root = new PopupRoot();
         private boolean indirectHide = false;
 
         {
@@ -276,31 +211,6 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> {
                 .listen();
         }
 
-        protected void setStyleableParent(Node styleableParent) {
-            boolean reFetch = this.styleableParent != styleableParent;
-            this.styleableParent = styleableParent;
-            if (reFetch) updateStylesheets();
-        }
-
-        protected void updateStylesheets() {
-            Collection<String> fetched = fetchStylesheets();
-            root.getStylesheets().setAll(fetched);
-        }
-
-        protected Collection<String> fetchStylesheets() {
-            SequencedSet<String> set = new LinkedHashSet<>();
-            set.addFirst(RESET_CSS);
-
-            if (!(styleableParent instanceof Parent parent))
-                return set;
-
-            while (parent != null) {
-                set.addAll(parent.getStylesheets());
-                parent = parent.getParent();
-            }
-            return set;
-        }
-
         @Override
         public void hide() {
             // Redirect auto-hide handling to popover hide logic!
@@ -313,7 +223,7 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> {
         }
 
         @Override
-        public StackPane getRoot() {
+        public PopupRoot getRoot() {
             return root;
         }
     }
@@ -333,7 +243,7 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> {
         @Override
         public void apply(MFXPopover popup) {
             popup.offset = offset;
-            popup.styleableParent = styleableParent;
+            popup.setStyleableParent(styleableParent);
             popup.peer.setAutoFix(autoFix);
             popup.peer.setAutoHide(autoHide);
             popup.peer.setHideOnEscape(hideOnEscape);

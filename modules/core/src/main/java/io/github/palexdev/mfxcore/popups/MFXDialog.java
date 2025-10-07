@@ -40,7 +40,6 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.*;
 
@@ -307,11 +306,9 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> {
 
     /// Custom extension of [Stage] which serves as the peer for [MFXDialog].
     ///
-    /// Sets the root node to a [StackPane], the style to [StageStyle#TRANSPARENT] and the scene's fill to transparent.
-    ///
-    /// Offers a bunch of convenience methods.
+    /// Sets the root node to a [PopupRoot], the style to [StageStyle#TRANSPARENT] and the scene's fill to transparent.
     protected class WindowPeer extends Stage implements Peer {
-        private final StackPane root = new StackPane();
+        private final PopupRoot root = new PopupRoot();
         private boolean indirectHide = false;
 
         {
@@ -322,7 +319,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> {
         }
 
         @Override
-        public StackPane getRoot() {
+        public PopupRoot getRoot() {
             return root;
         }
 
@@ -348,7 +345,8 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> {
         String[] backdropStyleClass,
         boolean alwaysOnTop,
         boolean lockInPlace,
-        boolean await
+        boolean await,
+        Node styleableParent
     ) implements Config<MFXDialog> {
         public static final DialogConfig DEFAULT = builder().build();
 
@@ -368,6 +366,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> {
             popup.peer.setAlwaysOnTop(alwaysOnTop);
             popup.lockInPlace = lockInPlace;
             popup.await = await;
+            popup.setStyleableParent(styleableParent);
             popup.config = this;
         }
 
@@ -396,6 +395,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> {
             private boolean alwaysOnTop = false;
             private boolean lockInPlace = false;
             private boolean await = false;
+            private Node styleableParent;
 
             public Builder offset(Position offset) {
                 this.offset = offset;
@@ -437,6 +437,11 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> {
                 return this;
             }
 
+            public Builder styleableParent(Node styleableParent) {
+                this.styleableParent = styleableParent;
+                return this;
+            }
+
             public DialogConfig build() {
                 return new DialogConfig(
                     offset,
@@ -446,7 +451,8 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> {
                     backdropStyleClass,
                     alwaysOnTop,
                     lockInPlace,
-                    await
+                    await,
+                    styleableParent
                 );
             }
         }

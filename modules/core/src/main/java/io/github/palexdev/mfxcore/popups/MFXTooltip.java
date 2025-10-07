@@ -18,6 +18,14 @@
 
 package io.github.palexdev.mfxcore.popups;
 
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
+
 import io.github.palexdev.mfxcore.base.Disposable;
 import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.base.properties.NodeProperty;
@@ -43,14 +51,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
-
-import java.lang.ref.Reference;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
 
 /// Custom implementation of tooltips based on the [MFXPopup] API. It also implements [MFXStyleable], the default CSS
 /// style-class is set to '.root' and '.mfx-tooltip.'. This mimics JavaFX popups which also have the '.root' style class
@@ -354,7 +354,8 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
         Align alignment,
         Position offset,
         Duration inDelay,
-        Duration outDelay
+        Duration outDelay,
+        Node styleableParent
     ) implements Config<MFXTooltip> {
         public static final TooltipConfig DEFAULT = builder().build();
 
@@ -365,6 +366,7 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
             tooltip.setOffset(offset);
             tooltip.inDelay = inDelay;
             tooltip.outDelay = outDelay;
+            tooltip.peer.setStyleableParent(styleableParent);
             tooltip.peer.config = this;
         }
 
@@ -387,6 +389,7 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
             private Position offset = Position.origin();
             private Duration inDelay = Duration.millis(500);
             private Duration outDelay = Duration.millis(500);
+            private Node styleableParent;
 
             public Builder anchor(Pos anchor) {
                 this.anchor = anchor;
@@ -421,13 +424,19 @@ public class MFXTooltip implements MFXPopup<Node>, MFXStyleable {
                 return outDelay(Duration.millis(millis));
             }
 
+            public Builder styleableParent(Node styleableParent) {
+                this.styleableParent = styleableParent;
+                return this;
+            }
+
             public TooltipConfig build() {
                 return new TooltipConfig(
                     anchor,
                     alignment,
                     offset,
                     inDelay,
-                    outDelay
+                    outDelay,
+                    styleableParent
                 );
             }
         }

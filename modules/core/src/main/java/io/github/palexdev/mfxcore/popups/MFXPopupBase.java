@@ -44,6 +44,7 @@ import javafx.stage.Window;
 ///
 /// @param <O> the popup's owner type
 /// @param <P> the popup's peer type, which is some kind of [Window]
+/// @see PopupRoot
 public abstract class MFXPopupBase<P extends Window & Peer, O> implements MFXPopup<O>, MFXStyleable {
     //================================================================================
     // Properties
@@ -113,6 +114,16 @@ public abstract class MFXPopupBase<P extends Window & Peer, O> implements MFXPop
     /// Hook to the [#contentProperty()] triggered when the content is changed. This can be used by implementations to
     /// update the peer's content, as well as other actions if needed.
     protected void onContentChanged() {}
+
+    /// Delegate to [peer.getRoot().updateStylesheets()][PopupRoot#updateStylesheets()].
+    public void updateStylesheets() {
+        peer.getRoot().updateStylesheets();
+    }
+
+    /// Delegate to [peer.getRoot().setStyleableParent(Node)][PopupRoot#setStyleableParent(Node)].
+    public void setStyleableParent(Node node) {
+        peer.getRoot().setStyleableParent(node);
+    }
 
     //================================================================================
     // Overridden Methods

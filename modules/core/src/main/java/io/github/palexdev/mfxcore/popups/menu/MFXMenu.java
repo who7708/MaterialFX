@@ -484,7 +484,8 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
         Position offset,
         MouseButton triggerButton,
         boolean anchorBasedPositioning,
-        Supplier<PopupAnimation> animationProvider
+        Supplier<PopupAnimation> animationProvider,
+        Node styleableParent
     ) implements Config<MFXMenu> {
         public static final MenuConfig DEFAULT = builder().build();
 
@@ -495,8 +496,9 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
             menu.setOffset(offset);
             menu.triggerButton = triggerButton;
             menu.anchorBasedPositioning = anchorBasedPositioning;
-            menu.config = this;
             menu.setAnimation(animationProvider.get());
+            menu.peer.setStyleableParent(styleableParent);
+            menu.config = this;
         }
 
         public static Builder builder() {
@@ -518,6 +520,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
             private MouseButton triggerButton = MouseButton.SECONDARY;
             private boolean anchorBasedPositioning = true;
             private Supplier<PopupAnimation> animationProvider = () -> new PopupAnimation(FADE);
+            private Node styleableParent;
 
             public Builder anchor(Pos anchor) {
                 this.anchor = anchor;
@@ -549,6 +552,11 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
                 return this;
             }
 
+            public Builder styleableParent(Node styleableParent) {
+                this.styleableParent = styleableParent;
+                return this;
+            }
+
             public MenuConfig build() {
                 return new MenuConfig(
                     anchor,
@@ -556,7 +564,8 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
                     offset,
                     triggerButton,
                     anchorBasedPositioning,
-                    animationProvider
+                    animationProvider,
+                    styleableParent
                 );
             }
         }

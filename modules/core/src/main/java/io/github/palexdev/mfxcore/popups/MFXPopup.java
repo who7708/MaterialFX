@@ -33,7 +33,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.PopupControl;
-import javafx.scene.layout.Pane;
 import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -100,8 +99,8 @@ import javafx.stage.Window;
 /// Let's just say that every popup has some **content**. There are other common properties too: every window has its position,
 /// and every window has a state, represented in `MFXPopup` as an enumeration: [PopupState].
 ///
-/// So, the intention with this, is to have an API that exposes the bare minimum to show a popup. The user is free to not
-/// understand the internals, and understand each kind. For the user perspective, I just want to show a window for
+/// So, the intention with this is to have an API that exposes the bare minimum to show a popup. The user is free to not
+/// understand the internals and each kind. From the user perspective, I just want to show a window for
 /// <insert goal here>. And `MFXPopup` does exactly this.
 ///
 /// **_Peers_**
@@ -111,7 +110,7 @@ import javafx.stage.Window;
 /// - But it represents or acts on behalf of it
 /// - And that it handles platform/system-specific concerns
 ///
-/// In other words, it's a _delegate_. The implementations still delegate to JavaFX APIs. And that's actually a good things.
+/// In other words, it's a _delegate_. The implementations still delegate to JavaFX APIs. And that's actually a good thing.
 /// Let me explain: unfortunately, as always, JavaFX has hidden APIs, tricks under the hood that are hard to replicate
 /// and thus forcing you to use their classes. For example: [Stage] for the modality and owner; [PopupWindow] for the
 /// auto-hide, auto-fix, etc.
@@ -228,11 +227,13 @@ public interface MFXPopup<O> {
     //================================================================================
 
     /// This interface defines the bare minimum API any popup's peer should expose.
+    ///
+    /// @see PopupRoot
     interface Peer {
 
-        /// @return the popup window's root node. By design, this is always a [Pane] or any subclass because the actual
+        /// @return the popup window's root node. By design, this is always a [PopupRoot] and the actual
         /// popup's content is wrapped in it. This vastly simplifies the implementation.
-        Pane getRoot();
+        PopupRoot getRoot();
 
         default void setContent(Node content) {
             ObservableList<Node> children = getRoot().getChildren();
