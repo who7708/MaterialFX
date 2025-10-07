@@ -158,7 +158,7 @@ public class TestCustomControls {
     static class CustomControl extends MFXControl {
 
         {
-            getStyleClass().add("my-node");
+            getStyleClass().add("my-control");
         }
 
         @Override
@@ -172,7 +172,7 @@ public class TestCustomControls {
         }
 
         @Override
-        public Supplier<MFXSkinBase<? extends MFXControl>> defaultSkinFactory() {
+        public Supplier<MFXSkinBase<? extends Node>> defaultSkinFactory() {
             return () -> new CustomSkin(this);
         }
 

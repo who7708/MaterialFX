@@ -137,7 +137,7 @@ public class TestSelectionGroup {
         group.addAll(selectables);
 
         group.removeAll(
-            selectables.get(0),
+            selectables.getFirst(),
             selectables.get(2),
             selectables.get(4)
         );
@@ -148,7 +148,7 @@ public class TestSelectionGroup {
             assertNull(selectables.get(i).getSelectionGroup());
         }
 
-        selectables.get(0).setSelected(true);
+        selectables.getFirst().setSelected(true);
         assertEquals(0, group.getSelection().size());
     }
 
@@ -164,10 +164,10 @@ public class TestSelectionGroup {
 
         // Sanity check
         assertEquals(1, group.getSelection().size());
-        assertTrue(group.getSelection().contains(selectables.get(0)));
+        assertTrue(group.getSelection().contains(selectables.getFirst()));
 
-        group.remove(selectables.get(0));
-        assertNull(selectables.get(0).getSelectionGroup());
+        group.remove(selectables.getFirst());
+        assertNull(selectables.getFirst().getSelectionGroup());
         assertEquals(1, group.getSelection().size());
         assertTrue(group.getSelection().contains(selectables.get(1)));
     }
@@ -184,7 +184,7 @@ public class TestSelectionGroup {
 
         // Sanity check
         assertEquals(1, group.getSelection().size());
-        assertTrue(group.getSelection().contains(selectables.get(0)));
+        assertTrue(group.getSelection().contains(selectables.getFirst()));
 
         selectables.get(3).setSelected(true);
         selectables.get(4).setSelected(true);
@@ -192,13 +192,13 @@ public class TestSelectionGroup {
         // Sanity check again
         assertEquals(3, group.getSelection().size());
         assertTrue(group.getSelection().containsAll(Set.of(
-            selectables.get(0),
+            selectables.getFirst(),
             selectables.get(3),
             selectables.get(4)
         )));
 
         group.removeAll(Set.of(
-            selectables.get(0),
+            selectables.getFirst(),
             selectables.get(3),
             selectables.get(4)
         ));
@@ -227,12 +227,12 @@ public class TestSelectionGroup {
         robot.interact(() -> box.getChildren().addAll(selectables));
 
         SelectionGroup group = new SelectionGroup(SelectionMode.MULTIPLE);
-        selectables.get(0).setSelected(true);
+        selectables.getFirst().setSelected(true);
         selectables.get(2).setSelected(true);
         selectables.get(3).setSelected(true);
         selectables.forEach(s -> s.setSelectionGroup(group));
 
-        assertTrue(selectables.get(0).isSelected());
+        assertTrue(selectables.getFirst().isSelected());
         assertFalse(selectables.get(1).isSelected());
         assertTrue(selectables.get(2).isSelected());
         assertTrue(selectables.get(3).isSelected());
@@ -241,7 +241,7 @@ public class TestSelectionGroup {
         // Group sanity check
         assertEquals(3, group.getSelection().size());
         assertTrue(group.getSelection().containsAll(Set.of(
-            selectables.get(0),
+            selectables.getFirst(),
             selectables.get(2),
             selectables.get(3)
         )));
@@ -259,7 +259,7 @@ public class TestSelectionGroup {
             selectables.get(i).setSelected(true);
         }
 
-        assertFalse(selectables.get(0).isSelected());
+        assertFalse(selectables.getFirst().isSelected());
         assertTrue(selectables.get(1).isSelected());
         assertTrue(selectables.get(2).isSelected());
         assertTrue(selectables.get(3).isSelected());
@@ -285,7 +285,7 @@ public class TestSelectionGroup {
 
 
         assertEquals(1, group.getSelection().size());
-        assertTrue(group.getSelection().contains(selectables.get(0)));
+        assertTrue(group.getSelection().contains(selectables.getFirst()));
 
         for (int i = 1; i < 5; i++) assertFalse(selectables.get(i).isSelected());
     }
@@ -301,9 +301,9 @@ public class TestSelectionGroup {
         group.setAtLeastOneSelected(true);
 
         // Check activation of first element
-        assertTrue(selectables.get(0).isSelected());
+        assertTrue(selectables.getFirst().isSelected());
         assertEquals(1, group.getSelection().size());
-        assertTrue(group.getSelection().contains(selectables.get(0)));
+        assertTrue(group.getSelection().contains(selectables.getFirst()));
 
         // Try select all, only last should remain active
         selectables.forEach(s -> s.setSelected(true));
@@ -335,11 +335,11 @@ public class TestSelectionGroup {
         for (int i = 1; i < 5; i++) {
             assertFalse(selectables.get(i).isSelected());
         }
-        assertTrue(selectables.get(0).isSelected());
+        assertTrue(selectables.getFirst().isSelected());
 
         // Group sanity check
         assertEquals(1, group.getSelection().size());
-        assertTrue(group.getSelection().contains(selectables.get(0)));
+        assertTrue(group.getSelection().contains(selectables.getFirst()));
     }
 
     @Test
@@ -356,11 +356,11 @@ public class TestSelectionGroup {
         for (int i = 1; i < 5; i++) {
             assertFalse(selectables.get(i).isSelected());
         }
-        assertTrue(selectables.get(0).isSelected());
+        assertTrue(selectables.getFirst().isSelected());
 
         // Group sanity check
         assertEquals(1, group.getSelection().size());
-        assertTrue(group.getSelection().contains(selectables.get(0)));
+        assertTrue(group.getSelection().contains(selectables.getFirst()));
     }
 
     @Test
@@ -377,22 +377,22 @@ public class TestSelectionGroup {
         for (int i = 1; i < 5; i++) {
             assertFalse(selectables.get(i).isSelected());
         }
-        assertTrue(selectables.get(0).isSelected());
+        assertTrue(selectables.getFirst().isSelected());
 
         // Group sanity check
         assertEquals(1, group.getSelection().size());
-        assertTrue(group.getSelection().contains(selectables.get(0)));
+        assertTrue(group.getSelection().contains(selectables.getFirst()));
 
-        assertTrue(selectables.get(0).getPseudoClassStates().contains(DummySelectable.SELECTED));
+        assertTrue(selectables.getFirst().getPseudoClassStates().contains(DummySelectable.SELECTED));
 
         // Try disabling it
-        selectables.get(0).setSelected(false);
-        assertTrue(selectables.get(0).isSelected());
+        selectables.getFirst().setSelected(false);
+        assertTrue(selectables.getFirst().isSelected());
         assertEquals(1, group.getSelection().size());
-        assertTrue(group.getSelection().contains(selectables.get(0)));
+        assertTrue(group.getSelection().contains(selectables.getFirst()));
 
         // This test is to ensure that the PseudoClass ":selected" is still on...
-        assertTrue(selectables.get(0).getPseudoClassStates().contains(DummySelectable.SELECTED));
+        assertTrue(selectables.getFirst().getPseudoClassStates().contains(DummySelectable.SELECTED));
     }
 
     @Test
@@ -426,8 +426,8 @@ public class TestSelectionGroup {
 
         // Sanity check
         assertEquals(1, group.getSelection().size());
-        assertTrue(selectables.get(0).isSelected());
-        assertTrue(group.getSelection().contains(selectables.get(0)));
+        assertTrue(selectables.getFirst().isSelected());
+        assertTrue(group.getSelection().contains(selectables.getFirst()));
 
         selectables.get(1).setSelected(true);
         selectables.get(2).setSelected(true);
@@ -448,14 +448,14 @@ public class TestSelectionGroup {
 
         SelectionGroup group = new SelectionGroup(SelectionMode.MULTIPLE);
         selectables.forEach(s -> s.setSelectionGroup(group));
-        selectables.get(0).setSelected(true);
+        selectables.getFirst().setSelected(true);
 
         // Switch...
         group.setSelectionMode(SelectionMode.SINGLE);
 
         // When switching, if selection contained only one, won't be cleared
         assertEquals(1, group.getSelection().size());
-        assertTrue(group.getSelection().contains(selectables.get(0)));
+        assertTrue(group.getSelection().contains(selectables.getFirst()));
     }
 
     @Test
@@ -468,24 +468,24 @@ public class TestSelectionGroup {
         SelectionGroup group2 = new SelectionGroup();
         group1.addAll(selectables);
 
-        selectables.get(0).setSelected(true);
+        selectables.getFirst().setSelected(true);
 
         // First sanity check
         assertEquals(1, group1.getSelection().size());
-        assertTrue(group1.getSelection().contains(selectables.get(0)));
+        assertTrue(group1.getSelection().contains(selectables.getFirst()));
 
         // Switch group
-        selectables.get(0).setSelectionGroup(group2);
-        assertEquals(group2, selectables.get(0).getSelectionGroup());
+        selectables.getFirst().setSelectionGroup(group2);
+        assertEquals(group2, selectables.getFirst().getSelectionGroup());
 
         // Sanity check on g1
         assertTrue(group1.getSelection().isEmpty());
-        assertFalse(group1.getSelectables().contains(selectables.get(0)));
+        assertFalse(group1.getSelectables().contains(selectables.getFirst()));
 
         // Sanity check on g2
         assertEquals(1, group2.getSelectables().size());
         assertEquals(1, group2.getSelection().size());
-        assertTrue(group2.getSelection().contains(selectables.get(0)));
+        assertTrue(group2.getSelection().contains(selectables.getFirst()));
     }
 
     @Test
@@ -501,11 +501,11 @@ public class TestSelectionGroup {
 
         // First sanity check
         assertEquals(1, group1.getSelection().size());
-        assertTrue(group1.getSelection().contains(selectables.get(0)));
+        assertTrue(group1.getSelection().contains(selectables.getFirst()));
 
         // Switch group
-        selectables.get(0).setSelectionGroup(group2);
-        assertEquals(group2, selectables.get(0).getSelectionGroup());
+        selectables.getFirst().setSelectionGroup(group2);
+        assertEquals(group2, selectables.getFirst().getSelectionGroup());
 
         // Sanity check on g1
         assertEquals(1, group1.getSelection().size());
@@ -514,7 +514,7 @@ public class TestSelectionGroup {
         // Sanity check on g2
         assertEquals(1, group2.getSelectables().size());
         assertEquals(1, group2.getSelection().size());
-        assertTrue(group2.getSelection().contains(selectables.get(0)));
+        assertTrue(group2.getSelection().contains(selectables.getFirst()));
     }
 
     @Test
@@ -531,7 +531,7 @@ public class TestSelectionGroup {
 
         // First sanity check
         assertEquals(1, group1.getSelection().size());
-        assertTrue(group1.getSelection().contains(selectables.get(0)));
+        assertTrue(group1.getSelection().contains(selectables.getFirst()));
 
         // Switch group
         selectables.get(1).setSelectionGroup(group2);
@@ -540,7 +540,7 @@ public class TestSelectionGroup {
         // Sanity check on g1
         assertEquals(1, group1.getSelection().size());
         assertEquals(4, group1.getSelectables().size());
-        assertTrue(group1.getSelectables().contains(selectables.get(0)));
+        assertTrue(group1.getSelectables().contains(selectables.getFirst()));
 
         // Sanity check on g2
         assertEquals(1, group2.getSelectables().size());
@@ -558,24 +558,24 @@ public class TestSelectionGroup {
         SelectionGroup group2 = new SelectionGroup();
         group1.addAll(selectables);
 
-        selectables.get(0).setSelected(true);
+        selectables.getFirst().setSelected(true);
 
         // First sanity check
         assertEquals(1, group1.getSelection().size());
-        assertTrue(group1.getSelection().contains(selectables.get(0)));
+        assertTrue(group1.getSelection().contains(selectables.getFirst()));
 
         // Switch group with add(...)
-        group2.add(selectables.get(0));
-        assertEquals(group2, selectables.get(0).getSelectionGroup());
+        group2.add(selectables.getFirst());
+        assertEquals(group2, selectables.getFirst().getSelectionGroup());
 
         // Sanity check on g1
         assertTrue(group1.getSelection().isEmpty());
-        assertFalse(group1.getSelectables().contains(selectables.get(0)));
+        assertFalse(group1.getSelectables().contains(selectables.getFirst()));
 
         // Sanity check on g2
         assertEquals(1, group2.getSelectables().size());
         assertEquals(1, group2.getSelection().size());
-        assertTrue(group2.getSelection().contains(selectables.get(0)));
+        assertTrue(group2.getSelection().contains(selectables.getFirst()));
     }
 
     List<DummySelectable> buildSelectables(int cnt) {
@@ -607,8 +607,7 @@ public class TestSelectionGroup {
         private final SelectionGroupProperty selectionGroup = new SelectionGroupProperty(this);
         private final SelectionProperty selected = new SelectionProperty(this) {
             @Override
-            protected void invalidated() {
-                super.invalidated();
+            protected void onInvalidated() {
                 pseudoClassStateChanged(SELECTED, get());
             }
         };
