@@ -115,6 +115,13 @@ public class SelectionModel<T> implements ISelectionModel<T> {
         return FXCollections.observableMap(backingMap);
     }
 
+    protected IntegerRange clampRange(IntegerRange range) {
+        return items.isEmpty() ? INVALID_RANGE : IntegerRange.of(
+            Math.max(0, range.getMin()),
+            Math.min(items.size() - 1, range.getMax())
+        );
+    }
+
     public ObservableList<T> getItems() {
         return FXCollections.unmodifiableObservableList(items);
     }
@@ -160,6 +167,8 @@ public class SelectionModel<T> implements ISelectionModel<T> {
 
     @Override
     public void deselectIndexes(IntegerRange range) {
+        range = clampRange(range);
+        if (INVALID_RANGE.equals(range)) return;
         ObservableMap<Integer, T> tmp = newMap(selection);
         for (Integer index : range) {
             tmp.remove(index);
@@ -224,6 +233,7 @@ public class SelectionModel<T> implements ISelectionModel<T> {
 
     @Override
     public void selectIndexes(IntegerRange range) {
+        range = clampRange(range);
         if (INVALID_RANGE.equals(range)) return;
         if (allowsMultipleSelection) {
             Map<Integer, T> newSelection = range.stream()
@@ -320,6 +330,7 @@ public class SelectionModel<T> implements ISelectionModel<T> {
 
     @Override
     public void replaceSelection(IntegerRange range) {
+        range = clampRange(range);
         if (INVALID_RANGE.equals(range)) return;
         if (allowsMultipleSelection) {
             ObservableMap<Integer, T> newSelection = range.stream()
