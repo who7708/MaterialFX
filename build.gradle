@@ -70,9 +70,8 @@ subprojects {
 
     test {
         useJUnitPlatform()
-        jvmArgs += [
-                '--add-opens', 'javafx.graphics/com.sun.javafx.application=ALL-UNNAMED'
-        ]
+        // FIXME well, this depends on the Gradle team if they decide to revert a dumb decision
+        failOnNoDiscoveredTests = false
     }
 }
 
