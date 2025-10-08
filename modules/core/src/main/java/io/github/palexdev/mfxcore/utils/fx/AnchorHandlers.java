@@ -45,7 +45,7 @@ import static io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Direction.*;
 /// // I want the popup to be adjacent to the button, at its right
 /// // The anchor is the top right corner of the button
 /// Pos anchor = Pos.TOP_RIGHT;
-///// Since I want it to be next to the button, the directions are:
+/// // Since I want it to be next to the button, the directions are:
 /// Direction hDir = Direction.AFTER;
 /// Direction vDir = Direction.AFTER;
 ///```
@@ -67,7 +67,7 @@ import static io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Direction.*;
 /// //   └─────────┘
 /// // The anchor is the bottom right corner of the component
 /// Pos anchor = Pos.BOTTOM_RIGHT;
-///// The popup is below the anchor and to the left (inwards), so the directions are:
+/// // The popup is below the anchor and to the left (inwards), so the directions are:
 /// Direction hDir = Direction.BEFORE;
 /// Direction vDir = Direction.AFTER;
 ///```

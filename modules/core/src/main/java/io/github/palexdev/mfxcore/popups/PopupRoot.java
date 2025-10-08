@@ -52,8 +52,8 @@ import javafx.scene.layout.StackPane;
 /// ```java
 /// Button myButton = new Button("My Button");
 /// myButton.getStylesheets().add("my-button.css");
-///// Install a popup on the button with getStyleableParent() overridden to `myButton`
-///// The stylesheet will be applied to the popup too and the above example CSS will work
+/// // Install a popup on the button with getStyleableParent() overridden to `myButton`
+/// // The stylesheet will be applied to the popup too and the above example CSS will work
 ///```
 /// Such functionality, which I deem crucial, is backported for my [popups][MFXPopup] hierarchy too, but:
 /// 1) It's more dynamic/versatile. The `styleable parent` can be changed at any time through a property which will also
