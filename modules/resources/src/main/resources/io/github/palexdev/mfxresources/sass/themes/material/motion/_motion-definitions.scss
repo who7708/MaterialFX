@@ -21,11 +21,11 @@
 @mixin MaterialButtonsMotion() {
   .mfx-button,
   .mfx-icon-button {
-    transition-property : -fx-background-color, -fx-background-radius;
+    transition-property : -fx-background-radius;
     @include motion('expressive-fast-spatial');
 
     > .surface {
-      transition-property        : -fx-background-radius;
+      transition-property : -fx-background-radius;
       @include motion('expressive-fast-spatial');
     }
 
@@ -69,7 +69,7 @@
     &.m,
     &.l,
     &.xl {
-      transition-property : -fx-background-color, -fx-background-radius, -fx-border-radius;
+      transition-property : -fx-background-radius, -fx-border-radius;
       @include motion('expressive-fast-spatial');
     }
 
@@ -101,7 +101,7 @@
     > .mfx-icon-button {
       -fx-scale-x         : 1.0;
       -fx-scale-y         : 1.0;
-      transition-property : -fx-background-color, -fx-background-radius, -fx-scale-x, -fx-scale-y;
+      transition-property : -fx-background-radius, -fx-scale-x, -fx-scale-y;
       @include motion('expressive-fast-spatial');
 
       &:pressed:hover {
@@ -114,7 +114,7 @@
 
 @mixin MaterialFloatingActionButtonsMenuMotion() {
   .mfx-fab-menu > .entry {
-    transition-property        : -fx-background-radius, -fx-scale-x, -fx-scale-y;
+    transition-property : -fx-background-radius, -fx-scale-x, -fx-scale-y;
     @include motion('expressive-fast-spatial');
   }
 }
@@ -257,8 +257,8 @@
     }
 
     > .mfx-button.trailing > .label > .mfx-font-icon {
-      transition-property        : -fx-rotate;
-        @include motion('expressive-fast-spatial');
+      transition-property : -fx-rotate;
+      @include motion('expressive-fast-spatial');
     }
   }
 }

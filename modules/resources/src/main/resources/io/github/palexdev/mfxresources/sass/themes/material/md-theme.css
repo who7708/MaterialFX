@@ -267,18 +267,30 @@
   -fx-border-width: 3px
 }
 
-.mfx-button:disabled {
-  -fx-background-color: transparent!important;
+.mfx-button.elevated:disabled,
+.mfx-button.filled:disabled,
+.mfx-button.outlined:disabled,
+.mfx-button.text:disabled,
+.mfx-button.tonal:disabled {
+  -fx-background-color : null !important;
   -fx-text-fill: -md-sys-color-on-surface!important;
   -mfx-text-opacity: 38%!important
 }
 
-.mfx-button:disabled > .label > .mfx-font-icon {
+.mfx-button.elevated:disabled > .label > .mfx-font-icon,
+.mfx-button.filled:disabled > .label > .mfx-font-icon,
+.mfx-button.outlined:disabled > .label > .mfx-font-icon,
+.mfx-button.text:disabled > .label > .mfx-font-icon,
+.mfx-button.tonal:disabled > .label > .mfx-font-icon {
   -fx-opacity: 38%!important;
   -mfx-color: -md-sys-color-on-surface!important
 }
 
-.mfx-button:disabled > .surface {
+.mfx-button.elevated:disabled > .surface,
+.mfx-button.filled:disabled > .surface,
+.mfx-button.outlined:disabled > .surface,
+.mfx-button.text:disabled > .surface,
+.mfx-button.tonal:disabled > .surface {
   -fx-background-color: -md-sys-color-on-surface!important
 }
 
@@ -1059,7 +1071,7 @@
 }
 
 .mfx-icon-button:disabled {
-  -fx-background-color: transparent!important
+  -fx-background-color : null !important
 }
 
 .mfx-icon-button:disabled > .mfx-icon-wrapper > .mfx-font-icon {

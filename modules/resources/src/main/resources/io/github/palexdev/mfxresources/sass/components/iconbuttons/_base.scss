@@ -16,8 +16,9 @@
  * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use '../../base/vars' as *;
 @use '../layers' as *;
+@use '../../abstracts/utils' as *;
+@use '../../base/vars' as *;
 
 @mixin MaterialIconButtonsBase() {
   .mfx-icon-button {
@@ -263,7 +264,7 @@
 
     // Disabled
     &:disabled {
-      -fx-background-color : transparent !important;
+      -fx-background-color : null() !important; /* crucial!! fixes color "flicker", must be null!! (transparent is bugged)*/
 
       > .mfx-icon-wrapper > .mfx-font-icon {
         -fx-opacity : opacity('disabled-text') !important;

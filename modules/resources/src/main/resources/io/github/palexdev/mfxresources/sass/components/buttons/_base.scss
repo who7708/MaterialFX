@@ -17,6 +17,7 @@
  */
 
 @use '../layers' as *;
+@use '../../abstracts/utils' as *;
 @use '../../base/typography' as *;
 @use '../../base/vars' as *;
 
@@ -200,8 +201,12 @@
     @include FocusRing();
 
     // Disabled
-    &:disabled {
-      -fx-background-color : transparent !important;
+    &.elevated:disabled,
+    &.filled:disabled,
+    &.outlined:disabled,
+    &.text:disabled,
+    &.tonal:disabled {
+      -fx-background-color : null() !important; /* crucial!! fixes color "flicker", must be null!! (transparent is bugged)*/
       -fx-text-fill        : -md-sys-color-on-surface !important;
       -mfx-text-opacity    : opacity('disabled-text') !important;
 

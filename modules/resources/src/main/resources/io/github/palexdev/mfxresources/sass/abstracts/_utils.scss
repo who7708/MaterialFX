@@ -12,3 +12,7 @@
 
   @return null;
 }
+
+@function null() {
+  @return string.unquote('null');
+}
