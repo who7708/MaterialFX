@@ -1,3 +1,31 @@
+## 25.2.0 - 08-10-2025 - e163a84b
+
+### Features
+
+- <3cc51c21> ISelectionModel: add selectAll convenience method
+- <66f7b8d2> MFXDialog: add some delegate methods to the peer window
+
+### Bug Fixes
+
+- <17793693> MFXDialog: forgot code to hide the backdrop
+- <0f8f495f> MFXTooltip: fix tooltip never closing because of flawed logic in hover check
+
+### Refactoring
+
+- <829f0cb3> SelectionModel: clamp IntegerRanges
+- <ad134681> Minor refactors to the validation API, mainly for convenience
+- <6f072288> Simplify the popups' positioning API while still maintaining the great flexibility it offers
+- <452e7c8c> PopupRoot: do not set a style class as every popup implementation overrides it anyway, use the class as a selector for the reset CSS
+- <b873b059> MFXPopups: extend styling capabilities through the `styleable parent` to all kinds of popups
+- <11e0503b> MFXDialog: init the peer's owner on show
+- <d77cd085> EventBusNetwork: return a map of active buses rather than a key set
+
+### Tests
+
+- <c65dff0d> Update/add tests
+
+
+
 ## 24.5.0 - 07-09-2025 - 87f73d00
 
 ### Features

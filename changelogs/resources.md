@@ -1,3 +1,15 @@
+## 25.1.1 - 08-10-2025 - e163a84b
+
+### Bug Fixes
+
+- <99cb8f12> Fix color flickering when disabling buttons due to md-motions interfering with surfaces animations
+
+### Style
+
+- <74af90af> Update/fix animations
+
+
+
 ## 24.3.0 - 07-09-2025 - eb8aea6d
 
 ### Features

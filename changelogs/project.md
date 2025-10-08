@@ -1,5 +1,8 @@
-## Project - daeea187
+## Project - e163a84b
 
+- 08-10-2025 <497e516e> Update Idea config
+- 08-10-2025 <2d8060cf> Update to latest JavaFX EA
+- 08-10-2025 <7248bed8> Fix tests for Gradle 9
 - 22-09-2025 <0fde157d> Update Maven publish plugin to v0.34.0
 - 23-09-2025 <edbb60bd> Upgrade VirtualizedFX to v25.1.0
 - 22-09-2025 <c7d61e7e> Upgrade JavaFX to v26-ea+7
