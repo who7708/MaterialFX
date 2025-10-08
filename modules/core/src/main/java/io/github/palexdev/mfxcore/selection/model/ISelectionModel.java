@@ -82,6 +82,11 @@ public interface ISelectionModel<T> {
     /// Selects all the elements associated with the given range if present.
     void selectIndexes(IntegerRange range);
 
+    /// Delegates to [#selectIndexes(IntegerRange)] with `IntegerRange.of(0, Integer.MAX_VALUE)`.
+    default void selectAll() {
+        selectIndexes(IntegerRange.of(0, Integer.MAX_VALUE));
+    }
+
     /// Selects the given element if present.
     void selectItem(T item);
 
