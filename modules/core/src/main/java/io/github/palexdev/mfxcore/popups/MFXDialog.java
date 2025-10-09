@@ -150,7 +150,8 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> {
                 lockWhen = When.observe(
                     this::reposition,
                     owner.xProperty(), owner.yProperty(),
-                    owner.widthProperty(), owner.heightProperty()
+                    owner.widthProperty(), owner.heightProperty(),
+                    getRoot().layoutBoundsProperty()
                 ).listen();
             }
 
