@@ -1,3 +1,12 @@
+## 25.1.2 - 09-10-2025 - 80d05dc1
+
+### Bug Fixes
+
+- <3092598f> Forgot to set the text color for checkboxes
+- <7aed1258> Partially revert 99cb8f12: not including the bg color to the animated properties makes some components' look stuck when changing theme mode
+
+
+
 ## 25.1.1 - 08-10-2025 - e163a84b
 
 ### Bug Fixes

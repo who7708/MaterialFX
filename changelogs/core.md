@@ -1,3 +1,22 @@
+## 25.3.0 - 09-10-2025 - 80d05dc1
+
+### Features
+
+- <40aa8f29> MFXDialog: added convenience methods to enable movement and resizing of the window
+- <c38bf31e> Implement WindowMover utility (for headless windows)
+
+### Refactoring
+
+- <d6f4cbe6> MFXPopup: move setContent logic to PopupRoot
+- <3f28e6fd> MFXDialog: add root's bounds to the lock in place listener
+- <e474a544> MFXPopups: remove constructors with style classes and make them more consistent across implementations
+
+### Misc
+
+- <b41f6b75> Move some utilities to the right package
+
+
+
 ## 25.2.0 - 08-10-2025 - e163a84b
 
 ### Features
