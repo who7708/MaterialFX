@@ -21,7 +21,7 @@
 @mixin MaterialButtonsMotion() {
   .mfx-button,
   .mfx-icon-button {
-    transition-property : -fx-background-radius;
+    transition-property : -fx-background-color, -fx-background-radius;
     @include motion('expressive-fast-spatial');
 
     > .surface {
@@ -69,7 +69,7 @@
     &.m,
     &.l,
     &.xl {
-      transition-property : -fx-background-radius, -fx-border-radius;
+      transition-property : -fx-background-color, -fx-background-radius, -fx-border-radius;
       @include motion('expressive-fast-spatial');
     }
 
@@ -101,7 +101,7 @@
     > .mfx-icon-button {
       -fx-scale-x         : 1.0;
       -fx-scale-y         : 1.0;
-      transition-property : -fx-background-radius, -fx-scale-x, -fx-scale-y;
+      transition-property : -fx-background-color, -fx-background-radius, -fx-scale-x, -fx-scale-y;
       @include motion('expressive-fast-spatial');
 
       &:pressed:hover {
