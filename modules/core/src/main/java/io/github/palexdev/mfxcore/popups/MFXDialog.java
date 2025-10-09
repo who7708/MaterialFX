@@ -93,11 +93,6 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> {
         DialogConfig.DEFAULT.apply(this);
     }
 
-    public MFXDialog(String... styleClass) {
-        setStyleClass(styleClass);
-        DialogConfig.DEFAULT.apply(this);
-    }
-
     //================================================================================
     // Methods
     //================================================================================
@@ -261,7 +256,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> {
 
     @Override
     public List<String> defaultStyleClasses() {
-        return MFXStyleable.styleClasses("mfx-dialog");
+        return MFXStyleable.styleClasses("root", "mfx-dialog");
     }
 
     @Override

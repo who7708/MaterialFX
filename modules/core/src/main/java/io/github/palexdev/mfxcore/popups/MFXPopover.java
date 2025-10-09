@@ -75,11 +75,6 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> {
         PopoverConfig.DEFAULT.apply(this);
     }
 
-    public MFXPopover(String... styleClass) {
-        setStyleClass(styleClass);
-        PopoverConfig.DEFAULT.apply(this);
-    }
-
     //================================================================================
     // Methods
     //================================================================================

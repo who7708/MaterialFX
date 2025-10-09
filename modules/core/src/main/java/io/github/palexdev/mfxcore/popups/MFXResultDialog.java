@@ -75,10 +75,6 @@ public class MFXResultDialog<R> extends MFXDialog {
     //================================================================================
     public MFXResultDialog() {}
 
-    public MFXResultDialog(String... styleClass) {
-        super(styleClass);
-    }
-
     //================================================================================
     // Methods
     //================================================================================
