@@ -29,7 +29,6 @@ import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Direction;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Placement;
 import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Dialog;
@@ -240,12 +239,7 @@ public interface MFXPopup<O> {
         PopupRoot getRoot();
 
         default void setContent(Node content) {
-            ObservableList<Node> children = getRoot().getChildren();
-            if (content == null) {
-                children.clear();
-            } else {
-                children.setAll(content);
-            }
+            getRoot().setContent(content);
         }
 
         default void setStyleClass(String... styleClass) {

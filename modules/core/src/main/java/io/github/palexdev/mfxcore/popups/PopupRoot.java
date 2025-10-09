@@ -87,6 +87,14 @@ public class PopupRoot extends StackPane {
     // Methods
     //================================================================================
 
+    protected void setContent(Node content) {
+        if (content == null) {
+            getChildren().clear();
+        } else {
+            getChildren().setAll(content);
+        }
+    }
+
     /// This is responsible for applying all the stylesheets collected by [#fetchStylesheets()] on this node.
     public void updateStylesheets() {
         Collection<String> stylesheets = fetchStylesheets();
