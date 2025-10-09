@@ -16,7 +16,7 @@
  * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.palexdev.mfxcore.utils.resize;
+package io.github.palexdev.mfxcore.utils.fx.resize;
 
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;

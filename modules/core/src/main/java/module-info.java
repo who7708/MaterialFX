@@ -68,10 +68,10 @@ module mfx.core {
     exports io.github.palexdev.mfxcore.utils;
     exports io.github.palexdev.mfxcore.utils.converters;
     exports io.github.palexdev.mfxcore.utils.fx;
-    exports io.github.palexdev.mfxcore.utils.loader;
-    exports io.github.palexdev.mfxcore.utils.resize;
-    exports io.github.palexdev.mfxcore.utils.resize.base;
-    exports io.github.palexdev.mfxcore.utils.resize.shapes;
+    exports io.github.palexdev.mfxcore.utils.fx.loader;
+    exports io.github.palexdev.mfxcore.utils.fx.resize;
+    exports io.github.palexdev.mfxcore.utils.fx.resize.base;
+    exports io.github.palexdev.mfxcore.utils.fx.resize.shapes;
 
     // Validations
     exports io.github.palexdev.mfxcore.validation;

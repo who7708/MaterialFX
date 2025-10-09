@@ -16,13 +16,13 @@
  * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.palexdev.mfxcore.utils.resize.shapes;
+package io.github.palexdev.mfxcore.utils.fx.resize.shapes;
 
 import java.util.function.Function;
 
 import io.github.palexdev.mfxcore.enums.Zone;
-import io.github.palexdev.mfxcore.utils.resize.base.AbstractDragResizer;
-import io.github.palexdev.mfxcore.utils.resize.base.DragResizeHandler;
+import io.github.palexdev.mfxcore.utils.fx.resize.base.AbstractDragResizer;
+import io.github.palexdev.mfxcore.utils.fx.resize.base.DragResizeHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
 

@@ -20,8 +20,8 @@ package io.github.palexdev.mfxcore.utils.fx;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import io.github.palexdev.mfxcore.utils.resize.StageResizer;
 import javafx.scene.Cursor;
+import io.github.palexdev.mfxcore.utils.fx.resize.StageResizer;
 import javafx.scene.Node;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
@@ -74,7 +74,7 @@ public class StageUtils {
     /// it can be used to also resize the window.
     ///
     /// This makes use of [StageResizer].
-    public static void makeResizable(Stage stage, Region byRegion) {
+    public static StageResizer makeResizable(Stage stage, Region byRegion) {
         StageResizer resizer = new StageResizer(byRegion, stage);
         resizer.makeResizable();
     }
@@ -85,5 +85,6 @@ public class StageUtils {
     private static class Delta {
         private double x;
         private double y;
+        return resizer;
     }
 }

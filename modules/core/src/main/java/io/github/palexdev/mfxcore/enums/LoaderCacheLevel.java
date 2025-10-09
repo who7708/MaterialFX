@@ -18,7 +18,7 @@
 
 package io.github.palexdev.mfxcore.enums;
 
-import io.github.palexdev.mfxcore.utils.loader.MFXLoader;
+import io.github.palexdev.mfxcore.utils.fx.loader.MFXLoader;
 import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.scene.Parent;

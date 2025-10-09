@@ -16,7 +16,7 @@
  * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.palexdev.mfxcore.utils;
+package io.github.palexdev.mfxcore.utils.fx;
 
 import io.github.palexdev.mfxcore.base.TriConsumer;
 import javafx.event.Event;

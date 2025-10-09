@@ -16,7 +16,7 @@
  * along with MaterialFX. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package io.github.palexdev.mfxcore.utils.loader;
+package io.github.palexdev.mfxcore.utils.fx.loader;
 
 import java.net.URL;
 import java.util.ArrayList;
