@@ -23,6 +23,7 @@
 @mixin MaterialCheckboxes() {
   .mfx-checkbox {
     @include LabelLarge();
+    -fx-text-fill : -md-sys-color-on-surface;
     -fx-graphic-text-gap : 4px;
 
     > .box {
