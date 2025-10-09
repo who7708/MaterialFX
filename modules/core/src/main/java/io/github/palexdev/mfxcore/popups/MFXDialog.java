@@ -32,6 +32,9 @@ import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Direction;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Placement;
 import io.github.palexdev.mfxcore.utils.fx.MFXBackdrop;
+import io.github.palexdev.mfxcore.utils.fx.StageUtils;
+import io.github.palexdev.mfxcore.utils.fx.WindowMover;
+import io.github.palexdev.mfxcore.utils.fx.resize.StageResizer;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.StringProperty;
@@ -82,6 +85,9 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> {
     private boolean lockInPlace;
     private When<?> lockWhen;
 
+    private WindowMover mover;
+    private StageResizer resizer;
+
     protected boolean await = false;
     protected boolean inNestedLoop = false;
 
@@ -122,6 +128,28 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> {
             ex.printStackTrace();
             inNestedLoop = false;
         }
+    }
+
+    public void setMoveable(Node anchor) {
+        if (anchor == null) {
+            if (mover != null) mover.uninstall();
+            return;
+        }
+
+        if (lockInPlace)
+            throw new IllegalStateException("Dialog is configured to be lock in place");
+        if (mover != null) mover.uninstall();
+        mover = StageUtils.makeDraggable(peer, anchor);
+    }
+
+    public void setResizable(boolean resizable) {
+        if (!resizable) {
+            if (resizer != null) resizer.dispose();
+            return;
+        }
+
+        if (resizer != null) resizer.dispose();
+        resizer = StageUtils.makeResizable(peer, peer.getRoot());
     }
 
     //================================================================================
