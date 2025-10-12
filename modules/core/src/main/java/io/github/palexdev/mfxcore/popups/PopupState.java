@@ -36,7 +36,7 @@ public enum PopupState {
     /// MFXPopover popover = ...;
     /// MFXButton btn = ...;
     /// btn.setOnAction(_ -> {
-    ///// Doesn't work for whatever fucking reason and the popup keeps getting shown.
+    /// // Doesn't work for whatever fucking reason and the popup keeps getting shown.
     ///   if (popover.isShowing()){
     ///     popover.hide();
     ///} else {
