@@ -1,3 +1,11 @@
+## 25.3.1 - 12-10-2025 - 83a8adcf
+
+### Features
+
+- <b5ceca97> Add an additional special state for MFXPopups to indicate if the popup is being auto-hidden by internal mechanisms
+
+
+
 ## 25.3.0 - 09-10-2025 - 80d05dc1
 
 ### Features
