@@ -211,6 +211,7 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> {
             // Redirect auto-hide handling to popover hide logic!
             if (!indirectHide) {
                 MFXPopover.this.hide();
+                setState(PopupState.AUTO_HIDE);
                 return;
             }
             indirectHide = false;

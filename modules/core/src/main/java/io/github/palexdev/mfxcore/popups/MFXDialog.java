@@ -354,6 +354,7 @@ public class MFXDialog extends MFXPopupBase<WindowPeer, Window> {
             // Redirect auto-hide handling to dialog hide logic!
             if (!indirectHide) {
                 MFXDialog.this.hide();
+                setState(PopupState.AUTO_HIDE);
                 return;
             }
             indirectHide = false;

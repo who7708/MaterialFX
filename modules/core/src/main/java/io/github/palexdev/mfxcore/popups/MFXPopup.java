@@ -191,7 +191,8 @@ public interface MFXPopup<O> {
 
     /// Convenience method to check if the [#stateProperty()] is either [PopupState#SHOWING] or [PopupState#SHOWN].
     default boolean isShowing() {
-        return getState() == PopupState.SHOWING || getState() == PopupState.SHOWN;
+        PopupState state = getState();
+        return state == PopupState.SHOWING || state == PopupState.SHOWN;
     }
 
     default PopupState getState() {
