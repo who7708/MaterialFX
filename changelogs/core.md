@@ -1,3 +1,11 @@
+## 25.3.2 - 12-10-2025 - 8d3e2311
+
+### Misc
+
+- <8275b5fe> Forgot export for notifications package
+
+
+
 ## 25.3.1 - 12-10-2025 - 83a8adcf
 
 ### Features
