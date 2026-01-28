@@ -1,3 +1,11 @@
+## 25.3.2 - 28-01-2026 - adbfaf6a
+
+### Refactoring
+
+- <2d4a41ef> AbstractDragResizer: do not reset cursor on mouse release but rather check zone and update accordingly
+
+
+
 ## 25.3.2 - 12-10-2025 - 8d3e2311
 
 ### Misc
