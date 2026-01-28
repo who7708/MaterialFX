@@ -122,8 +122,9 @@ public abstract class AbstractDragResizer<T extends Node> {
     }
 
     protected void handleReleased(MouseEvent event) {
-        node.setCursor(Cursor.DEFAULT);
-        draggedZone = Zone.NONE;
+        Zone zone = getZoneByEvent(event);
+        Cursor cursor = getCursorByZone(zone);
+        node.setCursor(cursor);
     }
 
     protected void handleKeyPressed(KeyEvent event) {
