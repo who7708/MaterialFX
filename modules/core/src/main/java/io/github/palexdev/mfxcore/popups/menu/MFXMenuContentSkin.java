@@ -26,6 +26,8 @@ import io.github.palexdev.mfxcore.controls.MFXSkinBase;
 import io.github.palexdev.mfxcore.input.WhenEvent;
 import io.github.palexdev.mfxcore.utils.fx.LayoutUtils;
 import javafx.beans.InvalidationListener;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
@@ -58,6 +60,8 @@ public class MFXMenuContentSkin extends MFXSkinBase<MFXMenuContent> {
 
     // Keep a reference to it for layout
     private Node placeholder;
+
+    private final DoubleProperty widerEntry = new SimpleDoubleProperty(Region.USE_COMPUTED_SIZE);
 
     //================================================================================
     // Constructors
@@ -140,7 +144,9 @@ public class MFXMenuContentSkin extends MFXSkinBase<MFXMenuContent> {
 
     /// Creates a new [MFXMenuEntry] for the given [MFXMenuItem].
     protected MFXMenuEntry buildEntry(MFXMenuItem item) {
-        return new MFXMenuEntry(getMenu(), item);
+        MFXMenuEntry entry = new MFXMenuEntry(getMenu(), item);
+        ((DoubleProperty) entry.minTextWidthProperty()).bind(widerEntry);
+        return entry;
     }
 
     /// Create a [Region] with style class `.separator` for the special item [MFXMenuItem#SEPARATOR].
@@ -197,7 +203,11 @@ public class MFXMenuContentSkin extends MFXSkinBase<MFXMenuContent> {
         double advance = 0;
         for (Node child : getChildren()) {
             double ch = LayoutUtils.boundHeight(child);
-            child.resizeRelocate(0, y + advance, w, ch);
+            if (child instanceof MFXMenuEntry e) {
+                double etW = e.textWidth();
+                if (widerEntry.get() < etW) widerEntry.set(etW);
+            }
+            child.resizeRelocate(x, y + advance, w, ch);
             advance += ch + gap;
         }
 

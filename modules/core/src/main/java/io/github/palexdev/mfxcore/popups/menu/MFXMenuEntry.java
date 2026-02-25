@@ -31,7 +31,11 @@ import io.github.palexdev.mfxcore.controls.Label;
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.observables.When;
 import io.github.palexdev.mfxcore.utils.fx.LayoutUtils;
+import io.github.palexdev.mfxcore.utils.fx.TextMeasurementCache;
 import javafx.beans.InvalidationListener;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
@@ -71,6 +75,9 @@ public class MFXMenuEntry extends Region implements MFXStyleable, WithBehavior {
     private final Label leading;
     private final Label trailing;
 
+    private final TextMeasurementCache tmc;
+    private final DoubleProperty minTextWidth = new SimpleDoubleProperty(USE_COMPUTED_SIZE);
+
     private InvalidationListener subListener;
     private SubMenuHandler subMenuHandler;
     private final List<Disposable> disposables = new ArrayList<>();
@@ -95,7 +102,10 @@ public class MFXMenuEntry extends Region implements MFXStyleable, WithBehavior {
         leading.setText(item.text());
         leading.getStyleClass().add("leading");
 
-        Region tIcon = new Region();
+        tmc = new TextMeasurementCache(leading);
+        leading.minWidthProperty().bind(minTextWidth);
+
+        Region tIcon = new Region(); // TODO provide default CSS with CSSFragment
         tIcon.getStyleClass().add("svg-icon");
         trailing = new Label("", tIcon);
         trailing.getStyleClass().add("trailing");
@@ -113,6 +123,12 @@ public class MFXMenuEntry extends Region implements MFXStyleable, WithBehavior {
     // Methods
     //================================================================================
 
+    /// @return the leading text width. The computation is cached by using a [TextMeasurementCache]
+    public double textWidth() {
+        return tmc.getSnappedWidth();
+    }
+
+    /// Adds the following listeners:
     /// - A listener on the entry's [#hoverProperty()] to show/hide the submenu if present. This also sets the parent menu's
     /// [MFXMenu#hoveredItemProperty()] to this entry.
     /// - A listener on the [MFXMenuItem#children()] list to build/dispose the submenu as needed.
@@ -161,6 +177,7 @@ public class MFXMenuEntry extends Region implements MFXStyleable, WithBehavior {
             subMenuHandler.dispose();
             subMenuHandler = null;
         }
+        leading.textProperty().unbind();
         disposables.forEach(Disposable::dispose);
         disposables.clear();
         disableProperty().unbind();
@@ -233,5 +250,16 @@ public class MFXMenuEntry extends Region implements MFXStyleable, WithBehavior {
     @Override
     public SupplierProperty<MFXBehavior<? extends Node>> behaviorFactoryProperty() {
         return behaviorFactory;
+    }
+
+    public double getMinTextWidth() {
+        return minTextWidth.get();
+    }
+
+    /// Specifies the leading label's minimum width.
+    ///
+    /// This is set by the [MFXMenuContentSkin] so that all entries in the menu are aligned (both leading and trailing).
+    public ReadOnlyDoubleProperty minTextWidthProperty() {
+        return minTextWidth;
     }
 }
