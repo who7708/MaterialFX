@@ -21,21 +21,20 @@ package io.github.palexdev.mfxcore.popups.menu;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 import io.github.palexdev.mfxcore.base.Disposable;
+import io.github.palexdev.mfxcore.base.properties.functional.SupplierProperty;
+import io.github.palexdev.mfxcore.behavior.MFXBehavior;
+import io.github.palexdev.mfxcore.behavior.WithBehavior;
 import io.github.palexdev.mfxcore.controls.Label;
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
-import io.github.palexdev.mfxcore.input.WhenEvent;
 import io.github.palexdev.mfxcore.observables.When;
 import io.github.palexdev.mfxcore.utils.fx.LayoutUtils;
 import javafx.beans.InvalidationListener;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
-import javafx.scene.TraversalDirection;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.Node;
 import javafx.scene.layout.Region;
 
 /// Each entry is associated and responsible for displaying a certain [MFXMenuItem]. The layout is simple, there are just
@@ -49,13 +48,24 @@ import javafx.scene.layout.Region;
 ///
 /// Any entry has also a dependency on the menu that owns it. This is necessary to properly handle the cascade of submenus.
 ///
-/// [MFXMenuEntry] also implements [MFXStyleable], the default CSS style class is set to `.menu-entry`.
-public class MFXMenuEntry extends Region implements MFXStyleable {
+/// [MFXMenuEntry] also implements [MFXStyleable] and [WithBehavior], the default CSS style class is set to `.menu-entry`
+/// and the default behavior is [MFXMenuEntryBehavior].
+public class MFXMenuEntry extends Region implements MFXStyleable, WithBehavior {
     //================================================================================
     // Properties
     //================================================================================
     private final MFXMenu menu;
     private final MFXMenuItem item;
+
+    private MFXBehavior<? extends Node> behavior;
+    private final SupplierProperty<MFXBehavior<? extends Node>> behaviorFactory = new SupplierProperty<>() {
+        @Override
+        protected void invalidated() {
+            if (behavior != null) behavior.dispose();
+            behavior = get().get();
+            if (behavior != null) behavior.init();
+        }
+    };
 
     private final Region surface;
     private final Label leading;
@@ -72,6 +82,7 @@ public class MFXMenuEntry extends Region implements MFXStyleable {
         this.menu = menu;
         this.item = item;
         setDefaultStyleClasses();
+        setDefaultBehaviorFactory();
         setFocusTraversable(true);
 
         // Build UI
@@ -102,12 +113,8 @@ public class MFXMenuEntry extends Region implements MFXStyleable {
     // Methods
     //================================================================================
 
-    /// Adds the following listeners/handlers:
     /// - A listener on the entry's [#hoverProperty()] to show/hide the submenu if present. This also sets the parent menu's
     /// [MFXMenu#hoveredItemProperty()] to this entry.
-    /// - A mouse click handler to run the action specified by the entry's item and close the menu from the root.
-    /// - A key handler on the entry to manage actions such as key navigation (including showing and closing submenus)
-    /// and trigger
     /// - A listener on the [MFXMenuItem#children()] list to build/dispose the submenu as needed.
     protected void addListeners() {
         Collections.addAll(disposables,
@@ -123,48 +130,7 @@ public class MFXMenuEntry extends Region implements MFXStyleable {
                     }
                 })
                 .executeNow(this::isHover)
-                .listen(),
-            WhenEvent.intercept(this, MouseEvent.MOUSE_CLICKED)
-                .condition(e -> e.getButton() == MouseButton.PRIMARY && item.action() != null)
-                .handle(_ -> {
-                    menu.getRootMenu().hide();
-                    item.action().run();
-                })
-                .register(),
-            WhenEvent.intercept(this, KeyEvent.KEY_PRESSED)
-                .handle(e -> {
-                    KeyCode code = e.getCode();
-                    switch (code) {
-                        case SPACE, ENTER -> {
-                            if (subMenuHandler != null) {
-                                if (!subMenuHandler.isShowing()) {
-                                    subMenuHandler.show();
-                                    subMenuHandler.focus();
-                                }
-                            } else {
-                                item.action().run();
-                                menu.getRootMenu().hide();
-                            }
-                        }
-                        case UP -> requestFocusTraversal(TraversalDirection.UP);
-                        case DOWN -> requestFocusTraversal(TraversalDirection.DOWN);
-                        case RIGHT -> {
-                            if (subMenuHandler != null) {
-                                subMenuHandler.show();
-                                subMenuHandler.focus();
-                            }
-                        }
-                        case LEFT -> {
-                            if (!menu.isRootMenu()) {
-                                menu.hide();
-                            }
-                        }
-                        case ESCAPE -> menu.hide();
-                    }
-                    e.consume();
-                })
-                .asFilter()
-                .register()
+                .listen()
         );
 
         subListener = _ -> handleSubMenu();
@@ -186,6 +152,7 @@ public class MFXMenuEntry extends Region implements MFXStyleable {
     }
 
     public void dispose() {
+        if (behavior != null) behavior.dispose();
         if (subListener != null) {
             item.children().removeListener(subListener);
             subListener = null;
@@ -202,6 +169,12 @@ public class MFXMenuEntry extends Region implements MFXStyleable {
     //================================================================================
     // Overridden Methods
     //================================================================================
+
+    @Override
+    public Supplier<MFXBehavior<? extends Node>> defaultBehaviorFactory() {
+        return () -> new MFXMenuEntryBehavior(this);
+    }
+
     @Override
     public List<String> defaultStyleClasses() {
         return MFXStyleable.styleClasses("menu-entry");
@@ -234,5 +207,31 @@ public class MFXMenuEntry extends Region implements MFXStyleable {
         surface.resizeRelocate(x, y, w, h);
         layoutInArea(leading, x, y, w, h, 0, getPadding(), HPos.LEFT, VPos.CENTER);
         layoutInArea(trailing, x, y, w, h, 0, getPadding(), HPos.RIGHT, VPos.CENTER);
+    }
+
+    //================================================================================
+    // Getters/Setters
+    //================================================================================
+
+    public MFXMenu getMenu() {
+        return menu;
+    }
+
+    public SubMenuHandler getSubMenuHandler() {
+        return subMenuHandler;
+    }
+
+    public MFXMenuItem getItem() {
+        return item;
+    }
+
+    @Override
+    public MFXBehavior<? extends Node> getBehavior() {
+        return behavior;
+    }
+
+    @Override
+    public SupplierProperty<MFXBehavior<? extends Node>> behaviorFactoryProperty() {
+        return behaviorFactory;
     }
 }
