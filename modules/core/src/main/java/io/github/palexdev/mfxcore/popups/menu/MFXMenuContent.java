@@ -52,6 +52,7 @@ public class MFXMenuContent extends MFXControl implements MFXStyleable {
     public MFXMenuContent(MFXMenu menu) {
         this.menu = menu;
         setDefaultStyleClasses();
+        if (menu.getConfig().preloadSkin()) preloadSkin();
     }
 
     //================================================================================
