@@ -196,14 +196,12 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> {
             // and shift the popup to some fucking arbitrary position.
             // Oh, and of course all of this is private bullshit that cannot be overridden.
             // Reset this crap and FUCK YOU
-            When.onInvalidated(root.translateXProperty())
-                .condition(_ -> root.getTranslateX() != 0.0 || root.getTranslateY() != 0.0)
-                .then(_ -> {
+            When.observe(() -> {
+                if (root.getTranslateX() != 0.0 || root.getTranslateY() != 0.0) {
                     root.setTranslateX(0.0);
                     root.setTranslateY(0.0);
-                })
-                .invalidating(root.translateYProperty())
-                .listen();
+                }
+            }, root.translateXProperty(), root.translateYProperty()).listen();
         }
 
         @Override
