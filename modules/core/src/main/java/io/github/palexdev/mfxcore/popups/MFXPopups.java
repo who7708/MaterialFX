@@ -18,6 +18,7 @@
 
 package io.github.palexdev.mfxcore.popups;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -25,6 +26,7 @@ import java.util.function.Function;
 import io.github.palexdev.mfxcore.base.beans.Position;
 import io.github.palexdev.mfxcore.popups.menu.MFXMenu;
 import io.github.palexdev.mfxcore.popups.menu.MFXMenuItem;
+import io.github.palexdev.mfxcore.popups.menu.MenuBuilder;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Placement;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -126,6 +128,12 @@ public class MFXPopups {
                 m.getItems().addAll(items);
             }
             return this;
+        }
+
+        public Builder<O, P> addMenuItems(MenuBuilder... builders) {
+            return addMenuItems(Arrays.stream(builders)
+                .map(MenuBuilder::build)
+                .toArray(MFXMenuItem[]::new));
         }
 
         /// Node: works only for [MFXMenus][MFXMenu].

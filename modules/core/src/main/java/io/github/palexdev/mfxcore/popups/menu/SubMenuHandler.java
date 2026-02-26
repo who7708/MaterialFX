@@ -21,44 +21,36 @@ package io.github.palexdev.mfxcore.popups.menu;
 import java.util.function.Function;
 
 import io.github.palexdev.mfxcore.observables.When;
-import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Direction;
-import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Placement;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.TraversalDirection;
 import javafx.scene.input.KeyEvent;
 
-import static io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Placement.placement;
-
 /// Utility class to make the submenu's handling easier and cleaner.
 public class SubMenuHandler {
-    private Node owner;
+    private MFXMenuItem item;
     private MFXMenu subMenu;
     private When<?> hideListener;
 
-    public SubMenuHandler(MFXMenu parentMenu, MFXMenuItem item, Node owner) {
-        if (owner == null) throw new IllegalArgumentException("Owner cannot be null");
-        this.owner = owner;
-
-        subMenu = parentMenu.createSubMenu(item.children());
-        hideListener = When.onInvalidated(parentMenu.hoveredItemProperty())
+    public SubMenuHandler(MFXMenuItem item) {
+        this.item = item;
+        subMenu = item.getMenu().createSubMenu(item.getSubItems());
+        hideListener = When.onInvalidated(item.getMenu().hoveredItemProperty())
             .then(_ -> hide())
             .listen();
     }
 
-    /// Shows the submenu by calling [MFXMenu#showSub(Node, Placement)] with [Pos#TOP_RIGHT] and [Direction#AFTER] for both
-    /// axis.
+    /// Shows the submenu by calling [MFXMenu#showSub(Node)] with the placement specified by the submenu's config.
     ///
     /// Also resets the submenu's hovered item to `null`.
     public void show() {
         subMenu.setHoveredItem(null);
-        subMenu.showSub(owner, placement(Pos.TOP_RIGHT, Direction.AFTER, Direction.AFTER));
+        subMenu.showSub(item);
     }
 
     /// Hides the submenu only if its parent's [MFXMenu#hoveredItemProperty()] is not this entry.
     public void hide() {
         Node hc = subMenu.getParentMenu().getHoveredItem();
-        if (hc != owner) {
+        if (hc != item) {
             subMenu.hide();
         }
     }
@@ -78,6 +70,7 @@ public class SubMenuHandler {
     ///
     /// This is to allow custom implementations of [MFXMenuContent] to be propagated to the submenus, because by default
     /// every [MFXMenu]'s content is set to [MFXMenuContent].
+    // TODO this is not reachable by the users for now
     public void setContent(Function<MFXMenu, ? extends MFXMenuContent> contentSupplier) {
         subMenu.setContent(contentSupplier.apply(subMenu));
     }
@@ -92,6 +85,6 @@ public class SubMenuHandler {
         hideListener = null;
         subMenu.setContent(null);
         subMenu = null;
-        owner = null;
+        item = null;
     }
 }

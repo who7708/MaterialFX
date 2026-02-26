@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 Parisi Alessandro - alessandro.parisi406@gmail.com
+ * Copyright (C) 2026 Parisi Alessandro - alessandro.parisi406@gmail.com
  * This file is part of MaterialFX (https://github.com/palexdev/MaterialFX)
  *
  * MaterialFX is free software: you can redistribute it and/or
@@ -18,57 +18,43 @@
 
 package io.github.palexdev.mfxcore.popups.menu;
 
-import java.util.*;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import io.github.palexdev.mfxcore.behavior.MFXBehavior;
 import io.github.palexdev.mfxcore.controls.MFXSkinBase;
 import io.github.palexdev.mfxcore.input.WhenEvent;
+import io.github.palexdev.mfxcore.observables.When;
 import io.github.palexdev.mfxcore.utils.fx.LayoutUtils;
-import javafx.beans.InvalidationListener;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Region;
 
 /// Default skin implementation for [MFXMenuContent]. Extends [MFXSkinBase] and expects behaviors of type
 /// [MFXMenuContentBehavior].
 ///
 /// The layout is manual but very simple:
-/// 1) Entries are cached. This means that every time a change occurs in the [MFXMenu#getItems()] list, it
-/// reuses the prebuilt entries if possible, while discarding only those for which the item is no longer in the list.
-/// The method responsible for updating the entries is [#updateChildren()].
-/// 2) Entries are positioned one below the other, spaced evenly by the [MFXMenuContent#spacingProperty()]
-/// 3) The width is the maximum between the entries. The height is the sum of all the entries' heights including the gap.
-/// 4) If the menu is empty, and the [MFXMenuContent#placeholderSupplierProperty()] produces a valid result, a placeholder
+/// 1. Entries are positioned one below the other, spaced evenly by the [MFXMenuContent#spacingProperty()]
+/// 2. The width is the maximum between the entries. The height is the sum of all the entries' heights including the gap.
+/// 3. If the menu is empty, and the [MFXMenuContent#placeholderSupplierProperty()] produces a valid result, a placeholder
 /// node is shown instead. This node can be selected from CSS via the style class: '.placeholder'
 public class MFXMenuContentSkin extends MFXSkinBase<MFXMenuContent> {
+
     //================================================================================
-    // Methods
+    // Properties
     //================================================================================
-    private Map<MFXMenuItem, MFXMenuEntry> itemsToNodes = new HashMap<>();
-    private InvalidationListener itemsListener = _ -> updateChildren();
-    private InvalidationListener placeholderListener = _ -> {
-        MFXMenuContent content = getSkinnable();
-        MFXMenu menu = content.getMenu();
-        if (menu.getItems().isEmpty()) updateChildren();
-    };
 
     // Keep a reference to it for layout
     private Node placeholder;
 
-    private final DoubleProperty widerEntry = new SimpleDoubleProperty(Region.USE_COMPUTED_SIZE);
-
     //================================================================================
     // Constructors
     //================================================================================
+
     public MFXMenuContentSkin(MFXMenuContent mc) {
         super(mc);
-        updateChildren();
         addListeners();
     }
 
@@ -76,29 +62,26 @@ public class MFXMenuContentSkin extends MFXSkinBase<MFXMenuContent> {
     // Methods
     //================================================================================
 
-    /// Adds the following listeners:
-    /// - A listener on the [MFXMenu#getItems()] list to call [#updateChildren()]
-    /// - A listener on the [MFXMenuContent#placeholderSupplierProperty()] to call [#updateChildren()] when the menu has
-    /// no items
     protected void addListeners() {
-        MFXMenuContent content = getSkinnable();
-        MFXMenu menu = content.getMenu();
-        menu.getItems().addListener(itemsListener);
-        content.placeholderSupplierProperty().addListener(placeholderListener);
+        MFXMenuContent mc = getSkinnable();
+        listeners(
+            When.observe(this::updateChildren, getMenuItems(), mc.placeholderSupplierProperty()).executeNow()
+        );
     }
 
-    /// This core method is responsible for building, caching and reusing the nodes that compose the menu's content.
-    /// It essentially produces two types of nodes:
-    /// - A [Region] that acts as a separator for items that are [MFXMenuItem#SEPARATOR]
-    /// - A [MFXMenuEntry] for all the others
+    /// Updates the [MFXMenuContent]'s children list with the items retrieved from [MFXMenuContent#getMenu()].
     ///
-    /// @see #buildEntry(MFXMenuItem)
-    /// @see #buildSeparator()
+    /// If the menu contains no items, this method sets a placeholder node, if provided by [MFXMenuContent#placeholderSupplierProperty()].
+    ///
+    /// **NOTE:** this method is also responsible for setting the menu instance on its items, [MFXMenuItem#setMenu(MFXMenu)].
+    /// The items do not carry the object at construction time by a design choice, as that would make their creation much
+    /// more inconvenient ([MenuBuilder]).
     protected void updateChildren() {
-        MFXMenuContent content = getSkinnable();
-        ObservableList<MFXMenuItem> items = content.getMenu().getItems();
+        MFXMenuContent mc = getSkinnable();
+        ObservableList<MFXMenuItem> items = getMenuItems();
+
         if (items.isEmpty()) {
-            Optional.ofNullable(content.getPlaceholderSupplier())
+            Optional.ofNullable(mc.getPlaceholderSupplier())
                 .map(Supplier::get)
                 .ifPresentOrElse(
                     n -> {
@@ -111,71 +94,29 @@ public class MFXMenuContentSkin extends MFXSkinBase<MFXMenuContent> {
                         getChildren().clear();
                     }
                 );
-            itemsToNodes.values().forEach(MFXMenuEntry::dispose);
-            itemsToNodes.clear();
             return;
         }
 
-        List<Node> children = new ArrayList<>();
-        Map<MFXMenuItem, MFXMenuEntry> tmp = itemsToNodes;
-        itemsToNodes = new HashMap<>();
-        for (MFXMenuItem item : items) {
-            // Separators are special
-            if (MFXMenuItem.SEPARATOR == item) {
-                children.add(buildSeparator());
-                continue;
-            }
-
-            MFXMenuEntry entry;
-            if ((entry = tmp.remove(item)) == null) {
-                entry = buildEntry(item);
-            }
-            itemsToNodes.put(item, entry);
-            children.add(entry);
-        }
-
-        // Clear and dispose remaining entries
-        tmp.values().forEach(MFXMenuEntry::dispose);
-        tmp.clear();
-
         placeholder = null;
-        getChildren().setAll(children);
+        items.forEach(it -> it.setMenu(mc.getMenu()));
+        getChildren().setAll(items);
     }
 
-    /// Creates a new [MFXMenuEntry] for the given [MFXMenuItem].
-    protected MFXMenuEntry buildEntry(MFXMenuItem item) {
-        MFXMenuEntry entry = new MFXMenuEntry(getMenu(), item);
-        ((DoubleProperty) entry.minTextWidthProperty()).bind(widerEntry);
-        return entry;
-    }
-
-    /// Create a [Region] with style class `.separator` for the special item [MFXMenuItem#SEPARATOR].
-    protected Node buildSeparator() {
-        Region separator = new Region();
-        separator.getStyleClass().add("separator");
-        return separator;
-    }
-
-    /// Shortcut for `getSkinnable().getMenu()`, retrieves the [MFXMenu] instance to which the content is associated to.
-    protected MFXMenu getMenu() {
-        return getSkinnable().getMenu();
+    protected ObservableList<MFXMenuItem> getMenuItems() {
+        return getSkinnable().getMenu().getItems();
     }
 
     //================================================================================
     // Overridden Methods
     //================================================================================
 
-    /// Adds the following handlers:
-    /// - An event handler on the control itself for key handling,
-    /// see [MFXMenuContentBehavior#keyPressed(KeyEvent, Runnable)]
     @Override
     protected void registerBehavior() {
         super.registerBehavior();
         MFXMenuContent mc = getSkinnable();
         MFXBehavior<? extends Node> behavior = getBehavior();
         events(
-            WhenEvent.intercept(mc, KeyEvent.KEY_PRESSED)
-                .handle(behavior::keyPressed)
+            WhenEvent.intercept(mc, KeyEvent.KEY_PRESSED).handle(behavior::keyPressed)
         );
     }
 
@@ -199,17 +140,20 @@ public class MFXMenuContentSkin extends MFXSkinBase<MFXMenuContent> {
 
     @Override
     protected void layoutChildren(double x, double y, double w, double h) {
-        double gap = getSkinnable().getSpacing();
-        double advance = 0;
-        for (Node child : getChildren()) {
-            double ch = LayoutUtils.boundHeight(child);
-            if (child instanceof MFXMenuEntry e) {
-                double etW = e.textWidth();
-                if (widerEntry.get() < etW) widerEntry.set(etW);
-            }
-            child.resizeRelocate(x, y + advance, w, ch);
-            advance += ch + gap;
+        MFXMenuContent mc = getSkinnable();
+        MFXMenu menu = mc.getMenu();
+        double gap = mc.getSpacing();
+        double advanceY = y;
+        ObservableList<MFXMenuItem> items = getMenuItems();
+        double maxTextW = -1;
+        for (MFXMenuItem item : items) {
+            double textW = item.textWidth();
+            if (textW > maxTextW) maxTextW = textW;
+            double iH = LayoutUtils.boundHeight(item);
+            item.resizeRelocate(x, advanceY, w, iH);
+            advanceY += iH + gap;
         }
+        menu.setTextColumnWidth(maxTextW);
 
         if (placeholder != null) {
             layoutInArea(placeholder, x, y, w, h, 0, HPos.CENTER, VPos.CENTER);
@@ -218,19 +162,7 @@ public class MFXMenuContentSkin extends MFXSkinBase<MFXMenuContent> {
 
     @Override
     public void dispose() {
-        MFXMenuContent content = getSkinnable();
-        if (itemsListener != null) {
-            MFXMenu menu = getMenu();
-            menu.getItems().removeListener(itemsListener);
-            itemsListener = null;
-        }
-        if (placeholderListener != null) {
-            content.placeholderSupplierProperty().removeListener(placeholderListener);
-            placeholderListener = null;
-        }
         placeholder = null;
-        itemsToNodes.values().forEach(MFXMenuEntry::dispose);
-        itemsToNodes.clear();
         getChildren().clear();
         super.dispose();
     }

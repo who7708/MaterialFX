@@ -35,10 +35,7 @@ import io.github.palexdev.mfxcore.popups.*;
 import io.github.palexdev.mfxcore.popups.menu.MFXMenu.MenuConfig.Builder;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Direction;
 import io.github.palexdev.mfxcore.utils.fx.AnchorHandlers.Placement;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
@@ -51,6 +48,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Region;
 
 import static io.github.palexdev.mfxcore.popups.PopupAnimationFunction.FADE;
 
@@ -104,6 +102,7 @@ import static io.github.palexdev.mfxcore.popups.PopupAnimationFunction.FADE;
 /// internally. (this may be changed in the future, or at least made configurable)
 ///
 /// @see MenuConfig
+/// @see #textColumnWidthProperty()
 public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
     //================================================================================
     // Static Properties
@@ -153,6 +152,13 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
     private final ObservableList<MFXMenuItem> items;
 
     private WhenEvent<?> trigger;
+
+    private final ReadOnlyDoubleWrapper textColumnWidth = new ReadOnlyDoubleWrapper(Region.USE_COMPUTED_SIZE) {
+        @Override
+        protected void invalidated() {
+            getRoot().requestLayout();
+        }
+    };
 
     // SubMenus Specific
     private Function<ObservableList<MFXMenuItem>, MFXMenu> subMenuFactory = items ->
@@ -245,8 +251,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
 
     /// This should be used by submenus to appear on the screen, next to the element that owns the submenu. This is
     /// typically one of the entries of the parent menu.
-    protected void showSub(Node owner, Placement placement) {
-        this.placement = placement;
+    protected void showSub(Node owner) {
         peer.show(owner, placement);
     }
 
@@ -404,6 +409,35 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
         return root;
     }
 
+    public double getTextColumnWidth() {
+        return textColumnWidth.get();
+    }
+
+    /// Specifies the minimum width for every item's leading text.
+    ///
+    /// Usually, by design, menus use a grid layout, in the sense that:
+    /// - All icons are aligned on the first column
+    /// - All items' labels are aligned on the second column
+    /// - All the shortcuts are aligned to the right in the third column
+    ///
+    /// Now, in reality, using a grid would not be possible, because you would have to split the three nodes, and
+    /// consequently it would not be possible to highlight items as a whole when hovering with the mouse for example.
+    ///
+    /// So, how do we deal with this? Through convention and a bit of trickery.
+    /// 1. All icons must have the same size. If that is not possible, wrap the icon in a container and size it to be
+    /// big enough to contain the biggest icon. (See `MFXIconWrapper` from _NFXResources_)
+    /// 2. At layout time, the text width of each item is computed ([MFXMenuItem#textWidth()]) and the maximum set as
+    /// the value of this property. Then, the default item's skin retrieves this value and adjusts the layout.
+    ///
+    /// Yes, it's complicated, I don't like it, but there's no other way and JavaFX does something similar internally too.
+    public ReadOnlyDoubleProperty textColumnWidthProperty() {
+        return textColumnWidth.getReadOnlyProperty();
+    }
+
+    protected void setTextColumnWidth(double width) {
+        textColumnWidth.set(width);
+    }
+
     public Function<ObservableList<MFXMenuItem>, MFXMenu> getSubMenuFactory() {
         return subMenuFactory;
     }
@@ -477,7 +511,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
     /// from the event that triggered the menu. Example: context menus (like the ones for text fields) use the mouse
     /// coordinates, while menus from toolbars are anchored to a button.
     /// - The `animationProvider` parameter allows you to set the animation for both `root` menus and all the submenus
-    /// in the cascade. This is needed because submenus are built internally by [MFXMenuCells][MFXMenuEntry].
+    /// in the cascade. This is needed because submenus are built internally by [MFXMenuItems][MFXMenuItem] (check default skin).
     /// If you use [MFXPopup#setAnimation(PopupAnimation)] on the `root` menu, the animation type won't propagate!
     public record MenuConfig(
         Placement placement,
