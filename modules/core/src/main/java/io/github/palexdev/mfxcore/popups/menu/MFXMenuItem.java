@@ -330,7 +330,7 @@ public class MFXMenuItem extends MFXLabeled {
         /// Adds the following listeners:
         /// - A listener on the entry's [#hoverProperty()] to show/hide the submenu if present. This also sets the parent menu's
         /// [MFXMenu#hoveredItemProperty()] to this entry.
-        /// - A listener on the [MFXMenuItem#subItems()] list to build/dispose the submenu as needed.
+        /// - A listener on the [MFXMenuItem#getSubItems()] list to build/dispose the submenu as needed.
         protected void addListeners() {
             MFXMenuItem item = getSkinnable();
             listeners(
@@ -352,7 +352,7 @@ public class MFXMenuItem extends MFXLabeled {
             trailing.textProperty().bind(item.shortcutProperty().map(KeyStroke::toDisplayString));
         }
 
-        /// This method is mainly responsible for creating or disposing the submenu depending on [MFXMenuItem#subItems()].
+        /// This method is mainly responsible for creating or disposing the submenu depending on [MFXMenuItem#getSubItems()].
         ///
         /// It also updates the trailing label to only show the text or submenu icon accordingly ([ContentDisplay]),
         /// and adds/removes the `.sub` style class to the item

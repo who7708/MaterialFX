@@ -98,7 +98,7 @@ import static io.github.palexdev.mfxcore.popups.PopupAnimationFunction.FADE;
 /// crucial to the close behavior. When the property's value becomes `null`, any open submenu is closed, and this causes
 /// all other submenus in the cascade (if any) to close too.
 /// 3) When it comes to show/hide, submenus are an exception to the rule. They do not need to be installed on an owner,
-/// as they typically appear on hover. So, a protected extra method [#showSub(Node, Placement)] allows this behavior
+/// as they typically appear on hover. So, a protected extra method [#showSub(Node)] allows this behavior
 /// internally. (this may be changed in the future, or at least made configurable)
 ///
 /// @see MenuConfig
