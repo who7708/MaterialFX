@@ -24,7 +24,6 @@ import io.github.palexdev.mfxcore.base.properties.styleable.StyleableDoublePrope
 import io.github.palexdev.mfxcore.utils.fx.StyleUtils;
 import javafx.css.CssMetaData;
 import javafx.css.Styleable;
-import javafx.css.StyleableObjectProperty;
 import javafx.css.StyleablePropertyFactory;
 import javafx.scene.text.FontSmoothingType;
 
@@ -41,16 +40,9 @@ public class Text extends javafx.scene.text.Text {
 
     public Text(String text) {
         super(text);
-    }
-
-    public Text(double x, double y, String text) {
-        super(x, y, text);
-    }
-
-    {
         getStyleClass().setAll("text");
         wrappingWidthProperty().bind(cssWrappingWidthProperty());
-        ((StyleableObjectProperty<FontSmoothingType>) fontSmoothingTypeProperty()).applyStyle(null, FontSmoothingType.LCD);
+        StyleUtils.initProperty(fontSmoothingTypeProperty(), FontSmoothingType.LCD);
     }
 
     //================================================================================
