@@ -155,7 +155,11 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
     private WhenEvent<?> trigger;
 
     // SubMenus Specific
-    private Function<ObservableList<MFXMenuItem>, MFXMenu> subMenuFactory = MFXMenu::new;
+    private Function<ObservableList<MFXMenuItem>, MFXMenu> subMenuFactory = items ->
+        new MFXMenu(items).configure(cfg -> cfg
+            .placement(Placement.placement(Pos.TOP_RIGHT, Direction.AFTER, Direction.AFTER))
+            .offset(Position.of(4.0, 0))
+        );
     private final ReadOnlyObjectWrapper<MFXMenu> parent = new ReadOnlyObjectWrapper<>(null);
     private final ObjectProperty<Node> hoveredItem = new SimpleObjectProperty<>();
 
