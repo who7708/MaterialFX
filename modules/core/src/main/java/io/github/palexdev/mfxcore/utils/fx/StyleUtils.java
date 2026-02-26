@@ -23,8 +23,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import javafx.beans.property.Property;
 import javafx.css.CssMetaData;
 import javafx.css.Styleable;
+import javafx.css.StyleableProperty;
 import javafx.geometry.Insets;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
@@ -121,6 +123,11 @@ public class StyleUtils {
         }
 
         return CornerRadii.EMPTY;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> void initProperty(Property<T> property, T value) {
+        ((StyleableProperty<T>) property).applyStyle(null, value);
     }
 
     @SafeVarargs
