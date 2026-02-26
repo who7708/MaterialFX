@@ -46,7 +46,7 @@ import javafx.scene.layout.StackPane;
 /// 1) You can style the dialog by selecting the owner (styleable parent), e.g.:
 /// ```css
 /// .my-button .my-popup {...}
-///```
+/// ```
 /// 2) The dialog catches all the stylesheets applied along the path to its `styleable parent`, so you don't have to add
 /// them yourself
 /// ```java
@@ -54,7 +54,7 @@ import javafx.scene.layout.StackPane;
 /// myButton.getStylesheets().add("my-button.css");
 /// // Install a popup on the button with getStyleableParent() overridden to `myButton`
 /// // The stylesheet will be applied to the popup too and the above example CSS will work
-///```
+/// ```
 /// Such functionality, which I deem crucial, is backported for my [popups][MFXPopup] hierarchy too, but:
 /// 1) It's more dynamic/versatile. The `styleable parent` can be changed at any time through a property which will also
 /// automatically update the style when needed.
@@ -82,6 +82,14 @@ public class PopupRoot extends StackPane {
             updateStylesheets();
         }
     };
+
+    //================================================================================
+    // Constructors
+    //================================================================================
+
+    public PopupRoot() {
+        updateStylesheets();
+    }
 
     //================================================================================
     // Methods
@@ -115,12 +123,11 @@ public class PopupRoot extends StackPane {
     /// 5) Returns all the collected stylesheets in the `Set` but in [reverse][SequencedSet#reversed()] order
     /// (because we go up the scenegraph).
     private Collection<String> fetchStylesheets() {
-        SequencedSet<String> set = new LinkedHashSet<>();
         Styleable styleable = getStyleableParent();
-
         if (!(styleable instanceof Parent parent))
             return Collections.singleton(RESET_CSS);
 
+        SequencedSet<String> set = new LinkedHashSet<>();
         while (parent != null) {
             set.addAll(parent.getStylesheets());
             parent = parent.getParent();
