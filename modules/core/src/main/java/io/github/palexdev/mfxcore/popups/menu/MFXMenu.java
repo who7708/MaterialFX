@@ -130,10 +130,12 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
         @Override
         protected void onContentChanged() {
             Node content = getContent();
-            if (content == null || content instanceof MFXMenuContent) {
+            if (content instanceof MFXMenuContent) {
                 super.onContentChanged();
             } else {
-                throw new IllegalStateException("Content must be of type MFXMenuContent! Got: " + content.getClass());
+                throw new IllegalStateException("Content must be of type MFXMenuContent! Got: " +
+                                                Optional.ofNullable(content).map(Object::getClass).orElse(null)
+                );
             }
         }
 
