@@ -27,6 +27,7 @@ import io.github.palexdev.mfxcore.behavior.MFXBehavior;
 import io.github.palexdev.mfxcore.controls.MFXSkinBase;
 import io.github.palexdev.mfxcore.input.KeyStroke;
 import io.github.palexdev.mfxcore.popups.MFXPopups;
+import io.github.palexdev.mfxcore.selection.SelectionGroup;
 import io.github.palexdev.mfxcore.utils.fx.FXCollectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -40,12 +41,29 @@ public class MenuBuilder {
     // Properties
     //================================================================================
 
+    private final Supplier<MFXMenuItem> itemFactory;
     private Node graphic;
     private String text;
     private KeyStroke shortcut;
     private Runnable action;
     private ObservableList<MFXMenuItem> subItems = FXCollections.observableArrayList();
     private Consumer<MFXMenuItem> cfg;
+
+    // check specific
+    private boolean selected = false;
+    private SelectionGroup group;
+
+    //================================================================================
+    // Constructors
+    //================================================================================
+
+    public MenuBuilder() {
+        this(MFXMenuItem::new);
+    }
+
+    public MenuBuilder(Supplier<MFXMenuItem> itemFactory) {
+        this.itemFactory = itemFactory;
+    }
 
     //================================================================================
     // Static Methods
@@ -64,7 +82,7 @@ public class MenuBuilder {
 
                     @Override
                     public List<String> defaultStyleClasses() {
-                        return List.of("separator");
+                        return List.of("menu-separator");
                     }
 
                     @Override
@@ -121,6 +139,16 @@ public class MenuBuilder {
         return this;
     }
 
+    public MenuBuilder selected(boolean selected) {
+        this.selected = selected;
+        return this;
+    }
+
+    public MenuBuilder group(SelectionGroup group) {
+        this.group = group;
+        return this;
+    }
+
     /// This method can be used to further customize the build [MFXMenuItem].
     ///
     /// For example, one may want to disable the item when a certain condition is not met:
@@ -133,10 +161,16 @@ public class MenuBuilder {
     }
 
     public MFXMenuItem build() {
-        MFXMenuItem item = new MFXMenuItem(text, graphic);
+        MFXMenuItem item = itemFactory.get();
+        item.setText(text);
+        item.setGraphic(graphic);
         item.setShortcut(shortcut);
         item.setAction(action);
         item.getSubItems().addAll(subItems);
+        if (item instanceof MFXCheckMenuItem ci) {
+            ci.setSelected(selected);
+            ci.setSelectionGroup(group);
+        }
         if (cfg != null) cfg.accept(item);
         return item;
     }
