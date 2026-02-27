@@ -134,7 +134,7 @@ public class MFXMenuContentSkin extends MFXSkinBase<MFXMenuContent> {
         if (placeholder != null) return LayoutUtils.snappedBoundHeight(placeholder);
         double gap = getSkinnable().getSpacing();
         return getChildren().stream()
-                   .mapToDouble(node -> LayoutUtils.boundHeight(node) + gap)
+                   .mapToDouble(node -> LayoutUtils.snappedBoundHeight(node) + gap)
                    .sum() + topInset + bottomInset - gap;
     }
 
@@ -146,13 +146,17 @@ public class MFXMenuContentSkin extends MFXSkinBase<MFXMenuContent> {
         double advanceY = y;
         ObservableList<MFXMenuItem> items = getMenuItems();
         double maxTextW = -1;
+        double maxIconW = -1;
         for (MFXMenuItem item : items) {
             double textW = item.textWidth();
+            double iconW = item.iconWidth();
             if (textW > maxTextW) maxTextW = textW;
-            double iH = LayoutUtils.boundHeight(item);
+            if (iconW > maxIconW) maxIconW = iconW;
+            double iH = LayoutUtils.snappedBoundHeight(item);
             item.resizeRelocate(x, advanceY, w, iH);
             advanceY += iH + gap;
         }
+        menu.setIconColumnWidth(maxIconW);
         menu.setTextColumnWidth(maxTextW);
 
         if (placeholder != null) {

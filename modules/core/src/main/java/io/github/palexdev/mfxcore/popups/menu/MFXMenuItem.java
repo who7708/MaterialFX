@@ -28,6 +28,7 @@ import io.github.palexdev.mfxcore.controls.MFXSkinBase;
 import io.github.palexdev.mfxcore.controls.MFXStyleable;
 import io.github.palexdev.mfxcore.input.KeyStroke;
 import io.github.palexdev.mfxcore.observables.When;
+import io.github.palexdev.mfxcore.utils.Memoizer;
 import io.github.palexdev.mfxcore.utils.fx.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -43,6 +44,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 
 import static io.github.palexdev.mfxcore.input.WhenEvent.intercept;
 
@@ -68,6 +70,7 @@ import static io.github.palexdev.mfxcore.input.WhenEvent.intercept;
 /// See [MFXMenuContentSkin#updateChildren()].
 ///
 /// @see MFXMenu#textColumnWidthProperty()
+/// @see MFXMenu#iconColumnWidthProperty()
 public class MFXMenuItem extends MFXLabeled {
 
     //================================================================================
@@ -103,10 +106,15 @@ public class MFXMenuItem extends MFXLabeled {
     private final ObservableList<MFXMenuItem> subItems = FXCollections.observableArrayList();
 
     private final TextMeasurementCache tmc;
+    private Supplier<Node> icRetriever = Memoizer.memoize(() -> lookup(".icon"));
 
     //================================================================================
     // Constructors
     //================================================================================
+
+    public MFXMenuItem() {
+        this("");
+    }
 
     public MFXMenuItem(String text) {
         this(text, null);
@@ -144,6 +152,12 @@ public class MFXMenuItem extends MFXLabeled {
         return tmc.getSnappedWidth();
     }
 
+    public double iconWidth() {
+        // FIXME ugly! is there another way?
+        Node iconContainer = icRetriever.get();
+        return iconContainer != null ? LayoutUtils.snappedBoundWidth(iconContainer) : USE_COMPUTED_SIZE;
+    }
+
     //================================================================================
     // Overridden Methods
     //================================================================================
@@ -161,6 +175,13 @@ public class MFXMenuItem extends MFXLabeled {
     @Override
     public List<String> defaultStyleClasses() {
         return MFXStyleable.styleClasses("mfx-menu-item");
+    }
+
+    @Override
+    protected MFXSkinBase<?> buildSkin() {
+        // reset cache!
+        icRetriever = Memoizer.memoize(() -> lookup(".icon"));
+        return super.buildSkin();
     }
 
     //================================================================================
@@ -250,10 +271,8 @@ public class MFXMenuItem extends MFXLabeled {
 
         @Override
         public void mouseClicked(MouseEvent e, Runnable callback) {
-            MFXMenuItem item = getNodeAs(MFXMenuItem.class);
-            if (e.getButton() == MouseButton.PRIMARY && item.getAction() != null) {
-                item.getMenu().getRootMenu().hide();
-                item.getAction().run();
+            if (e.getButton() == MouseButton.PRIMARY) {
+                runAction();
             }
         }
 
@@ -267,8 +286,7 @@ public class MFXMenuItem extends MFXLabeled {
                         subMenuHandler.show();
                         subMenuHandler.focus();
                     } else if (item.getAction() != null) {
-                        item.getAction().run();
-                        item.getMenu().getRootMenu().hide();
+                        runAction();
                     }
                 }
                 case UP -> item.requestFocusTraversal(TraversalDirection.UP);
@@ -296,6 +314,14 @@ public class MFXMenuItem extends MFXLabeled {
             e.consume();
         }
 
+        protected void runAction() {
+            MFXMenuItem item = getNode();
+            if (item.getAction() != null) {
+                item.getAction().run();
+                item.getMenu().getRootMenu().hide();
+            }
+        }
+
         protected SubMenuHandler getSubMenuHandler() {
             return subMenuHandlerAccessor != null ? subMenuHandlerAccessor.get() : null;
         }
@@ -307,7 +333,8 @@ public class MFXMenuItem extends MFXLabeled {
 
     public static class MFXMenuItemSkin extends MFXSkinBase<MFXMenuItem> {
 
-        private final BoundLabel leading;
+        protected final BoundLabel leading;
+        protected final StackPane iconContainer;
         private final Label trailing;
         private final Region tIcon;
         private final Region surface;
@@ -318,8 +345,17 @@ public class MFXMenuItem extends MFXLabeled {
             super(item);
 
             // Init
-            leading = new BoundLabel(item);
-            leading.getStyleClass().add("leading");
+            leading = createLeadingLabel();
+            iconContainer = new StackPane() {
+                @Override
+                protected void layoutChildren() {
+                    for (Node child : getChildren()) {
+                        child.autosize();
+                        positionInArea(child, 0, 0, getWidth(), getHeight(), 0, getPadding(), HPos.CENTER, VPos.CENTER, true);
+                    }
+                }
+            };
+            iconContainer.getStyleClass().add("icon");
             trailing = new Label();
             trailing.getStyleClass().add("trailing");
             tIcon = new Region();
@@ -333,7 +369,7 @@ public class MFXMenuItem extends MFXLabeled {
 
             // Finalize
             addListeners();
-            getChildren().addAll(surface, leading, trailing);
+            getChildren().addAll(surface, iconContainer, leading, trailing);
         }
 
         /// Adds the following listeners:
@@ -355,10 +391,20 @@ public class MFXMenuItem extends MFXLabeled {
                         }
                     })
                     .executeNow(item::isHover),
+                When.onInvalidated(item.graphicProperty()).then(_ -> updateIcon()).executeNow(),
                 When.observe(this::handleSubMenu, item.getSubItems()).executeNow()
             );
 
             trailing.textProperty().bind(item.shortcutProperty().map(KeyStroke::toDisplayString));
+        }
+
+        protected void updateIcon() {
+            Node icon = getSkinnable().getGraphic();
+            if (icon == null) {
+                iconContainer.getChildren().clear();
+            } else {
+                iconContainer.getChildren().setAll(icon);
+            }
         }
 
         /// This method is mainly responsible for creating or disposing the submenu depending on [MFXMenuItem#getSubItems()].
@@ -388,6 +434,13 @@ public class MFXMenuItem extends MFXLabeled {
         }
 
 
+        protected double minIconWidth() {
+            MFXMenuItem item = getSkinnable();
+            MFXMenu menu = item.getMenu();
+            if (menu == null) return Region.USE_COMPUTED_SIZE;
+            return Math.max(menu.getIconColumnWidth(), LayoutUtils.snappedBoundWidth(iconContainer));
+        }
+
         /// Computes the minimum width required for the leading element of this item, including the value specified by the
         /// [MFXMenu#textColumnWidthProperty()] which is crucial for having all the menu's items aligned.
         protected double minLeadingWidth() {
@@ -395,6 +448,16 @@ public class MFXMenuItem extends MFXLabeled {
             MFXMenu menu = item.getMenu();
             if (menu == null) return Region.USE_COMPUTED_SIZE;
             return Math.max(menu.getTextColumnWidth(), LayoutUtils.snappedBoundWidth(leading));
+        }
+
+        protected BoundLabel createLeadingLabel() {
+            BoundLabel label = new BoundLabel(getSkinnable());
+            label.graphicProperty().unbind();
+            label.setGraphic(null);
+            label.contentDisplayProperty().unbind();
+            label.setContentDisplay(ContentDisplay.TEXT_ONLY);
+            label.getStyleClass().add("leading");
+            return label;
         }
 
         @Override
@@ -413,7 +476,7 @@ public class MFXMenuItem extends MFXLabeled {
 
         @Override
         protected double computePrefWidth(double height, double topInset, double rightInset, double bottomInset, double leftInset) {
-            return leftInset + minLeadingWidth() + LayoutUtils.snappedBoundWidth(trailing) + rightInset;
+            return leftInset + minIconWidth() + minLeadingWidth() + LayoutUtils.snappedBoundWidth(trailing) + rightInset;
         }
 
         @Override
@@ -429,9 +492,16 @@ public class MFXMenuItem extends MFXLabeled {
             MFXMenuItem item = getSkinnable();
             surface.resizeRelocate(0, 0, item.getWidth(), item.getHeight());
 
+            double remainingWidth = w;
             layoutInArea(trailing, x, y, w, h, 0, HPos.RIGHT, VPos.CENTER);
-            leading.resize(w - trailing.getWidth(), LayoutUtils.snappedBoundHeight(leading));
-            positionInArea(leading, x, y, w, h, 0, HPos.LEFT, VPos.CENTER);
+            remainingWidth -= trailing.getWidth();
+
+            iconContainer.resize(minIconWidth(), h);
+            positionInArea(iconContainer, x, y, w, h, 0, HPos.LEFT, VPos.CENTER);
+            remainingWidth -= iconContainer.getWidth();
+
+            leading.resize(remainingWidth, LayoutUtils.snappedBoundHeight(leading));
+            positionInArea(leading, x + iconContainer.getWidth(), y, w, h, 0, HPos.LEFT, VPos.CENTER);
         }
 
         @Override

@@ -103,6 +103,7 @@ import static io.github.palexdev.mfxcore.popups.PopupAnimationFunction.FADE;
 ///
 /// @see MenuConfig
 /// @see #textColumnWidthProperty()
+/// @see #iconColumnWidthProperty()
 public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
     //================================================================================
     // Static Properties
@@ -154,6 +155,12 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
     private WhenEvent<?> trigger;
 
     private final ReadOnlyDoubleWrapper textColumnWidth = new ReadOnlyDoubleWrapper(Region.USE_COMPUTED_SIZE) {
+        @Override
+        protected void invalidated() {
+            getRoot().requestLayout();
+        }
+    };
+    private final ReadOnlyDoubleWrapper iconColumnWidth = new ReadOnlyDoubleWrapper(Region.USE_COMPUTED_SIZE) {
         @Override
         protected void invalidated() {
             getRoot().requestLayout();
@@ -436,6 +443,21 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
 
     protected void setTextColumnWidth(double width) {
         textColumnWidth.set(width);
+    }
+
+    public double getIconColumnWidth() {
+        return iconColumnWidth.get();
+    }
+
+    /// Specifies the minimum width for every item's leading icon.
+    ///
+    /// Same story as [#textColumnWidthProperty()] but for the icons.
+    public ReadOnlyDoubleProperty iconColumnWidthProperty() {
+        return iconColumnWidth.getReadOnlyProperty();
+    }
+
+    protected void setIconColumnWidth(double width) {
+        iconColumnWidth.set(width);
     }
 
     public Function<ObservableList<MFXMenuItem>, MFXMenu> getSubMenuFactory() {
