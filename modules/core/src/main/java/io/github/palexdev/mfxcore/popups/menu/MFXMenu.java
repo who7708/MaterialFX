@@ -50,8 +50,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 
-import static io.github.palexdev.mfxcore.popups.PopupAnimationFunction.FADE;
-
 /// Custom implementation of menus based on the [MFXPopup] API. It also implements [MFXStyleable], the default CSS
 /// style-class is set to '.root' and '.mfx-menu.'. This mimics JavaFX popups which also have the '.root' style class
 /// applied. It's recommended to keep it so that if your theme defines some lookup color on the '.root' selector, it gets
@@ -191,9 +189,6 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
         MenuConfig.DEFAULT.apply(this);
         this.items = items;
         setContent(new MFXMenuContent(this));
-
-        // By design, menus open and close immediately
-        setAnimation(null);
     }
 
     //================================================================================
@@ -551,7 +546,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
             menu.setOffset(offset);
             menu.triggerButton = triggerButton;
             menu.anchorBasedPositioning = anchorBasedPositioning;
-            menu.setAnimation(animationProvider.get());
+            menu.setAnimation(animationProvider != null ? animationProvider.get() : null);
             menu.peer.setStyleableParent(styleableParent);
             menu.config = this;
         }
@@ -572,7 +567,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
             private Position offset = Position.origin();
             private MouseButton triggerButton = MouseButton.SECONDARY;
             private boolean anchorBasedPositioning = true;
-            private Supplier<PopupAnimation> animationProvider = () -> new PopupAnimation(FADE);
+            private Supplier<PopupAnimation> animationProvider = null;
             private Node styleableParent;
 
             public Builder placement(Placement placement) {

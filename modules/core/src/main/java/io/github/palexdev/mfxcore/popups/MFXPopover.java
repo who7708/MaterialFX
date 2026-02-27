@@ -67,6 +67,12 @@ import javafx.stage.Window;
 public class MFXPopover extends MFXPopupBase<PopupPeer, Node> {
 
     //================================================================================
+    // Properties
+    //================================================================================
+
+    private boolean preloaded = false;
+
+    //================================================================================
     // Constructors
     //================================================================================
 
@@ -112,6 +118,11 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> {
         this.owner = owner;
         Node content = getContent();
         content.setVisible(false);
+        if (!preloaded) {
+            peer.root.applyCss();
+            peer.root.layout();
+            preloaded = true;
+        }
 
         peer.show(owner, x, y);
         positionProperty().setPosition(x, y);
