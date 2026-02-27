@@ -76,13 +76,22 @@ public class MFXMenuItem extends MFXLabeled {
 
     private static final String DEFAULT_CSS = new CSSFragment("""
         .mfx-menu-item.sub .svg-icon {
-          -fx-background-color: black;
+          -fx-background-color: rgba(0, 0, 0, 0.87);
           -fx-pref-width: 8px;
           -fx-max-height: 12px;
           -fx-shape: "M439.1 297.4C451.6 309.9 451.6 330.2 439.1 342.7L279.1 502.7C266.6 515.2 246.3 515.2 233.8 502.7C221.3 490.2 221.3 469.9 233.8 457.4L371.2 320L233.9 182.6C221.4 170.1 221.4 149.8 233.9 137.3C246.4 124.8 266.7 124.8 279.2 137.3L439.2 297.3z";
         }
+        
+        .mfx-menu-item > .icon {
+          -fx-padding: 0px 8px 0px 0px;
+        }
+        
+        .menu-separator {
+          -fx-background-color: rgba(0, 0, 0, 0.1);
+          -fx-background-insets: 1px 2px 2px 2px;
+          -fx-padding: 2px 0px;
+        }
         """).toDataUri();
-
 
     //================================================================================
     // Properties
