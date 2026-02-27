@@ -70,6 +70,6 @@ public interface Selectable {
 
     /// Allows specifying a callback to invoke when the selection state of this `Selectable` changes.
     ///
-    /// This is an optional API. By default, does nothing.
+    /// **This is an optional API. By default, does nothing.**
     default void onSelectionChanged(Consumer<Boolean> action) {}
 }
