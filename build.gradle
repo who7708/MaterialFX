@@ -55,6 +55,7 @@ subprojects {
         testImplementation("io.github.palexdev:scenicview:$scenicView") {
             exclude group: "org.openjfx"
         }
+        testImplementation "one.jpro.platform.jpms:cssfx:$cssfx"
     }
 
     javafx {
