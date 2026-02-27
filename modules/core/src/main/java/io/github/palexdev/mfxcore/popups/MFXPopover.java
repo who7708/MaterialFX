@@ -113,7 +113,7 @@ public class MFXPopover extends MFXPopupBase<PopupPeer, Node> {
         Node content = getContent();
         content.setVisible(false);
 
-        peer.show(owner, 0, 0);
+        peer.show(owner, x, y);
         positionProperty().setPosition(x, y);
 
         if (placement != null) {
