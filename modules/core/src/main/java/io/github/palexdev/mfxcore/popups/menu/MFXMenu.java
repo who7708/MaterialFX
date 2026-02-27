@@ -541,8 +541,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
         MouseButton triggerButton,
         boolean anchorBasedPositioning,
         Supplier<PopupAnimation> animationProvider,
-        Node styleableParent,
-        boolean preloadSkin
+        Node styleableParent
     ) implements Config<MFXMenu> {
         public static final MenuConfig DEFAULT = builder().build();
 
@@ -575,7 +574,6 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
             private boolean anchorBasedPositioning = true;
             private Supplier<PopupAnimation> animationProvider = () -> new PopupAnimation(FADE);
             private Node styleableParent;
-            private boolean preloadSkin = false;
 
             public Builder placement(Placement placement) {
                 this.placement = placement;
@@ -607,11 +605,6 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
                 return this;
             }
 
-            public Builder preloadSkin(boolean preloadSkin) {
-                this.preloadSkin = preloadSkin;
-                return this;
-            }
-
             public MenuConfig build() {
                 return new MenuConfig(
                     placement,
@@ -619,8 +612,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
                     triggerButton,
                     anchorBasedPositioning,
                     animationProvider,
-                    styleableParent,
-                    preloadSkin
+                    styleableParent
                 );
             }
         }
