@@ -8,8 +8,6 @@ dependencies {
     api("io.github.palexdev:virtualizedfx:$vfx") {
         exclude group: 'io.github.palexdev'
     }
-
-    testImplementation "fr.brouillard.oss:cssfx:$cssfx"
 }
 
 java {
