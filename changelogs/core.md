@@ -2,7 +2,7 @@
 
 ### Removed
 
-- <d820ac53> MFXMenu: revert 257c1a7f as the option was not doing anything and cannot be easily implemented the right way
+- <d820ac53> MFXMenu: revert 55e85a2c as the option was not doing anything and cannot be easily implemented the right way
 
 ### Features
 
