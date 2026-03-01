@@ -250,6 +250,7 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
 
         subMenu.setParentMenu(this);
         subMenu.setSubMenuFactory(subMenuFactory);
+        subMenu.setAnimation(config.animationProvider().get());
         return subMenu;
     }
 
@@ -531,7 +532,6 @@ public class MFXMenu implements MFXPopup<Node>, MFXStyleable {
     /// coordinates, while menus from toolbars are anchored to a button.
     /// - The `animationProvider` parameter allows you to set the animation for both `root` menus and all the submenus
     /// in the cascade. This is needed because submenus are built internally by [MFXMenuItems][MFXMenuItem] (check default skin).
-    /// If you use [MFXPopup#setAnimation(PopupAnimation)] on the `root` menu, the animation type won't propagate!
     public record MenuConfig(
         Placement placement,
         Position offset,
