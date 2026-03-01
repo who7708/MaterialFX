@@ -42,7 +42,7 @@ import io.github.palexdev.mfxeffects.beans.Offset;
 /// Offset(0.05, 0), Offset(0.133333, 0.06), // a1 and b1
 /// Offset(0.166666, 0.4), // midpoint
 /// Offset(0.208333, 0.82), Offset(0.25, 1) // a2 and b2
-///```
+/// ```
 public class ThreePointCubic extends Curve {
     private final Offset a1;
     private final Offset b1;

@@ -84,7 +84,7 @@ public class NumberUtils {
     /// ```
     /// mapOneRangeToAnother(0, new DoubleRange(-100, 100), new DoubleRange(0, 100), 2)
     /// // -> 50.0
-    ///```
+    /// ```
     ///
     /// If the source range has zero width, or a non-finite result occurs, returns the target minimum.
     public static double mapOneRangeToAnother(double value, DoubleRange fromRange, DoubleRange toRange, int decimalPrecision) {

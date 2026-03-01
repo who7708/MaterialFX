@@ -70,7 +70,7 @@ import javafx.event.EventType;
 ///     System.out.println("Not the primary button!");
 ///     WhenEvent<MouseEvent> we = w.get();
 ///     if (we != null) we.dispose();
-///}).asFilter().oneShot().register();
+/// }).asFilter().oneShot().register();
 /// // More details
 /// // 1) Note that the asFilter functionality can be quite useful. In fact, you can even create
 /// // a filter that consumes the events, thus avoiding other constructs or handlers to process the same type of events
@@ -78,7 +78,7 @@ import javafx.event.EventType;
 /// // PRIMARY button, the oneShot() will be taken into account, so the construct will only run once and then disposed
 /// // If you press any other button, you enter the "otherwise" action, and there it is also disposed.
 /// // So, this specific example will run once and only once`
-///```
+/// ```
 ///
 /// @see EventTarget
 public class WhenEvent<T extends Event> implements Disposable {

@@ -39,11 +39,11 @@ public enum PopupState {
     /// // Doesn't work for whatever fucking reason and the popup keeps getting shown.
     ///   if (popover.isShowing()){
     ///     popover.hide();
-    ///} else {
+    /// } else {
     ///     popover.show(...);
-    ///}
-    ///});
-    ///```
+    /// }
+    /// });
+    /// ```
     /// Now, thanks to **my** implementation that hooks directly into auto-hide bullshit, you can query for this special
     /// state and workaround the issue.
     /// ```java
@@ -52,11 +52,11 @@ public enum PopupState {
     /// btn.setOnAction(_ -> {
     ///   if (popover.getState() == PopupState.AUTO_HIDE){
     ///     return;
-    ///} else {
+    /// } else {
     ///     popover.show(...);
-    ///}
-    ///});
-    ///```
+    /// }
+    /// });
+    /// ```
     AUTO_HIDE,
 
     /// Indicates that the popup is about to get shown

@@ -36,11 +36,11 @@ import java.util.Set;
 /// for (Integer val : range){
 ///     if (check(val))
 ///         expanded.remove(val);
-///}
+/// }
 /// // At the end of the for you have a Set of values for which the check failed, at this point...
 /// for (Integer failingVal : expanded){
 ///     process(failingVal);
-///}
+/// }
 ///
 /// // Now, the issue here is that the `expandRangeToSet(...)` operation can be costly, and we don't really need it
 /// // By using an ExcludingIntegerRange the code becomes like this...
@@ -49,13 +49,13 @@ import java.util.Set;
 /// for (Integer val : range){
 ///     if (check(val))
 ///         eRange.exclude(val);
-///}
+/// }
 /// for (Integer failingVal : eRange){
 ///     process(failingVal);
-///}
+/// }
 /// // There's no need to expand the whole range to a Set anymore, and ExcludingIntegerRange also implements Iterable thus offering
 /// // a pretty efficient Iterator which allows using enhanced for loops too.
-///```
+/// ```
 ///
 /// **WARNING!**
 ///

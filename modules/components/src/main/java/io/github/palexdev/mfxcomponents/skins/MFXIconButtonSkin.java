@@ -39,8 +39,8 @@ import javafx.geometry.VPos;
 ///   -mfx-animation: SCALE;
 ///
 ///   -mfx-icon: 'fa-check';
-///}
-///```
+/// }
+/// ```
 ///
 /// @see MFXIconWrapper
 public class MFXIconButtonSkin extends MFXButtonSkin {

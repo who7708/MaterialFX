@@ -51,7 +51,7 @@ import javafx.util.StringConverter;
 /// U convertedQuery = converter.fromString(query);
 /// // We can build a Predicate<T> by doing this...
 /// Predicate<T> predicate = t -> biPredicate.test(extractor.apply(t), convertedQuery);
-///```
+/// ```
 ///
 /// Filters are intended to be used with UI controls, they provide an interactive way to build a [Predicate]
 /// and filter a collection with generics; however, you can also use them without a UI.

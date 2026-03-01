@@ -43,16 +43,16 @@ import javafx.util.Pair;
 /// 3 [ P Q R S T ]
 /// 4 [ U V W X Y ]
 /// // This is how linear indexes work
-///[  0  1  2  3  4 ]
-///[  5  6  7  8  9 ]
-///[ 10 11 12 13 14 ]
-///[ 15 16 17 18 19 ]
-///[ 20 21 22 23 24 ]
+/// [  0  1  2  3  4 ]
+/// [  5  6  7  8  9 ]
+/// [ 10 11 12 13 14 ]
+/// [ 15 16 17 18 19 ]
+/// [ 20 21 22 23 24 ]
 /// // So...
 /// Grid<String> grid = ...;
 /// String e1 = grid.getElement(11); // Equals grid.getElement(2, 1); Both are "L"
 /// String e2 = grid.getElement(23); // Equals grid.getElement(4, 3); Both are "X"`
-///```
+/// ```
 ///
 /// These are all the possible operations:
 /// - Create a grid from a list, an array or a 2D array

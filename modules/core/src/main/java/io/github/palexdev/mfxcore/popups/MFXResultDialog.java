@@ -62,7 +62,7 @@ import javafx.stage.Window;
 /// confirm.setOnAction(_ -> dialog.confirm());
 /// Button cancel = new Button("Cancel");
 /// cancel.setOnAction(_ -> dialog.cancel());
-///```
+/// ```
 public class MFXResultDialog<R> extends MFXDialog {
     //================================================================================
     // Properties
@@ -155,14 +155,14 @@ public class MFXResultDialog<R> extends MFXDialog {
     /// bus.subscribe(ResultDialogEven.class, e -> {
     ///     if (e.isConfirmed()){
     ///         d.confirm();
-    ///} else {
+    /// } else {
     ///         d.cancel();
-    ///}
-    ///});
+    /// }
+    /// });
     ///
     /// // From somewhere else in your program, on the same `bus` or network
     /// bus.publish(new ResultDialogEvent(<true | false>));
-    ///```
+    /// ```
     public static class ResultDialogEvent extends Event {
         public ResultDialogEvent(boolean confirmed) {
             super(confirmed);

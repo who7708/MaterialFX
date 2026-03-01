@@ -38,7 +38,7 @@ import javafx.beans.value.WritableValue;
 ///     .setFirstToSecondMapper(Integer::parseInt)
 ///     .setSecondToFirstMapper(String::valueOf)
 ///     .bind();
-///```
+/// ```
 ///
 /// @param <A> the type of the first observable value
 /// @param <B> the type of the second observable value

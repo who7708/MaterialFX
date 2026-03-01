@@ -63,8 +63,8 @@ import javafx.util.Duration;
 ///     .setOnUpdate(delta -> rt.setTranslateX(rt.getTranslateX() + delta))
 ///     .setInterpolatorFluent(...) // Optional
 ///     .play();
-///})
-///```
+/// })
+/// ```
 ///
 /// A little side note: if you try to debug the values before and after the transition, you may notice that the target
 /// value may be a little different. MomentumTransition is not 100% precise in the calculations, and this is also needed
@@ -74,7 +74,7 @@ import javafx.util.Duration;
 /// Easing refers to the gradual acceleration or deceleration of an object, while overshoot refers to the extra movement
 ///  that occurs when an object passes its target position and then bounces back.
 /// Easing and overshooting can create a sense of realism, weight, and energy in your animation, depending on how you use them.
-///```
+/// ```
 ///
 /// The overshoot can be avoided or mitigated with different methods: clamping, changing the transition parameters, changing
 /// the interpolator. The clamping method completely removes the effect.
@@ -98,11 +98,11 @@ import javafx.util.Duration;
 ///       double val = rt.getTranslateX() + delta;
 ///       double clamped = Math.min(val, target); // We don't want it to exceed the target
 ///       rt.setTranslateX(clamped);
-///});
+/// });
 ///    mt.setInterpolator(...); // Optional
 ///    mt.play();
-///}
-///```
+/// }
+/// ```
 /// That said, I still do not recommend removing the overshoot effect as it makes animations more appealing.
 public class MomentumTransition extends FluentTransition {
     //================================================================================

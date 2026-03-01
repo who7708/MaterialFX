@@ -83,7 +83,7 @@ import javafx.stage.Window;
 /// | Focus    | Modal & non-modal | Non-modal |         |
 /// | Backdrop | For modal dialogs | No        | No      |
 /// | Dismiss  | Explicit          | Light     | Light   |
-///```
+/// ```
 /// This is **great**! Know why? Because knowing these differences limits the scope. Take, for example [PopupWindow].
 /// By the above definitions, a popover is typically shown close to a specific UI element for additional information,
 /// options, actions, etc.
