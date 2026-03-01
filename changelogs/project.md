@@ -1,5 +1,9 @@
-## Project - adbfaf6a
+## Project - 0e776ec6
 
+- 01-03-2026 <204eb6c7> Use latest IntelliJ for code format
+- 01-03-2026 <8cf9ad92> Remove CSSFX from components dependencies as already imported from parent config
+- 27-02-2026 <8311ba46> Add CSSFX as test dependency for all subprojects
+- 27-02-2026 <9ea48140> Update JavaFX to latest EA (fix compilation error)
 - 08-10-2025 <497e516e> Update Idea config
 - 08-10-2025 <2d8060cf> Update to latest JavaFX EA
 - 08-10-2025 <7248bed8> Fix tests for Gradle 9

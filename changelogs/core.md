@@ -1,3 +1,45 @@
+## 25.4.0 - 01-03-2026 - 0e776ec6
+
+### Removed
+
+- <d820ac53> MFXMenu: revert 257c1a7f as the option was not doing anything and cannot be easily implemented the right way
+
+### Features
+
+- <a2aef59f> Implement selectable menu items as MFXCheckMenuItem
+- <8b96f6b6> Major refactor of MFXMenu items, now they are concrete nodes
+- <2ddb800a> StyleUtils: add method to initialize styleable properties without locking them (classic JavaFX shenanigans, :facepalm:)
+- <55e85a2c> MFXMenu: allow preloading content's skin if necessary (rarely)
+
+### Bug Fixes
+
+- <56249d83> MFXMenu: properly handle animation
+- <92c5bd89> MFXPopover: show peer at the given x,y coordinates even if the position is set afterwards otherwise the popup might flicker
+- <b5077511> KeyModifier: add missing toLowerCase()
+- <4ba48587> PopupRoot: retrieve stylesheets upon construction
+
+### Refactoring
+
+- <2e722268> MFXMenu: propagate animation to submenus for convenience and consistency
+- <4a5c76e3> MFXMenu: do not allow null contents
+- <8b1888a8> Implement column-like alignment for menu icons too
+- <8372675b> Text: minor changes to constructors
+- <f7f4adf5> MFXMenu: change default submenus factory for a bit of offset and default placement
+- <8af4e8fa> MFXPopover: use When.observe to reset translate properties (another JavaFX shenanigan btw :facepalm:)
+- <66de84c8> MFXMenuContentSkin and MFXMenuEntry: mimic typical grid layout of menus, where the trailing nodes (either shortcuts or submenu icons) are aligned to the right and leading text aligned to the left. Also, honor padding during layout
+- <6a44280b> MFXMenuEntry: move input handling to behavior class
+
+### Documentation
+
+- <12d97f92> Selectable: clarify API docs
+- <b2076cf2> Fix javadocs
+
+### Style
+
+- <ed42d640> MFXMenuItem: extend and improve default stylying
+
+
+
 ## 25.3.2 - 28-01-2026 - adbfaf6a
 
 ### Refactoring
