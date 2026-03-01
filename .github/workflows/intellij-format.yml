@@ -25,6 +25,7 @@ jobs:
 
       - uses: notdevcody/intellij-format-action@main
         with:
+          idea-version: '2025.3.3'
           include-glob: '*.java'
           style-settings-file: '.idea/codeStyles/Default.xml'
           push-type: 'commit'
