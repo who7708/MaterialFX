@@ -36,6 +36,7 @@ dependencies {
 compileJava {
     sourceCompatibility = "$testJdk"
     targetCompatibility = "$testJdk"
+    options.encoding = 'UTF-8'
 }
 
 compileTestJava {
