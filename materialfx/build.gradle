@@ -51,8 +51,8 @@ javadoc {
     options.version = true
     options.windowTitle = "$project.name $project.version API"
     options.docTitle = "$project.name $project.version API"
-    options.links = ['https://docs.oracle.com/en/java/javase/11/docs/api',
-                     'https://openjfx.io/javadoc/17']
+    options.links = ['https://docs.oracle.com/en/java/javase/21/docs/api',
+                     'https://openjfx.io/javadoc/21']
 }
 
 tasks.register('javadocJar', Jar) {
