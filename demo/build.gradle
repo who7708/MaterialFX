@@ -64,6 +64,30 @@ application {
     applicationDefaultJvmArgs = ["-Dglass.disableGrab=true"]
 }
 
+// 调试任务配置
+tasks.register('debugRun', JavaExec) {
+    dependsOn classes
+    group = "verification"
+    description = "Run the demo with debug options"
+    
+    // 设置主类
+    String mainClass = project.findProperty("chooseMain").toString()
+    if (mainClass != "null" && !mainClass.trim().isEmpty()) {
+        this.mainClass = mainClass
+    } else {
+        this.mainClass = "io.github.palexdev.materialfx.demo.Launcher"
+    }
+    
+    // 设置类路径
+    classpath = sourceSets.main.runtimeClasspath
+    
+    // JVM 参数
+    jvmArgs = [
+        '-Dglass.disableGrab=true',
+        '-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005'
+    ]
+}
+
 jlink {
     options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
     launcher {
