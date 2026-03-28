@@ -34,7 +34,7 @@
 
 @font-face {
     font-family: 'Open Sans ExtraBold';
-    font-weight: 800px;
+    font-weight: 800;
     font-style: normal;
     font-display: swap;
     src: url('OpenSans-ExtraBold.ttf') format('truetype');
@@ -42,7 +42,7 @@
 
 @font-face {
     font-family: 'Open Sans ExtraBoldItalic';
-    font-weight: 800px;
+    font-weight: 800;
     font-style: italic;
     font-display: swap;
     src: url('OpenSans-ExtraBoldItalic.ttf') format('truetype');
@@ -50,7 +50,7 @@
 
 @font-face {
     font-family: 'Open Sans Light';
-    font-weight: 300px;
+    font-weight: 300;
     font-style: normal;
     font-display: swap;
     src: url('OpenSans-Light.ttf') format('truetype');
@@ -58,7 +58,7 @@
 
 @font-face {
     font-family: 'Open Sans LightItalic';
-    font-weight: 300px;
+    font-weight: 300;
     font-style: italic;
     font-display: swap;
     src: url('OpenSans-LightItalic.ttf') format('truetype');
@@ -74,7 +74,7 @@
 
 @font-face {
     font-family: 'Open Sans SemiBold';
-    font-weight: 600px;
+    font-weight: 600;
     font-style: normal;
     font-display: swap;
     src: url('OpenSans-SemiBold.ttf') format('truetype');
@@ -90,7 +90,7 @@
 
 @font-face {
     font-family: 'Open Sans SemiBoldItalic';
-    font-weight: 600px;
+    font-weight: 600;
     font-style: italic;
     font-display: swap;
     src: url('OpenSans-SemiBoldItalic.ttf') format('truetype');
