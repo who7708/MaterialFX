@@ -67,6 +67,9 @@ public class DemoController implements Initializable {
 	private MFXFontIcon minimizeIcon;
 
 	@FXML
+	private MFXFontIcon maximizeIcon;
+
+	@FXML
 	private MFXFontIcon alwaysOnTopIcon;
 
 	@FXML
@@ -94,6 +97,10 @@ public class DemoController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		closeIcon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> Platform.exit());
 		minimizeIcon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> ((Stage) rootPane.getScene().getWindow()).setIconified(true));
+		maximizeIcon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+			Stage stage = (Stage) rootPane.getScene().getWindow();
+			stage.setMaximized(!stage.isMaximized());
+		});
 		alwaysOnTopIcon.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
 			boolean newVal = !stage.isAlwaysOnTop();
 			alwaysOnTopIcon.pseudoClassStateChanged(PseudoClass.getPseudoClass("always-on-top"), newVal);
